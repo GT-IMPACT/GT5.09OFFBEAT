@@ -49,6 +49,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import appeng.api.parts.IPartHost;
 
@@ -157,20 +162,24 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 
     private void pullFromIc2EnergySources(IGregTechTileEntity aBaseMetaTileEntity) {
         if(!GT_Mod.gregtechproxy.ic2EnergySourceCompat) return;
+        
+        ExecutorService es = Executors.newCachedThreadPool();
+        for( byte aSide = 0 ; aSide < 6 ; aSide++) {
+        	es.execute(new GT_MetaPipeEntity_CableEnergyThread(this, aBaseMetaTileEntity, aSide));
+        	
+        	/*if(isConnectedAtSide(aSide)) {
+            	final TileEntity tTileEntity = aBaseMetaTileEntity.getTileEntityAtSide(aSide);
+            	final TileEntity tEmitter;
+            	if (tTileEntity instanceof IReactorChamber)
+                	tEmitter = (TileEntity) ((IReactorChamber) tTileEntity).getReactor();
+            	else tEmitter = (tTileEntity == null || tTileEntity instanceof IEnergyTile || EnergyNet.instance == null) ? tTileEntity :
+                	EnergyNet.instance.getTileEntity(tTileEntity.getWorldObj(), tTileEntity.xCoord, tTileEntity.yCoord, tTileEntity.zCoord);
 
-        for( byte aSide = 0 ; aSide < 6 ; aSide++) if(isConnectedAtSide(aSide)) {
-            final TileEntity tTileEntity = aBaseMetaTileEntity.getTileEntityAtSide(aSide);
-            final TileEntity tEmitter;
-            if (tTileEntity instanceof IReactorChamber)
-                tEmitter = (TileEntity) ((IReactorChamber) tTileEntity).getReactor();
-            else tEmitter = (tTileEntity == null || tTileEntity instanceof IEnergyTile || EnergyNet.instance == null) ? tTileEntity :
-                EnergyNet.instance.getTileEntity(tTileEntity.getWorldObj(), tTileEntity.xCoord, tTileEntity.yCoord, tTileEntity.zCoord);
-
-            if (tEmitter instanceof IEnergySource) {
-                final GT_CoverBehavior coverBehavior = aBaseMetaTileEntity.getCoverBehaviorAtSide(aSide);
-                final int coverId = aBaseMetaTileEntity.getCoverIDAtSide(aSide),
+            	if (tEmitter instanceof IEnergySource) {
+                	final GT_CoverBehavior coverBehavior = aBaseMetaTileEntity.getCoverBehaviorAtSide(aSide);
+                	final int coverId = aBaseMetaTileEntity.getCoverIDAtSide(aSide),
                     coverData = aBaseMetaTileEntity.getCoverDataAtSide(aSide);
-                final ForgeDirection tDirection = ForgeDirection.getOrientation(GT_Utility.getOppositeSide(aSide));
+                	final ForgeDirection tDirection = ForgeDirection.getOrientation(GT_Utility.getOppositeSide(aSide));
 
                 if (((IEnergySource) tEmitter).emitsEnergyTo((TileEntity) aBaseMetaTileEntity, tDirection) &&
                     coverBehavior.letsEnergyIn(aSide, coverId, coverData, aBaseMetaTileEntity)) {
@@ -179,8 +188,16 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
                     if (transferElectricity(aSide, tEU, 1, Sets.newHashSet((TileEntity) aBaseMetaTileEntity)) > 0)
                         ((IEnergySource) tEmitter).drawEnergy(tEU);
                 }
-            }
+            }*/
         }
+        
+        es.shutdown();
+        try {
+			boolean finished = es.awaitTermination(1, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @Override
@@ -189,6 +206,22 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     		return 0;
         if (!getBaseMetaTileEntity().getCoverBehaviorAtSide(aSide).letsEnergyIn(aSide, getBaseMetaTileEntity().getCoverIDAtSide(aSide), getBaseMetaTileEntity().getCoverDataAtSide(aSide), getBaseMetaTileEntity()))
             return 0;
+        
+        /*ExecutorService es = Executors.newCachedThreadPool();
+        Future<Long> transferResult = es.submit(new GT_MetaPipeEntity_CableTransferElectricity(this, aSide, aVoltage, aAmperage, Sets.newHashSet((TileEntity) getBaseMetaTileEntity())));
+        
+        try {
+			return transferResult.get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return transferElectricity(aSide, aVoltage, aAmperage, Sets.newHashSet((TileEntity) getBaseMetaTileEntity()));
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return transferElectricity(aSide, aVoltage, aAmperage, Sets.newHashSet((TileEntity) getBaseMetaTileEntity()));
+		}*/
+        
         return transferElectricity(aSide, aVoltage, aAmperage, Sets.newHashSet((TileEntity) getBaseMetaTileEntity()));
     }
 
@@ -198,50 +231,62 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         return transferElectricity(aSide, aVoltage, aAmperage, new HashSet<>(aAlreadyPassedTileEntityList));
     }
 
-    @Override
-    public long transferElectricity(byte aSide, long aVoltage, long aAmperage, HashSet<TileEntity> aAlreadyPassedSet) {
-        if (!isConnectedAtSide(aSide) && aSide != 6) return 0;
+	@Override
+	public long transferElectricity(byte aSide, long aVoltage, long aAmperage, HashSet<TileEntity> aAlreadyPassedSet) {
+		if (!isConnectedAtSide(aSide) && aSide != 6)
+			return 0;
 
-        long rUsedAmperes = 0;
-        final IGregTechTileEntity baseMetaTile = getBaseMetaTileEntity();
-		
-		byte i = (byte)((((aSide/2)*2)+2)%6); //this bit of trickery makes sure a direction goes to the next cardinal pair.  IE, NS goes to E, EW goes to U, UD goes to N.  It's a lame way to make sure locally connected machines on a wire get EU first.
-        
-        aVoltage -= mCableLossPerMeter;
-        if (aVoltage > 0) for (byte j = 0; j < 6 && aAmperage > rUsedAmperes; j++, i=(byte)((i+1)%6) )
-            if (i != aSide && isConnectedAtSide(i) && baseMetaTile.getCoverBehaviorAtSide(i).letsEnergyOut(i, baseMetaTile.getCoverIDAtSide(i), baseMetaTile.getCoverDataAtSide(i), baseMetaTile)) {
-                final TileEntity tTileEntity = baseMetaTile.getTileEntityAtSide(i);
+		long rUsedAmperes = 0;
+		final IGregTechTileEntity baseMetaTile = getBaseMetaTileEntity();
 
-                if (tTileEntity != null && aAlreadyPassedSet.add(tTileEntity)) {
-                    final byte tSide = GT_Utility.getOppositeSide(i);
-                    final IGregTechTileEntity tBaseMetaTile = tTileEntity instanceof IGregTechTileEntity ? ((IGregTechTileEntity) tTileEntity) : null;
-                    final IMetaTileEntity tMeta = tBaseMetaTile != null ? tBaseMetaTile.getMetaTileEntity() : null;
+		byte i = (byte) ((((aSide / 2) * 2) + 2) % 6); // this bit of trickery makes sure a direction goes to the next
+														// cardinal pair. IE, NS goes to E, EW goes to U, UD goes to N.
+														// It's a lame way to make sure locally connected machines on a
+														// wire get EU first.
 
-                    if (tMeta instanceof IMetaTileEntityCable) {
-                        if (tBaseMetaTile.getCoverBehaviorAtSide(tSide).letsEnergyIn(tSide, tBaseMetaTile.getCoverIDAtSide(tSide), tBaseMetaTile.getCoverDataAtSide(tSide), tBaseMetaTile) && ((IGregTechTileEntity) tTileEntity).getTimer() > 50) {
-                            rUsedAmperes += ((IMetaTileEntityCable) ((IGregTechTileEntity) tTileEntity).getMetaTileEntity()).transferElectricity(tSide, aVoltage, aAmperage - rUsedAmperes, aAlreadyPassedSet);
-                        }
-                    } else {
-                        rUsedAmperes += insertEnergyInto(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes);
-                    }
+		aVoltage -= mCableLossPerMeter;
+		if (aVoltage > 0)
+			for (byte j = 0; j < 6 && aAmperage > rUsedAmperes; j++, i = (byte) ((i + 1) % 6))
+				if (i != aSide && isConnectedAtSide(i) && baseMetaTile.getCoverBehaviorAtSide(i).letsEnergyOut(i,
+						baseMetaTile.getCoverIDAtSide(i), baseMetaTile.getCoverDataAtSide(i), baseMetaTile)) {
+					final TileEntity tTileEntity = baseMetaTile.getTileEntityAtSide(i);
 
-                }
-            }
-        mTransferredAmperage += rUsedAmperes;
-        mTransferredVoltageLast20 = Math.max(mTransferredVoltageLast20, aVoltage);
-        mTransferredAmperageLast20 = Math.max(mTransferredAmperageLast20, mTransferredAmperage);
-        if (aVoltage > mVoltage || mTransferredAmperage > mAmperage) {
-            if (mOverheat > GT_Mod.gregtechproxy.mWireHeatingTicks * 100) {
-                getBaseMetaTileEntity().setToFire();
-            } else {
-                mOverheat += 100;
-            }
-            return aAmperage;
-        }
-        return rUsedAmperes;
-    }
+					if (tTileEntity != null && aAlreadyPassedSet.add(tTileEntity)) {
+						final byte tSide = GT_Utility.getOppositeSide(i);
+						final IGregTechTileEntity tBaseMetaTile = tTileEntity instanceof IGregTechTileEntity
+								? ((IGregTechTileEntity) tTileEntity)
+								: null;
+						final IMetaTileEntity tMeta = tBaseMetaTile != null ? tBaseMetaTile.getMetaTileEntity() : null;
 
-    private long insertEnergyInto(TileEntity tTileEntity, byte tSide, long aVoltage, long aAmperage) {
+						if (tMeta instanceof IMetaTileEntityCable) {
+							if (tBaseMetaTile.getCoverBehaviorAtSide(tSide).letsEnergyIn(tSide,
+									tBaseMetaTile.getCoverIDAtSide(tSide), tBaseMetaTile.getCoverDataAtSide(tSide),
+									tBaseMetaTile) && ((IGregTechTileEntity) tTileEntity).getTimer() > 50) {
+								rUsedAmperes += ((IMetaTileEntityCable) ((IGregTechTileEntity) tTileEntity)
+										.getMetaTileEntity()).transferElectricity(tSide, aVoltage,
+												aAmperage - rUsedAmperes, aAlreadyPassedSet);
+							}
+						} else {
+							rUsedAmperes += insertEnergyInto(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes);
+						}
+
+					}
+				}
+		mTransferredAmperage += rUsedAmperes;
+		mTransferredVoltageLast20 = Math.max(mTransferredVoltageLast20, aVoltage);
+		mTransferredAmperageLast20 = Math.max(mTransferredAmperageLast20, mTransferredAmperage);
+		if (aVoltage > mVoltage || mTransferredAmperage > mAmperage) {
+			if (mOverheat > GT_Mod.gregtechproxy.mWireHeatingTicks * 100) {
+				getBaseMetaTileEntity().setToFire();
+			} else {
+				mOverheat += 100;
+			}
+			return aAmperage;
+		}
+		return rUsedAmperes;
+	}
+
+    public long insertEnergyInto(TileEntity tTileEntity, byte tSide, long aVoltage, long aAmperage) {
         if (aAmperage == 0 || tTileEntity == null) return 0;
 
         final IGregTechTileEntity baseMetaTile = getBaseMetaTileEntity();
@@ -255,7 +300,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         if (GT_Mod.gregtechproxy.mAE2Integration && tTileEntity instanceof appeng.tile.powersink.IC2) {
             if (((appeng.tile.powersink.IC2) tTileEntity).acceptsEnergyFrom((TileEntity) baseMetaTile, tDirection)) {
                 long rUsedAmperes = 0;
-                while (aAmperage > rUsedAmperes && ((appeng.tile.powersink.IC2)tTileEntity).getDemandedEnergy() > 0 && ((appeng.tile.powersink.IC2)tTileEntity).injectEnergy(tDirection, aVoltage, aVoltage) <= aVoltage)
+                while (aAmperage > rUsedAmperes && ((appeng.tile.powersink.IC2)tTileEntity).getDemandedEnergy() > 0 && 
+                		((appeng.tile.powersink.IC2)tTileEntity).injectEnergy(tDirection, aVoltage, aVoltage) <= aVoltage)
                     rUsedAmperes++;
 
                 return rUsedAmperes;
@@ -294,7 +340,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 
             if (tIc2Acceptor instanceof IEnergySink && ((IEnergySink) tIc2Acceptor).acceptsEnergyFrom((TileEntity) baseMetaTile, tDirection)) {
                 long rUsedAmperes = 0;
-                while (aAmperage > rUsedAmperes && ((IEnergySink) tIc2Acceptor).getDemandedEnergy() > 0 && ((IEnergySink) tIc2Acceptor).injectEnergy(tDirection, aVoltage, aVoltage) <= aVoltage)
+                while (aAmperage > rUsedAmperes && ((IEnergySink) tIc2Acceptor).getDemandedEnergy() > 0 && 
+                		((IEnergySink) tIc2Acceptor).injectEnergy(tDirection, aVoltage, aVoltage) <= aVoltage)
                     rUsedAmperes++;
                 return rUsedAmperes;
             }
@@ -333,9 +380,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
             if (GT_Mod.gregtechproxy.ic2EnergySourceCompat) pullFromIc2EnergySources(aBaseMetaTileEntity);
-
+            
             mTransferredAmperage = 0;
-            if(mOverheat>0)mOverheat--;
+            if(mOverheat>0) mOverheat--;
+            
             if (aTick % 20 == 0) {
                 mTransferredVoltageLast20 = 0;
                 mTransferredAmperageLast20 = 0;

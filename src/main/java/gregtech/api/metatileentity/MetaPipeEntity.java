@@ -8,6 +8,8 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IColoredTileEntity;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
+import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_CableCheckConnections;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_CoverBehavior;
@@ -36,6 +38,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static gregtech.api.enums.GT_Values.GT;
 import static gregtech.api.enums.GT_Values.V;
@@ -794,11 +799,24 @@ public abstract class MetaPipeEntity implements IMetaTileEntity, IConnectable {
     protected void checkConnections() {
         // Verify connections around us.  If GT6 style cables are not enabled then revert to old behavior and try
         // connecting to everything around us
-        for (byte aSide = 0; aSide < 6; aSide++) {
-            if ((!getGT6StyleConnection() || isConnectedAtSide(aSide)) && connect(aSide) == 0) {
+    	ExecutorService es = Executors.newCachedThreadPool();
+    	
+    	for (byte aSide = 0; aSide < 6; aSide++) {
+    		es.execute(new GT_MetaPipeEntity_CableCheckConnections(this, aSide));
+    		
+            /*if ((!getGT6StyleConnection() || isConnectedAtSide(aSide)) && connect(aSide) == 0) {
                 disconnect(aSide);
-            }
+            }*/
         }
+    	
+    	es.shutdown();
+        try {
+			boolean finished = es.awaitTermination(1, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
         mCheckConnections = false;
     }
 
