@@ -10,4 +10,6 @@ public interface IMetaTileEntityCable extends IMetaTileEntity {
     public long transferElectricity(byte aSide, long aVoltage, long aAmperage, ArrayList<TileEntity> aAlreadyPassedTileEntityList);
 
     public long transferElectricity(byte aSide, long aVoltage, long aAmperage, HashSet<TileEntity> aAlreadyPassedSet);
+    
+    public long transferElectricity(IMetaTileEntityCable startCable, byte aSide, long aVoltage, long aAmperege, HashSet<TileEntity> aAlreadyPassedSet);
 }

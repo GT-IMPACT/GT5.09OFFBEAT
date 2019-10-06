@@ -5,10 +5,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.metatileentity.IConnectable;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntityCable;
 import gregtech.api.interfaces.tileentity.IColoredTileEntity;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
+import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_CableChain;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_CableCheckConnections;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_Config;
@@ -36,8 +38,10 @@ import net.minecraftforge.fluids.FluidTankInfo;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -799,23 +803,44 @@ public abstract class MetaPipeEntity implements IMetaTileEntity, IConnectable {
     protected void checkConnections() {
         // Verify connections around us.  If GT6 style cables are not enabled then revert to old behavior and try
         // connecting to everything around us
-    	ExecutorService es = Executors.newCachedThreadPool();
+    	//ExecutorService es = Executors.newCachedThreadPool();
+    	
+    	boolean needDisconnect = false;
     	
     	for (byte aSide = 0; aSide < 6; aSide++) {
-    		es.execute(new GT_MetaPipeEntity_CableCheckConnections(this, aSide));
+    		//es.execute(new GT_MetaPipeEntity_CableCheckConnections(this, aSide));
     		
-            /*if ((!getGT6StyleConnection() || isConnectedAtSide(aSide)) && connect(aSide) == 0) {
+            if ((!getGT6StyleConnection() || isConnectedAtSide(aSide)) && connect(aSide) == 0) {
                 disconnect(aSide);
-            }*/
+                
+                //needDisconnect = true;
+            }
         }
     	
-    	es.shutdown();
+    	/*if(needDisconnect) {
+    		if(this instanceof IMetaTileEntityCable) {
+                // ѕерепроверить и пересобрать цепочку проводов
+                Iterator it = GT_MetaPipeEntity_Cable.startCableCash.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry)it.next();
+                    //System.out.println(pair.getKey() + " = " + pair.getValue());
+                    
+                    if(((GT_MetaPipeEntity_CableChain)pair.getValue()).isCableInChain((GT_MetaPipeEntity_Cable)this)) {
+                    	GT_MetaPipeEntity_Cable.startCableCash.remove(pair.getKey());
+                    }
+                    
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
+            }
+    	}*/
+    	
+    	/*es.shutdown();
         try {
-			boolean finished = es.awaitTermination(1, TimeUnit.MINUTES);
+			boolean finished = es.awaitTermination(50, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
     	
         mCheckConnections = false;
     }

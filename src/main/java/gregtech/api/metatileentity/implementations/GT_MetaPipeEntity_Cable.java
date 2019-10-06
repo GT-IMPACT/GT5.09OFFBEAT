@@ -22,6 +22,7 @@ import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Client;
 import gregtech.common.covers.GT_Cover_SolarPanel;
+import gregtech.loaders.materialprocessing.ProcessingModSupport;
 import gregtech.loaders.postload.PartP2PGTPower;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergyEmitter;
@@ -46,9 +47,13 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -68,7 +73,12 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     public long mRestRF;
     public short mOverheat;
     private boolean mCheckConnections = !GT_Mod.gregtechproxy.gt6Cable;
-
+    
+    private boolean isPlaced = true;
+    
+    public static HashMap<IMetaTileEntityCable, GT_MetaPipeEntity_CableChain> startCableCash = 
+    		new HashMap<IMetaTileEntityCable, GT_MetaPipeEntity_CableChain>();
+    
     public GT_MetaPipeEntity_Cable(int aID, String aName, String aNameRegional, float aThickNess, Materials aMaterial, long aCableLossPerMeter, long aAmperage, long aVoltage, boolean aInsulated, boolean aCanShock) {
         super(aID, aName, aNameRegional, 0);
         mThickNess = aThickNess;
@@ -100,7 +110,23 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaPipeEntity_Cable(mName, mThickNess, mMaterial, mCableLossPerMeter, mAmperage, mVoltage, mInsulated, mCanShock);
     }
-
+    
+    private void UpdateNearestCables() {
+    	if(this != null && this instanceof IMetaTileEntityCable) {
+    		UpdateCablesChain((IMetaTileEntityCable)this);
+    	}
+    	
+    	// ќбновить соседние провода если нужно
+    	for(byte i = 0; i < 6; i++) {
+    		TileEntity entity = getBaseMetaTileEntity().getTileEntityAtSide(i);
+    		System.out.println("Check tile entity " + i);
+    		if(entity != null && entity instanceof IMetaTileEntityCable) {
+    			System.out.println("entity instanceof IMetaTileEntityCable");
+    			UpdateCablesChain((IMetaTileEntityCable)entity);
+    		}
+    	}
+    }
+    
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aConnections, byte aColorIndex, boolean aConnected, boolean aRedstone) {
         if (!mInsulated)
@@ -163,11 +189,11 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     private void pullFromIc2EnergySources(IGregTechTileEntity aBaseMetaTileEntity) {
         if(!GT_Mod.gregtechproxy.ic2EnergySourceCompat) return;
         
-        ExecutorService es = Executors.newCachedThreadPool();
+        // ExecutorService es = Executors.newCachedThreadPool();
         for( byte aSide = 0 ; aSide < 6 ; aSide++) {
-        	es.execute(new GT_MetaPipeEntity_CableEnergyThread(this, aBaseMetaTileEntity, aSide));
+        	// es.execute(new GT_MetaPipeEntity_CableEnergyThread(this, aBaseMetaTileEntity, aSide));
         	
-        	/*if(isConnectedAtSide(aSide)) {
+        	if(isConnectedAtSide(aSide)) {
             	final TileEntity tTileEntity = aBaseMetaTileEntity.getTileEntityAtSide(aSide);
             	final TileEntity tEmitter;
             	if (tTileEntity instanceof IReactorChamber)
@@ -184,20 +210,24 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
                 if (((IEnergySource) tEmitter).emitsEnergyTo((TileEntity) aBaseMetaTileEntity, tDirection) &&
                     coverBehavior.letsEnergyIn(aSide, coverId, coverData, aBaseMetaTileEntity)) {
                     final long tEU = (long) ((IEnergySource) tEmitter).getOfferedEnergy();
-
-                    if (transferElectricity(aSide, tEU, 1, Sets.newHashSet((TileEntity) aBaseMetaTileEntity)) > 0)
+                    
+                    if (transferElectricity(this, aSide, tEU, 1, Sets.newHashSet((TileEntity) aBaseMetaTileEntity)) > 0)
                         ((IEnergySource) tEmitter).drawEnergy(tEU);
+                    
+                    //if (transferElectricity(aSide, tEU, 1, Sets.newHashSet((TileEntity) aBaseMetaTileEntity)) > 0)
+                    //    ((IEnergySource) tEmitter).drawEnergy(tEU);
                 }
-            }*/
+	            }
+	        }
         }
         
-        es.shutdown();
+        /*es.shutdown();
         try {
-			boolean finished = es.awaitTermination(1, TimeUnit.MINUTES);
+			boolean finished = es.awaitTermination(50, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
     }
 
     @Override
@@ -222,7 +252,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			return transferElectricity(aSide, aVoltage, aAmperage, Sets.newHashSet((TileEntity) getBaseMetaTileEntity()));
 		}*/
         
-        return transferElectricity(aSide, aVoltage, aAmperage, Sets.newHashSet((TileEntity) getBaseMetaTileEntity()));
+        return transferElectricity(this, aSide, aVoltage, aAmperage, Sets.newHashSet((TileEntity) getBaseMetaTileEntity()));
     }
 
     @Override
@@ -231,6 +261,172 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         return transferElectricity(aSide, aVoltage, aAmperage, new HashSet<>(aAlreadyPassedTileEntityList));
     }
 
+    // Cashed method of electrisity transport
+    @Override
+    public long transferElectricity(IMetaTileEntityCable startCable, byte aSide, long aVoltage, long aAmperage, HashSet<TileEntity> aAlreadyPassedSet) {
+    	if (!isConnectedAtSide(aSide) && aSide != 6)
+			return 0;
+    	
+		long rUsedAmperes = 0;
+		final IGregTechTileEntity baseMetaTile = getBaseMetaTileEntity();
+
+		byte i = (byte) ((((aSide / 2) * 2) + 2) % 6); // this bit of trickery makes sure a direction goes to the next
+														// cardinal pair. IE, NS goes to E, EW goes to U, UD goes to N.
+														// It's a lame way to make sure locally connected machines on a
+														// wire get EU first.
+		
+		if(startCableCash.containsKey(startCable)) {
+    		for(GT_MetaPipeEntity_CableCash cableCash : startCableCash.get(startCable).consumers) {
+    			rUsedAmperes += insertEnergyInto(cableCash.tTileEntity, cableCash.tSide, cableCash.voltage, cableCash.aAmperage);
+    		}
+    	} else {
+    		GT_MetaPipeEntity_CableChain cableCashList = 
+    				recalculateCables(new GT_MetaPipeEntity_CableChain(), aAlreadyPassedSet, aAmperage, rUsedAmperes, aVoltage, aSide, baseMetaTile);
+    		
+    		System.out.println("Cables addded: " + cableCashList.cablesChain.size());
+        	System.out.println("Consumers added: " + cableCashList.consumers.size());
+    		cableCashList.showCablesChainsCoordinates();
+        	cableCashList.showConsumersCoordinates();
+    		
+    		startCableCash.put(startCable, cableCashList);
+    		
+    		for(GT_MetaPipeEntity_CableCash cableCash : startCableCash.get(startCable).consumers) {
+    			rUsedAmperes += insertEnergyInto(cableCash.tTileEntity, cableCash.tSide, cableCash.voltage, cableCash.aAmperage);
+    		}
+    	}
+		
+		/*aVoltage -= mCableLossPerMeter;
+		if (aVoltage > 0)
+			for (byte j = 0; j < 6 && aAmperage > rUsedAmperes; j++, i = (byte) ((i + 1) % 6))
+				if (i != aSide && isConnectedAtSide(i) && baseMetaTile.getCoverBehaviorAtSide(i).letsEnergyOut(i,
+						baseMetaTile.getCoverIDAtSide(i), baseMetaTile.getCoverDataAtSide(i), baseMetaTile)) {
+					final TileEntity tTileEntity = baseMetaTile.getTileEntityAtSide(i);
+
+					if (tTileEntity != null && aAlreadyPassedSet.add(tTileEntity)) {
+						final byte tSide = GT_Utility.getOppositeSide(i);
+						final IGregTechTileEntity tBaseMetaTile = tTileEntity instanceof IGregTechTileEntity
+								? ((IGregTechTileEntity) tTileEntity)
+								: null;
+						final IMetaTileEntity tMeta = tBaseMetaTile != null ? tBaseMetaTile.getMetaTileEntity() : null;
+
+						if (tMeta instanceof IMetaTileEntityCable) {
+							if (tBaseMetaTile.getCoverBehaviorAtSide(tSide).
+									letsEnergyIn(tSide, tBaseMetaTile.getCoverIDAtSide(tSide), tBaseMetaTile.getCoverDataAtSide(tSide), tBaseMetaTile) && 
+									((IGregTechTileEntity) tTileEntity).getTimer() > 50) {
+								rUsedAmperes += ((IMetaTileEntityCable) ((IGregTechTileEntity) tTileEntity)
+										.getMetaTileEntity()).transferElectricity(startCable, tSide, aVoltage, aAmperage - rUsedAmperes, aAlreadyPassedSet);
+							}
+						} else {
+							rUsedAmperes += insertEnergyInto(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes);
+						}
+
+					}
+				}*/
+		
+		// —горание проводов при повышенном напр€жении
+		/*mTransferredAmperage += rUsedAmperes;
+		mTransferredVoltageLast20 = Math.max(mTransferredVoltageLast20, aVoltage);
+		mTransferredAmperageLast20 = Math.max(mTransferredAmperageLast20, mTransferredAmperage);
+		if (aVoltage > mVoltage || mTransferredAmperage > mAmperage) {
+			if (mOverheat > GT_Mod.gregtechproxy.mWireHeatingTicks * 100) {
+				getBaseMetaTileEntity().setToFire();
+			} else {
+				mOverheat += 100;
+			}
+			return aAmperage;
+		}*/
+		
+		return rUsedAmperes;
+    }
+    
+    public static boolean isCableInChain(IMetaTileEntityCable cable) {
+    	Iterator it = GT_MetaPipeEntity_Cable.startCableCash.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            //System.out.println(pair.getKey() + " = " + pair.getValue());
+            
+            if(((GT_MetaPipeEntity_CableChain)pair.getValue()).isCableInChain(cable)) {
+            	return true;
+            }
+            
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+    	
+    	return false;
+    }
+    
+    public static void UpdateCablesChain(IMetaTileEntityCable cable) {
+    	ArrayList<IMetaTileEntityCable> keysToRemove = new ArrayList<IMetaTileEntityCable>();
+    	
+    	Iterator it = GT_MetaPipeEntity_Cable.startCableCash.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            //System.out.println(pair.getKey() + " = " + pair.getValue());
+            
+            if(((GT_MetaPipeEntity_CableChain)pair.getValue()).isCableInChain(cable)) {
+            	keysToRemove.add((IMetaTileEntityCable)pair.getKey());
+            }
+            
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        
+        for(IMetaTileEntityCable c : keysToRemove) {
+        	System.out.println("Remove key from cash");
+        	
+        	GT_MetaPipeEntity_Cable.startCableCash.remove(c);
+        }
+    }
+    
+    private GT_MetaPipeEntity_CableChain recalculateCables(GT_MetaPipeEntity_CableChain result,
+    															HashSet<TileEntity> aAlreadyPassedSet, 
+    															long aAmperage, 
+    															long rUsedAmperes, 
+    															long aVoltage,
+    															byte aSide,
+    															IGregTechTileEntity baseMetaTile){
+    	
+    	if(this instanceof IMetaTileEntityCable) {
+    		result.cablesChain.add((IMetaTileEntityCable)this);
+    	}
+    	
+    	byte i = (byte) ((((aSide / 2) * 2) + 2) % 6);
+    	
+    	aVoltage -= mCableLossPerMeter;
+    	for (byte j = 0; j < 6 && aAmperage > rUsedAmperes; j++, i = (byte) ((i + 1) % 6)) {
+			if (/*i != aSide && isConnectedAtSide(i) &&*/ 
+				baseMetaTile.getCoverBehaviorAtSide(i).letsEnergyOut(i, baseMetaTile.getCoverIDAtSide(i), baseMetaTile.getCoverDataAtSide(i), baseMetaTile)) {
+				final TileEntity tTileEntity = baseMetaTile.getTileEntityAtSide(i);
+
+				if (tTileEntity != null && aAlreadyPassedSet.add(tTileEntity)) {
+					final byte tSide = GT_Utility.getOppositeSide(i);
+					final IGregTechTileEntity tBaseMetaTile = tTileEntity instanceof IGregTechTileEntity
+							? ((IGregTechTileEntity) tTileEntity)
+							: null;
+					final IMetaTileEntity tMeta = tBaseMetaTile != null ? tBaseMetaTile.getMetaTileEntity() : null;
+
+					if (tMeta instanceof IMetaTileEntityCable) {
+						if (tBaseMetaTile.getCoverBehaviorAtSide(tSide).
+								letsEnergyIn(tSide, tBaseMetaTile.getCoverIDAtSide(tSide), tBaseMetaTile.getCoverDataAtSide(tSide), tBaseMetaTile) && 
+								((IGregTechTileEntity) tTileEntity).getTimer() > 50) {
+							//rUsedAmperes += ((IMetaTileEntityCable) ((IGregTechTileEntity) tTileEntity)
+							//		.getMetaTileEntity()).transferElectricity(tSide, aVoltage, aAmperage - rUsedAmperes, aAlreadyPassedSet);
+							
+							result.cablesChain.add((IMetaTileEntityCable)tMeta);
+							result = recalculateCables(result, aAlreadyPassedSet, aAmperage, rUsedAmperes, aVoltage, aSide, tBaseMetaTile);
+						}
+					} else {
+						result.consumers.add(new GT_MetaPipeEntity_CableCash(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes));
+						
+						//rUsedAmperes += insertEnergyInto(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes);
+					}
+
+				}
+			}
+    	}
+    	
+    	return result;
+    }
+    
 	@Override
 	public long transferElectricity(byte aSide, long aVoltage, long aAmperage, HashSet<TileEntity> aAlreadyPassedSet) {
 		if (!isConnectedAtSide(aSide) && aSide != 6)
@@ -259,12 +455,11 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 						final IMetaTileEntity tMeta = tBaseMetaTile != null ? tBaseMetaTile.getMetaTileEntity() : null;
 
 						if (tMeta instanceof IMetaTileEntityCable) {
-							if (tBaseMetaTile.getCoverBehaviorAtSide(tSide).letsEnergyIn(tSide,
-									tBaseMetaTile.getCoverIDAtSide(tSide), tBaseMetaTile.getCoverDataAtSide(tSide),
-									tBaseMetaTile) && ((IGregTechTileEntity) tTileEntity).getTimer() > 50) {
+							if (tBaseMetaTile.getCoverBehaviorAtSide(tSide).
+									letsEnergyIn(tSide, tBaseMetaTile.getCoverIDAtSide(tSide), tBaseMetaTile.getCoverDataAtSide(tSide), tBaseMetaTile) && 
+									((IGregTechTileEntity) tTileEntity).getTimer() > 50) {
 								rUsedAmperes += ((IMetaTileEntityCable) ((IGregTechTileEntity) tTileEntity)
-										.getMetaTileEntity()).transferElectricity(tSide, aVoltage,
-												aAmperage - rUsedAmperes, aAlreadyPassedSet);
+										.getMetaTileEntity()).transferElectricity(tSide, aVoltage, aAmperage - rUsedAmperes, aAlreadyPassedSet);
 							}
 						} else {
 							rUsedAmperes += insertEnergyInto(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes);
@@ -377,9 +572,28 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     }
 
     @Override
+    public void onCreated(ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
+    	super.onCreated(aStack, aWorld, aPlayer);
+    	
+    	System.out.println("onCreated");
+    	
+    	UpdateNearestCables();
+    }
+    
+    @Override
+    public void onFirstTick(IGregTechTileEntity aBaseMetaTileEntity) {
+    	// TODO Auto-generated method stub
+    	super.onFirstTick(aBaseMetaTileEntity);
+    	
+    	System.out.println("onFirstTick");
+    	
+    	UpdateNearestCables();
+    }
+    
+    @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
-            if (GT_Mod.gregtechproxy.ic2EnergySourceCompat) pullFromIc2EnergySources(aBaseMetaTileEntity);
+        	if (GT_Mod.gregtechproxy.ic2EnergySourceCompat) pullFromIc2EnergySources(aBaseMetaTileEntity);
             
             mTransferredAmperage = 0;
             if(mOverheat>0) mOverheat--;
@@ -391,7 +605,36 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
             }
         }else if(aBaseMetaTileEntity.isClientSide() && GT_Client.changeDetected==4) aBaseMetaTileEntity.issueTextureUpdate();
     }
-
+    
+    @Override
+    public void onRemoval() {
+    	super.onRemoval();
+    	
+    	System.out.println("onRemoval");
+    	
+    	UpdateNearestCables();
+    }
+    
+    @Override
+    public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer, byte aSide, float aX,
+    		float aY, float aZ) {
+    	
+    	System.out.println("onRightclick");
+    	
+    	UpdateNearestCables();
+    	
+    	return super.onRightclick(aBaseMetaTileEntity, aPlayer, aSide, aX, aY, aZ);
+    }
+    
+    @Override
+    public void onLeftclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
+    	System.out.println("onLeftclick");
+    	
+    	UpdateNearestCables();
+    	
+    	super.onLeftclick(aBaseMetaTileEntity, aPlayer);
+    }
+    
     @Override
     public boolean onWireCutterRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if (GT_Mod.gregtechproxy.gt6Cable && GT_ModHandler.damageOrDechargeItem(aPlayer.inventory.getCurrentItem(), 1, 500, aPlayer)) {
