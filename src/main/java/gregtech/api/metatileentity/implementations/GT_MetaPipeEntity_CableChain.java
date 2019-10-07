@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import codechicken.multipart.scalatraits.TTileChangeTile;
@@ -8,9 +9,11 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 
 public class GT_MetaPipeEntity_CableChain {
 	/// Потребители энергии
-	public HashSet<GT_MetaPipeEntity_CableCash> consumers = new HashSet<GT_MetaPipeEntity_CableCash>();
+	public ArrayList<GT_MetaPipeEntity_CableCash> consumers = new ArrayList<GT_MetaPipeEntity_CableCash>();
 	/// Все провода в цепочке
-	public HashSet<IMetaTileEntityCable> cablesChain = new HashSet<IMetaTileEntityCable>();
+	public ArrayList<IMetaTileEntityCable> cablesChain = new ArrayList<IMetaTileEntityCable>();
+	
+	public long rUsedAmperes = 0;
 	
 	public boolean isCableInChain(IMetaTileEntityCable cable) {
 		return cablesChain.contains(cable);
