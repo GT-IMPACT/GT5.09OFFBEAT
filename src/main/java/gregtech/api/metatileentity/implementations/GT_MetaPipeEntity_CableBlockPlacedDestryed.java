@@ -15,6 +15,8 @@ public class GT_MetaPipeEntity_CableBlockPlacedDestryed {
 	private BaseMetaPipeEntity baseMetaPipeEntityTmp;
 	private Position[] pos;
 	
+	private int TickTimer;
+	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void BlockPlaced(BlockEvent.PlaceEvent event){
 		if(event.block.hasTileEntity()) {
