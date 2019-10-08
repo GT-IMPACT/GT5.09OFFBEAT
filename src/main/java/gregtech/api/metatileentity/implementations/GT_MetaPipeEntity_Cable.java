@@ -49,6 +49,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -122,8 +124,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     }
     
     public void UpdateNearestCables() {
-    	System.out.println("this != null: " + (this != null));
-    	System.out.println("this instanceof IMetaTileEntityCable: " + (this instanceof IMetaTileEntityCable));
+    	// System.out.println("this != null: " + (this != null));
+    	// System.out.println("this instanceof IMetaTileEntityCable: " + (this instanceof IMetaTileEntityCable));
     	
     	if(this != null && this instanceof IMetaTileEntityCable) {
     		UpdateCablesChain((IMetaTileEntityCable)this);
@@ -132,11 +134,11 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     	// Обновить соседние провода если нужно
     	for(byte i = 0; i < 6; i++) {
     		TileEntity entity = getBaseMetaTileEntity().getTileEntityAtSide(i);
-    		System.out.println("Check tile entity " + i + " " + entity);
+    		// System.out.println("Check tile entity " + i + " " + entity);
     		if(entity != null && entity instanceof BaseMetaPipeEntity) {
     			BaseMetaPipeEntity baseMetaPipeEntityTmp = (BaseMetaPipeEntity)entity;
     			GT_MetaPipeEntity_Cable cable = (GT_MetaPipeEntity_Cable)(baseMetaPipeEntityTmp.getMetaTileEntity());
-    			System.out.println("UpdateNearestCables() entity instanceof IMetaTileEntityCable");
+    			// System.out.println("UpdateNearestCables() entity instanceof IMetaTileEntityCable");
     			UpdateCablesChain(cable);
     		}
     	}
@@ -321,7 +323,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     		//cableCashList.showCablesChainsCoordinates();
         	//cableCashList.showConsumersCoordinates();
     		
-    		System.out.println("Cables recalculated!");
+    		//System.out.println("Cables recalculated!");
     		startCableCash.put(startCable, cableCashList);
     		
     		/*for(GT_MetaPipeEntity_CableCash cableCash : startCableCash.get(startCable).consumers) {
@@ -640,7 +642,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     public void onCreated(ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
     	super.onCreated(aStack, aWorld, aPlayer);
     	
-    	System.out.println("onCreated");
+    	// System.out.println("onCreated");
     	
     	UpdateNearestCables();
     }
@@ -650,7 +652,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     	// TODO Auto-generated method stub
     	super.onFirstTick(aBaseMetaTileEntity);
     	
-    	System.out.println("onFirstTick");
+    	// System.out.println("onFirstTick");
     	
     	UpdateNearestCables();
     }
@@ -712,7 +714,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer, byte aSide, float aX,
     		float aY, float aZ) {
     	
-    	System.out.println("onRightclick");
+    	// System.out.println("onRightclick");
     	
     	UpdateNearestCables();
     	
@@ -721,7 +723,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     
     @Override
     public void onLeftclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-    	System.out.println("onLeftclick");
+    	// System.out.println("onLeftclick");
     	
     	UpdateNearestCables();
     	
