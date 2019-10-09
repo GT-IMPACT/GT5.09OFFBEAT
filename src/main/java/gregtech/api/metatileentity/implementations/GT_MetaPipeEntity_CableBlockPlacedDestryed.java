@@ -49,12 +49,12 @@ public class GT_MetaPipeEntity_CableBlockPlacedDestryed {
 			if(needUpdateCable) break;
 		}
 		
-		System.out.println("needUpdateCable: " + needUpdateCable);
-		System.out.println("tmpTileEntity != null: " + (tmpTileEntity != null));
+		//System.out.println("needUpdateCable: " + needUpdateCable);
+		//System.out.println("tmpTileEntity != null: " + (tmpTileEntity != null));
 		
-		if(tmpTileEntity != null) {
-			System.out.println("tmpTileEntity: " + tmpTileEntity);
-		}
+		//if(tmpTileEntity != null) {
+			//System.out.println("tmpTileEntity: " + tmpTileEntity);
+		//}
 		
 		baseMetaPipeEntityTmp = null;
 		
@@ -65,6 +65,7 @@ public class GT_MetaPipeEntity_CableBlockPlacedDestryed {
 		if(needUpdateCable && tmpTileEntity != null && (baseMetaPipeEntityTmp.getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable)) {
 			GT_MetaPipeEntity_Cable cable = (GT_MetaPipeEntity_Cable)(baseMetaPipeEntityTmp.getMetaTileEntity());
 			cable.UpdateNearestCables();
+			cable.checkConnection();
 		}
 	}
 	

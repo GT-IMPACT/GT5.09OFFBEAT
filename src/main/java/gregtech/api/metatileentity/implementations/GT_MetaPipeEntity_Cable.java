@@ -309,7 +309,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     		}
 			
 			for(IMetaTileEntityCable cable : startCableCash.get(startCable).cablesChain) {
-				if(aAmperage > ((GT_MetaPipeEntity_Cable)cable).mAmperage) {
+				if(((aAmperage > ((GT_MetaPipeEntity_Cable)cable).mAmperage) && ((GT_MetaPipeEntity_Cable)cable).mVoltage == aVoltage) ||
+				   ((aAmperage > ((GT_MetaPipeEntity_Cable)cable).mAmperage) && aVoltage > (((GT_MetaPipeEntity_Cable)cable).mVoltage / aAmperage))) {
 					((GT_MetaPipeEntity_Cable)cable).getBaseMetaTileEntity().setToFire();
 					break;
 				}
@@ -657,6 +658,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     	UpdateNearestCables();
     }
     
+    public void checkConnection() {
+    	if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
+    }
+    
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
@@ -668,21 +673,27 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
             if (aTick % 20 == 0) {
                 mTransferredVoltageLast20 = 0;
                 mTransferredAmperageLast20 = 0;
-                if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
+                checkConnection();
+                //if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
             }
             
-            if(needUpdateNearestCables) {
-            	if(delay > 0) {
-            		delay--;
-            	} else {
-            		needUpdateNearestCables = false;
-            		delay = -1;
-            		UpdateNearestCables();
-            	}
-            }
+            // TODO: Обновление проводов с задержкой в коде на данный момент не используется если нужно разкоментировать
+            // NeedUpdateCableWithDelay();
             
             ClearListOfEmmiters();
         }else if(aBaseMetaTileEntity.isClientSide() && GT_Client.changeDetected==4) aBaseMetaTileEntity.issueTextureUpdate();
+    }
+    
+    private void NeedUpdateCableWithDelay() {
+    	if(needUpdateNearestCables) {
+        	if(delay > 0) {
+        		delay--;
+        	} else {
+        		needUpdateNearestCables = false;
+        		delay = -1;
+        		UpdateNearestCables();
+        	}
+        }
     }
     
     private void ClearListOfEmmiters() {
@@ -833,6 +844,13 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         return false;
     }
 
+    @Override
+    public void onExplosion() {
+    	// TODO Auto-generated method stub
+    	super.onExplosion();
+    	checkConnection();
+    }
+    
 	@Override
     public boolean getGT6StyleConnection() {
         // Yes if GT6 Cables are enabled
