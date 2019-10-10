@@ -16,6 +16,6 @@ public interface IMetaTileEntityCable extends IMetaTileEntity {
     
     public long transferElectricity(IMetaTileEntityCable startCable, byte aSide, long aVoltage, long aAmperege, HashSet<TileEntity> aAlreadyPassedSet);
     
-    public GT_MetaPipeEntity_CableChain recalculateCables(GT_MetaPipeEntity_CableChain result, HashSet<TileEntity> aAlreadyPassedSet, 
+    public GT_MetaPipeEntity_CableChain recalculateCables(IMetaTileEntityCable startCable, GT_MetaPipeEntity_CableChain result, HashSet<TileEntity> aAlreadyPassedSet, 
 			long aAmperage, long rUsedAmperes, long aVoltage, byte aSide, IGregTechTileEntity baseMetaTile);
 }
