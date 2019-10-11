@@ -41,6 +41,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
@@ -64,6 +65,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import appeng.api.parts.IPartHost;
+import codechicken.multipart.asm.StackAnalyser.Const;
 
 import static gregtech.api.enums.GT_Values.VN;
 
@@ -78,6 +80,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     private boolean mCheckConnections = !GT_Mod.gregtechproxy.gt6Cable;
     
     private boolean isPlaced = true;
+    
+    public static final int CONNECTION_DELAY = 1;
     
     public static HashMap<IMetaTileEntityCable, GT_MetaPipeEntity_CableChain> startCableCash = 
     		new HashMap<IMetaTileEntityCable, GT_MetaPipeEntity_CableChain>();
@@ -305,13 +309,18 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			for(GT_MetaPipeEntity_CableCash cableCash : startCableCash.get(startCable).consumers) {
 				GT_MetaPipeEntity_Cable cable = cableCash.cable;
 				
-				if(aVoltage * /*aAmperage*/ (aAmperage - rUsedAmperes) > (((GT_MetaPipeEntity_Cable)cable).mVoltage * ((GT_MetaPipeEntity_Cable)cable).mAmperage)) {
+				newAmperage = aAmperage - rUsedAmperes;
+				
+				if(aVoltage * newAmperage > (((GT_MetaPipeEntity_Cable)cable).mVoltage * ((GT_MetaPipeEntity_Cable)cable).mAmperage)) {
 					cable.getBaseMetaTileEntity().setToFire();
 					
 					break;
 				} else {
-					rUsedAmperes += insertEnergyInto(cableCash.tTileEntity, cableCash.tSide, cableCash.voltage, aAmperage - rUsedAmperes /*cableCash.aAmperage*/);
-
+					rUsedAmperes += insertEnergyInto(cableCash.tTileEntity, cableCash.tSide, cableCash.voltage, newAmperage);
+					
+					cableCash.cable.mTransferredVoltageLast20 = Math.max(mTransferredVoltageLast20, cableCash.voltage);
+					cableCash.cable.mTransferredAmperageLast20 = Math.max(mTransferredAmperageLast20, rUsedAmperes);
+					
 					if(rUsedAmperes >= aAmperage)
 						break;
 				}
@@ -433,6 +442,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         keysToRemove.clear();
     }
     
+    private int x1, y1, z1, x2, y2, z2;
+    private long newAmperage;
+    private float distance;
+    
     public GT_MetaPipeEntity_CableChain recalculateCables(IMetaTileEntityCable startCable,
     															GT_MetaPipeEntity_CableChain result,
     															HashSet<TileEntity> aAlreadyPassedSet, 
@@ -478,19 +491,21 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 						}
 					} else {
 						if(energyEmmiters.contains(tTileEntity) == false) {
-							int x1 = startCable.getBaseMetaTileEntity().getXCoord();
-							int y1 = startCable.getBaseMetaTileEntity().getYCoord();
-							int z1 = startCable.getBaseMetaTileEntity().getZCoord();
+							x1 = startCable.getBaseMetaTileEntity().getXCoord();
+							y1 = startCable.getBaseMetaTileEntity().getYCoord();
+							z1 = startCable.getBaseMetaTileEntity().getZCoord();
 							
-							int x2 = tTileEntity.xCoord;
-							int y2 = tTileEntity.yCoord;
-							int z2 = tTileEntity.zCoord;
+							x2 = tTileEntity.xCoord;
+							y2 = tTileEntity.yCoord;
+							z2 = tTileEntity.zCoord;
 							
-							float distance = getDistance(x1, y1, z1, x2, y2, z2);
+							distance = getDistance(x1, y1, z1, x2, y2, z2);
 							
-							result.consumers.add(new GT_MetaPipeEntity_CableCash(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes, distance, this));
+							newAmperage = aAmperage - rUsedAmperes;
 							
-							tmpRUsedAmpers += insertEnergyInto(tTileEntity, tSide, aVoltage, aAmperage - rUsedAmperes);
+							result.consumers.add(new GT_MetaPipeEntity_CableCash(tTileEntity, tSide, aVoltage, newAmperage, distance, this));
+							
+							tmpRUsedAmpers += insertEnergyInto(tTileEntity, tSide, aVoltage, newAmperage);
 						}
 					}
 
@@ -672,6 +687,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     	// System.out.println("onCreated");
     	
     	UpdateNearestCables();
+    	checkConnection(CONNECTION_DELAY);
     }
     
     @Override
@@ -682,10 +698,19 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     	// System.out.println("onFirstTick");
     	
     	UpdateNearestCables();
+    	checkConnection(CONNECTION_DELAY);
     }
     
     public void checkConnection() {
     	if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
+    }
+    
+    private boolean needToCheck;
+    private int checkDealy = -1;
+    
+    public void checkConnection(int delay) {
+    	checkDealy = 20 * delay;
+    	needToCheck = true;
     }
     
     @Override
@@ -699,14 +724,29 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
             if (aTick % 20 == 0) {
                 mTransferredVoltageLast20 = 0;
                 mTransferredAmperageLast20 = 0;
-                checkConnection();
+                
+                if(needToCheck) {
+                	if(checkDealy > 0) {
+                		checkDealy -= 20;
+                		
+                		if(checkDealy <= 0) {
+                			needToCheck = false;
+                			checkDealy = -1;
+                			
+                			checkConnection();
+                		}
+                	}
+                }
+                
+                //checkConnection();
+                
                 //if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
             }
             
             // TODO: Обновление проводов с задержкой в коде на данный момент не используется если нужно разкоментировать
             // NeedUpdateCableWithDelay();
             
-            ClearListOfEmmiters();
+            // ClearListOfEmmiters();
         }else if(aBaseMetaTileEntity.isClientSide() && GT_Client.changeDetected==4) aBaseMetaTileEntity.issueTextureUpdate();
     }
     
@@ -874,7 +914,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     public void onExplosion() {
     	// TODO Auto-generated method stub
     	super.onExplosion();
-    	checkConnection();
+    	checkConnection(CONNECTION_DELAY);
     }
     
 	@Override

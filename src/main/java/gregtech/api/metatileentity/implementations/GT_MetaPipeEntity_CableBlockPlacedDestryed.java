@@ -65,7 +65,7 @@ public class GT_MetaPipeEntity_CableBlockPlacedDestryed {
 		if(needUpdateCable && tmpTileEntity != null && (baseMetaPipeEntityTmp.getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable)) {
 			GT_MetaPipeEntity_Cable cable = (GT_MetaPipeEntity_Cable)(baseMetaPipeEntityTmp.getMetaTileEntity());
 			cable.UpdateNearestCables();
-			cable.checkConnection();
+			cable.checkConnection(GT_MetaPipeEntity_Cable.CONNECTION_DELAY);
 		}
 	}
 	
