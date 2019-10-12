@@ -439,6 +439,22 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     	return false;
     }
     
+    public static GT_MetaPipeEntity_CableChain getNetworkInfo(IMetaTileEntityCable cable) {
+    	Iterator it = GT_MetaPipeEntity_Cable.startCableCash.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            //System.out.println(pair.getKey() + " = " + pair.getValue());
+            
+            if(((GT_MetaPipeEntity_CableChain)pair.getValue()).isCableInChain(cable)) {
+            	return (GT_MetaPipeEntity_CableChain)pair.getValue();
+            }
+            
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        
+        return null;
+    }
+    
     public static void UpdateCablesChain(IMetaTileEntityCable cable) {
     	ArrayList<IMetaTileEntityCable> keysToRemove = new ArrayList<IMetaTileEntityCable>();
     	
