@@ -88,7 +88,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     
     public static HashSet<TileEntity> energyEmmiters = new HashSet<>();
     
-    public GT_MetaPipeEntity_Cable(int aID, String aName, String aNameRegional, float aThickNess, Materials aMaterial, long aCableLossPerMeter, long aAmperage, long aVoltage, boolean aInsulated, boolean aCanShock) {
+    public GT_MetaPipeEntity_Cable(int aID, String aName, String aNameRegional, float aThickNess, Materials aMaterial, 
+    		long aCableLossPerMeter, long aAmperage, long aVoltage, boolean aInsulated, boolean aCanShock) {
         super(aID, aName, aNameRegional, 0);
         mThickNess = aThickNess;
         mMaterial = aMaterial;
@@ -99,7 +100,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         mCableLossPerMeter = aCableLossPerMeter;
     }
 
-    public GT_MetaPipeEntity_Cable(String aName, float aThickNess, Materials aMaterial, long aCableLossPerMeter, long aAmperage, long aVoltage, boolean aInsulated, boolean aCanShock) {
+    public GT_MetaPipeEntity_Cable(String aName, float aThickNess, Materials aMaterial, long aCableLossPerMeter, 
+    		long aAmperage, long aVoltage, boolean aInsulated, boolean aCanShock) {
         super(aName, 0);
         mThickNess = aThickNess;
         mMaterial = aMaterial;
@@ -117,7 +119,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaPipeEntity_Cable(mName, mThickNess, mMaterial, mCableLossPerMeter, mAmperage, mVoltage, mInsulated, mCanShock);
+        return new GT_MetaPipeEntity_Cable(mName, mThickNess, mMaterial, mCableLossPerMeter, mAmperage, 
+        		mVoltage, mInsulated, mCanShock);
     }
     
     private int delay = -1;
@@ -136,7 +139,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     		UpdateCablesChain((IMetaTileEntityCable)this);
     	}
     	
-    	// Обновить соседние провода если нужно
+    	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     	for(byte i = 0; i < 6; i++) {
     		TileEntity entity = getBaseMetaTileEntity().getTileEntityAtSide(i);
     		// System.out.println("Check tile entity " + i + " " + entity);
@@ -150,31 +153,49 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     }
     
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aConnections, byte aColorIndex, boolean aConnected, boolean aRedstone) {
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aConnections, byte aColorIndex, 
+    		boolean aConnected, boolean aRedstone) {
         if (!mInsulated)
-            return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], Dyes.getModulation(aColorIndex, mMaterial.mRGBa) )};
+            return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], 
+            		Dyes.getModulation(aColorIndex, mMaterial.mRGBa) )};
         if (aConnected) {
             float tThickNess = getThickNess();
             if (tThickNess < 0.124F)
-                return new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.INSULATION_FULL, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+                return new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.INSULATION_FULL, 
+                		Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
             if (tThickNess < 0.374F)//0.375 x1
-                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), new GT_RenderedTexture(Textures.BlockIcons.INSULATION_TINY, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), 
+                		new GT_RenderedTexture(Textures.BlockIcons.INSULATION_TINY, 
+                				Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
             if (tThickNess < 0.499F)//0.500 x2
-                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), new GT_RenderedTexture(Textures.BlockIcons.INSULATION_SMALL, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), 
+                		new GT_RenderedTexture(Textures.BlockIcons.INSULATION_SMALL, 
+                				Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
             if (tThickNess < 0.624F)//0.625 x4
-                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), new GT_RenderedTexture(Textures.BlockIcons.INSULATION_MEDIUM, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), 
+                		new GT_RenderedTexture(Textures.BlockIcons.INSULATION_MEDIUM, 
+                				Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
             if (tThickNess < 0.749F)//0.750 x8
-                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), new GT_RenderedTexture(Textures.BlockIcons.INSULATION_MEDIUM_PLUS, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), 
+                		new GT_RenderedTexture(Textures.BlockIcons.INSULATION_MEDIUM_PLUS, 
+                				Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
             if (tThickNess < 0.874F)//0.825 x12
-                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), new GT_RenderedTexture(Textures.BlockIcons.INSULATION_LARGE, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
-            return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), new GT_RenderedTexture(Textures.BlockIcons.INSULATION_HUGE, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+                return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), 
+                		new GT_RenderedTexture(Textures.BlockIcons.INSULATION_LARGE, 
+                				Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+            return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[TextureSet.INDEX_wire], mMaterial.mRGBa), 
+            		new GT_RenderedTexture(Textures.BlockIcons.INSULATION_HUGE, Dyes.getModulation(aColorIndex, 
+            				Dyes.CABLE_INSULATION.mRGBa))};
         }
-        return new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.INSULATION_FULL, Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
+        return new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.INSULATION_FULL, 
+        		Dyes.getModulation(aColorIndex, Dyes.CABLE_INSULATION.mRGBa))};
     }
 
     @Override
     public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity aEntity) {
-        if (mCanShock && (((BaseMetaPipeEntity) getBaseMetaTileEntity()).mConnections & -128) == 0 && aEntity instanceof EntityLivingBase && !isCoverOnSide((BaseMetaPipeEntity) getBaseMetaTileEntity(), (EntityLivingBase) aEntity))
+        if (mCanShock && (((BaseMetaPipeEntity) getBaseMetaTileEntity()).mConnections & -128) == 0 && 
+        		aEntity instanceof EntityLivingBase && 
+        		!isCoverOnSide((BaseMetaPipeEntity) getBaseMetaTileEntity(), (EntityLivingBase) aEntity))
             GT_Utility.applyElectricityDamage((EntityLivingBase) aEntity, mTransferredVoltageLast20, mTransferredAmperageLast20);
     }
 
@@ -292,7 +313,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 
     // Cashed method of electrisity transport
     @Override
-    public long transferElectricity(IMetaTileEntityCable startCable, byte aSide, long aVoltage, long aAmperage, HashSet<TileEntity> aAlreadyPassedSet) {
+    public long transferElectricity(IMetaTileEntityCable startCable, byte aSide, long aVoltage, long aAmperage, 
+    		HashSet<TileEntity> aAlreadyPassedSet) {
     	if (!isConnectedAtSide(aSide) && aSide != 6)
 			return 0;
 
@@ -335,7 +357,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			}*/
     	} else {
     		GT_MetaPipeEntity_CableChain cableCashList = 
-    				recalculateCables(startCable, new GT_MetaPipeEntity_CableChain(), aAlreadyPassedSet, aAmperage, rUsedAmperes, aVoltage, aSide, baseMetaTile);
+    				recalculateCables(startCable, new GT_MetaPipeEntity_CableChain(), aAlreadyPassedSet, 
+    						aAmperage, rUsedAmperes, aVoltage, aSide, baseMetaTile);
     		
     		cableCashList.consumers.sort(Comparator.comparing(GT_MetaPipeEntity_CableCash::getDistance));
     		
@@ -380,7 +403,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 					}
 				}*/
 		
-		// Сгорание проводов при повышенном напряжении
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		/*mTransferredAmperage += rUsedAmperes;
 		mTransferredVoltageLast20 = Math.max(mTransferredVoltageLast20, aVoltage);
 		mTransferredAmperageLast20 = Math.max(mTransferredAmperageLast20, mTransferredAmperage);
@@ -743,7 +766,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
                 //if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
             }
             
-            // TODO: Обновление проводов с задержкой в коде на данный момент не используется если нужно разкоментировать
+            // TODO: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             // NeedUpdateCableWithDelay();
             
             // ClearListOfEmmiters();
