@@ -1,6 +1,7 @@
 package gregtech.api.metatileentity.implementations;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import codechicken.multipart.scalatraits.TTileChangeTile;
@@ -15,8 +16,18 @@ public class GT_MetaPipeEntity_CableChain {
 	
 	public long rUsedAmperes = 0;
 	
+	public HashMap<GT_MetaPipeEntity_Cable, ArrayList<GT_MetaPipeEntity_Cable>> cableSegments = new HashMap<GT_MetaPipeEntity_Cable, ArrayList<GT_MetaPipeEntity_Cable>>();
+	
 	public boolean isCableInChain(IMetaTileEntityCable cable) {
 		return cablesChain.contains(cable);
+	}
+	
+	public boolean isConsumerCable(IMetaTileEntityCable cable) {
+		for(GT_MetaPipeEntity_CableCash consumer : consumers) {
+			if(cable.equals(consumer.cable)) return true;
+		}
+		
+		return false;
 	}
 	
 	public void showCablesChainsCoordinates() {
