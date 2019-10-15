@@ -601,11 +601,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 							tmpRUsedAmpers += result.rUsedAmperes;
 						}
 					} else {
-						if (energyEmmiters.contains(
-								tTileEntity) == false /*
-														 * && tTileEntity instanceof IEnergyConnected &&
-														 * ((IEnergyConnected)tTileEntity).inputEnergyFrom(tSide)
-														 */ ) {
+						/*if (energyEmmiters.contains(tTileEntity) == false 
+														  && ((tTileEntity instanceof IEnergyConnected &&
+														  ((IEnergyConnected)tTileEntity).inputEnergyFrom(tSide)
+														  ) || tTileEntity instanceof appeng.tile.powersink.IC2)) {*/
 							x1 = startCable.getBaseMetaTileEntity().getXCoord();
 							y1 = startCable.getBaseMetaTileEntity().getYCoord();
 							z1 = startCable.getBaseMetaTileEntity().getZCoord();
@@ -622,7 +621,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 									newAmperage, distance, this));
 
 							tmpRUsedAmpers += insertEnergyInto(tTileEntity, tSide, aVoltage, newAmperage);
-						}
+						//}
 					}
 
 				}
@@ -853,7 +852,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 				mTransferredVoltageLast20 = 0;
 				mTransferredAmperageLast20 = 0;
 
-				if (needToCheck) {
+				/*if (needToCheck) {
 					if (checkDealy > 0) {
 						checkDealy -= 20;
 
@@ -864,9 +863,9 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 							checkConnection();
 						}
 					}
-				}
+				}*/
 
-				// checkConnection();
+				checkConnection();
 
 				// if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
 			}
