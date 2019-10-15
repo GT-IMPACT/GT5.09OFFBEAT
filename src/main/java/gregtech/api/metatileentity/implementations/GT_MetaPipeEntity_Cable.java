@@ -290,7 +290,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 	
 	private void TryDrawEnergy(IGregTechTileEntity aBaseMetaTileEntity, IEnergySource tEmitter, byte aSide) {
 		final long tEU = (long) tEmitter.getOfferedEnergy();
-		long transferedAmerage = transferElectricity(this, aSide, tEU, 1, Sets.newHashSet((TileEntity) aBaseMetaTileEntity));
+		long transferedAmerage = transferElectricity(aSide, tEU, 1, Sets.newHashSet((TileEntity) aBaseMetaTileEntity));
 		if (transferedAmerage > 0) tEmitter.drawEnergy(tEU);
 	}
 	
@@ -305,8 +305,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 				getBaseMetaTileEntity())) {
 			return 0;
 		}
-
-		long transferedAmperes = transferElectricity(this, aSide, aVoltage, aAmperage,
+		
+		long transferedAmperes = transferElectricity(aSide, aVoltage, aAmperage,
 				Sets.newHashSet((TileEntity) getBaseMetaTileEntity()));
 
 		return transferedAmperes;
@@ -430,12 +430,14 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			GT_MetaPipeEntity_CableChain cableCashList = recalculateCables(startCable, this,
 					new GT_MetaPipeEntity_CableChain(), aAlreadyPassedSet, aAmperage, rUsedAmperes, aVoltage, aSide,
 					baseMetaTile);
-
-			cableCashList.consumers.sort(Comparator.comparing(GT_MetaPipeEntity_CableCash::getDistance));
-
-			rUsedAmperes = cableCashList.rUsedAmperes;
-
-			startCableCash.put(startCable, cableCashList);
+			
+			if(cableCashList != null) {
+				cableCashList.consumers.sort(Comparator.comparing(GT_MetaPipeEntity_CableCash::getDistance));
+	
+				rUsedAmperes = cableCashList.rUsedAmperes;
+	
+				startCableCash.put(startCable, cableCashList);
+			}
 		}
 
 		return rUsedAmperes;
@@ -546,7 +548,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 		 * if(this instanceof IMetaTileEntityCable) {
 		 * result.cablesChain.add((IMetaTileEntityCable)this); }
 		 */
-
+		
 		byte i = (byte) ((((aSide / 2) * 2) + 2) % 6);
 
 		long tmpRUsedAmpers = 0;
@@ -641,7 +643,11 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			result.rUsedAmperes += aAmperage;
 		}
 		result.rUsedAmperes += rUsedAmperes;
-
+		
+		if(result.cablesChain.contains(this) == false && this == startCable) {
+			result.cablesChain.add(this);
+		}
+		
 		return result;
 	}
 
@@ -841,7 +847,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 	@Override
 	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
 		if (aBaseMetaTileEntity.isServerSide()) {
-			if (GT_Mod.gregtechproxy.ic2EnergySourceCompat)
+			if (aTick > 50 && GT_Mod.gregtechproxy.ic2EnergySourceCompat)
 				pullFromIc2EnergySources(aBaseMetaTileEntity);
 
 			mTransferredAmperage = 0;
@@ -852,7 +858,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 				mTransferredVoltageLast20 = 0;
 				mTransferredAmperageLast20 = 0;
 
-				/*if (needToCheck) {
+				if (needToCheck) {
 					if (checkDealy > 0) {
 						checkDealy -= 20;
 
@@ -863,9 +869,9 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 							checkConnection();
 						}
 					}
-				}*/
+				}
 
-				checkConnection();
+				// checkConnection();
 
 				// if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
 			}
