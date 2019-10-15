@@ -297,7 +297,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     private boolean needToFireCable(GT_MetaPipeEntity_Cable cable, long aVoltage, long amperege) {
     	if(amperege == 0) return false;
     	
-    	boolean needToFire = aVoltage * amperege > cable.mVoltage * cable.mAmperage;
+/*    	boolean needToFire = aVoltage * amperege > cable.mVoltage * cable.mAmperage;
     	
     	if(needToFire) {
 	    	System.out.println("================needToFireCable================");
@@ -307,7 +307,9 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 	    	System.out.println("cable.mAmperage: " + cable.mAmperage);
     	}
     	
-    	return needToFire;
+    	return needToFire;*/
+    	
+    	return aVoltage * amperege > cable.mVoltage * cable.mAmperage;
     }
     
     private boolean cableInFire = false;
@@ -362,7 +364,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 					/*cableCash.cable.mTransferredVoltageLast20 = Math.max(mTransferredVoltageLast20, cableCash.voltage);
 					cableCash.cable.mTransferredAmperageLast20 = Math.max(mTransferredAmperageLast20, rUsedAmperes);*/
 					
-					if(rUsedAmperes >= aAmperage || rUsedAmperes >= startCableCash.get(startCable).consumers.size())
+					if(rUsedAmperes >= aAmperage)
 						break;
 				}
 				
@@ -460,7 +462,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 		        }
 		        
 		        for(IMetaTileEntityCable c : keysToRemove) {
-		        	System.out.println("Remove key from cash");
+		        	// System.out.println("Remove key from cash");
 		        	
 		        	GT_MetaPipeEntity_Cable.startCableCash.remove(c);
 		        }
