@@ -87,7 +87,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 	public static HashMap<IMetaTileEntityCable, GT_MetaPipeEntity_CableChain> startCableCash = new HashMap<IMetaTileEntityCable, GT_MetaPipeEntity_CableChain>();
 
 	public static HashSet<TileEntity> energyEmmiters = new HashSet<>();
-
+	
+	public ArrayList<GT_MetaPipeEntity_CableEnergyEmmitor> cableEnergyEmmiters = new ArrayList<GT_MetaPipeEntity_CableEnergyEmmitor>();
+	public boolean isEnrgyEmmitersCashed = false;
+	
 	public GT_MetaPipeEntity_Cable(int aID, String aName, String aNameRegional, float aThickNess, Materials aMaterial,
 			long aCableLossPerMeter, long aAmperage, long aVoltage, boolean aInsulated, boolean aCanShock) {
 		super(aID, aName, aNameRegional, 0);
@@ -241,50 +244,56 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 	private void pullFromIc2EnergySources(IGregTechTileEntity aBaseMetaTileEntity) {
 		if (!GT_Mod.gregtechproxy.ic2EnergySourceCompat)
 			return;
-
-		for (byte aSide = 0; aSide < 6; aSide++) {
-			if (isConnectedAtSide(aSide)) {
-				final TileEntity tTileEntity = aBaseMetaTileEntity.getTileEntityAtSide(aSide);
-				final TileEntity tEmitter;
-
-				if (tTileEntity instanceof IReactorChamber) {
-					tEmitter = (TileEntity) ((IReactorChamber) tTileEntity).getReactor();
-				} else {
-					tEmitter = (tTileEntity == null || tTileEntity instanceof IEnergyTile || EnergyNet.instance == null)
-							? tTileEntity
-							: EnergyNet.instance.getTileEntity(tTileEntity.getWorldObj(), tTileEntity.xCoord,
-									tTileEntity.yCoord, tTileEntity.zCoord);
-				}
-
-				if (tEmitter instanceof IEnergySource) {
-					final GT_CoverBehavior coverBehavior = aBaseMetaTileEntity.getCoverBehaviorAtSide(aSide);
-					final int coverId = aBaseMetaTileEntity.getCoverIDAtSide(aSide),
-							coverData = aBaseMetaTileEntity.getCoverDataAtSide(aSide);
-					final ForgeDirection tDirection = ForgeDirection.getOrientation(GT_Utility.getOppositeSide(aSide));
-
-					//System.out.println("Biba");
-
-					if (((IEnergySource) tEmitter).emitsEnergyTo((TileEntity) aBaseMetaTileEntity, tDirection)
-							&& coverBehavior.letsEnergyIn(aSide, coverId, coverData, aBaseMetaTileEntity)) {
-						final long tEU = (long) ((IEnergySource) tEmitter).getOfferedEnergy();
-
-						long transferedAmerage = transferElectricity(this, aSide, tEU, 1,
-								Sets.newHashSet((TileEntity) aBaseMetaTileEntity));
-
-						//System.out.println("transferedAmerage: " + transferedAmerage);
-
-						if (transferedAmerage > 0)
-							((IEnergySource) tEmitter).drawEnergy(tEU);
+		
+		if(isEnrgyEmmitersCashed == false) {
+			for (byte aSide = 0; aSide < 6; aSide++) {
+				if (isConnectedAtSide(aSide)) {
+					final TileEntity tTileEntity = aBaseMetaTileEntity.getTileEntityAtSide(aSide);
+					final TileEntity tEmitter;
+	
+					if (tTileEntity instanceof IReactorChamber) {
+						tEmitter = (TileEntity) ((IReactorChamber) tTileEntity).getReactor();
+					} else {
+						tEmitter = (tTileEntity == null || tTileEntity instanceof IEnergyTile || EnergyNet.instance == null)
+								? tTileEntity
+								: EnergyNet.instance.getTileEntity(tTileEntity.getWorldObj(), tTileEntity.xCoord,
+										tTileEntity.yCoord, tTileEntity.zCoord);
 					}
-
-					if (tEmitter != null) {
-						energyEmmiters.add(tEmitter);
+	
+					if (tEmitter instanceof IEnergySource) {
+						final GT_CoverBehavior coverBehavior = aBaseMetaTileEntity.getCoverBehaviorAtSide(aSide);
+						final int coverId = aBaseMetaTileEntity.getCoverIDAtSide(aSide),
+								coverData = aBaseMetaTileEntity.getCoverDataAtSide(aSide);
+						final ForgeDirection tDirection = ForgeDirection.getOrientation(GT_Utility.getOppositeSide(aSide));
+	
+						if (((IEnergySource) tEmitter).emitsEnergyTo((TileEntity) aBaseMetaTileEntity, tDirection)
+								&& coverBehavior.letsEnergyIn(aSide, coverId, coverData, aBaseMetaTileEntity)) {
+							
+							TryDrawEnergy(aBaseMetaTileEntity, (IEnergySource) tEmitter, aSide);
+						}
+	
+						if (tEmitter != null) {
+							energyEmmiters.add(tEmitter);
+							cableEnergyEmmiters.add(new GT_MetaPipeEntity_CableEnergyEmmitor((IEnergySource)tEmitter, aSide));
+						}
 					}
 				}
 			}
+		} else {
+			for(GT_MetaPipeEntity_CableEnergyEmmitor energySource : cableEnergyEmmiters) {
+				TryDrawEnergy(aBaseMetaTileEntity, energySource.energySource, energySource.aSide);
+			}
 		}
+		
+		isEnrgyEmmitersCashed = true;
 	}
-
+	
+	private void TryDrawEnergy(IGregTechTileEntity aBaseMetaTileEntity, IEnergySource tEmitter, byte aSide) {
+		final long tEU = (long) tEmitter.getOfferedEnergy();
+		long transferedAmerage = transferElectricity(this, aSide, tEU, 1, Sets.newHashSet((TileEntity) aBaseMetaTileEntity));
+		if (transferedAmerage > 0) tEmitter.drawEnergy(tEU);
+	}
+	
 	@Override
 	public long injectEnergyUnits(byte aSide, long aVoltage, long aAmperage) {
 		if (!isConnectedAtSide(aSide) && aSide != 6) {
@@ -388,7 +397,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			while (it.hasNext()) {
 				Map.Entry pair = (Map.Entry) it.next();
 				long usedAmpres = (long) pair.getValue();
-				
+
 				GT_MetaPipeEntity_Cable cable = (GT_MetaPipeEntity_Cable) pair.getKey();
 
 				if (needToFireCable(cable, aVoltage, rUsedAmperes - usedAmpres)) {
@@ -401,7 +410,8 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 						&& startCableCash.get(startCable).cableSegments.containsKey(cable)) {
 					for (GT_MetaPipeEntity_Cable segmentCable : startCableCash.get(startCable).cableSegments
 							.get(cable)) {
-						if (segmentCable != null && needToFireCable(segmentCable, aVoltage, rUsedAmperes - usedAmpres)) {
+						if (segmentCable != null
+								&& needToFireCable(segmentCable, aVoltage, rUsedAmperes - usedAmpres)) {
 							FireCable(segmentCable, ((GT_MetaPipeEntity_Cable) startCable));
 
 							cableInFire = true;
@@ -478,6 +488,11 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			isUpdateCablesChainAtWork = true;
 
 			if (cable != null) {
+				if(cable instanceof GT_MetaPipeEntity_Cable) {
+					((GT_MetaPipeEntity_Cable)cable).isEnrgyEmmitersCashed = false;
+					((GT_MetaPipeEntity_Cable)cable).cableEnergyEmmiters.clear();
+				}
+				
 				ArrayList<IMetaTileEntityCable> keysToRemove = new ArrayList<IMetaTileEntityCable>();
 
 				Iterator it = GT_MetaPipeEntity_Cable.startCableCash.entrySet().iterator();
@@ -838,15 +853,20 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 				mTransferredVoltageLast20 = 0;
 				mTransferredAmperageLast20 = 0;
 
-				/*
-				 * if(needToCheck) { if(checkDealy > 0) { checkDealy -= 20;
-				 * 
-				 * if(checkDealy <= 0) { needToCheck = false; checkDealy = -1;
-				 * 
-				 * checkConnection(); } } }
-				 */
+				if (needToCheck) {
+					if (checkDealy > 0) {
+						checkDealy -= 20;
 
-				checkConnection();
+						if (checkDealy <= 0) {
+							needToCheck = false;
+							checkDealy = -1;
+
+							checkConnection();
+						}
+					}
+				}
+
+				// checkConnection();
 
 				// if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
 			}
