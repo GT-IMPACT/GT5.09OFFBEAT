@@ -500,9 +500,9 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
     	/*if (!isConnectedAtSide(aSide) && aSide != 6)
 			return result;*/
     	
-    	if(this instanceof IMetaTileEntityCable) {
+    	/*if(this instanceof IMetaTileEntityCable) {
     		result.cablesChain.add((IMetaTileEntityCable)this);
-    	}
+    	}*/
     	
     	byte i = (byte) ((((aSide / 2) * 2) + 2) % 6);
     	
