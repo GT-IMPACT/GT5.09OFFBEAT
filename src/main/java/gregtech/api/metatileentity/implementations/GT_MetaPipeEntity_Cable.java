@@ -262,7 +262,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 							coverData = aBaseMetaTileEntity.getCoverDataAtSide(aSide);
 					final ForgeDirection tDirection = ForgeDirection.getOrientation(GT_Utility.getOppositeSide(aSide));
 
-					System.out.println("Biba");
+					//System.out.println("Biba");
 
 					if (((IEnergySource) tEmitter).emitsEnergyTo((TileEntity) aBaseMetaTileEntity, tDirection)
 							&& coverBehavior.letsEnergyIn(aSide, coverId, coverData, aBaseMetaTileEntity)) {
@@ -271,7 +271,7 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 						long transferedAmerage = transferElectricity(this, aSide, tEU, 1,
 								Sets.newHashSet((TileEntity) aBaseMetaTileEntity));
 
-						System.out.println("transferedAmerage: " + transferedAmerage);
+						//System.out.println("transferedAmerage: " + transferedAmerage);
 
 						if (transferedAmerage > 0)
 							((IEnergySource) tEmitter).drawEnergy(tEU);
