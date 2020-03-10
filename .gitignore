@@ -1,14 +1,78 @@
+### Windows ###
+
+thumbs.db
+*.db
+
+### Java ###
+
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.war
+*.ear
+*.txt
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Eclipse ###
+
+*.pydevproject
+.metadata
 .gradle
-/build/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+/eclipse
 
-# Ignore Gradle GUI config
-gradle-app.setting
+# Eclipse Core
+.project
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+# External tool builders
+.externalToolBuilders/
 
-# Cache of project
-.gradletasknamecache
+# Locally stored "Eclipse launch configurations"
+*.launch
 
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
+# CDT-specific
+.cproject
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# TeXlipse plugin
+.texlipse
+
+### Intellij IDEA ###
+
+*.iml
+*.ipr
+*.iws
+
+.idea/
+.idea_modules/
+classes/
+
+/out/
+
+# Linux
+*~
+build/
+*.rar
