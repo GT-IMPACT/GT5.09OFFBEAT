@@ -332,7 +332,7 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.mImmersiveEngineeringRecipes = tMainConfig.get(aTextGeneral, "EnableImmersiveEngineeringRSupport", true).getBoolean(true);
         gregtechproxy.mMagneticraftBonusOutputPercent = tMainConfig.get(aTextGeneral, "MagneticraftBonusOutputPercent", 100.0f).getDouble();
         gregtechproxy.mTEMachineRecipes = tMainConfig.get("general", "TEMachineRecipes", false).getBoolean(false);
-        gregtechproxy.mEnableAllMaterials = tMainConfig.get("general", "EnableAllMaterials", false).getBoolean(false);
+        gregtechproxy.mEnableAllMaterials = tMainConfig.get("general", "EnableAllMaterials", false, "Enabled all Materials. Warning!").getBoolean(false);
         gregtechproxy.mEnableAllComponents = tMainConfig.get("general", "EnableAllComponents", false).getBoolean(false);
         gregtechproxy.mPollution = tMainConfig.get("Pollution", "EnablePollution", true).getBoolean(true);
         gregtechproxy.mPollutionSmogLimit = tMainConfig.get("Pollution", "SmogLimit", 500000).getInt(500000);
@@ -912,7 +912,7 @@ public class GT_Mod implements IGT_Mod {
             }
         }   
         for (Materials tMaterial : Materials.values()) {
-            if ((tMaterial.mElement != null) && (!tMaterial.mElement.mIsIsotope) && (tMaterial != Materials.Magic) && (tMaterial.getMass() > 0L)) {
+            if ((tMaterial.mElement != null) && (!tMaterial.mElement.mIsIsotope) && (tMaterial.getMass() > 0L)) {
             	ItemStack tOutput = ItemList.Tool_DataOrb.get(1L);
             	Behaviour_DataOrb.setDataTitle(tOutput, "Elemental-Scan");
                 Behaviour_DataOrb.setDataName(tOutput, tMaterial.mElement.name());
@@ -1072,37 +1072,37 @@ public class GT_Mod implements IGT_Mod {
                 tStack = (ItemStack) i$.next();
             }
         }
-        GT_Log.out.println("GT_Mod: Dungeon Loot");
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("dungeonChest").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("bonusChest").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("villageBlacksmith").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdCrossing").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdLibrary").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdCorridor").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidJungleDispenser").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidJungleChest").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidDesertyChest").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
-        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("mineshaftCorridor").getItems(new XSTR())) {
-            tStacks.add(tContent.theItemId);
-        }
+        GT_Log.out.println("GT_Mod: Dungeon Loot Disabled");
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("dungeonChest").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("bonusChest").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("villageBlacksmith").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdCrossing").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdLibrary").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdCorridor").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidJungleDispenser").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidJungleChest").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidDesertyChest").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
+//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("mineshaftCorridor").getItems(new XSTR())) {
+//            tStacks.add(tContent.theItemId);
+//        }
         GT_Log.out.println("GT_Mod: Smelting");
         Object tStack;
         for (Iterator i$ = FurnaceRecipes.smelting().getSmeltingList().values().iterator(); i$.hasNext(); tStacks.add((ItemStack) tStack)) {

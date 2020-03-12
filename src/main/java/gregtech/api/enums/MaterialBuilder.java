@@ -48,7 +48,7 @@ public class MaterialBuilder {
 
 	public Materials constructMaterial() {
 		return new Materials(metaItemSubID, iconSet, toolSpeed, durability, toolQuality, types, r, g, b, a, name, defaultLocalName, fuelType, fuelPower, meltingPoint, blastFurnaceTemp,
-				blastFurnaceRequired, transparent, oreValue, densityMultiplier, densityDivider, color, extraData, materialList, aspects)
+				blastFurnaceRequired, transparent, oreValue, densityMultiplier, densityDivider, color)
 				.setHasCorrespondingFluid(hasCorrespondingFluid)
 				.setHasCorrespondingGas(hasCorrespondingGas)
 				.setHasCorrespondingSemi(hasCorrespondingSemi)

@@ -92,8 +92,6 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.opal", true, 5, 250, 1, false, true, false, false, true, true, Materials.Opal);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.jasper", true, 5, 250, 1, false, true, false, false, true, true, Materials.Jasper);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.bluetopaz", true, 5, 250, 1, false, true, false, false, true, true, Materials.BlueTopaz);
-        new GT_Worldgen_GT_Ore_SmallPieces("ore.small.amber", true, 5, 250, 1, false, true, false, false, true, true, Materials.Amber);
-        new GT_Worldgen_GT_Ore_SmallPieces("ore.small.foolsruby", true, 5, 250, 1, false, true, false, false, true, true, Materials.FoolsRuby);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.garnetred", true, 5, 250, 1, false, true, false, false, true, true, Materials.GarnetRed);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.garnetyellow", true, 5, 250, 1, false, true, false, false, true, true, Materials.GarnetYellow);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.redstone", true, 5, 20, 8, true, true, false, true, true, true, Materials.Redstone);
