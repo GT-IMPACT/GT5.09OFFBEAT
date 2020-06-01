@@ -1,7 +1,6 @@
 package gregtech.api.enums;
 
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.TC_Aspects.TC_AspectStack;
 import gregtech.api.interfaces.ICondition;
 import gregtech.api.interfaces.IMaterialHandler;
 import gregtech.api.interfaces.IOreRecipeRegistrator;
@@ -21,25 +20,25 @@ import static gregtech.api.enums.GT_Values.*;
 import com.google.common.base.Objects;
 
 public enum OrePrefixes {
-	@Deprecated pulp("Pulps", "", "", false, false, false, false, false, false, false, false, false, false, B[0] | B[1] | B[2] | B[3], -1, 64, -1),
+	@Deprecated pulp("Pulps", "", "", false, false, false, false, false, false, false, false, false, false, 0, -1, 64, -1),
     @Deprecated leaves("Leaves", "", "", false, false, false, false, false, false, false, false, false, false, 0, -1, 64, -1),
     @Deprecated sapling("Saplings", "", "", false, false, false, false, false, false, false, false, false, false, 0, -1, 64, -1),
-    @Deprecated itemDust("Dusts", "", "", false, false, false, false, false, false, false, false, false, false, B[0] | B[1] | B[2] | B[3], -1, 64, -1),
+    @Deprecated itemDust("Dusts", "", "", false, false, false, false, false, false, false, false, false, false, 0, -1, 64, -1),
     oreBlackgranite("Black Granite Ores", "Granite ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // In case of an End-Ores Mod. Ore -> Material is a Oneway Operation!
     oreRedgranite("Red Granite Ores", "Granite ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // In case of an End-Ores Mod. Ore -> Material is a Oneway Operation!
     oreMarble("Marble Ores", "Marble ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // In case of an End-Ores Mod. Ore -> Material is a Oneway Operation!
     oreBasalt("Basalt Ores", "Basalt ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // In case of an End-Ores Mod. Ore -> Material is a Oneway Operation!
     oreNetherrack("Netherrack Ores", "Nether ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // Prefix of the Nether-Ores Mod. Causes Ores to double. Ore -> Material is a Oneway Operation!
     oreNether("Nether Ores", "Nether ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // Prefix of the Nether-Ores Mod. Causes Ores to double. Ore -> Material is a Oneway Operation!
-    @Deprecated denseore("Dense Ores", "", "", false, false, false, false, false, true, false, false, false, true, B[3], -1, 64, -1),
+    @Deprecated denseore("Dense Ores", "", "", false, false, false, false, false, true, false, false, false, true, 0, -1, 64, -1),
     oreDense("Dense Ores", "Dense ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // Prefix of the Dense-Ores Mod. Causes Ores to double. Ore -> Material is a Oneway Operation!
     oreRich("Rich Ores", "Rich ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // Prefix of TFC
     oreNormal("Normal Ores", "Normal ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // Prefix of TFC
-    oreSmall("Small Ores", "Small ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, 67), // Prefix of Railcraft.
-    orePoor("Poor Ores", "Poor ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // Prefix of Railcraft.
+    oreSmall("Small Ores", "Small ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, 67),
+    orePoor("Poor Ores", "Poor ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1),
     oreEndstone("Endstone Ores", "End ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // In case of an End-Ores Mod. Ore -> Material is a Oneway Operation!
     oreEnd("End Ores", "End ", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, -1), // In case of an End-Ores Mod. Ore -> Material is a Oneway Operation!
-    @Deprecated oreGem("Ores", "", "", false, false, false, false, false, true, false, false, false, true, B[3], -1, 64, -1),
+    @Deprecated oreGem("Ores", "", "", false, false, false, false, false, true, false, false, false, true, 0, -1, 64, -1),
     ore("Ores", "", " Ore", true, true, false, false, false, true, false, false, false, true, B[3], -1, 64, 68), // Regular Ore Prefix. Ore -> Material is a Oneway Operation! Introduced by Eloraam
     crushedCentrifuged("Centrifuged Ores", "Centrifuged ", " Ore", true, true, false, false, false, false, false, true, false, true, B[3], -1, 64, 7),
     crushedPurified("Purified Ores", "Purified ", " Ore", true, true, false, false, false, false, false, true, false, true, B[3], -1, 64, 6),
@@ -52,7 +51,7 @@ public enum OrePrefixes {
     dirtyGravel("Dirty Gravels", "", "", true, true, false, false, false, false, false, false, false, true, B[3], -1, 64, -1),
     ingotQuintuple("5x Ingots", "Quintuple ", " Ingot", true, true, false, false, false, false, true, true, false, false, B[1], M * 5, 12, 16), // A quintuple Ingot.
     ingotQuadruple("4x Ingots", "Quadruple ", " Ingot", true, true, false, false, false, false, true, true, false, false, B[1], M * 4, 16, 15), // A quadruple Ingot.
-    @Deprecated ingotQuad("4x Ingots", "Quadruple ", " Ingot", false, false, false, false, false, false, false, false, false, false, B[1], -1, 16, 15),
+    @Deprecated ingotQuad("4x Ingots", "Quadruple ", " Ingot", false, false, false, false, false, false, false, false, false, false, 0, -1, 16, 15),
     ingotTriple("3x Ingots", "Triple ", " Ingot", true, true, false, false, false, false, true, false, false, false, B[1], M * 3, 21, 14), // A triple Ingot.
     ingotDouble("2x Ingots", "Double ", " Ingot", true, true, false, false, false, false, true, true, false, false, B[1], M * 2, 32, 13), // A double Ingot. Introduced by TerraFirmaCraft
     ingotHot("Hot Ingots", "Hot ", " Ingot", true, true, false, false, false, false, false, true, false, false, B[1], M * 1, 16, 12), // A hot Ingot, which has to be cooled down by a Vacuum Freezer.
@@ -62,7 +61,7 @@ public enum OrePrefixes {
     gemFlawless("Flawless Gemstones", "Flawless ", "", true, true, true, false, false, false, true, true, false, false, B[2], M * 2, 32, 61), // A regular Gem worth two Dusts. Introduced by TerraFirmaCraft
     gemExquisite("Exquisite Gemstones", "Exquisite ", "", true, true, true, false, false, false, true, true, false, false, B[2], M * 4, 16, 62), // A regular Gem worth four Dusts. Introduced by TerraFirmaCraft
     gem("Gemstones", "", "", true, true, true, false, false, false, true, true, false, false, B[2], M * 1, 64, 8), // A regular Gem worth one Dust. Introduced by Eloraam
-    @Deprecated dustDirty("Impure Dusts", "", "", false, false, false, false, false, false, false, false, false, true, B[3], -1, 64, 3),
+    @Deprecated dustDirty("Impure Dusts", "", "", false, false, false, false, false, false, false, false, false, true, 0, -1, 64, 3),
     dustTiny("Tiny Dusts", "Tiny Pile of ", " Dust", true, true, false, false, false, false, false, true, false, false, B[0] | B[1] | B[2] | B[3], M / 9, 64, 0), // 1/9th of a Dust.
     dustSmall("Small Dusts", "Small Pile of ", " Dust", true, true, false, false, false, false, false, true, false, false, B[0] | B[1] | B[2] | B[3], M / 4, 64, 1), // 1/4th of a Dust.
     dustImpure("Impure Dusts", "Impure Pile of ", " Dust", true, true, false, false, false, false, false, true, false, true, B[3], M * 1, 64, 3), // Dust with impurities. 1 Unit of Main Material and 1/9 - 1/4 Unit of secondary Material
@@ -93,12 +92,12 @@ public enum OrePrefixes {
     wireFine("Fine Wires", "Fine ", " Wire", true, true, false, false, false, false, true, true, false, false, B[1], M / 8, 64, 51), // consisting out of 1/8 Ingot or 1/4 Wire.
     rotor("Rotors", "", " Rotor", true, true, false, false, false, false, true, true, false, false, B[7], M * 4 + M / 4, 16, 53), // consisting out of 4 Plates, 1 Ring and 1 Screw.
     gearGtSmall("Small Gears", "Small ", " Gear", true, true, false, false, false, false, true, true, false, false, B[7], M * 1, 64, 52),
-    gearGt("Gears", "", " Gear", true, true, false, false, false, false, true, true, false, false, B[7], M * 4, 16, 63), // Introduced by me because BuildCraft has ruined the gear Prefix...
+    gearGt("Gears", "", " Gear", true, true, false, false, false, false, true, true, false, false, B[7], M * 4, 16, 63),
     lens("Lenses", "", " Lens", true, true, false, false, false, false, true, true, false, false, B[2], (M * 3) / 4, 64, 24), // 3/4 of a Plate or Gem used to shape a Lense. Normally only used on Transparent Materials.
-    crateGtDust("Crates of Dust", "Crate of ", " Dust", true, true, false, true, false, false, false, true, false, false, B[0] | B[1] | B[2] | B[3], -1, 64, 96), // consisting out of 16 Dusts.
-    crateGtPlate("Crates of Plates", "Crate of ", " Plate", true, true, false, true, false, false, false, true, false, false, B[1] | B[2], -1, 64, 99), // consisting out of 16 Plates.
-    crateGtIngot("Crates of Ingots", "Crate of ", " Ingot", true, true, false, true, false, false, false, true, false, false, B[1], -1, 64, 97), // consisting out of 16 Ingots.
-    crateGtGem("Crates of Gems", "Crate of ", " Gem", true, true, false, true, false, false, false, true, false, false, B[2], -1, 64, 98), // consisting out of 16 Gems.
+    crateGtDust("Crates of Dust", "Crate of ", " Dust", true, true, false, true, false, false, false, true, false, false, 0, -1, 64, 96), // consisting out of 16 Dusts.
+    crateGtPlate("Crates of Plates", "Crate of ", " Plate", true, true, false, true, false, false, false, true, false, false, 0, -1, 64, 99), // consisting out of 16 Plates.
+    crateGtIngot("Crates of Ingots", "Crate of ", " Ingot", true, true, false, true, false, false, false, true, false, false, 0, -1, 64, 97), // consisting out of 16 Ingots.
+    crateGtGem("Crates of Gems", "Crate of ", " Gem", true, true, false, true, false, false, false, true, false, false, 0, -1, 64, 98), // consisting out of 16 Gems.
     cellPlasma("Cells of Plasma", "", " Plasma Cell", true, true, true, true, false, false, false, true, false, false, B[5], M * 1, 64, 31), // Hot Cell full of Plasma, which can be used in the Plasma Generator.
     cell("Cells", "", " Cell", true, true, true, true, false, false, true, true, false, false, B[4] | B[8], M * 1, 64, 30), // Regular Gas/Fluid Cell. Introduced by Calclavia
     bucket("Buckets", "", " Bucket", true, true, true, true, false, false, true, false, false, false, B[4] | B[8], M * 1, 16, -1), // A vanilla Iron Bucket filled with the Material.
@@ -108,10 +107,10 @@ public enum OrePrefixes {
     bulletGtSmall("Small Bullets", "Small ", " Bullet", true, true, false, false, true, false, true, false, true, false, B[6] | B[8], M / 9, 64, -1),
     bulletGtMedium("Medium Bullets", "Medium ", " Bullet", true, true, false, false, true, false, true, false, true, false, B[6] | B[8], M / 6, 64, -1),
     bulletGtLarge("Large Bullets", "Large ", " Bullet", true, true, false, false, true, false, true, false, true, false, B[6] | B[8], M / 3, 64, -1),
-    arrowGtWood("Regular Arrows", "", " Arrow", true, true, false, false, true, false, true, false, true, false, B[6], M / 4, 64, 57), // Arrow made of 1/4 Ingot/Dust + Wooden Stick.
-    arrowGtPlastic("Light Arrows", "Light ", " Arrow", true, true, false, false, true, false, true, false, true, false, B[6], M / 4, 64, 58), // Arrow made of 1/4 Ingot/Dust + Plastic Stick.
-    arrow("Arrows", "", "", false, false, true, false, false, false, false, false, true, false, B[6], -1, 64, 57),
-    toolHeadArrow("Arrow Heads", "", " Arrow Head", true, true, false, false, false, false, true, true, false, false, B[6], M / 4, 64, 46), // consisting out of 1/4 Ingot.
+    arrowGtWood("Regular Arrows", "", " Arrow", true, true, false, false, true, false, true, false, true, false, 0, M / 4, 64, 57), // Arrow made of 1/4 Ingot/Dust + Wooden Stick.
+    arrowGtPlastic("Light Arrows", "Light ", " Arrow", true, true, false, false, true, false, true, false, true, false, 0, M / 4, 64, 58), // Arrow made of 1/4 Ingot/Dust + Plastic Stick.
+    arrow("Arrows", "", "", false, false, true, false, false, false, false, false, true, false, 0, -1, 64, 57),
+    toolHeadArrow("Arrow Heads", "", " Arrow Head", true, true, false, false, false, false, true, true, false, false, 0, M / 4, 64, 46), // consisting out of 1/4 Ingot.
     toolHeadSword("Sword Blades", "", " Sword Blade", true, true, false, false, false, false, true, true, false, false, B[6], M * 2, 16, 32), // consisting out of 2 Ingots.
     toolHeadPickaxe("Pickaxe Heads", "", " Pickaxe Head", true, true, false, false, false, false, true, true, false, false, B[6], M * 3, 16, 33), // consisting out of 3 Ingots.
     toolHeadShovel("Shovel Heads", "", " Shovel Head", true, true, false, false, false, false, true, true, false, false, B[6], M * 1, 16, 34), // consisting out of 1 Ingots.
@@ -230,7 +229,7 @@ public enum OrePrefixes {
     batterySingleuse("Single Use Batteries", "", "", false, true, false, false, false, false, false, false, false, false, 0, -1, 64, -1),
     battery("Reusable Batteries", "", "", false, true, false, false, false, false, false, false, false, false, 0, -1, 64, -1), // Introduced by Calclavia
     circuit("Circuits", "", "", true, true, false, false, false, false, false, false, false, false, 0, -1, 64, -1), // Introduced by Calclavia
-    chipset("Chipsets", "", "", true, true, false, false, false, false, false, false, false, false, 0, -1, 64, -1), // Introduced by Buildcraft
+    chipset("Chipsets", "", "", true, true, false, false, false, false, false, false, false, false, 0, -1, 64, -1),
     computer("Computers", "", "", true, true, false, false, true, false, false, false, false, false, 0, -1, 64, -1), // A whole Computer. "computerMaster" = ComputerCube
 
     // random known prefixes without special abilities.
@@ -339,7 +338,7 @@ public enum OrePrefixes {
         ingotHot.mHeatDamage = 3.0F;
         cellPlasma.mHeatDamage = 6.0F;
 
-        block.ignoreMaterials(Materials.Ice, Materials.Snow, Materials.Concrete, Materials.Glass, Materials.Glowstone, Materials.Marble, Materials.Quartz, Materials.CertusQuartz, Materials.Limestone);
+        block.ignoreMaterials(Materials.Ice, Materials.Snow, Materials.Concrete, Materials.Glass, Materials.Glowstone, Materials.DarkIron, Materials.Marble, Materials.Quartz, Materials.CertusQuartz, Materials.Limestone);
         ingot.ignoreMaterials(Materials.Brick, Materials.NetherBrick);
 
         dust.addFamiliarPrefix(dustTiny);
@@ -413,7 +412,6 @@ public enum OrePrefixes {
         block.mNotGeneratedItems.add(Materials.Redstone);
         block.mNotGeneratedItems.add(Materials.Diamond);
         block.mNotGeneratedItems.add(Materials.Coal);
-        toolHeadArrow.mNotGeneratedItems.add(Materials.Glass);
 
         //-----
 
@@ -529,8 +527,6 @@ public enum OrePrefixes {
         toolHeadDrill.mSecondaryMaterial = new MaterialStack(Materials.Steel, plate.mMaterialAmount * 4);
         toolHeadChainsaw.mSecondaryMaterial = new MaterialStack(Materials.Steel, plate.mMaterialAmount * 4 + ring.mMaterialAmount * 2);
         toolHeadWrench.mSecondaryMaterial = new MaterialStack(Materials.Steel, ring.mMaterialAmount + screw.mMaterialAmount * 2);
-        arrowGtWood.mSecondaryMaterial = new MaterialStack(Materials.Wood, stick.mMaterialAmount);
-        arrowGtPlastic.mSecondaryMaterial = new MaterialStack(Materials.Plastic, stick.mMaterialAmount);
         bulletGtSmall.mSecondaryMaterial = new MaterialStack(Materials.Brass, ingot.mMaterialAmount / 9);
         bulletGtMedium.mSecondaryMaterial = new MaterialStack(Materials.Brass, ingot.mMaterialAmount / 6);
         bulletGtLarge.mSecondaryMaterial = new MaterialStack(Materials.Brass, ingot.mMaterialAmount / 3);
@@ -540,7 +536,6 @@ public enum OrePrefixes {
     public final short mTextureIndex;
     public final String mRegularLocalName, mLocalizedMaterialPre, mLocalizedMaterialPost;
     public final boolean mIsUsedForOreProcessing, mIsEnchantable, mIsUnificatable, mIsMaterialBased, mIsSelfReferencing, mIsContainer, mDontUnificateActively, mIsUsedForBlocks, mAllowNormalRecycling, mGenerateDefaultItem;
-    public final List<TC_AspectStack> mAspects = new ArrayList<TC_AspectStack>();
     public final Collection<OrePrefixes> mFamiliarPrefixes = new HashSet<OrePrefixes>();
     /**
      * Used to determine the amount of Material this Prefix contains.
@@ -557,8 +552,7 @@ public enum OrePrefixes {
     public MaterialStack mSecondaryMaterial = null;
     public OrePrefixes mPrefixInto = this;
     public float mHeatDamage = 0.0F; // Negative for Frost Damage
-    public static List<OrePrefixes> mPreventableComponents = new LinkedList<>(Arrays.asList(OrePrefixes.gem, OrePrefixes.ingotHot, OrePrefixes.ingotDouble, OrePrefixes.ingotTriple, OrePrefixes.ingotQuadruple, OrePrefixes.ingotQuintuple, OrePrefixes.plate, OrePrefixes.plateDouble, OrePrefixes.plateTriple, OrePrefixes.plateQuadruple, OrePrefixes.plateQuintuple, OrePrefixes.plateDense, OrePrefixes.stick, OrePrefixes.round, OrePrefixes.bolt, OrePrefixes.screw, OrePrefixes.ring, OrePrefixes.foil, OrePrefixes.toolHeadSword, OrePrefixes.toolHeadPickaxe, OrePrefixes.toolHeadShovel, OrePrefixes.toolHeadAxe, OrePrefixes.toolHeadHoe, OrePrefixes.toolHeadHammer, OrePrefixes.toolHeadFile, OrePrefixes.toolHeadSaw, OrePrefixes.toolHeadDrill, OrePrefixes.toolHeadChainsaw, OrePrefixes.toolHeadWrench, OrePrefixes.toolHeadUniversalSpade, OrePrefixes.toolHeadSense, OrePrefixes.toolHeadPlow, OrePrefixes.toolHeadArrow, OrePrefixes.toolHeadBuzzSaw, OrePrefixes.turbineBlade, OrePrefixes.wireFine, OrePrefixes.gearGtSmall, OrePrefixes.rotor, OrePrefixes.stickLong, OrePrefixes.springSmall, OrePrefixes.spring, OrePrefixes.arrowGtWood, OrePrefixes.arrowGtPlastic, OrePrefixes.gemChipped, OrePrefixes.gemFlawed, OrePrefixes.gemFlawless, OrePrefixes.gemExquisite, OrePrefixes.gearGt, OrePrefixes.crateGtDust, OrePrefixes.crateGtIngot, OrePrefixes.crateGtGem, OrePrefixes.crateGtPlate, OrePrefixes.itemCasing));
-    /**
+    public static List<OrePrefixes> mPreventableComponents = new LinkedList<>(Arrays.asList(OrePrefixes.gem, OrePrefixes.ingotHot, OrePrefixes.ingotDouble, OrePrefixes.ingotTriple, OrePrefixes.ingotQuadruple, OrePrefixes.ingotQuintuple, OrePrefixes.plate, OrePrefixes.plateDouble, OrePrefixes.plateTriple, OrePrefixes.plateQuadruple, OrePrefixes.plateQuintuple, OrePrefixes.plateDense, OrePrefixes.stick, OrePrefixes.round, OrePrefixes.bolt, OrePrefixes.screw, OrePrefixes.ring, OrePrefixes.foil, OrePrefixes.toolHeadSword, OrePrefixes.toolHeadPickaxe, OrePrefixes.toolHeadShovel, OrePrefixes.toolHeadAxe, OrePrefixes.toolHeadHoe, OrePrefixes.toolHeadHammer, OrePrefixes.toolHeadFile, OrePrefixes.toolHeadSaw, OrePrefixes.toolHeadDrill, OrePrefixes.toolHeadChainsaw, OrePrefixes.toolHeadWrench, OrePrefixes.toolHeadUniversalSpade, OrePrefixes.toolHeadSense, OrePrefixes.toolHeadPlow, OrePrefixes.toolHeadArrow, OrePrefixes.toolHeadBuzzSaw, OrePrefixes.turbineBlade, OrePrefixes.wireFine, OrePrefixes.gearGtSmall, OrePrefixes.rotor, OrePrefixes.stickLong, OrePrefixes.springSmall, OrePrefixes.spring, OrePrefixes.arrowGtWood, OrePrefixes.arrowGtPlastic, OrePrefixes.gemChipped, OrePrefixes.gemFlawed, OrePrefixes.gemFlawless, OrePrefixes.gemExquisite, OrePrefixes.gearGt, OrePrefixes.crateGtDust, OrePrefixes.crateGtIngot, OrePrefixes.crateGtGem, OrePrefixes.crateGtPlate, OrePrefixes.itemCasing));    /**
      * Yes this Value can be changed to add Bits for the MetaGenerated-Item-Check.
      */
     public int mMaterialGenerationBits = 0;
@@ -580,41 +574,6 @@ public enum OrePrefixes {
         mLocalizedMaterialPost = aLocalizedMaterialPost;
         mDefaultStackSize = (byte) aDefaultStackSize;
         mTextureIndex = (short) aTextureindex;
-
-        if (name().startsWith("ore")) {
-            new TC_AspectStack(TC_Aspects.TERRA, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("wire") || name().startsWith("cable")) {
-            new TC_AspectStack(TC_Aspects.ELECTRUM, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("dust")) {
-            new TC_AspectStack(TC_Aspects.PERDITIO, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("crushed")) {
-            new TC_AspectStack(TC_Aspects.PERFODIO, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("ingot") || name().startsWith("nugget")) {
-            new TC_AspectStack(TC_Aspects.METALLUM, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("armor")) {
-            new TC_AspectStack(TC_Aspects.TUTAMEN, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("stone")) {
-            new TC_AspectStack(TC_Aspects.TERRA, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("pipe")) {
-            new TC_AspectStack(TC_Aspects.ITER, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("gear")) {
-            new TC_AspectStack(TC_Aspects.MOTUS, 1).addToAspectList(mAspects);
-            new TC_AspectStack(TC_Aspects.MACHINA, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("frame") || name().startsWith("plate")) {
-            new TC_AspectStack(TC_Aspects.FABRICO, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("tool")) {
-            new TC_AspectStack(TC_Aspects.INSTRUMENTUM, 2).addToAspectList(mAspects);
-        } else if (name().startsWith("gem") || name().startsWith("crystal") || name().startsWith("lens")) {
-            new TC_AspectStack(TC_Aspects.VITREUS, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("crate")) {
-            new TC_AspectStack(TC_Aspects.ITER, 2).addToAspectList(mAspects);
-        } else if (name().startsWith("circuit")) {
-            new TC_AspectStack(TC_Aspects.COGNITIO, 1).addToAspectList(mAspects);
-        } else if (name().startsWith("computer")) {
-            new TC_AspectStack(TC_Aspects.COGNITIO, 4).addToAspectList(mAspects);
-        } else if (name().startsWith("battery")) {
-            new TC_AspectStack(TC_Aspects.ELECTRUM, 1).addToAspectList(mAspects);
-        }
     }
 
     public static void initMaterialComponents() {
@@ -638,7 +597,6 @@ public enum OrePrefixes {
         boolean enableUnusedRotors = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedRotors", false);
         boolean enableUnusedFineWires = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedFineWires", false);
         boolean enableUnusedFoil = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedFoil", false);
-        boolean enableUnusedArrows = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedArrowHeads", false);
         boolean enableUnusedCrates = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedCrates", false);
         boolean enableUnusedBolts = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedBolts", false);
         boolean enableUnusedScrews = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedScrews", false);
@@ -663,18 +621,12 @@ public enum OrePrefixes {
                     crateGtGem.mDisabledItems.add(aMaterial);
                     crateGtPlate.mDisabledItems.add(aMaterial);
                 }
-                if (!enableUnusedArrows) {
-                    toolHeadArrow.mDisabledItems.add(aMaterial);
-                    arrowGtPlastic.mDisabledItems.add(aMaterial);
-                    if (!(aMaterial == Materials.DamascusSteel || aMaterial == Materials.SterlingSilver))
-                        arrowGtWood.mDisabledItems.add(aMaterial);
-                }
                 //Plates
                 if (!enableUnusedPlates && ((aMaterial.mTypes & 0x40) == 0) && !(aMaterial == Materials.Silicon || aMaterial == Materials.Zinc ||
                         aMaterial == Materials.Europium || aMaterial == Materials.Americium || aMaterial == Materials.RedAlloy || aMaterial == Materials.SolderingAlloy || aMaterial == Materials.BatteryAlloy ||
                         aMaterial == Materials.AnnealedCopper || aMaterial == Materials.VanadiumGallium || aMaterial == Materials.YttriumBariumCuprate ||
                         aMaterial == Materials.NiobiumTitanium || aMaterial == Materials.CertusQuartz || aMaterial == Materials.NetherQuartz || aMaterial == Materials.Lazurite || aMaterial == Materials.Lapis ||
-                        aMaterial == Materials.Paper || aMaterial == Materials.Jasper || aMaterial == Materials.Dilithium ||
+                        aMaterial == Materials.Paper || aMaterial == Materials.Jasper || aMaterial == Materials.Forcicium || aMaterial == Materials.Forcillium ||
                         aMaterial == Materials.EnderPearl || aMaterial == Materials.EnderEye || aMaterial == Materials.Glass || aMaterial == Materials.Copper || aMaterial == Materials.Tin || aMaterial == Materials.Redstone ||
                         aMaterial == Materials.Sodalite || aMaterial == Materials.Gallium || aMaterial == Materials.GalliumArsenide || aMaterial == Materials.IndiumGalliumPhosphide))
                     plate.mDisabledItems.add(aMaterial);
@@ -688,7 +640,7 @@ public enum OrePrefixes {
                 if (!enableUnusedTriplePlates && !(aMaterial == Materials.Paper)) plateTriple.mDisabledItems.add(aMaterial);
                 if (!enableUnusedQuadPlates && !(aMaterial == Materials.Paper)) plateQuadruple.mDisabledItems.add(aMaterial);
                 if (!enableUnusedQuinPlates && !(aMaterial == Materials.Paper)) plateQuintuple.mDisabledItems.add(aMaterial);
-                if (!(enableUnusedDensePlates || GregTech_API.mGTPlusPlus) && !(aMaterial == Materials.Iron || aMaterial == Materials.Copper || aMaterial == Materials.Lead || aMaterial == Materials.Paper))
+                if (!enableUnusedDensePlates && !(aMaterial == Materials.Iron || aMaterial == Materials.Copper || aMaterial == Materials.Lead || aMaterial == Materials.Paper))
                     plateDense.mDisabledItems.add(aMaterial);
 				
                 //Rotors
@@ -699,7 +651,7 @@ public enum OrePrefixes {
                 //Rings
                 if (!enableUnusedRings && !(aMaterial == Materials.Titanium || aMaterial == Materials.Chrome || aMaterial == Materials.Iron || aMaterial == Materials.Tin ||
                         aMaterial == Materials.Osmium || aMaterial == Materials.Iridium || aMaterial == Materials.Bronze || aMaterial == Materials.WroughtIron ||
-                        aMaterial == Materials.Steel || aMaterial == Materials.StainlessSteel || aMaterial == Materials.PigIron || aMaterial == Materials.TungstenSteel ||
+                        aMaterial == Materials.Steel || aMaterial == Materials.StainlessSteel || aMaterial == Materials.TungstenSteel ||
                         aMaterial == Materials.Rubber || aMaterial == Materials.HSSE || aMaterial == Materials.Neutronium || aMaterial == Materials.HSSG || aMaterial == Materials.Aluminium || 
                         aMaterial == Materials.Invar || aMaterial == Materials.Brass || aMaterial == Materials.Paper || aMaterial == Materials.Silicone || aMaterial == Materials.StyreneButadieneRubber))
                     ring.mDisabledItems.add(aMaterial);
@@ -732,19 +684,19 @@ public enum OrePrefixes {
                 if (!enableUnusedBolts && ((aMaterial.mTypes & 0x40) == 0) && !(aMaterial == Materials.Titanium || aMaterial == Materials.Chrome || aMaterial == Materials.Iron ||
                         aMaterial == Materials.Tin || aMaterial == Materials.Osmium || aMaterial == Materials.Iridium || aMaterial == Materials.Neutronium ||
                         aMaterial == Materials.Bronze || aMaterial == Materials.WroughtIron || aMaterial == Materials.Steel || aMaterial == Materials.StainlessSteel ||
-                        aMaterial == Materials.PigIron || aMaterial == Materials.TungstenSteel || aMaterial == Materials.Tungsten || aMaterial == Materials.HSSE || aMaterial == Materials.HSSG))
+                        aMaterial == Materials.TungstenSteel || aMaterial == Materials.Tungsten || aMaterial == Materials.HSSE || aMaterial == Materials.HSSG))
                     bolt.mDisabledItems.add(aMaterial);
                 //Screws
                 if (!enableUnusedScrews && ((aMaterial.mTypes & 0x40) == 0) && !(aMaterial == Materials.Titanium || aMaterial == Materials.Chrome || aMaterial == Materials.Iron ||
                         aMaterial == Materials.Tin || aMaterial == Materials.Osmium || aMaterial == Materials.Iridium || aMaterial == Materials.Neutronium ||
                         aMaterial == Materials.Bronze || aMaterial == Materials.WroughtIron || aMaterial == Materials.Steel || aMaterial == Materials.StainlessSteel ||
-                        aMaterial == Materials.PigIron || aMaterial == Materials.TungstenSteel || aMaterial == Materials.HSSE || aMaterial == Materials.HSSG))
+                        aMaterial == Materials.TungstenSteel || aMaterial == Materials.HSSE || aMaterial == Materials.HSSG))
                     screw.mDisabledItems.add(aMaterial);
                 //Rods
                 if (!enableUnusedRods && ((aMaterial.mTypes & 0x40) == 0) && !(aMaterial == Materials.Titanium || aMaterial == Materials.Chrome || aMaterial == Materials.Iron ||
                         aMaterial == Materials.Tin || aMaterial == Materials.Osmium || aMaterial == Materials.Iridium || aMaterial == Materials.Neutronium ||
                         aMaterial == Materials.Bronze || aMaterial == Materials.WroughtIron || aMaterial == Materials.Steel || aMaterial == Materials.StainlessSteel ||
-                        aMaterial == Materials.PigIron || aMaterial == Materials.TungstenSteel || aMaterial == Materials.HSSE || aMaterial == Materials.HSSG ||
+                        aMaterial == Materials.TungstenSteel || aMaterial == Materials.HSSE || aMaterial == Materials.HSSG ||
                         aMaterial == Materials.Aluminium || aMaterial == Materials.Copper || aMaterial == Materials.Neodymium || aMaterial == Materials.Europium ||
                         aMaterial == Materials.Platinum || aMaterial == Materials.Gold || aMaterial == Materials.Uranium235 || aMaterial == Materials.Plutonium241 ||
                         aMaterial == Materials.Americium || aMaterial == Materials.Neutronium || aMaterial == Materials.Bronze || aMaterial == Materials.Brass ||
@@ -1073,31 +1025,6 @@ public enum OrePrefixes {
                         return "Ground " + "%material";
                 }
                 break;
-        }
-        if (ProcessingModSupport.aEnableThaumcraftMats) {
-            switch (aMaterial.mName) {
-                case "InfusedAir":
-                case "InfusedDull":
-                case "InfusedEarth":
-                case "InfusedEntropy":
-                case "InfusedFire":
-                case "InfusedOrder":
-                case "InfusedVis":
-                case "InfusedWater":
-                    if (name().startsWith("gem")) return mLocalizedMaterialPre + "Shard of " + "%material";
-                    if (name().startsWith("crystal")) return mLocalizedMaterialPre + "Shard of " + "%material";
-                    if (name().startsWith("plate"))
-                        return mLocalizedMaterialPre + "%material" + " Crystal Plate";
-                    if (name().startsWith("dust"))
-                        return mLocalizedMaterialPre + "%material" + " Crystal Powder";
-                    switch (this) {
-                        case crushedCentrifuged:
-                        case crushedPurified:
-                        case crushed:
-                            return mLocalizedMaterialPre + "%material" + " Crystals";
-                    }
-                    break;
-            }
         }
         // Use Standard Localization
         return mLocalizedMaterialPre + "%material" + mLocalizedMaterialPost;

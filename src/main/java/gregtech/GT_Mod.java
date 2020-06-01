@@ -12,21 +12,17 @@ import gregtech.api.enums.*;
 import gregtech.api.interfaces.internal.IGT_Mod;
 import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
-import gregtech.api.objects.XSTR;
 import gregtech.api.util.*;
 import gregtech.common.GT_DummyWorld;
 import gregtech.common.GT_Network;
 import gregtech.common.GT_Proxy;
 import gregtech.common.GT_RecipeAdder;
-import gregtech.common.entities.GT_Entity_Arrow;
-import gregtech.common.entities.GT_Entity_Arrow_Potion;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.items.ItemDebug;
 import gregtech.common.items.armor.components.LoadArmorComponents;
 import gregtech.common.items.behaviors.Behaviour_DataOrb;
 import gregtech.common.tileentities.machines.basic.GT_MetaTileEntity_Massfabricator;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_DigitalChestBase;
-import gregtech.common.tileentities.storage.GT_MetaTileEntity_QuantumChest;
-import gregtech.common.tileentities.storage.GT_MetaTileEntity_SuperChest;
 import gregtech.loaders.load.GT_CoverBehaviorLoader;
 import gregtech.loaders.load.GT_FuelLoader;
 import gregtech.loaders.load.GT_ItemIterator;
@@ -47,10 +43,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -70,16 +64,8 @@ import static gregtech.api.enums.GT_Values.MOD_ID_FR;
 
 @Mod(modid = "gregtech", name = "GregTech", version = "MC1710", useMetadata = false, 
 dependencies =  " required-after:IC2;" +
-        " after:spartakcore;"+
         " after:Forestry;" +
-        " after:PFAAGeologica;" +
-        " after:Thaumcraft;" +
-        " after:Railcraft;" +
         " after:appliedenergistics2;" +
-        " after:ThermalExpansion;" +
-        " after:TwilightForest;" +
-        " after:harvestcraft;" +
-        " after:magicalcrops;" +
         " after:BuildCraft|Transport;" +
         " after:BuildCraft|Silicon;" +
         " after:BuildCraft|Factory;" +
@@ -89,18 +75,6 @@ dependencies =  " required-after:IC2;" +
         " after:GalacticraftCore;" +
         " after:GalacticraftMars;" +
         " after:GalacticraftPlanets;" +
-        " after:ThermalExpansion|Transport;" +
-        " after:ThermalExpansion|Energy;" +
-        " after:ThermalExpansion|Factory;" +
-        " after:RedPowerCore;" +
-        " after:RedPowerBase;" +
-        " after:RedPowerMachine;" +
-        " after:RedPowerCompat;" +
-        " after:RedPowerWiring;" +
-        " after:RedPowerLogic;" +
-        " after:RedPowerLighting;" +
-        " after:RedPowerWorld;" +
-        " after:RedPowerControl;" +
         " after:UndergroundBiomes;" +
         " after:TConstruct;" +
         " after:Translocator;")
@@ -177,10 +151,6 @@ public class GT_Mod implements IGT_Mod {
 
         GregTech_API.sClientDataFile = new GT_Config(new Configuration(new File(aEvent.getModConfigurationDirectory().getParentFile(), "GregTech.cfg")));
         GregTech_API.mIC2Classic = Loader.isModLoaded("IC2-Classic-Spmod");
-        GregTech_API.mMagneticraft = Loader.isModLoaded("Magneticraft");
-        GregTech_API.mImmersiveEngineering = Loader.isModLoaded("ImmersiveEngineering");
-        GregTech_API.mGTPlusPlus = Loader.isModLoaded("miscutils");        
-        GregTech_API.mGTPlusPlus = Loader.isModLoaded("miscutils");
         GregTech_API.mTranslocator = Loader.isModLoaded("Translocator");
         GregTech_API.mTConstruct = Loader.isModLoaded("TConstruct");
         GregTech_API.mGalacticraft = Loader.isModLoaded("GalacticraftCore");
@@ -251,6 +221,7 @@ public class GT_Mod implements IGT_Mod {
         GT_Values.D1 = tMainConfig.get(aTextGeneral, "Debug", false).getBoolean(false);
         GT_Values.D2 = tMainConfig.get(aTextGeneral, "Debug2", false).getBoolean(false);
         GT_Values.allow_broken_recipemap = tMainConfig.get(aTextGeneral, "debug allow broken recipemap",false).getBoolean(false);
+        GT_Values.debugRecipes = tMainConfig.get(aTextGeneral, "debugRecipes", false,"Displaying an \"Error\" item in recipes if they are broken or the item is missing [default: false]").getBoolean(false);
         GT_Values.debugCleanroom = tMainConfig.get(aTextGeneral, "debugCleanroom", false).getBoolean(false);
         GT_Values.debugDriller = tMainConfig.get(aTextGeneral, "debugDriller", false).getBoolean(false);
         GT_Values.debugWorldGen = tMainConfig.get(aTextGeneral, "debugWorldGen", false).getBoolean(false);
@@ -299,7 +270,6 @@ public class GT_Mod implements IGT_Mod {
             }
         }
         gregtechproxy.mMaxEqualEntitiesAtOneSpot = tMainConfig.get(aTextGeneral, "MaxEqualEntitiesAtOneSpot", 3).getInt(3);
-        gregtechproxy.mSkeletonsShootGTArrows = tMainConfig.get(aTextGeneral, "SkeletonsShootGTArrows", 16).getInt(16);
         gregtechproxy.mFlintChance = tMainConfig.get(aTextGeneral, "FlintAndSteelChance", 30).getInt(30);
         gregtechproxy.mItemDespawnTime = tMainConfig.get(aTextGeneral, "ItemDespawnTime", 6000).getInt(6000);
         gregtechproxy.mNerfStorageBlocks = tMainConfig.get(aTextGeneral,"NerfStorageBlocks",true).getBoolean(true);
@@ -328,12 +298,9 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.mHideUnusedOres = tMainConfig.get(aTextGeneral, "HideUnusedOres", true).getBoolean(true);
         gregtechproxy.mHideRecyclingRecipes = tMainConfig.get(aTextGeneral, "HideRecyclingRecipes", true).getBoolean(true);
         gregtechproxy.mArcSmeltIntoAnnealed = tMainConfig.get(aTextGeneral, "ArcSmeltIntoAnnealedWrought", true).getBoolean(true);
-        gregtechproxy.mMagneticraftRecipes = tMainConfig.get(aTextGeneral, "EnableMagneticraftSupport", true).getBoolean(true);
-        gregtechproxy.mImmersiveEngineeringRecipes = tMainConfig.get(aTextGeneral, "EnableImmersiveEngineeringRSupport", true).getBoolean(true);
-        gregtechproxy.mMagneticraftBonusOutputPercent = tMainConfig.get(aTextGeneral, "MagneticraftBonusOutputPercent", 100.0f).getDouble();
-        gregtechproxy.mTEMachineRecipes = tMainConfig.get("general", "TEMachineRecipes", false).getBoolean(false);
-        gregtechproxy.mEnableAllMaterials = tMainConfig.get("general", "EnableAllMaterials", false, "Enabled all Materials. Warning!").getBoolean(false);
+        gregtechproxy.mEnableAllMaterials = tMainConfig.get("general", "EnableAllMaterials", false).getBoolean(false);
         gregtechproxy.mEnableAllComponents = tMainConfig.get("general", "EnableAllComponents", false).getBoolean(false);
+        gregtechproxy.mEnableAllComponentsWithoutIntegration = tMainConfig.get("general", "mEnableAllComponentsWithoutIntegration", true, "No Touch!").getBoolean(true);
         gregtechproxy.mPollution = tMainConfig.get("Pollution", "EnablePollution", true).getBoolean(true);
         gregtechproxy.mPollutionSmogLimit = tMainConfig.get("Pollution", "SmogLimit", 500000).getInt(500000);
         gregtechproxy.mPollutionPoisonLimit = tMainConfig.get("Pollution", "PoisonLimit", 750000).getInt(750000);
@@ -345,8 +312,6 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.mEnableCleanroom = tMainConfig.get("general", "EnableCleanroom", true).getBoolean(true);
         gregtechproxy.mLowGravProcessing = Loader.isModLoaded(GT_Values.MOD_ID_GC_CORE) && tMainConfig.get("general", "LowGravProcessing", true).getBoolean(true);
         gregtechproxy.mLowGravProcessingCircuits = Loader.isModLoaded(GT_Values.MOD_ID_GC_CORE) && tMainConfig.get("general", "LowGravProcessingCircuits", false).getBoolean(false);
-        gregtechproxy.mGTPlusPlusHard = Loader.isModLoaded("miscutils") && tMainConfig.get("general", "GTPlusPlusHard", false).getBoolean(false);
-        gregtechproxy.mBartHard = Loader.isModLoaded("bartworks") && tMainConfig.get("general", "BartHard", false).getBoolean(false);
         gregtechproxy.mComponentAssembler = tMainConfig.get("general","ComponentAssembler",false).getBoolean(false);
         
         Calendar now = Calendar.getInstance();
@@ -438,9 +403,6 @@ public class GT_Mod implements IGT_Mod {
         GT_Log.out.println("GT_Mod: Adding Scrap with a Weight of 200.0F to the Scrapbox Drops.");
         GT_ModHandler.addScrapboxDrop(200.0F, GT_ModHandler.getIC2Item("scrap", 1L));
 
-        EntityRegistry.registerModEntity(GT_Entity_Arrow.class, "GT_Entity_Arrow", 1, GT_Values.GT, 160, 1, true);
-        EntityRegistry.registerModEntity(GT_Entity_Arrow_Potion.class, "GT_Entity_Arrow_Potion", 2, GT_Values.GT, 160, 1, true);
-
         GT_FML_LOGGER.info("preReader");
         List<String> oreTags = new ArrayList<String>();
         if(Loader.isModLoaded("MineTweaker3")){
@@ -483,7 +445,7 @@ public class GT_Mod implements IGT_Mod {
         					  String tag = "";
         					  String[] tags = new String[]{};
         					  if(mIt==1)tags = new String[]{"dustTiny","dustSmall","dust","dustImpure","dustPure","crushed","crushedPurified","crushedCentrifuged","gem","nugget",null,"ingot","ingotHot","ingotDouble","ingotTriple","ingotQuadruple","ingotQuintuple","plate","plateDouble","plateTriple","plateQuadruple","plateQuintuple","plateDense","stick","lens","round","bolt","screw","ring","foil","cell","cellPlasma"};
-        					  if(mIt==2)tags = new String[]{"toolHeadSword", "toolHeadPickaxe", "toolHeadShovel", "toolHeadAxe", "toolHeadHoe", "toolHeadHammer", "toolHeadFile", "toolHeadSaw", "toolHeadDrill", "toolHeadChainsaw", "toolHeadWrench", "toolHeadUniversalSpade", "toolHeadSense", "toolHeadPlow", "toolHeadArrow", "toolHeadBuzzSaw", "turbineBlade", null, "itemCasing", "wireFine", "gearGtSmall", "rotor", "stickLong", "springSmall", "spring", "arrowGtWood", "arrowGtPlastic", "gemChipped", "gemFlawed", "gemFlawless", "gemExquisite", "gearGt"};
+        					  if(mIt==2)tags = new String[]{"toolHeadSword", "toolHeadPickaxe", "toolHeadShovel", "toolHeadAxe", "toolHeadHoe", "toolHeadHammer", "toolHeadFile", "toolHeadSaw", "toolHeadDrill", "toolHeadChainsaw", "toolHeadWrench", "toolHeadUniversalSpade", "toolHeadSense", "toolHeadPlow", null, "toolHeadBuzzSaw", "turbineBlade", null, "itemCasing", "wireFine", "gearGtSmall", "rotor", "stickLong", "springSmall", "spring", null, null, "gemChipped", "gemFlawed", "gemFlawless", "gemExquisite", "gearGt"};
         					  if(mIt==3)tags = new String[]{"crateGtDust", "crateGtIngot", "crateGtGem", "crateGtPlate"};
         					  if(tags.length>prefix) tag = tags[prefix];
         					  if(GregTech_API.sGeneratedMaterials[material]!=null){
@@ -497,7 +459,7 @@ public class GT_Mod implements IGT_Mod {
         		}
         	}
         }
-        String[] preS = new String[]{"dustTiny","dustSmall","dust","dustImpure","dustPure","crushed","crushedPurified","crushedCentrifuged","gem","nugget","ingot","ingotHot","ingotDouble","ingotTriple","ingotQuadruple","ingotQuintuple","plate","plateDouble","plateTriple","plateQuadruple","plateQuintuple","plateDense","stick","lens","round","bolt","screw","ring","foil","cell","cellPlasma","toolHeadSword", "toolHeadPickaxe", "toolHeadShovel", "toolHeadAxe", "toolHeadHoe", "toolHeadHammer", "toolHeadFile", "toolHeadSaw", "toolHeadDrill", "toolHeadChainsaw", "toolHeadWrench", "toolHeadUniversalSpade", "toolHeadSense", "toolHeadPlow", "toolHeadArrow", "toolHeadBuzzSaw", "turbineBlade", "wireFine", "gearGtSmall", "rotor", "stickLong", "springSmall", "spring", "arrowGtWood", "arrowGtPlastic", "gemChipped", "gemFlawed", "gemFlawless", "gemExquisite", "gearGt","crateGtDust", "crateGtIngot", "crateGtGem", "crateGtPlate", "itemCasing"};
+        String[] preS = new String[]{"dustTiny","dustSmall","dust","dustImpure","dustPure","crushed","crushedPurified","crushedCentrifuged","gem","nugget","ingot","ingotHot","ingotDouble","ingotTriple","ingotQuadruple","ingotQuintuple","plate","plateDouble","plateTriple","plateQuadruple","plateQuintuple","plateDense","stick","lens","round","bolt","screw","ring","foil","cell","cellPlasma","toolHeadSword", "toolHeadPickaxe", "toolHeadShovel", "toolHeadAxe", "toolHeadHoe", "toolHeadHammer", "toolHeadFile", "toolHeadSaw", "toolHeadDrill", "toolHeadChainsaw", "toolHeadWrench", "toolHeadUniversalSpade", "toolHeadSense", "toolHeadPlow", null, "toolHeadBuzzSaw", "turbineBlade", "wireFine", "gearGtSmall", "rotor", "stickLong", "springSmall", "spring", null, null, "gemChipped", "gemFlawed", "gemFlawless", "gemExquisite", "gearGt","crateGtDust", "crateGtIngot", "crateGtGem", "crateGtPlate", "itemCasing"};
 
         List<String> mMTTags = new ArrayList<String>();
         for(String test : oreTags){
@@ -557,42 +519,7 @@ public class GT_Mod implements IGT_Mod {
         new GT_SonictronLoader().run();
         new GT_SpawnEventHandler();
         
-        /*
-        if (GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanel", true)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel.get(1L, new Object[0]),    GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"SGS", "CPC", 'C', OrePrefixes.circuit.get(Materials.Basic), 'G', new ItemStack(Blocks.glass_pane, 1), 'P', OrePrefixes.plateAlloy.get(Materials.Carbon), 'S', ItemList.Circuit_Silicon_Wafer});
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_8V.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"SGS", "CPC","R R", 'C', OrePrefixes.circuit.get(Materials.Advanced), 'G', new ItemStack(Blocks.glass_pane, 1), 'P', OrePrefixes.wireGt04.get(Materials.Graphene), 'S', ItemList.Circuit_Silicon_Wafer2,'R', OrePrefixes.plate.get(Materials.GalliumArsenide)});
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_LV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"SGS", "CPC","R R", 'C', OrePrefixes.circuit.get(Materials.Master), 'G', GT_ModHandler.getIC2Item("reinforcedGlass", 1L), 'P', OrePrefixes.wireGt16.get(Materials.Graphene), 'S', ItemList.Circuit_Silicon_Wafer3,'R', OrePrefixes.plate.get(Materials.IndiumGalliumPhosphide)});
-                               }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanel8V", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_8V.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"SSS", "STS", "SSS", 'S', ItemList.Cover_SolarPanel, 'T', OrePrefixes.circuit.get(Materials.Advanced)});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelLV", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_LV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_8V, 'T', ItemList.Transformer_LV_ULV});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelMV", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_MV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_LV, 'T', ItemList.Transformer_MV_LV});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelHV", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_HV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_MV, 'T', ItemList.Transformer_HV_MV});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelEV", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_EV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_HV, 'T', ItemList.Transformer_EV_HV});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelIV", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_IV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_EV, 'T', ItemList.Transformer_IV_EV});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelLuV", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_LuV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_IV, 'T', ItemList.Transformer_LuV_IV});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelZPM", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_ZPM.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_LuV, 'T', ItemList.Transformer_ZPM_LuV});
-        }
-        if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "SolarPanelUV", false)) {
-            GT_ModHandler.addCraftingRecipe(ItemList.Cover_SolarPanel_UV.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{" S ", "STS", " S ", 'S', ItemList.Cover_SolarPanel_ZPM, 'T', ItemList.Transformer_UV_ZPM});
-        }
-        */
-        
-    	GT_Values.RA.addCentrifugeRecipe(Materials.Stone.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF, 
+        GT_Values.RA.addCentrifugeRecipe(Materials.Stone.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF,
 					Materials.Quartzite.getDustSmall(1),Materials.PotassiumFeldspar.getDustSmall(1),Materials.Marble.getDustTiny(2),
 					Materials.Biotite.getDustTiny(1), 	Materials.MetalMixture.getDustTiny(1), 		Materials.Sodalite.getDustTiny(1), 
 					new int[]{10000, 10000, 10000, 10000, 10000, 7500}, 480, 120);
@@ -653,6 +580,8 @@ public class GT_Mod implements IGT_Mod {
         }
         if (FMLCommonHandler.instance().getEffectiveSide().isServer())
         	GT_Assemblyline_Server.fillMap(aEvent);
+
+        ItemDebug.getInstance().registerItem();
     }
 
     @Mod.EventHandler
@@ -709,7 +638,6 @@ public class GT_Mod implements IGT_Mod {
             gregtechproxy.registerUnificationEntries();
             new GT_FuelLoader().run();
         }
-        new GT_BookAndLootLoader().run();
         new GT_ItemMaxStacksizeLoader().run();
         new GT_BlockResistanceLoader().run();
         new GT_RecyclerBlacklistLoader().run();
@@ -1072,37 +1000,6 @@ public class GT_Mod implements IGT_Mod {
                 tStack = (ItemStack) i$.next();
             }
         }
-        GT_Log.out.println("GT_Mod: Dungeon Loot Disabled");
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("dungeonChest").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("bonusChest").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("villageBlacksmith").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdCrossing").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdLibrary").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("strongholdCorridor").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidJungleDispenser").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidJungleChest").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("pyramidDesertyChest").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
-//        for (WeightedRandomChestContent tContent : ChestGenHooks.getInfo("mineshaftCorridor").getItems(new XSTR())) {
-//            tStacks.add(tContent.theItemId);
-//        }
         GT_Log.out.println("GT_Mod: Smelting");
         Object tStack;
         for (Iterator i$ = FurnaceRecipes.smelting().getSmeltingList().values().iterator(); i$.hasNext(); tStacks.add((ItemStack) tStack)) {
@@ -1305,9 +1202,6 @@ public class GT_Mod implements IGT_Mod {
         		GT_OreDictUnificator.get(ItemList.Block_SSFUEL.get(1)),
         		GT_OreDictUnificator.get(ItemList.Block_MSSFUEL.get(1)),
         		GT_OreDictUnificator.get(OrePrefixes.rod, Materials.Blaze, 1));
-        if (Loader.isModLoaded("Thaumcraft")) {
-        	GT_Recipe.GT_Recipe_Map.sLargeBoilerFakeFuels.addSolidRecipe(GT_ModHandler.getModItem("Thaumcraft", "ItemResource", 1));
-        }
     }
     
     public static int calculateTotalGTVersion(int minorVersion){

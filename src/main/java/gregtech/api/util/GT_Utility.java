@@ -824,7 +824,7 @@ public class GT_Utility {
         /** These are all special Cases, in which it is intended to have only GT Blocks outputting those Container Items */
         if (ItemList.Cell_Empty.isStackEqual(aStack, false, true)) return null;
         if (ItemList.IC2_Fuel_Can_Filled.isStackEqual(aStack, false, true)) return ItemList.IC2_Fuel_Can_Empty.get(1);
-        if (aStack.getItem() == Items.potionitem || aStack.getItem() == Items.experience_bottle || ItemList.TF_Vial_FieryBlood.isStackEqual(aStack) || ItemList.TF_Vial_FieryTears.isStackEqual(aStack))
+        if (aStack.getItem() == Items.potionitem || aStack.getItem() == Items.experience_bottle)
             return ItemList.Bottle_Empty.get(1);
 
         if (aCheckIFluidContainerItems && aStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) aStack.getItem()).getCapacity(aStack) > 0) {
@@ -1491,20 +1491,6 @@ public class GT_Utility {
         return !GregTech_API.sDimensionalList.contains(aDimensionID) && DimensionManager.isDimensionRegistered(aDimensionID);
     }
 
-    //public static boolean isRealDimension(int aDimensionID) {
-    //    try {
-    //        if (DimensionManager.getProvider(aDimensionID).getClass().getName().contains("com.xcompwiz.mystcraft"))
-    //            return true;
-    //    } catch (Throwable e) {/*Do nothing*/}
-    //    try {
-    //        if (DimensionManager.getProvider(aDimensionID).getClass().getName().contains("TwilightForest")) return true;
-    //    } catch (Throwable e) {/*Do nothing*/}
-    //    try {
-    //        if (DimensionManager.getProvider(aDimensionID).getClass().getName().contains("galacticraft")) return true;
-    //    } catch (Throwable e) {/*Do nothing*/}
-    //    return GregTech_API.sDimensionalList.contains(aDimensionID);
-    //}
-
     public static boolean moveEntityToDimensionAtCoords(Entity entity, int aDimension, double aX, double aY, double aZ) {
         //Credit goes to BrandonCore Author :!:
 
@@ -2031,6 +2017,17 @@ public class GT_Utility {
         public static NBTTagCompound getNBT(ItemStack aStack) {
             NBTTagCompound rNBT = aStack.getTagCompound();
             return rNBT == null ? new NBTTagCompound() : rNBT;
+        }
+
+        public static void setDrillRangeMode(ItemStack aStack, int aMode) {
+            NBTTagCompound tNBT = getNBT(aStack);
+            tNBT.setInteger("GT.DrillRangeMode", aMode);
+            setNBT(aStack, tNBT);
+        }
+
+        public static int getDrillRangeMode(ItemStack aStack) {
+            NBTTagCompound tNBT = getNBT(aStack);
+            return tNBT.getInteger("GT.DrillRangeMode");
         }
 
         public static void setPunchCardData(ItemStack aStack, String aPunchCardData) {

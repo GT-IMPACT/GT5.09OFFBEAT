@@ -137,6 +137,7 @@ public class GT_MetaTileEntity_Boiler_Bronze
                         (GT_Utility.isPartOfMaterials(this.mInventory[2],Materials.Charcoal) && !GT_Utility.isPartOfOrePrefix(this.mInventory[2],OrePrefixes.block)) ||
                         (GT_Utility.isPartOfMaterials(this.mInventory[2],Materials.Lignite) && !GT_Utility.isPartOfOrePrefix(this.mInventory[2],OrePrefixes.block)) ||
                         (GT_Utility.isPartOfMaterials(this.mInventory[2],Materials.Diamond) && !GT_Utility.isPartOfOrePrefix(this.mInventory[2],OrePrefixes.block)) ||
+                        GT_OreDictUnificator.isItemStackInstanceOf(this.mInventory[2], "blockCokeCoal") ||
                         GT_OreDictUnificator.isItemStackInstanceOf(this.mInventory[2], "fuelCoke")
                 ) {
                     if ((TileEntityFurnace.getItemBurnTime(this.mInventory[2])/10) > 0) {
@@ -153,8 +154,8 @@ public class GT_MetaTileEntity_Boiler_Bronze
                         GT_OreDictUnificator.isItemStackInstanceOf(this.mInventory[2], OrePrefixes.block.get(Materials.Lignite)) ||
                         GT_OreDictUnificator.isItemStackInstanceOf(this.mInventory[2], OrePrefixes.block.get(Materials.Charcoal))||
                         GT_OreDictUnificator.isItemStackInstanceOf(this.mInventory[2], OrePrefixes.block.get(Materials.Diamond)) ||
+                        GT_OreDictUnificator.isItemStackInstanceOf(this.mInventory[2], "blockCokeCoal") ||
 
-                         //if its either a Railcraft Coke Block or a custom GTNH compressed Coal/charcoal/lignite/coke block
                         (
                          Block.getBlockFromItem(this.mInventory[2].getItem()) != null && //check if the block exists
                         (
@@ -165,7 +166,6 @@ public class GT_MetaTileEntity_Boiler_Bronze
                          Block.getBlockFromItem(this.mInventory[2].getItem()).getUnlocalizedName().toLowerCase().contains("coal") ||
                          Block.getBlockFromItem(this.mInventory[2].getItem()).getUnlocalizedName().toLowerCase().contains("diamond") ||
                          Block.getBlockFromItem(this.mInventory[2].getItem()).getUnlocalizedName().toLowerCase().contains("coke") ||
-                         Block.getBlockFromItem(this.mInventory[2].getItem()).getUnlocalizedName().toLowerCase().contains("railcraft.cube") ||
                          Block.getBlockFromItem(this.mInventory[2].getItem()).getUnlocalizedName().toLowerCase().contains("lignite")
                         )
                         )

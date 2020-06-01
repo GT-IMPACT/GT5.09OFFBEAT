@@ -3,12 +3,12 @@ package gregtech.loaders.load;
 import buildcraft.api.tools.IToolWrench;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
+import gregtech.api.interfaces.IToolCrowbar;
 import gregtech.api.items.GT_Generic_Item;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
-import mods.railcraft.api.core.items.IToolCrowbar;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -66,10 +66,10 @@ public class GT_ItemIterator
                             if ((!tItem.isDamageable()) && (!GT_ModHandler.isElectricItem(new ItemStack(tItem, 1, 0)))) {
                                 if ((GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.disabledrecipes, "infiniteDurabilityRCCrowbars", false)) &&
                                         (GT_ModHandler.removeRecipeByOutput(new ItemStack(tItem, 1, 32767)))) {
-                                    GT_Log.out.println("GT_Mod: Removed infinite RC Crowbar: " + tName);
+                                    GT_Log.out.println("GT_Mod: Removed infinite Fake RC Crowbar: " + tName);
                                 }
                             } else if (GregTech_API.registerCrowbar(new ItemStack(tItem, 1, 32767))) {
-                                GT_Log.out.println("GT_Mod: Registered valid RC Crowbar: " + tName);
+                                GT_Log.out.println("GT_Mod: Registered valid Fake RC Crowbar: " + tName);
                             }
                         }
                         if ((tItem instanceof IToolWrench)) {
@@ -184,6 +184,7 @@ public class GT_ItemIterator
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Gabbro, new ItemStack(tItem, 1, 4));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Basalt, new ItemStack(tItem, 1, 5));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Komatiite, new ItemStack(tItem, 1, 6));
+                            GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Dacite, new ItemStack(tItem, 1, 7));
 
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.GraniteRed, new ItemStack(tItem, 1, 8));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.GraniteBlack, new ItemStack(tItem, 1, 9));
@@ -192,6 +193,7 @@ public class GT_ItemIterator
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Gabbro, new ItemStack(tItem, 1, 12));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Basalt, new ItemStack(tItem, 1, 13));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Komatiite, new ItemStack(tItem, 1, 14));
+                            GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Dacite, new ItemStack(tItem, 1, 15));
                         }
                         if ((tName.equals("tile.metamorphicStone")) || (tName.equals("tile.metamorphicStoneBrick")) || (tName.equals("tile.metamorphicCobblestone"))) {
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Gneiss, new ItemStack(tItem, 1, 0));
@@ -201,7 +203,6 @@ public class GT_ItemIterator
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Blueschist, new ItemStack(tItem, 1, 4));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Greenschist, new ItemStack(tItem, 1, 5));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Soapstone, new ItemStack(tItem, 1, 6));
-                            GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Migmatite, new ItemStack(tItem, 1, 7));
 
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Gneiss, new ItemStack(tItem, 1, 8));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Eclogite, new ItemStack(tItem, 1, 9));
@@ -210,7 +211,6 @@ public class GT_ItemIterator
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Blueschist, new ItemStack(tItem, 1, 12));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Greenschist, new ItemStack(tItem, 1, 13));
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Soapstone, new ItemStack(tItem, 1, 14));
-                            GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Migmatite, new ItemStack(tItem, 1, 15));
                         }
                         if (tName.equals("tile.blockCosmeticSolid")) {
                             GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.Obsidian, new ItemStack(tItem, 1, 0));

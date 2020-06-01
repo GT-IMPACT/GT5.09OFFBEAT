@@ -9,29 +9,24 @@ import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
 import gregtech.api.util.*;
 import gregtech.common.covers.GT_Cover_SolarPanel;
-import gregtech.common.items.behaviors.Behaviour_Arrow;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 
 public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
     public static GT_MetaGenerated_Item_02 INSTANCE;
     private final static String aTextCover = "Usable as Cover"; private final static String aTextForestry = "Forestry";
 
     public GT_MetaGenerated_Item_02() {
-        super("metaitem.02", new OrePrefixes[]{OrePrefixes.toolHeadSword, OrePrefixes.toolHeadPickaxe, OrePrefixes.toolHeadShovel, OrePrefixes.toolHeadAxe, OrePrefixes.toolHeadHoe, OrePrefixes.toolHeadHammer, OrePrefixes.toolHeadFile, OrePrefixes.toolHeadSaw, OrePrefixes.toolHeadDrill, OrePrefixes.toolHeadChainsaw, OrePrefixes.toolHeadWrench, OrePrefixes.toolHeadUniversalSpade, OrePrefixes.toolHeadSense, OrePrefixes.toolHeadPlow, OrePrefixes.toolHeadArrow, OrePrefixes.toolHeadBuzzSaw, OrePrefixes.turbineBlade, null, OrePrefixes.itemCasing, OrePrefixes.wireFine, OrePrefixes.gearGtSmall, OrePrefixes.rotor, OrePrefixes.stickLong, OrePrefixes.springSmall, OrePrefixes.spring, OrePrefixes.arrowGtWood, OrePrefixes.arrowGtPlastic, OrePrefixes.gemChipped, OrePrefixes.gemFlawed, OrePrefixes.gemFlawless, OrePrefixes.gemExquisite, OrePrefixes.gearGt});
+        super("metaitem.02", new OrePrefixes[]{OrePrefixes.toolHeadSword, OrePrefixes.toolHeadPickaxe, OrePrefixes.toolHeadShovel, OrePrefixes.toolHeadAxe, OrePrefixes.toolHeadHoe, OrePrefixes.toolHeadHammer, OrePrefixes.toolHeadFile, OrePrefixes.toolHeadSaw, OrePrefixes.toolHeadDrill, OrePrefixes.toolHeadChainsaw, OrePrefixes.toolHeadWrench, OrePrefixes.toolHeadUniversalSpade, OrePrefixes.toolHeadSense, OrePrefixes.toolHeadPlow, OrePrefixes.toolHeadArrow, OrePrefixes.toolHeadBuzzSaw, OrePrefixes.turbineBlade, null, OrePrefixes.itemCasing, OrePrefixes.wireFine, OrePrefixes.gearGtSmall, OrePrefixes.rotor, OrePrefixes.stickLong, OrePrefixes.springSmall, OrePrefixes.spring, null, null, OrePrefixes.gemChipped, OrePrefixes.gemFlawed, OrePrefixes.gemFlawless, OrePrefixes.gemExquisite, OrePrefixes.gearGt});
         INSTANCE = this;
 
         int tLastID = 0;
@@ -48,7 +43,7 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.ThermosCan_Ice_Tea.set(addItem(tLastID = 9, "Ice Tea", "Better than this purple Junk Drink from failed Potions", new Object[]{new GT_FoodStat(2, 0.2F, EnumAction.drink, ItemList.ThermosCan_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.moveSlowdown.id, 300, 0, 50})}));
 
         ItemList.GelledToluene.set(addItem(tLastID = 10, "Gelled Toluene", "Raw Explosive", new Object[]{}));
-
+        
         ItemList.Bottle_Purple_Drink.set(addItem(tLastID = 100, "Purple Drink", "How about Lemonade. Or some Ice Tea? I got Purple Drink!", new Object[]{new GT_FoodStat(8, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.moveSlowdown.id, 400, 1, 90})}));
         ItemList.Bottle_Grape_Juice.set(addItem(tLastID = 101, "Grape Juice", "This has a cleaning effect on your internals.", new Object[]{new GT_FoodStat(4, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.hunger.id, 400, 1, 60})}));
         ItemList.Bottle_Wine.set(addItem(tLastID = 102, "Wine", "Ordinary", new Object[]{new GT_FoodStat(2, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.confusion.id, 400, 1, 60, Potion.heal.id, 0, 0, 60, Potion.poison.id, 200, 1, 5})}));
@@ -88,8 +83,8 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Bottle_Milk.set(addItem(tLastID = 136, "Milk", "Got Milk?", new Object[]{OrePrefixes.bottle.get(Materials.Milk), new GT_FoodStat(0, 0.0F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[0]).setMilk()}));
         ItemList.Bottle_Holy_Water.set(addItem(tLastID = 137, "Holy Water", "May the holy Planks be with you", new Object[]{OrePrefixes.bottle.get(Materials.HolyWater), new GT_FoodStat(0, 0.0F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.poison.id, 100, 1, 100}).setMilk()}));
 
-
-
+        
+        
         ItemList.Food_Potato_On_Stick.set(addItem(tLastID = 200, "Potato on a Stick", "Totally looks like a Crab Claw", new Object[]{new GT_FoodStat(1, 0.3F, EnumAction.eat, new ItemStack(Items.stick, 1), false, true, false, new int[0])}));
         ItemList.Food_Potato_On_Stick_Roasted.set(addItem(tLastID = 201, "Roasted Potato on a Stick", "Still looks like a Crab Claw", new Object[]{new GT_FoodStat(6, 0.6F, EnumAction.eat, new ItemStack(Items.stick, 1), false, true, false, new int[0])}));
         ItemList.Food_Raw_Fries.set(addItem(tLastID = 202, "Potato Strips", "It's Potato in Stripe Form", new Object[]{new GT_FoodStat(1, 0.3F, EnumAction.eat, null, false, true, false, new int[0])}));
@@ -146,70 +141,70 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Food_Baked_Pizza_Meat.set(addItem(tLastID = 262, "Mince Meat Pizza", "Emo Pizza, it cuts itself!", new Object[]{new GT_FoodStat(5, 0.5F, EnumAction.eat, null, false, true, false, new int[0])}));
 
 
-        ItemList.Dye_Indigo.set(addItem(tLastID = 410, "Indigo Dye", "Blue Dye", new Object[]{Dyes.dyeBlue}));
+        ItemList.Dye_Indigo.set(addItem(tLastID = 410, "Indigo Dye", "Blue Dye", new Object[]{ Dyes.dyeBlue}));
         for (byte i = 0; i < 16; i = (byte) (i + 1)) {
-            ItemList.DYE_ONLY_ITEMS[i].set(addItem(tLastID = 414 + i, Dyes.get(i).mName + " Dye", "", new Object[]{Dyes.get(i).name()}));
+            ItemList.DYE_ONLY_ITEMS[i].set(addItem(tLastID = 414 + i, Dyes.get(i).mName + " Dye", ""));
         }
-        ItemList.Plank_Oak.set(addItem(tLastID = 470, "Oak Plank", aTextCover, new Object[0]));
+        ItemList.Plank_Oak.set(addItem(tLastID = 470, "Oak Plank", aTextCover));
         setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Spruce.set(addItem(tLastID = 471, "Spruce Plank", aTextCover, new Object[0]));
+        ItemList.Plank_Spruce.set(addItem(tLastID = 471, "Spruce Plank", aTextCover));
         setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Birch.set(addItem(tLastID = 472, "Birch Plank", aTextCover, new Object[0]));
+        ItemList.Plank_Birch.set(addItem(tLastID = 472, "Birch Plank", aTextCover));
         setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Jungle.set(addItem(tLastID = 473, "Jungle Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Acacia.set(addItem(tLastID = 474, "Acacia Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_DarkOak.set(addItem(tLastID = 475, "Dark Oak Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Larch.set(addItem(tLastID = 476, "Larch Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Teak.set(addItem(tLastID = 477, "Teak Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Acacia_Green.set(addItem(tLastID = 478, "Green Acacia Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Lime.set(addItem(tLastID = 479, "Lime Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Chestnut.set(addItem(tLastID = 480, "Chestnut Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Wenge.set(addItem(tLastID = 481, "Wenge Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Baobab.set(addItem(tLastID = 482, "Baobab Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Sequoia.set(addItem(tLastID = 483, "Sequoia Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Kapok.set(addItem(tLastID = 484, "Kapok Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Ebony.set(addItem(tLastID = 485, "Ebony Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Mahagony.set(addItem(tLastID = 486, "Mahagony Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Balsa.set(addItem(tLastID = 487, "Balsa Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Willow.set(addItem(tLastID = 488, "Willow Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Walnut.set(addItem(tLastID = 489, "Walnut Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Greenheart.set(addItem(tLastID = 490, "Greenheart Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Cherry.set(addItem(tLastID = 491, "Cherry Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Mahoe.set(addItem(tLastID = 492, "Mahoe Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Poplar.set(addItem(tLastID = 493, "Poplar Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Palm.set(addItem(tLastID = 494, "Palm Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Papaya.set(addItem(tLastID = 495, "Papaya Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Pine.set(addItem(tLastID = 496, "Pine Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Plum.set(addItem(tLastID = 497, "Plum Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Maple.set(addItem(tLastID = 498, "Maple Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
-        ItemList.Plank_Citrus.set(addItem(tLastID = 499, "Citrus Plank", aTextCover, new Object[0]));
-    setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Jungle.set(addItem(tLastID = 473, "Jungle Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Acacia.set(addItem(tLastID = 474, "Acacia Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_DarkOak.set(addItem(tLastID = 475, "Dark Oak Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Larch.set(addItem(tLastID = 476, "Larch Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Teak.set(addItem(tLastID = 477, "Teak Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Acacia_Green.set(addItem(tLastID = 478, "Green Acacia Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Lime.set(addItem(tLastID = 479, "Lime Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Chestnut.set(addItem(tLastID = 480, "Chestnut Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Wenge.set(addItem(tLastID = 481, "Wenge Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Baobab.set(addItem(tLastID = 482, "Baobab Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Sequoia.set(addItem(tLastID = 483, "Sequoia Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Kapok.set(addItem(tLastID = 484, "Kapok Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Ebony.set(addItem(tLastID = 485, "Ebony Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Mahagony.set(addItem(tLastID = 486, "Mahagony Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Balsa.set(addItem(tLastID = 487, "Balsa Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Willow.set(addItem(tLastID = 488, "Willow Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Walnut.set(addItem(tLastID = 489, "Walnut Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Greenheart.set(addItem(tLastID = 490, "Greenheart Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Cherry.set(addItem(tLastID = 491, "Cherry Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Mahoe.set(addItem(tLastID = 492, "Mahoe Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Poplar.set(addItem(tLastID = 493, "Poplar Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Palm.set(addItem(tLastID = 494, "Palm Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Papaya.set(addItem(tLastID = 495, "Papaya Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Pine.set(addItem(tLastID = 496, "Pine Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Plum.set(addItem(tLastID = 497, "Plum Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Maple.set(addItem(tLastID = 498, "Maple Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
+        ItemList.Plank_Citrus.set(addItem(tLastID = 499, "Citrus Plank", aTextCover));
+        setBurnValue(32000 + tLastID, 75);
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Larch.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 0)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Teak.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Acacia_Green.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 2)});
@@ -234,11 +229,11 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Plum.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 5)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Maple.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 6)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Citrus.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 7)});
-
+        
 
         ItemList.SFMixture.set(addItem(tLastID = 270, "Super Fuel Binder", "Raw Material", new Object[]{}));
         ItemList.MSFMixture.set(addItem(tLastID = 271, "Magic Super Fuel Binder", "Raw Material", new Object[]{}));
-
+        
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Oak.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 0)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Spruce.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Birch.get(2L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 2)});
@@ -277,24 +272,24 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         GregTech_API.registerCover(ItemList.Plank_Maple.get(1L, new Object[0]), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 22, new ItemStack(Blocks.planks, 1, 0))), 0, 6), null);
         GregTech_API.registerCover(ItemList.Plank_Citrus.get(1L, new Object[0]), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 23, new ItemStack(Blocks.planks, 1, 0))), 0, 7), null);
 
-        ItemList.Crop_Drop_Plumbilia.set(addItem(tLastID = 500, "Plumbilia Leaf", "Source of Lead", new Object[0]));
-        ItemList.Crop_Drop_Argentia.set(addItem(tLastID = 501, "Argentia Leaf", "Source of Silver", new Object[0]));
-        ItemList.Crop_Drop_Indigo.set(addItem(tLastID = 502, "Indigo Blossom", "Used for making Blue Dye", new Object[0]));
-        ItemList.Crop_Drop_Ferru.set(addItem(tLastID = 503, "Ferru Leaf", "Source of Iron", new Object[0]));
-        ItemList.Crop_Drop_Aurelia.set(addItem(tLastID = 504, "Aurelia Leaf", "Source of Gold", new Object[0]));
+        ItemList.Crop_Drop_Plumbilia.set(addItem(tLastID = 500, "Plumbilia Leaf", "Source of Lead"));
+        ItemList.Crop_Drop_Argentia.set(addItem(tLastID = 501, "Argentia Leaf", "Source of Silver"));
+        ItemList.Crop_Drop_Indigo.set(addItem(tLastID = 502, "Indigo Blossom", "Used for making Blue Dye"));
+        ItemList.Crop_Drop_Ferru.set(addItem(tLastID = 503, "Ferru Leaf", "Source of Iron"));
+        ItemList.Crop_Drop_Aurelia.set(addItem(tLastID = 504, "Aurelia Leaf", "Source of Gold"));
         ItemList.Crop_Drop_TeaLeaf.set(addItem(tLastID = 505, "Tea Leaf", "Source of Tea", new Object[]{"cropTea"}));
 
-        ItemList.Crop_Drop_OilBerry.set(addItem(tLastID = 510, "Oil Berry", "Oil in Berry form", new Object[0]));
-        ItemList.Crop_Drop_BobsYerUncleRanks.set(addItem(tLastID = 511, "Bobs-Yer-Uncle-Berry", "Source of Emeralds", new Object[0]));
-        ItemList.Crop_Drop_UUMBerry.set(addItem(tLastID = 512, "UUM Berry", "UUM in Berry form", new Object[0]));
-        ItemList.Crop_Drop_UUABerry.set(addItem(tLastID = 513, "UUA Berry", "UUA in Berry form", new Object[0]));
+        ItemList.Crop_Drop_OilBerry.set(addItem(tLastID = 510, "Oil Berry", "Oil in Berry form"));
+        ItemList.Crop_Drop_BobsYerUncleRanks.set(addItem(tLastID = 511, "Bobs-Yer-Uncle-Berry", "Source of Emeralds"));
+        ItemList.Crop_Drop_UUMBerry.set(addItem(tLastID = 512, "UUM Berry", "UUM in Berry form"));
+        ItemList.Crop_Drop_UUABerry.set(addItem(tLastID = 513, "UUA Berry", "UUA in Berry form"));
 
-        ItemList.Crop_Drop_MilkWart.set(addItem(tLastID = 520, "Milk Wart", "Source of Milk", new Object[0]));
+        ItemList.Crop_Drop_MilkWart.set(addItem(tLastID = 520, "Milk Wart", "Source of Milk"));
 
-        ItemList.Crop_Drop_Coppon.set(addItem(tLastID = 530, "Coppon Fiber", "ORANGE WOOOOOOOL!!!", new Object[0]));
+        ItemList.Crop_Drop_Coppon.set(addItem(tLastID = 530, "Coppon Fiber", "ORANGE WOOOOOOOL!!!"));
 
-        ItemList.Crop_Drop_Tine.set(addItem(tLastID = 540, "Tine Twig", "Source of Tin", new Object[0]));
-    setBurnValue(32000 + tLastID, 100);
+        ItemList.Crop_Drop_Tine.set(addItem(tLastID = 540, "Tine Twig", "Source of Tin"));
+        setBurnValue(32000 + tLastID, 100);
 
         ItemList.Crop_Drop_Bauxite.set(addItem(tLastID = 521, "Bauxia Leaf", "Source of Aluminium", new Object[]{}));
         ItemList.Crop_Drop_Ilmenite.set(addItem(tLastID = 522, "Titania Leaf", "Source of Titanium", new Object[]{}));
@@ -309,7 +304,7 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Crop_Drop_Iridium.set(addItem(tLastID = 533, "Quantaria Leaf", "Source of Iridium", new Object[]{}));
         ItemList.Crop_Drop_Osmium.set(addItem(tLastID = 534, "Quantaria Leaf", "Source of Osmium", new Object[]{}));
         ItemList.Crop_Drop_Naquadah.set(addItem(tLastID = 535, "Stargatium Leaf", "Source of Naquadah", new Object[]{}));
-
+        
         ItemList.Crop_Drop_Chilly.set(addItem(tLastID = 550, "Chilly Pepper", "It is red and hot", new Object[]{"cropChilipepper", new GT_FoodStat(1, 0.3F, EnumAction.eat, null, false, true, false, new int[]{Potion.confusion.id, 200, 1, 40})}));
         ItemList.Crop_Drop_Lemon.set(addItem(tLastID = 551, "Lemon", "Don't make Lemonade", new Object[]{"cropLemon", new GT_FoodStat(1, 0.3F, EnumAction.eat, null, false, true, false, new int[0])}));
         ItemList.Crop_Drop_Tomato.set(addItem(tLastID = 552, "Tomato", "Solid Ketchup", new Object[]{"cropTomato", new GT_FoodStat(1, 0.2F, EnumAction.eat, null, false, true, false, new int[0])}));
@@ -317,7 +312,7 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Crop_Drop_Grapes.set(addItem(tLastID = 554, "Grapes", "Source of Wine", new Object[]{"cropGrape", new GT_FoodStat(2, 0.3F, EnumAction.eat, null, false, true, false, new int[0])}));
         ItemList.Crop_Drop_Onion.set(addItem(tLastID = 555, "Onion", "Taking over the whole Taste", new Object[]{"cropOnion", new GT_FoodStat(2, 0.2F, EnumAction.eat, null, false, true, false, new int[0])}));
         ItemList.Crop_Drop_Cucumber.set(addItem(tLastID = 556, "Cucumber", "Not a Sea Cucumber!", new Object[]{"cropCucumber", new GT_FoodStat(1, 0.2F, EnumAction.eat, null, false, true, false, new int[0])}));
-        ItemList.Crop_Drop_Rape.set(addItem(tLastID = 557, "Rape", "Time to oil up!", new Object[0]));
+        ItemList.Crop_Drop_Rape.set(addItem(tLastID = 557, "Rape", "Time to oil up!"));
 
         ItemList.Food_Cheese.set(addItem(tLastID = 558, "Cheese", "Click the Cheese", new Object[]{"foodCheese", new GT_FoodStat(3, 0.6F, EnumAction.eat, null, false, true, false, new int[0])}));
         ItemList.Food_Dough.set(addItem(tLastID = 559, "Dough", "For making Breads", new Object[]{"foodDough", new GT_FoodStat(1, 0.1F, EnumAction.eat, null, false, true, false, new int[0])}));
@@ -340,10 +335,10 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Food_Sliced_Cheese.set(addItem(tLastID = 576, "Cheese Slice", "ALIEN ATTACK!!!, throw the CHEEEEESE!!!", new Object[]{new GT_FoodStat(1, 0.1F, EnumAction.eat, null, false, true, false, new int[0])}));
 
         //Air Filter
-        ItemList.AdsorptionFilter.set(addItem(tLastID = 577, "Adsorption Filter", "", new Object[0]));
-        ItemList.AdsorptionFilterCasing.set(addItem(tLastID = 578, "Adsorption Filter Casing", "", new Object[0]));
-        ItemList.AdsorptionFilterDirty.set(addItem(tLastID = 579, "Dirty Adsorption Filter", "", new Object[0]));
-
+        ItemList.AdsorptionFilter.set(addItem(tLastID = 577, "Adsorption Filter", ""));
+        ItemList.AdsorptionFilterCasing.set(addItem(tLastID = 578, "Adsorption Filter Casing", ""));
+        ItemList.AdsorptionFilterDirty.set(addItem(tLastID = 579, "Dirty Adsorption Filter", ""));
+        
         //Bio Addon
         ItemList.BioBall.set(addItem(tLastID = 580, "Bio Ball", "", new Object[0]));
         ItemList.BioCarbonPlate.set(addItem(tLastID = 581, "Bio Carbon Plate", "", new Object[0]));
@@ -352,16 +347,16 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.CompressedBioBall.set(addItem(tLastID = 584, "Compressed Bio Ball", "", new Object[0]));
         ItemList.PlantMass.set(addItem(tLastID = 585, "Plant Mass", "", new Object[0]));
         ItemList.RawBioFiber.set(addItem(tLastID = 586, "Raw Bio Fiber", "", new Object[0]));
-
+        
         //Solar Panel
-        ItemList.Cover_SolarPanel_UHV.set(addItem(tLastID = 587, "Solar Panel (UHV)", "Ultimate High Voltage Solar Panel (Needs cleaning with right click)", new Object[0]));
-        ItemList.Cover_SolarPanel_UEV.set(addItem(tLastID = 588, "Solar Panel (UEV)", "Ultimate Extreme Voltage Solar Panel (Needs cleaning with right click)", new Object[0]));
-        ItemList.Cover_SolarPanel_UIV.set(addItem(tLastID = 589, "Solar Panel (UIV)", "Ultimate Insane Voltage Solar Panel (Needs cleaning with right click)", new Object[0]));
-
+        ItemList.Cover_SolarPanel_UHV.set(addItem(tLastID = 587, "Solar Panel (UHV)", "Ultimate High Voltage Solar Panel (Needs cleaning with right click)"));
+        ItemList.Cover_SolarPanel_UEV.set(addItem(tLastID = 588, "Solar Panel (UEV)", "Ultimate Extreme Voltage Solar Panel (Needs cleaning with right click)"));
+        ItemList.Cover_SolarPanel_UIV.set(addItem(tLastID = 589, "Solar Panel (UIV)", "Ultimate Insane Voltage Solar Panel (Needs cleaning with right click)"));
+        
         GregTech_API.registerCover(ItemList.Cover_SolarPanel_UHV.get(1L, new Object[0]), new GT_RenderedTexture(Textures.BlockIcons.SOLARPANEL_UHV), new GT_Cover_SolarPanel(2097152));
         GregTech_API.registerCover(ItemList.Cover_SolarPanel_UEV.get(1L, new Object[0]), new GT_RenderedTexture(Textures.BlockIcons.SOLARPANEL_UEV), new GT_Cover_SolarPanel(8388608));
         GregTech_API.registerCover(ItemList.Cover_SolarPanel_UIV.get(1L, new Object[0]), new GT_RenderedTexture(Textures.BlockIcons.SOLARPANEL_UIV), new GT_Cover_SolarPanel(33554432));
-
+        
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.red_flower, 1, 0), new ItemStack(Items.dye, 2, 1));
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.red_flower, 1, 1), new ItemStack(Items.dye, 2, 12));
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.red_flower, 1, 2), new ItemStack(Items.dye, 2, 13));
@@ -408,99 +403,63 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         GT_ModHandler.addPulverisationRecipe(new ItemStack(Items.stick, 1), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Wood, 2L), null, 0, false);
         GT_ModHandler.addPulverisationRecipe(new ItemStack(Blocks.wool, 1, 32767), new ItemStack(Items.string, 2), new ItemStack(Items.string, 1), 50, false);
         try {
-        Object tCrop;
-        GT_Utility.getField(tCrop = ic2.api.crops.Crops.instance.getCropList()[13], "mDrop").set(tCrop, ItemList.Crop_Drop_Ferru.get(1L, new Object[0]));
-        GT_Utility.getField(tCrop = ic2.api.crops.Crops.instance.getCropList()[14], "mDrop").set(tCrop, ItemList.Crop_Drop_Aurelia.get(1L, new Object[0]));
+            Object tCrop;
+            GT_Utility.getField(tCrop = ic2.api.crops.Crops.instance.getCropList()[13], "mDrop").set(tCrop, ItemList.Crop_Drop_Ferru.get(1L, new Object[0]));
+            GT_Utility.getField(tCrop = ic2.api.crops.Crops.instance.getCropList()[14], "mDrop").set(tCrop, ItemList.Crop_Drop_Aurelia.get(1L, new Object[0]));
         } catch (Throwable e) {
-        if (GT_Values.D1) {
-        e.printStackTrace(GT_Log.err);
-        }
+            if (GT_Values.D1) {
+                e.printStackTrace(GT_Log.err);
+            }
         }
         ItemList.Display_ITS_FREE.set(addItem(tLastID = 766, "ITS FREE", "(or at least almost free)", new Object[]{SubTag.INVISIBLE}));
-        }
+    }
 
-public boolean onLeftClickEntity(ItemStack aStack, EntityPlayer aPlayer, Entity aEntity) {
+    public boolean onLeftClickEntity(ItemStack aStack, EntityPlayer aPlayer, Entity aEntity) {
         super.onLeftClickEntity(aStack, aPlayer, aEntity);
-        int aDamage = aStack.getItemDamage();
-        if ((aDamage >= 25000) && (aDamage < 27000)) {
-        if (aDamage >= 26000) {
-        return Behaviour_Arrow.DEFAULT_PLASTIC.onLeftClickEntity(this, aStack, aPlayer, aEntity);
-        }
-        return Behaviour_Arrow.DEFAULT_WOODEN.onLeftClickEntity(this, aStack, aPlayer, aEntity);
-        }
         return false;
-        }
+    }
 
-public boolean hasProjectile(SubTag aProjectileType, ItemStack aStack) {
+    public boolean hasProjectile(SubTag aProjectileType, ItemStack aStack) {
         int aDamage = aStack.getItemDamage();
         return ((aDamage >= 25000) && (aDamage < 27000)) || (super.hasProjectile(aProjectileType, aStack));
-        }
+    }
 
-public EntityArrow getProjectile(SubTag aProjectileType, ItemStack aStack, World aWorld, double aX, double aY, double aZ) {
-        int aDamage = aStack.getItemDamage();
-        if ((aDamage >= 25000) && (aDamage < 27000)) {
-        if (aDamage >= 26000) {
-        return Behaviour_Arrow.DEFAULT_PLASTIC.getProjectile(this, aProjectileType, aStack, aWorld, aX, aY, aZ);
-        }
-        return Behaviour_Arrow.DEFAULT_WOODEN.getProjectile(this, aProjectileType, aStack, aWorld, aX, aY, aZ);
-        }
-        return super.getProjectile(aProjectileType, aStack, aWorld, aX, aY, aZ);
-        }
-
-public EntityArrow getProjectile(SubTag aProjectileType, ItemStack aStack, World aWorld, EntityLivingBase aEntity, float aSpeed) {
-        int aDamage = aStack.getItemDamage();
-        if ((aDamage >= 25000) && (aDamage < 27000)) {
-        if (aDamage >= 26000) {
-        return Behaviour_Arrow.DEFAULT_PLASTIC.getProjectile(this, aProjectileType, aStack, aWorld, aEntity, aSpeed);
-        }
-        return Behaviour_Arrow.DEFAULT_WOODEN.getProjectile(this, aProjectileType, aStack, aWorld, aEntity, aSpeed);
-        }
-        return super.getProjectile(aProjectileType, aStack, aWorld, aEntity, aSpeed);
-        }
-
-public boolean isItemStackUsable(ItemStack aStack) {
+    public boolean isItemStackUsable(ItemStack aStack) {
         int aDamage = aStack.getItemDamage();
         Materials aMaterial = GregTech_API.sGeneratedMaterials[(aDamage % 1000)];
         if ((aDamage >= 25000) && (aDamage < 27000) && (aMaterial != null) && (aMaterial.mEnchantmentTools != null)) {
-        Enchantment tEnchant = aMaterial.mEnchantmentTools == Enchantment.fortune ? Enchantment.looting : aMaterial.mEnchantmentTools;
-        if (tEnchant.type == EnumEnchantmentType.weapon) {
-        NBTTagCompound tNBT = GT_Utility.ItemNBT.getNBT(aStack);
-        if (!tNBT.getBoolean("GT.HasBeenUpdated")) {
-        tNBT.setBoolean("GT.HasBeenUpdated", true);
-        GT_Utility.ItemNBT.setNBT(aStack, tNBT);
-        GT_Utility.ItemNBT.addEnchantment(aStack, tEnchant, aMaterial.mEnchantmentToolsLevel);
-        }
-        }
+            Enchantment tEnchant = aMaterial.mEnchantmentTools == Enchantment.fortune ? Enchantment.looting : aMaterial.mEnchantmentTools;
+            if (tEnchant.type == EnumEnchantmentType.weapon) {
+                NBTTagCompound tNBT = GT_Utility.ItemNBT.getNBT(aStack);
+                if (!tNBT.getBoolean("GT.HasBeenUpdated")) {
+                    tNBT.setBoolean("GT.HasBeenUpdated", true);
+                    GT_Utility.ItemNBT.setNBT(aStack, tNBT);
+                    GT_Utility.ItemNBT.addEnchantment(aStack, tEnchant, aMaterial.mEnchantmentToolsLevel);
+                }
+            }
         }
         return super.isItemStackUsable(aStack);
-        }
+    }
 
-public boolean doesShowInCreative(OrePrefixes aPrefix, Materials aMaterial, boolean aDoShowAllItems) {
+    public boolean doesShowInCreative(OrePrefixes aPrefix, Materials aMaterial, boolean aDoShowAllItems) {
         return (aDoShowAllItems) || (!aPrefix.name().startsWith("toolHead"));
-        }
+    }
 
-public ItemStack onDispense(IBlockSource aSource, ItemStack aStack) {
-        int aDamage = aStack.getItemDamage();
-        if ((aDamage >= 25000) && (aDamage < 27000)) {
-        if (aDamage >= 26000) {
-        return Behaviour_Arrow.DEFAULT_PLASTIC.onDispense(this, aSource, aStack);
-        }
-        return Behaviour_Arrow.DEFAULT_WOODEN.onDispense(this, aSource, aStack);
-        }
+    public ItemStack onDispense(IBlockSource aSource, ItemStack aStack) {
         return super.onDispense(aSource, aStack);
-        }
+    }
 
-public final ItemStack getContainerItem(ItemStack aStack) {
+    public final ItemStack getContainerItem(ItemStack aStack) {
         int aDamage = aStack.getItemDamage();
         if (aDamage < 32000) {
-        return null;
+            return null;
         }
         if (aDamage < 32100) {
-        return ItemList.ThermosCan_Empty.get(1L, new Object[0]);
+            return ItemList.ThermosCan_Empty.get(1L, new Object[0]);
         }
         if (aDamage < 32200) {
-        return ItemList.Bottle_Empty.get(1L, new Object[0]);
+            return ItemList.Bottle_Empty.get(1L, new Object[0]);
         }
         return null;
-        }
-        }
+    }
+}

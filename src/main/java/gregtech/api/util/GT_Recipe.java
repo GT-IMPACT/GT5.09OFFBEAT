@@ -576,11 +576,9 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sCentrifugeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1200), "gt.recipe.centrifuge", "Centrifuge", null, RES_PATH_GUI + "basicmachines/Centrifuge", 2, 6, 0, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sElectrolyzerRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(300), "gt.recipe.electrolyzer", "Electrolyzer", null, RES_PATH_GUI + "basicmachines/Electrolyzer", 2, 6, 0, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sBlastRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(800), "gt.recipe.blastfurnace", "Blast Furnace", null, RES_PATH_GUI + "basicmachines/Default", 2, 2, 1, 0, 1, "Heat Capacity: ", 1, " K", false, true);
-        public static final GT_Recipe_Map sBlastSmelterRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(800), "gt.recipe.blastsmelter", "Blast Smelter", null, RES_PATH_GUI + "basicmachines/Default", 9, 1, 1, 0, 1, "Heat Capacity: ", 1, " K", false, true);
         public static final GT_Recipe_Map sPrimitiveBlastRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(200), "gt.recipe.primitiveblastfurnace", "Primitive Blast Furnace", null, RES_PATH_GUI + "basicmachines/Default", 3, 3, 1, 0, 1, E, 1, E, false, true);
         public static final GT_Recipe_Map sImplosionRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(900), "gt.recipe.implosioncompressor", "Implosion Compressor", null, RES_PATH_GUI + "basicmachines/Default", 2, 2, 2, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sVacuumRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(305), "gt.recipe.vacuumfreezer", "Vacuum Freezer", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 1, 0, 1, E, 1, E, false, true);
-        public static final GT_Recipe_Map sSuperCoolantRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(100), "gt.recipe.supercoolantfreezer", "Super Cooling Freezer", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sChemicalRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1170), "gt.recipe.chemicalreactor", "Chemical Reactor", null, RES_PATH_GUI + "basicmachines/ChemicalReactor", 2, 2, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sIndustrialPulverizerRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.industrialpulverizer", "Industrial Pulverizer", null, RES_PATH_GUI + "basicmachines/Default", 1, 4, 0, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sFlotationUnitRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.flotationunit", "Flotation Unit", null, RES_PATH_GUI + "basicmachines/Default", 1, 6, 0, 0, 1, E, 1, E, true, true);
@@ -614,6 +612,12 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sMultiblockElectrolyzerRecipes = new GT_Recipe_Map_MultiblockElectrolyzerRecipe();
         public static final GT_Recipe_Map sNuclearReactorRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.nuclearreactor", "Nuclear Reactor", null, RES_PATH_GUI + "basicmachines/Default", 2, 3, 0, 0, 1, E, 1, E, true, true);
 
+        public static final GT_Recipe_Map sBlastSmelterRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(800), "gt.recipe.blastsmelter", "         Blast Smelter", null, RES_PATH_GUI + "basicmachines/BlastSmelter", 9, 1, 1, 0, 1, "Heat Capacity: ", 1, " K", false, true);
+        public static final GT_Recipe_Map sFreezerSolidficationRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(35000), "gt.recipe.freezersolidifier", "Freezer Solidifier", null, RES_PATH_GUI + "basicmachines/FreezSolidifier", 1, 1, 1, 2, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sPrimitiveLine = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.primitiveline", "3D Printer 3x3", null, RES_PATH_GUI + "Primitiveline", 33, 3344, 1, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sBasicline = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.basicline", "3D Printer 4x4", null, RES_PATH_GUI + "Basicline", 44, 3344, 1, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sAdvanecedline = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.advancedline", "Advanced Line", null, RES_PATH_GUI + "Advancedline", 44, 3344, 1, 0, 1, E, 1, E, true, true);
+
         public static final GT_Recipe_Map_Fuel sSemifluidFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.semifluidgeneratorfuel", "Semifluid Generator Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
         public static final GT_Recipe_Map_Fuel sNukeFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.nukesteam", "Nuclear Turbine Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
         public static final GT_Recipe_Map_Fuel sDieselFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(20), "gt.recipe.dieselgeneratorfuel", "Diesel Generator Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
@@ -630,7 +634,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map_Fuel sUltraHugeNaquadahReactorFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(1), "gt.recipe.ultrahugenaquadahreactor", "Naquadah Reactor MkV", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
         public static final GT_Recipe_Map_Fuel sExtremeHugeNaquadahReactorFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(1), "gt.recipe.extremehugenaquadahreactor", "Naquadah Reactor MkV", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
         public static final GT_Recipe_Map_Fuel sInfiniteHugeNaquadahReactorFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(1), "gt.recipe.infinitehugenaquadahreactor", "Naquadah Reactor MkV", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
-        
+
         public static final GT_Recipe_Map_LargeBoilerFakeFuels sLargeBoilerFakeFuels = new GT_Recipe_Map_LargeBoilerFakeFuels();
 
         public static final GT_Recipe_Map_Fuel sAntimatterReactorFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(10), "gt.recipe.antimetterreactor", "Antimatter Reactor", null, RES_PATH_GUI + "basicmachines/Default", 2, 1, 2, 1, 1, "Reaction Time: ", 1, " sec", true, true);

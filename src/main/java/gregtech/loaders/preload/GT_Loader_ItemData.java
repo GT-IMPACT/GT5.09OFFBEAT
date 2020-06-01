@@ -68,9 +68,6 @@ public class GT_Loader_ItemData
         GT_OreDictUnificator.addItemData(ItemList.IC2_Fuel_Can_Empty.get(1L, new Object[0]), new ItemData(Materials.Tin, 25401600L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.light_weighted_pressure_plate, 1, 32767), new ItemData(Materials.Gold, 7257600L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.heavy_weighted_pressure_plate, 1, 32767), new ItemData(Materials.Iron, 7257600L, new MaterialStack[0]));
-        GT_OreDictUnificator.addItemData(GT_ModHandler.getModItem("Railcraft", "tile.railcraft.anvil", 1L, 0), new ItemData(Materials.Steel, 108864000L, new MaterialStack[0]));
-        GT_OreDictUnificator.addItemData(GT_ModHandler.getModItem("Railcraft", "tile.railcraft.anvil", 1L, 1), new ItemData(Materials.Steel, 72576000L, new MaterialStack[0]));
-        GT_OreDictUnificator.addItemData(GT_ModHandler.getModItem("Railcraft", "tile.railcraft.anvil", 1L, 2), new ItemData(Materials.Steel, 36288000L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.anvil, 1, 0), new ItemData(Materials.Iron, 108864000L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.anvil, 1, 1), new ItemData(Materials.Iron, 72576000L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.anvil, 1, 2), new ItemData(Materials.Iron, 36288000L, new MaterialStack[0]));
@@ -147,6 +144,15 @@ public class GT_Loader_ItemData
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.sticky_piston, 1, 32767), new ItemData(Materials.Stone, 14515200L, new MaterialStack[]{new MaterialStack(Materials.Wood, 10886400L)}));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.dispenser, 1, 32767), new ItemData(Materials.Stone, 25401600L, new MaterialStack[]{new MaterialStack(Materials.Redstone, 3628800L)}));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.dropper, 1, 32767), new ItemData(Materials.Stone, 25401600L, new MaterialStack[]{new MaterialStack(Materials.Redstone, 3628800L)}));
-
+        for (ItemStack tItem : new ItemStack[]{new ItemStack(Items.porkchop), new ItemStack(Items.beef), new ItemStack(Items.chicken), new ItemStack(Items.fish)}) {
+            if (tItem != null) {
+                GT_OreDictUnificator.addItemData(GT_Utility.copyMetaData(32767L, new Object[]{tItem}), new ItemData(Materials.MeatRaw, 3628800L, new MaterialStack[]{new MaterialStack(Materials.Bone, 403200L)}));
+            }
+        }
+        for (ItemStack tItem : new ItemStack[]{new ItemStack(Items.cooked_porkchop), new ItemStack(Items.cooked_beef), new ItemStack(Items.cooked_chicken), new ItemStack(Items.cooked_fished)}) {
+            if (tItem != null) {
+                GT_OreDictUnificator.addItemData(GT_Utility.copyMetaData(32767L, new Object[]{tItem}), new ItemData(Materials.MeatCooked, 3628800L, new MaterialStack[]{new MaterialStack(Materials.Bone, 403200L)}));
+            }
+        }
     }
 }

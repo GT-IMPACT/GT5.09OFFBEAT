@@ -22,8 +22,6 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_PlayedSound;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import gregtech.common.entities.GT_Entity_Arrow;
-import gregtech.common.entities.GT_Entity_Arrow_Potion;
 import gregtech.common.render.*;
 import ic2.api.tile.IWrenchable;
 import net.minecraft.block.Block;
@@ -87,13 +85,15 @@ public class GT_Client extends GT_Proxy
         isFirstClientPlayerTick = true;
         mMessage = "";
         mPosR = Arrays.asList(new Materials[]{
-                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria, Materials.Pyrotheum, Materials.Sunnarium, Materials.Glowstone, Materials.FierySteel
+                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
+                Materials.Sunnarium, Materials.Glowstone,
         });
         mPosG = Arrays.asList(new Materials[]{
-                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria, Materials.Pyrotheum, Materials.Sunnarium, Materials.Glowstone
+                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
+                Materials.Sunnarium, Materials.Glowstone,
         });
         mPosB = Arrays.asList(new Materials[]{
-                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria
+                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
         });
         mNegR = Arrays.asList(new Materials[]{
                 Materials.NetherStar
@@ -106,14 +106,14 @@ public class GT_Client extends GT_Proxy
         });
         mMoltenPosR = Arrays.asList(new Materials[]{
                 Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-                Materials.Pyrotheum, Materials.Sunnarium, Materials.Glowstone, Materials.FierySteel
+                Materials.Sunnarium, Materials.Glowstone
         });
         mMoltenPosG = Arrays.asList(new Materials[]{
                 Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-                Materials.Pyrotheum, Materials.Sunnarium, Materials.Glowstone
+                Materials.Sunnarium, Materials.Glowstone
         });
         mMoltenPosB = Arrays.asList(new Materials[]{
-                Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria
+                Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
         });
         mMoltenNegR = Arrays.asList(new Materials[]{
         });
@@ -299,8 +299,6 @@ public class GT_Client extends GT_Proxy
         new GT_Renderer_Block();
         new GT_MetaGenerated_Item_Renderer();
         new GT_MetaGenerated_Tool_Renderer();
-        new GT_Renderer_Entity_Arrow(GT_Entity_Arrow.class, "arrow");
-        new GT_Renderer_Entity_Arrow(GT_Entity_Arrow_Potion.class, "arrow_potions");
         new GT_FlaskRenderer();
     }
 

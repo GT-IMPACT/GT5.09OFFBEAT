@@ -1,28 +1,26 @@
 buildscript {
     repositories {
         mavenCentral()
-		jcenter()
-        maven {
-            name = "MavenRepo"
-            url = "https://repo.maven.apache.org/maven2"
-        }
-        maven {
-            name = "MavenRepo"
-            url = "https://repo1.maven.org/maven2/"
-        }
+		jcenter()	
+        //maven {
+        //    name = "forge"
+        //    url = "http://files.minecraftforge.net/maven"
+        //}
 		maven {
-		    name = "forge"
-		    url = "https://files.minecraftforge.net/maven"
+			name = "gt"
+			url = "https://gregtech.overminddl1.com/"
 		}	
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }        
+        }
+		maven {
+			url = "https://plugins.gradle.org/m2/"
+		}
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT"
-		classpath "de.undercouch:gradle-download-task:3.1.2"
-
+		classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.55"
     }
 }
 
@@ -82,6 +80,10 @@ configurations {
 
 repositories {
     maven {
+        name 'Forge'
+        url 'http://files.minecraftforge.net/maven'
+    }
+    maven {
         name = "chickenbones"
         url = "http://chickenbones.net/maven/"
     }
@@ -91,37 +93,48 @@ repositories {
     }
     maven { // EnderIO & EnderCore
         name 'tterrag Repo'
-        url "https://maven.tterrag.com"
+        url "http://maven.tterrag.com"
     }
     maven { // TConstruct
         name 'DVS1 Maven FS'
-        url 'https://dvs1.progwml6.com/files/maven'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
+
+    maven { // AppleCore
+        url "http://www.ryanliptak.com/maven/"
     }
     ivy {
         name "BuildCraft"
-        artifactPattern "https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
-    maven {
-        name = "mvnrepository"
-        url = "https://mvnrepository.com/"
+    ivy {
+        name 'CoFHLib'
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhlib.cf}/[module]-[revision].[ext]"
     }
-    maven {
-        name = "google"
-        url = "https://mvnrepository.com/artifact/com.google.code.gson/gson/2.2.4"
+    ivy {
+        name 'CoFHCore'
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhcore.cf}/[module]-[revision].[ext]"
     }
-
-}
-
-configurations {
-    provided
-    embedded
-    compile.extendsFrom provided, embedded
+    ivy {
+        name 'Railcraft'
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.railcraft.cf}/[module]_[revision].[ext]"
+    }
+	ivy {
+        name 'IC2NuclearControl'
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.nc.cf}/[module]-[revision].[ext]"
+    }
+		ivy {
+        name 'ImmersiveEngineering'
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.immeng.cf}/[module]-[revision].[ext]"
+    }
+		ivy {
+        name 'magneticraft'
+        artifactPattern "http://addons-origin.cursecdn.com/files/${config.magneticraft.cf}/[module]-[revision].[ext]"
+    }
 }
 
 dependencies {
-	provided fileTree(dir: 'libs/', include:'*.jar')
-	compile files("libs/gson-2.2.4.jar")
-
+//    compile fileTree(dir: 'libs', include: '*.jar')
 
     compile "tconstruct:TConstruct:${config.minecraft.version}-${config.tconstruct.version}:deobf"
     //provided ("appeng:appliedenergistics2:${config.ae2.version}:dev") {
@@ -133,11 +146,22 @@ dependencies {
     provided "codechicken:Translocator:${config.minecraft.version}-${config.translocators.version}:dev"
     provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
     provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
+    provided "applecore:AppleCore:${config.applecore.version}:api"
     provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
     provided ("com.enderio:EnderIO:${config.enderio.version}:dev") {
         transitive = false
     }
     provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
+    //provided name: 'CoFHLib', version: config.cofhlib.version, ext: 'jar'
+    //provided name: 'CoFHCore', version: config.cofhcore.version, ext: 'jar'
+    //provided name: 'Railcraft', version: config.railcraft.version, ext: 'jar'
+    //provided name: 'IC2NuclearControl', version: config.nc.version, ext: 'jar'
+    //provided name: 'ImmersiveEngineering', version: config.immeng.version, ext: 'jar'
+    //provided name: 'magneticraft', version: config.magneticraft.version, ext: 'jar'
+//    compile files("libs/Galacticraft-API-1.7-${config.gc.version}.jar")
+//    compile files("libs/GalacticraftCore-Dev-${config.gc.version}.jar")
+    //provided name: "Galacticraft-API", version: config.gc.version, ext: 'jar'
+    //provided name: "GalacticraftCore-Dev", version: config.gc.version, ext: 'jar'
 }
 
 processResources

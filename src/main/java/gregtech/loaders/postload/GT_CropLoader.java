@@ -8,6 +8,7 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class GT_CropLoader
@@ -203,7 +204,7 @@ public class GT_CropLoader
                     "Troll",
                     "Bad",
                     "Scrap"
-            }, GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Ruby, 1L), new ItemStack[] {
+            }, GT_OreDictUnificator.get(OrePrefixes.gem, Materials.FoolsRuby, 1L), new ItemStack[] {
                     ItemList.IC2_Plantball.get(1), ItemList.IC2_Scrap.get(1), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Plutonium241, 1L)
             });
             new GT_BaseCrop(150, "Lazulia", "unknown", null, 7, 4, 0, 2, 4, 4, 2, 5, 7, 4, new String[] {
@@ -374,6 +375,11 @@ public class GT_CropLoader
                     "Yellow",
                     "Oil"
             }, ItemList.Crop_Drop_Rape.get(1), null);
+
+            new GT_BaseCrop(179, "Cotton", "4gname", null, 1, 1, 50, 1, 2, 1, 1, 0, 1, 0, new String[] {
+                    "String",
+            }, new ItemStack(Items.string, 2), null);
+
         } catch (Throwable e) {
             GT_Log.err.println("GT_Mod: Failed to register Crops to IC2.");
             e.printStackTrace(GT_Log.err);

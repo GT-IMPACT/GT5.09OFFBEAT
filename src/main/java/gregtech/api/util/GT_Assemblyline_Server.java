@@ -114,7 +114,7 @@ public class GT_Assemblyline_Server {
 			                Materials.AnnealedCopper,
 			                Materials.Antimony,
 			                Materials.Arsenic,
-							null,
+			                Materials._NULL,
 			                Materials.BatteryAlloy,
 			                Materials.Beryllium,
 			                Materials.Bismuth,
@@ -138,11 +138,11 @@ public class GT_Assemblyline_Server {
 			                Materials.Copper,
 			                Materials.Cupronickel,
 			                Materials.DamascusSteel,
-							null,
+			                Materials.DarkIron,
 			                Materials.DeepIron,
 			                Materials.Desh,
 			                Materials.Duranium,
-							null,
+			                Materials._NULL,
 			                Materials.Electrum
 			                };
 					break;
@@ -150,25 +150,25 @@ public class GT_Assemblyline_Server {
 					mMats=new Materials[]{
 			                Materials.ElectrumFlux,
 			                Materials.Enderium,
-							null,
+			                Materials._NULL,
 			                Materials.Europium,
-			                Materials.FierySteel,
-							null,
+			                Materials._NULL,
+			                Materials.Gadolinium,
 			                Materials.Gallium,
-							null,
+			                Materials._NULL,
 			                Materials.HSLA,
 			                Materials.Indium,
-							null,
+			                Materials._NULL,
 			                Materials.Invar,
 			                Materials.Iridium,
 			                Materials.IronMagnetic,
-							null,
+			                Materials._NULL,
 			                Materials.Kanthal
 					};
 					break;
 				case 4:
 					mMats=new Materials[]{
-							null,
+							Materials._NULL,
 			                Materials.Lanthanum,
 			                Materials.Lead,
 			                Materials.Lutetium,
@@ -177,7 +177,7 @@ public class GT_Assemblyline_Server {
 			                Materials.Manganese,
 			                Materials.MeteoricIron,
 			                Materials.MeteoricSteel,
-							null,
+			                Materials._NULL,
 			                Materials.Mithril,
 			                Materials.Molybdenum,
 			                Materials.Naquadah,
@@ -194,47 +194,47 @@ public class GT_Assemblyline_Server {
 			                Materials.Nichrome,
 			                Materials.Nickel,
 			                Materials.Niobium,
-			                Materials.NiobiumNitride,
+			                Materials._NULL,
 			                Materials.NiobiumTitanium,
 			                Materials.Osmiridium,
 			                Materials.Osmium,
 			                Materials.Palladium,
-			                Materials.PigIron,
+			                Materials._NULL,
 			                Materials.Platinum,
 			                Materials.Plutonium,
 			                Materials.Plutonium241,
-							null
+			                Materials._NULL
 					};
 					break;
 				case 6:
 					mMats=new Materials[]{
-							null,
+							Materials._NULL,
 			                Materials.RedAlloy,
 			                Materials.RedSteel,
 			                Materials.RoseGold,
 			                Materials.Rubidium,
 			                Materials.Samarium,
-			                null,
-			                null,
-			                null,
+			                Materials._NULL,
+			                Materials._NULL,
+			                Materials._NULL,
 			                Materials.Silicon,
 			                Materials.Silver,
 			                Materials.SolderingAlloy,
 			                Materials.StainlessSteel,
 			                Materials.Steel,
 			                Materials.SteelMagnetic,
-			                Materials.SterlingSilver
+			                Materials._NULL
 					};
 					break;
 				case 7:
 					mMats=new Materials[]{
 							Materials.Sunnarium,
 			                Materials.Tantalum,
-							null,
-			                Materials.Terbium,
-							null,
+			                Materials.Tellurium,
+			                Materials._NULL,
+			                Materials._NULL,
 			                Materials.Thorium,
-							null,
+			                Materials._NULL,
 			                Materials.Tin,
 			                Materials.TinAlloy,
 			                Materials.Titanium,
@@ -251,7 +251,7 @@ public class GT_Assemblyline_Server {
 							Materials.Vanadium,
 			                Materials.VanadiumGallium,
 			                Materials.WroughtIron,
-							null,
+			                Materials.Ytterbium,
 			                Materials.Yttrium,
 			                Materials.YttriumBariumCuprate,
 			                Materials.Zinc,
@@ -263,7 +263,7 @@ public class GT_Assemblyline_Server {
 			                Materials.EuropiumoxideMagnetic,
 			                Materials.Steeleaf,
 			                Materials.Blaze,
-			                Materials.Ichorium
+			                Materials._NULL
 					};
 					break;
 					}
@@ -279,21 +279,21 @@ public class GT_Assemblyline_Server {
 					switch (i) {
 						case 1:
 							mMats = new Materials[]{
-							  null,
-				              null,
+							  Materials._NULL,
+				              Materials.Amber,
 				              Materials.Amethyst,
-							  null,
+				              Materials._NULL,
 				              Materials.BlueTopaz,
 				              Materials.CertusQuartz,
-				              Materials.Dilithium,
+				              Materials._NULL,
 				              Materials.EnderEye,
 				              Materials.EnderPearl,
-				              null,
-				              null,
-				              null,
-				              null,
+				              Materials.FoolsRuby,
+				              Materials._NULL,
+				              Materials.Forcicium,
+				              Materials.Forcillium,
 				              Materials.GreenSapphire,
-							  null,
+				              Materials._NULL,
 				              Materials.Jasper
 			                };
 					break;
@@ -302,11 +302,11 @@ public class GT_Assemblyline_Server {
 							  Materials.Lazurite,
 				              Materials.Lignite,
 				              Materials.Monazite,
-				              Materials.Niter,
+				              Materials._NULL,
 				              Materials.Olivine,
 				              Materials.Opal,
-				              null,
-				              null,
+				              Materials._NULL,
+				              Materials._NULL,
 				              Materials.Phosphorus,
 				              Materials.Quartzite,
 				              Materials.GarnetRed,
@@ -314,13 +314,13 @@ public class GT_Assemblyline_Server {
 				              Materials.Sapphire,
 				              Materials.Sodalite,
 				              Materials.Tanzanite,
-							  null,
+				              Materials._NULL
 			                };
 					break;
 				case 3:
 					mMats=new Materials[]{
 							  Materials.Topaz,
-							  null,
+			                  Materials._NULL,
 			                  Materials.GarnetYellow,
 			                  Materials.NetherStar,
 			                  Materials.Charcoal,

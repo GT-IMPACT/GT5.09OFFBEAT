@@ -47,19 +47,11 @@ public class GT_FuelLoader
         GT_Recipe.GT_Recipe_Map.sMagicFuels.addRecipe(true, new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","imbuedSlate",1L)},  new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","reinforcedSlate",1L)}, null, null, null, 0, 0, 400);
         GT_Recipe.GT_Recipe_Map.sMagicFuels.addRecipe(true, new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","demonicSlate",1L)},  new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","imbuedSlate",1L)}, null, null, null, 0, 0, 1000);
         GT_Recipe.GT_Recipe_Map.sMagicFuels.addRecipe(true, new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","bloodMagicBaseItems",1L,27)},  new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","demonicSlate",1L)}, null, null, null, 0, 0, 5000);
-        
-        GT_Values.RA.addFuel(GT_ModHandler.getModItem("Thaumcraft", "ItemResource", 1L, 4), null, 4, 5);
+
         GT_Values.RA.addFuel(new ItemStack(Items.experience_bottle, 1), null, 10, 5);
         GT_Values.RA.addFuel(new ItemStack(Items.ghast_tear, 1), null, 50, 5);
         GT_Values.RA.addFuel(new ItemStack(Blocks.beacon, 1), null, Materials.NetherStar.mFuelPower * 2, Materials.NetherStar.mFuelType);
         GT_Values.RA.addFuel(GT_ModHandler.getModItem("EnderIO", "bucketRocket_fuel", 1), null, 250, 1);
-        if(GregTech_API.mMagneticraft){
-        	 GT_Values.RA.addFuel(GT_ModHandler.getModItem("Magneticraft", "item.bucket_light_oil", 1), null, 256, 0);
-        	 GT_Values.RA.addFuel(GT_ModHandler.getModItem("Magneticraft", "item.bucket_heavy_oil", 1), null, 192, 3);
-        }
-        if(GregTech_API.mImmersiveEngineering){
-       	 GT_Values.RA.addFuel(GT_ModHandler.getModItem("ImmersiveEngineering", "fluidContainers", 1, 7), null, 128, 0);
-        }
         if(Loader.isModLoaded("PneumaticCraft")){
           	 GT_Values.RA.addFuel(GT_ModHandler.getModItem("PneumaticCraft", "pgBucket", 1), null, 512, 1);
           	 GT_Values.RA.addFuel(GT_ModHandler.getModItem("PneumaticCraft", "fuelBucket", 1), null, 400, 0);

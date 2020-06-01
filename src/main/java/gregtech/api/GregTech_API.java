@@ -7,7 +7,6 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IDamagableItem;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.internal.IGT_RecipeAdder;
-import gregtech.api.interfaces.internal.IThaumcraftCompat;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.items.GT_CoolantCellIC_Item;
 import gregtech.api.items.GT_CoolantCell_Item;
@@ -20,6 +19,7 @@ import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
 import gregtech.api.world.GT_Worldgen;
+import gregtech.common.items.ItemDebug;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -27,6 +27,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -160,10 +161,6 @@ public class GregTech_API {
     @Deprecated
     public static IGT_RecipeAdder sRecipeAdder;
     /**
-     * Used to register Aspects to ThaumCraft, this Object might be null if ThaumCraft isn't installed
-     */
-    public static IThaumcraftCompat sThaumcraftCompat;
-    /**
      * These Lists are getting executed at their respective timings. Useful if you have to do things right before/after I do them, without having to control the load order. Add your "Commands" in the Constructor or in a static Code Block of your Mods Main Class. These are not Threaded, I just use a native Java Interface for their execution. Implement just the Method run() and everything should work
      */
     public static List<Runnable> sBeforeGTPreload = new ArrayList<Runnable>(), sAfterGTPreload = new ArrayList<Runnable>(), sBeforeGTLoad = new ArrayList<Runnable>(), sAfterGTLoad = new ArrayList<Runnable>(), sBeforeGTPostload = new ArrayList<Runnable>(), sAfterGTPostload = new ArrayList<Runnable>(), sBeforeGTServerstart = new ArrayList<Runnable>(), sAfterGTServerstart = new ArrayList<Runnable>(), sBeforeGTServerstop = new ArrayList<Runnable>(), sAfterGTServerstop = new ArrayList<Runnable>(), sGTBlockIconload = new ArrayList<Runnable>(), sGTItemIconload = new ArrayList<Runnable>();
@@ -197,9 +194,6 @@ public class GregTech_API {
     public static boolean mRFExplosions = true;
     public static boolean mServerStarted = false;
     public static boolean mIC2Classic = false;
-    public static boolean mMagneticraft = false;
-    public static boolean mImmersiveEngineering = false;
-    public static boolean mGTPlusPlus = false;
     public static boolean mTranslocator = false;
     public static boolean mTConstruct = false;
     public static boolean mGalacticraft = false;
@@ -263,7 +257,6 @@ public class GregTech_API {
 
     /**
      * You want OreDict-Unification for YOUR Mod/Addon, when GregTech is installed? This Function is especially for YOU.
-     * Call this Function after the load-Phase, as I register the the most of the Unification at that Phase (Redpowers Storageblocks are registered at postload).
      * A recommended use of this Function is inside your Recipe-System itself (if you have one), as the unification then makes 100% sure, that every added non-unificated Output gets automatically unificated.
      * <p/>
      * I will personally make sure, that only common prefixes of Ores get registered at the Unificator, as of now there are:
@@ -309,8 +302,6 @@ public class GregTech_API {
      */
     public static boolean registerMachineBlock(Block aBlock, int aMeta) {
         if (GT_Utility.isBlockInvalid(aBlock)) return false;
-        if (GregTech_API.sThaumcraftCompat != null)
-            GregTech_API.sThaumcraftCompat.registerPortholeBlacklistedBlock(aBlock);
         sMachineIDs.put(aBlock, aMeta);
         return true;
     }
@@ -320,8 +311,6 @@ public class GregTech_API {
      */
     public static boolean registerMachineBlock(Block aBlock, boolean... aMeta) {
         if (GT_Utility.isBlockInvalid(aBlock) || aMeta == null || aMeta.length == 0) return false;
-        if (GregTech_API.sThaumcraftCompat != null)
-            GregTech_API.sThaumcraftCompat.registerPortholeBlacklistedBlock(aBlock);
         int rMeta = 0;
         for (byte i = 0; i < aMeta.length && i < 16; i++) if (aMeta[i]) rMeta |= B[i];
         sMachineIDs.put(aBlock, rMeta);
@@ -539,7 +528,7 @@ public class GregTech_API {
      * I even have a new Config to autodisable most infinite BC Wrenches (but that one is turned off).
      * <p/>
      * One last Bug for you to fix:
-     * My Autoregistration detects Railcrafts Crowbars, Buildcrafts Wrenches and alike, due to their Interfaces.
+     * My Autoregistration detects Buildcrafts Wrenches and alike, due to their Interfaces.
      * Guess what now became a Crowbar by accident. Try registering the Wrench at the load phase to prevent things like that from happening.
      * Yes, I know that "You need to register Tools in the Load Phase"-Part wasn't there before this. Sorry about that.
      */
@@ -623,4 +612,16 @@ public class GregTech_API {
         sToolList.add(new GT_ItemStack(GT_Utility.copyAmount(1, aTool)));
         return true;
     }
+
+    public static ItemStack getStackofAmountFromOreDict(String oredictName, final int amount){
+        final ArrayList<ItemStack> list = OreDictionary.getOres(oredictName);
+        if(!list.isEmpty()) {
+            final ItemStack ret = list.get(0).copy();
+            ret.stackSize = amount;
+            return ret;
+        }
+        System.err.println("Failed to find " + oredictName + " in OreDict");
+        return new ItemStack(ItemDebug.getInstance(), amount);
+    }
+
 }

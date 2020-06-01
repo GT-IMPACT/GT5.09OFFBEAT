@@ -90,6 +90,7 @@ public final class SubTag implements ICondition<ISubTagContainer> {
      * Paper, Wood, Gunpowder, Stone
      */
     public static final SubTag NO_SMELTING = getNewSubTag("NO_SMELTING");
+    public static final SubTag NO_FREEZING = getNewSubTag("NO_FREEZING");
     /**
      * This Material can be molten into a Fluid
      */
@@ -231,10 +232,8 @@ public final class SubTag implements ICondition<ISubTagContainer> {
      * Secondary = RF
      */
     public static final SubTag ENERGY_REDSTONE_FLUX = getNewSubTag("ENERGY_REDSTONE_FLUX");
-    /**
-     * Projectile Tag for Arrows
-     */
-    public static final SubTag PROJECTILE_ARROW = getNewSubTag("PROJECTILE_ARROW");
+
+
     public final Collection<ISubTagContainer> mRelevantTaggedItems = new HashSet<ISubTagContainer>(1);
 
     private SubTag(String aName) {

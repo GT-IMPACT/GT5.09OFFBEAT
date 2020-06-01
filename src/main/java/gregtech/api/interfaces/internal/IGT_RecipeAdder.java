@@ -252,7 +252,7 @@ public interface IGT_RecipeAdder {
 
     public boolean addBlastSmelterRecipe(ItemStack[] aInputs, ItemStack aOutput, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt, int aLevel);
 
-    
+    public boolean addFreezerSolidifierRecipe(ItemStack aMold, FluidStack aInput1, FluidStack aInput2, ItemStack aOutput, int aDuration, int aEUt);
     /**
      * Adds a CNC-Machine Recipe
      *
@@ -707,6 +707,15 @@ public interface IGT_RecipeAdder {
 
     public boolean addNuclearReactorRecipe(ItemStack aInput, ItemStack aOutput, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration);
 
+    /**
+     * Recipe adder Tiered Lines
+     * */
+    public boolean addPrimitiveLineRecipe(ItemStack[] aInputs, ItemStack aOutput, FluidStack[] aFluidInputs, int aDuration, int aEUt);
+
+    public boolean addBasicLineRecipe(ItemStack[] aInputs, ItemStack aOutput, FluidStack[] aFluidInputs, int aDuration, int aEUt);
+
+    public boolean addAdvancedLineRecipe(ItemStack[] aInputs, ItemStack aOutput, FluidStack[] aFluidInputs, int aDuration, int aEUt);
+
     public boolean addTesseractRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, ItemStack aOutput4, ItemStack aOutput5, ItemStack aOutput6, int[] aChances, int aDuration, int aEUt);
     
     public boolean addTinyWormHoleRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, ItemStack aOutput4, ItemStack aOutput5, ItemStack aOutput6, int[] aChances, int aDuration, int aEUt);
@@ -730,17 +739,6 @@ public interface IGT_RecipeAdder {
     public boolean addSpaceResearch6Recipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, ItemStack aInput4, ItemStack aInput5, ItemStack aInput6, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt, boolean aPlanetTier6);
 
     public boolean addSpaceResearch7Recipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, ItemStack aInput4, ItemStack aInput5, ItemStack aInput6, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt, boolean aPlanetTier7);
-
-
-    /**
-     * Adds a Super Cooling Freezer Recipe
-     *
-     * @param aInput1   must be != null
-     * @param aOutput1  must be != null
-     * @param aFluidInput  must be != null
-     * @param aDuration must be > 0
-     */
-    public boolean addSuperCoolingFreezerRecipe(ItemStack aInput1, ItemStack aOutput1, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt);
 
     /**
      * Adds a Distillation Tower Recipe

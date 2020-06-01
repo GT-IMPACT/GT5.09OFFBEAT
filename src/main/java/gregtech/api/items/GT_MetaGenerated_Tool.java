@@ -10,16 +10,16 @@ import forestry.api.arboriculture.IToolGrafter;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enchants.Enchantment_Radioactivity;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
-import gregtech.api.enums.TC_Aspects.TC_AspectStack;
 import gregtech.api.interfaces.IDamagableItem;
+import gregtech.api.interfaces.IToolCrowbar;
 import gregtech.api.interfaces.IToolStats;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.tools.GT_Tool_Turbine;
-import mods.railcraft.api.core.items.IToolCrowbar;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -52,13 +52,12 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static gregtech.api.enums.GT_Values.MOD_ID_FR;
-import static gregtech.api.enums.GT_Values.MOD_ID_RC;
 
 /**
  * This is an example on how you can create a Tool ItemStack, in this case a Bismuth Wrench:
  * GT_MetaGenerated_Tool.sInstances.get("gt.metatool.01").getToolWithStats(GT_MetaGenerated_Tool_01.WRENCH, 1, Materials.Bismuth, Materials.Bismuth, null);
  */
-@Optional.InterfaceList(value = {@Optional.Interface(iface = "forestry.api.arboriculture.IToolGrafter", modid = MOD_ID_FR), @Optional.Interface(iface = "mods.railcraft.api.core.items.IToolCrowbar", modid = MOD_ID_RC), @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft"), @Optional.Interface(iface = "crazypants.enderio.api.tool.ITool", modid = "EnderIO")})
+@Optional.InterfaceList(value = {@Optional.Interface(iface = "forestry.api.arboriculture.IToolGrafter", modid = MOD_ID_FR), @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft"), @Optional.Interface(iface = "crazypants.enderio.api.tool.ITool", modid = "EnderIO")})
 public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements IDamagableItem, IToolGrafter, IToolCrowbar, IToolWrench, ITool {
     /**
      * All instances of this Item Class are listed here.
@@ -144,10 +143,10 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
      * @param aEnglish                The Default Localized Name of the created Item
      * @param aToolTip                The Default ToolTip of the created Item, you can also insert null for having no ToolTip
      * @param aToolStats              The Food Value of this Item. Can be null as well.
-     * @param aOreDictNamesAndAspects The OreDict Names you want to give the Item. Also used to assign Thaumcraft Aspects.
+     * @param aOreDictNames           Registration OreDictNames
      * @return An ItemStack containing the newly created Item, but without specific Stats.
      */
-    public final ItemStack addTool(int aID, String aEnglish, String aToolTip, IToolStats aToolStats, Object... aOreDictNamesAndAspects) {
+    public final ItemStack addTool(int aID, String aEnglish, String aToolTip, IToolStats aToolStats, Object... aOreDictNames) {
         if (aToolTip == null) aToolTip = "";
         if (aID >= 0 && aID < 32766 && aID % 2 == 0) {
             GT_LanguageManager.addStringLocalization(getUnlocalizedName() + "." + aID + ".name", aEnglish);
@@ -158,15 +157,9 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
             mToolStats.put((short) (aID + 1), aToolStats);
             aToolStats.onStatsAddedToTool(this, aID);
             ItemStack rStack = new ItemStack(this, 1, aID);
-            List<TC_AspectStack> tAspects = new ArrayList<TC_AspectStack>();
-            for (Object tOreDictNameOrAspect : aOreDictNamesAndAspects) {
-                if (tOreDictNameOrAspect instanceof TC_AspectStack)
-                    ((TC_AspectStack) tOreDictNameOrAspect).addToAspectList(tAspects);
-                else
-                    GT_OreDictUnificator.registerOre(tOreDictNameOrAspect, rStack);
+            for (Object tOreDictName : aOreDictNames) {
+                    GT_OreDictUnificator.registerOre(tOreDictName, rStack);
             }
-            if (GregTech_API.sThaumcraftCompat != null)
-                GregTech_API.sThaumcraftCompat.registerThaumcraftAspectsToItem(rStack, tAspects, false);
             return rStack;
         }
         return null;
@@ -317,14 +310,19 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     @SideOnly(Side.CLIENT)
     public final void getSubItems(Item var1, CreativeTabs aCreativeTab, List aList) {
         for (int i = 0; i < 32766; i += 2) {
             if (getToolStats(new ItemStack(this, 1, i)) != null) {
                 ItemStack tStack = new ItemStack(this, 1, i);
                 isItemStackUsable(tStack);
-                aList.add(tStack);
-                aList.add(getToolWithStats(i,1,Materials.Neutronium,Materials.Neutronium,null));
+                //aList.add(tStack);
+                if (i >= 100 && i <=169) {
+                    aList.add(getToolWithStats(i,1,Materials.Neutronium,Materials.Neutronium, new long[]{81920000L, GT_Values.V[5], 5L, 81920000L}));
+                } else {
+                    aList.add(getToolWithStats(i, 1, Materials.Neutronium, Materials.Neutronium, null));
+                }
             }
 
         }

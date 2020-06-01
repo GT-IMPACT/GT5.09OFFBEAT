@@ -26,11 +26,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import static gregtech.api.enums.GT_Values.*;
-
-import gtPlusPlus.core.material.ALLOY;
-import gtPlusPlus.core.material.ELEMENT;
-import gtPlusPlus.core.material.Material;
-
+import static gregtech.api.util.GT_OreDictUnificator.isItemStackInstanceOf;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
@@ -45,30 +41,6 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
     private final boolean mSharedTank, mRequiresFluidForFiltering;
     private final byte mGUIParameterA, mGUIParameterB;
 
-    public static String rotorTumbaga= "rotorTumbaga";
-    public static String rotorPotin= "rotorPotin";
-    public static String rotorEglinSteel= "rotorEglinSteel";
-    public static String rotorZirconiumCarbide= "rotorZirconiumCarbide";
-	public static String rotorIncoloy020= "rotorIncoloy020";
-	public static String rotorStellite= "rotorStellite";
-	public static String rotorNitinol60= "rotorNitinol60";
-	public static String rotorArceusAlloy2B= "rotorArceusAlloy2B";
-	public static String rotorCinobiteA243= "rotorCinobiteA243";
-	public static String rotorAbyssalAlloy= "rotorAbyssalAlloy";
-	public static String rotorQuantum= "rotorQuantum";
-	
-	public static String plateTumbaga= "plateTumbaga";
-    public static String platePotin= "platePotin";
-    public static String plateEglinSteel= "plateEglinSteel";
-    public static String plateZirconiumCarbide= "plateZirconiumCarbide";
-	public static String plateIncoloy020= "plateIncoloy020";
-	public static String plateStellite= "plateStellite";
-	public static String plateNitinol60= "plateNitinol60";
-	public static String plateArceusAlloy2B= "plateArceusAlloy2B";
-	public static String plateCinobiteA243= "plateCinobiteA243";
-	public static String plateAbyssalAlloy= "plateAbyssalAlloy";
-	public static String plateQuantum= "plateQuantum";
-	
     public GT_MetaTileEntity_BasicMachine_GT_Recipe(int aID, String aName, String aNameRegional, int aTier, String aDescription, GT_Recipe_Map aRecipes, int aInputSlots, int aOutputSlots, int aTankCapacity, int aGUIParameterA, int aGUIParameterB, String aGUIName, String aSound, boolean aSharedTank, boolean aRequiresFluidForFiltering, int aSpecialEffect, String aOverlays, Object[] aRecipe) {
         super(aID, aName, aNameRegional, aTier, aRecipes.mAmperage, aDescription, aInputSlots, aOutputSlots, aGUIName, aRecipes.mNEIName, new ITexture[]{new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_SIDE_ACTIVE")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_SIDE")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_FRONT_ACTIVE")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_FRONT")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_TOP_ACTIVE")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_TOP")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_BOTTOM_ACTIVE")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/" + aOverlays.toLowerCase(Locale.ENGLISH) + "/OVERLAY_BOTTOM"))});
         mSharedTank = aSharedTank;
@@ -104,17 +76,9 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                 }
 
                 if (aRecipe[i] == X.GLASS) {
-                	if (GT_Mod.gregtechproxy.mBartHard) {
-                        if (mTier>=8)
-                           aRecipe[i] = "blockGlass"+VN[8];
-                        else if (mTier < 3)
-                           aRecipe[i] = "blockGlass"+VN[3];
-                        else
-                            aRecipe[i] = "blockGlass"+VN[mTier];
-                        continue;              
-                    } 
-                    else {
                         switch (mTier) {
+                            case 4:
+                            case 5:
                             case 6:
                             case 7:
                             case 8:
@@ -124,54 +88,12 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                                 aRecipe[i] = new ItemStack(Blocks.glass, 1, W);
                                 break;
                         }
-                        continue;
-                    }
+                    continue;
                 }
 
-                if (GT_Mod.gregtechproxy.mGTPlusPlusHard) {
                 if (aRecipe[i] == X.PLATE) {
                     switch (mTier) {
                         case 0:
-                        case 1:
-                            aRecipe[i] = "plateTumbaga";
-                            break;
-                        case 2:
-                            aRecipe[i] = "platePotin";
-                            break;
-                        case 3:
-                            aRecipe[i] = "plateEglinSteel";
-                            break;
-                        case 4:
-                            aRecipe[i] = "plateZirconiumCarbide";
-                            break;
-                        case 5:
-                            aRecipe[i] = "plateIncoloy020";
-                            break;
-                        case 6:
-                            aRecipe[i] = "plateStellite";
-                            break;
-                        case 7:
-                            aRecipe[i] = "plateNitinol60";
-                            break;
-                        case 8:
-                            aRecipe[i] = "plateArceusAlloy2B";
-                            break;
-                        case 9:
-                            aRecipe[i] = "plateCinobiteA243";
-                            break;
-                        case 10:
-                            aRecipe[i] = "plateAbyssalAlloy";
-                            break;
-                        default:
-                            aRecipe[i] = "plateQuantum";
-                            break;
-                    }
-                    continue;
-                }
-                }else {
-                	if (aRecipe[i] == X.PLATE) {
-                        switch (mTier) {
-                            case 0:
                             case 1:
                                 aRecipe[i] = OrePrefixes.plate.get(Materials.Steel);
                                 break;
@@ -179,33 +101,20 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                                 aRecipe[i] = OrePrefixes.plate.get(Materials.Aluminium);
                                 break;
                             case 3:
-                                aRecipe[i] = OrePrefixes.plate.get(Materials.StainlessSteel);
+                                aRecipe[i] = OrePrefixes.plate.get(Materials.HSLA);
                                 break;
                             case 4:
                                 aRecipe[i] = OrePrefixes.plate.get(Materials.Titanium);
                                 break;
                             case 5:
-                                aRecipe[i] = OrePrefixes.plate.get(Materials.TungstenSteel);
-                                break;
-                            case 6:
-                                aRecipe[i] = OrePrefixes.plate.get(Materials.HSSG);
-                                break;
-                            case 7:
-                                aRecipe[i] = OrePrefixes.plate.get(Materials.HSSE);
-                                break;
-                            case 8:
-                                aRecipe[i] = OrePrefixes.plate.get(Materials.Europium);
-                                break;
-                            case 9:
-                                aRecipe[i] = OrePrefixes.plate.get(Materials.Neutronium);
+                                aRecipe[i] = OrePrefixes.plate.get(Materials.HastelloyC276);
                                 break;
                             default:
-                                aRecipe[i] = OrePrefixes.plate.get(Materials.Phoenixite);
+                                aRecipe[i] = OrePrefixes.plate.get(Materials.HastelloyC276);
                                 break;
                         }
                         continue;
                     }
-                }
 
                 if (aRecipe[i] == X.PIPE) {
                     switch (mTier) {
@@ -223,22 +132,10 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                             aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.Titanium);
                             break;
                         case 5:
-                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.TungstenSteel);
-                            break;
-                        case 6:
-                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.NiobiumTitanium);
-                            break;
-                        case 7:
-                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.Enderium);
-                            break;
-                        case 8:
-                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.Naquadah);
-                            break;
-                        case 9:
-                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.Infuscolium);
+                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.MaragingSteel300);
                             break;
                         default:
-                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.Neutronium);
+                            aRecipe[i] = OrePrefixes.pipeMedium.get(Materials.MaragingSteel300);
                             break;
                     }
                     continue;
@@ -262,29 +159,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = OrePrefixes.wireGt02.get(Materials.TungstenSteel);
                             break;
-                        case 6:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.HSSG);
-                            break;
-                        case 7:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.Naquadah);
-                            break;
-                        case 8:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.NaquadahAlloy);
-                            break;
-                        case 9:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.Europium);
-                            break;
-                        case 10:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.Diamericiumtitanium);
-                            break;
-                        case 11:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.Neutronium);
-                            break;
-                        case 12:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.Quantium);
-                            break;
                         default:
-                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.BlackPlutonium);
+                            aRecipe[i] = OrePrefixes.wireGt02.get(Materials.TungstenSteel);
                             break;
                     }
                     continue;
@@ -308,29 +184,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = OrePrefixes.wireGt04.get(Materials.TungstenSteel);
                             break;
-                        case 6:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.HSSG);
-                            break;
-                        case 7:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.Naquadah);
-                            break;
-                        case 8:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.NaquadahAlloy);
-                            break;
-                        case 9:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.Europium);
-                            break;
-                        case 10:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.Diamericiumtitanium);
-                            break;
-                        case 11:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.Neutronium);
-                            break;
-                        case 12:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.Quantium);
-                            break;
                         default:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.BlackPlutonium);
+                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.TungstenSteel);
                             break;
                     }
                     continue;
@@ -354,21 +209,9 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                     case 5:
                         aRecipe[i] = OrePrefixes.spring.get(Materials.TungstenSteel);
                         break;
-                    case 6:
-                        aRecipe[i] = OrePrefixes.spring.get(Materials.HSSG);
+                    default:
+                        aRecipe[i] = OrePrefixes.spring.get(Materials.TungstenSteel);
                         break;
-                    case 7:
-                        aRecipe[i] = OrePrefixes.spring.get(Materials.Naquadah);
-                        break;
-                    case 8:
-                        aRecipe[i] = OrePrefixes.spring.get(Materials.NaquadahAlloy);
-                        break;
-                    case 9:
-                        aRecipe[i] = OrePrefixes.spring.get(Materials.Tritanium);
-                        break;
-                        default:
-                        	aRecipe[i] = OrePrefixes.spring.get(Materials.Neutronium);
-                            break;
                     }
                     continue;
                 }
@@ -387,16 +230,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = OrePrefixes.stick.get(Materials.NeodymiumMagnetic);
                             break;
-                        case 6:
-                        case 7:
-                            aRecipe[i] = OrePrefixes.stickLong.get(Materials.NeodymiumMagnetic);
-                            break;
-                        case 8:
-                        case 9:
-                            aRecipe[i] = OrePrefixes.stick.get(Materials.EuropiumoxideMagnetic);
-                            break;
                         default:
-                            aRecipe[i] = OrePrefixes.stickLong.get(Materials.EuropiumoxideMagnetic);
+                            aRecipe[i] = OrePrefixes.stickLong.get(Materials.NeodymiumMagnetic);
                             break;
                     }
                     continue;
@@ -416,16 +251,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = OrePrefixes.stick.get(Materials.Neodymium);
                             break;
-                        case 6:
-                        case 7:
-                            aRecipe[i] = OrePrefixes.stickLong.get(Materials.Neodymium);
-                            break;
-                        case 8:
-                        case 9:
-                            aRecipe[i] = OrePrefixes.stick.get(Materials.VanadiumGallium);
-                            break;
                         default:
-                            aRecipe[i] = OrePrefixes.stickLong.get(Materials.VanadiumGallium);
+                            aRecipe[i] = OrePrefixes.stickLong.get(Materials.Neodymium);
                             break;
                     }
                     continue;
@@ -451,26 +278,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = OrePrefixes.wireGt08.get(Materials.AnnealedCopper);
                             break;
-                        case 6:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.YttriumBariumCuprate);
-                            break;
-                        case 7:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.ElectrumFlux);
-                            break;
-                        case 8:
-                            aRecipe[i] = OrePrefixes.wireGt04.get(Materials.Europium);
-                            break;
-                        case 9:
-                            aRecipe[i] = OrePrefixes.wireGt08.get(Materials.Diamericiumtitanium);
-                            break;
-                        case 10:
-                            aRecipe[i] = OrePrefixes.wireGt08.get(Materials.Neutronium);
-                            break;
-                        case 11:
-                            aRecipe[i] = OrePrefixes.wireGt08.get(Materials.Quantium);
-                            break;
                         default:
-                            aRecipe[i] = OrePrefixes.wireGt08.get(Materials.BlackPlutonium);
+                            aRecipe[i] = OrePrefixes.wireGt08.get(Materials.AnnealedCopper);
                             break;
                     }
                     continue;
@@ -494,20 +303,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Robot_Arm_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Robot_Arm_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Robot_Arm_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Robot_Arm_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Robot_Arm_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Robot_Arm_UEV;
+                            aRecipe[i] = ItemList.Robot_Arm_IV;
                             break;
                     }
                     continue;
@@ -531,69 +328,16 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Electric_Pump_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Electric_Pump_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Electric_Pump_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Electric_Pump_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Electric_Pump_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Electric_Pump_UEV;
+                            aRecipe[i] = ItemList.Electric_Pump_IV;
                             break;
                     }
                     continue;
                 }
 
-                if (GT_Mod.gregtechproxy.mGTPlusPlusHard) {
                 if (aRecipe[i] == X.ROTOR) {
                     switch (mTier) {
                         case 0:
-                        case 1:
-                            aRecipe[i] = "rotorTumbaga";
-                            break;
-                        case 2:
-                            aRecipe[i] = "rotorPotin";
-                            break;
-                        case 3:
-                            aRecipe[i] = "rotorEglinSteel";
-                            break;
-                        case 4:
-                            aRecipe[i] = "rotorZirconiumCarbide";
-                            break;
-                        case 5:
-                            aRecipe[i] = "rotorIncoloy020";
-                            break;
-                        case 6:
-                            aRecipe[i] = "rotorStellite";
-                            break;
-                        case 7:
-                            aRecipe[i] = "rotorNitinol60";
-                            break;
-                        case 8:
-                            aRecipe[i] = "rotorArceusAlloy2B";
-                            break;
-                        case 9:
-                            aRecipe[i] = "rotorCinobiteA243";
-                            break;
-                        case 10:
-                            aRecipe[i] = "rotorAbyssalAlloy";
-                            break;
-                        default:
-                            aRecipe[i] = "rotorQuantum";
-                            break;
-                    }
-                    continue;
-                }
-                }else {
-                	if (aRecipe[i] == X.ROTOR) {
-                        switch (mTier) {
-                            case 0:
                             case 1:
                                 aRecipe[i] = OrePrefixes.rotor.get(Materials.Tin);
                                 break;
@@ -607,30 +351,14 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                                 aRecipe[i] = OrePrefixes.rotor.get(Materials.StainlessSteel);
                                 break;
                             case 5:
-                                aRecipe[i] = OrePrefixes.rotor.get(Materials.TungstenSteel);
-                                break;
-                            case 6:
-                                aRecipe[i] = OrePrefixes.rotor.get(Materials.Chrome);
-                                break;
-                            case 7:
-                                aRecipe[i] = OrePrefixes.rotor.get(Materials.Iridium);
-                                break;
-                            case 8:
-                                aRecipe[i] = OrePrefixes.rotor.get(Materials.Osmium);
-                                break;
-                            case 9:
-                                aRecipe[i] = OrePrefixes.rotor.get(Materials.NaquadahAlloy);
-                                break;
-                            case 10:
-                                aRecipe[i] = OrePrefixes.rotor.get(Materials.Neutronium);
+                                aRecipe[i] = OrePrefixes.rotor.get(Materials.HastelloyC276);
                                 break;
                             default:
-                                aRecipe[i] = OrePrefixes.rotor.get(Materials.Phoenixite);
+                                aRecipe[i] = OrePrefixes.rotor.get(Materials.HastelloyC276);
                                 break;
                         }
                         continue;
                     }
-                }
 
                 if (aRecipe[i] == X.MOTOR) {
                     switch (mTier) {
@@ -650,20 +378,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Electric_Motor_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Electric_Motor_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Electric_Motor_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Electric_Motor_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Electric_Motor_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Electric_Motor_UEV;
+                            aRecipe[i] = ItemList.Electric_Motor_IV;
                             break;
                     }
                     continue;
@@ -687,20 +403,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Electric_Piston_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Electric_Piston_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Electric_Piston_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Electric_Piston_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Electric_Piston_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Electric_Piston_UEV;
+                            aRecipe[i] = ItemList.Electric_Piston_IV;
                             break;
                     }
                     continue;
@@ -724,20 +428,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Conveyor_Module_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Conveyor_Module_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Conveyor_Module_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Conveyor_Module_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Conveyor_Module_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Conveyor_Module_UEV;
+                            aRecipe[i] = ItemList.Conveyor_Module_IV;
                             break;
                     }
                     continue;
@@ -761,20 +453,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Emitter_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Emitter_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Emitter_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Emitter_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Emitter_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Emitter_UEV;
+                            aRecipe[i] = ItemList.Emitter_IV;
                             break;
                     }
                     continue;
@@ -798,20 +478,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Sensor_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Sensor_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Sensor_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Sensor_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Sensor_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Sensor_UEV;
+                            aRecipe[i] = ItemList.Sensor_IV;
                             break;
                     }
                     continue;
@@ -835,20 +503,8 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                         case 5:
                             aRecipe[i] = ItemList.Field_Generator_IV;
                             break;
-                        case 6:
-                            aRecipe[i] = ItemList.Field_Generator_LuV;
-                            break;
-                        case 7:
-                            aRecipe[i] = ItemList.Field_Generator_ZPM;
-                            break;
-                        case 8:
-                            aRecipe[i] = ItemList.Field_Generator_UV;
-                            break;
-                        case 9:
-                            aRecipe[i] = ItemList.Field_Generator_UHV;
-                            break;
                         default:
-                            aRecipe[i] = ItemList.Field_Generator_UEV;
+                            aRecipe[i] = ItemList.Field_Generator_IV;
                             break;
                     }
                     continue;
@@ -917,8 +573,16 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
             default:
                 int tID = getBaseMetaTileEntity().getMetaTileID();
                 if (tID >= 211 && tID <= 218 || tID >= 1180 && tID <= 1187 || tID >= 10783 && tID <= 10786 || tID >= 12080 && tID <= 12085 || tID >= 13010 && tID <= 13019){// assemblers IDs
-                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitBasic")) return true; // allow input all LV-circuits for assemblers
-                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitAdvanced")) return true; // allow input all HV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitBasic")) return true; // allow input all LV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitGood")) return true; // allow input all MV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitAdvanced")) return true; // allow input all HV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitData")) return true; // allow input all EV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitElite")) return true; // allow input all IV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitMaster")) return true; // allow input all LuV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitUltimate")) return true; // allow input all ZPM-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitSuperconductor")) return true; // allow input all UV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitInfinite")) return true; // allow input all UHV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitBio")) return true; // allow input all UEV-circuits for assemblers
 					if (GT_Utility.areStacksEqual(GT_OreDictUnificator.get(OrePrefixes.bolt,Materials.BlueAlloy,1L),aStack)) return true;
                 }
                 return getRecipeList().containsInput(aStack);

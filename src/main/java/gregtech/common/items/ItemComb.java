@@ -325,7 +325,7 @@ public class ItemComb extends Item {
 		
 		//gem2
 		tComb = getStackForType(CombType.FLUIX);
-		GT_Values.RA.addCentrifugeRecipe(tComb, GT_Values.NI, GT_Values.NF, GT_Values.NF,ItemList.FR_Wax.get(1, new Object[0]), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Fluix,1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[] {3000, 2500}, 128, 5);
+		GT_Values.RA.addCentrifugeRecipe(tComb, GT_Values.NI, GT_Values.NF, GT_Values.NF,ItemList.FR_Wax.get(1, new Object[0]), GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Fluix,1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[] {3000, 2500}, 128, 5);
 		addProcessLV(tComb, Materials.Redstone, 90);
 		addProcessLV(tComb, Materials.CertusQuartz, 90);
 		addProcessLV(tComb, Materials.NetherQuartz, 90);
