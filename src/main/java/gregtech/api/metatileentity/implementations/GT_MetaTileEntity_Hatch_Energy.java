@@ -8,11 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.lang.reflect.Field;
+
 import static gregtech.api.enums.GT_Values.V;
 
 public class GT_MetaTileEntity_Hatch_Energy extends GT_MetaTileEntity_Hatch {
 
-    int mAmpers = 2;
+    public int mAmpers = 2;
     long mCapacity = 0;
 
     public GT_MetaTileEntity_Hatch_Energy(int aID, String aName, String aNameRegional, int aTier) {
@@ -118,7 +120,7 @@ public class GT_MetaTileEntity_Hatch_Energy extends GT_MetaTileEntity_Hatch {
 
     @Override
     public long maxAmperesIn() {
-        return mAmpers;
+        return mAmpers==2? 2 : mAmpers + (mAmpers >> 2);
     }
 
     @Override
