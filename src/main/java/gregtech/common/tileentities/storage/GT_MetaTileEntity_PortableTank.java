@@ -102,6 +102,7 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_BasicTank 
 				GT_Utility.sendChatToPlayer(aPlayer, "Fluid Output Enabled");
 			}
 		}
+		if (!aPlayer.isSneaking()) {}
 	}
 
 	@Override

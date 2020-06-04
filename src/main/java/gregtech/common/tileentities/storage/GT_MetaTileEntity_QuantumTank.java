@@ -109,6 +109,7 @@ public class GT_MetaTileEntity_QuantumTank
                 GT_Utility.sendChatToPlayer(aPlayer, "Fluid Output Enabled");
             }
         }
+        if (!aPlayer.isSneaking()) {}
     }
 
     @Override
