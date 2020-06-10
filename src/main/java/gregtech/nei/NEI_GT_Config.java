@@ -8,6 +8,8 @@ public class NEI_GT_Config
         implements IConfigureNEI {
     public static boolean sIsAdded = true;
     public static GT_NEI_AssLineHandler ALH;
+    public static GT_NEI_SawMill SAW;
+    public static GT_NEI_Pyro PYRO;
 
     public void loadConfig() {
         sIsAdded = false;
@@ -16,8 +18,11 @@ public class NEI_GT_Config
                 new GT_NEI_DefaultHandler(tMap);
             }
         }
-        if(FMLCommonHandler.instance().getEffectiveSide().isClient())
-            ALH=new GT_NEI_AssLineHandler(GT_Recipe.GT_Recipe_Map.sAssemblylineVisualRecipes);
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            ALH = new GT_NEI_AssLineHandler(GT_Recipe.GT_Recipe_Map.sAssemblylineVisualRecipes);
+            SAW = new GT_NEI_SawMill(GT_Recipe.GT_Recipe_Map.sSawMillVisual);
+            PYRO = new GT_NEI_Pyro(GT_Recipe.GT_Recipe_Map.sPyrolyseBasicVisual);
+        }
         sIsAdded = true;
     }
 

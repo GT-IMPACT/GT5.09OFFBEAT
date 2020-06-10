@@ -175,6 +175,28 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         GT_Recipe.GT_Recipe_Map.sAdvanecedline.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, null, aFluidInputs, null, aDuration, aEUt, 0);
         return true;
     }
+    public boolean addSawMill(ItemStack[] aInputs, ItemStack[] aOutputs, FluidStack[] aFluidInputs, int aDuration, int aEUt, int aMode) {
+        GT_Recipe.GT_Recipe_Map.sSawMillVisual.addFakeRecipe(true, aInputs, aOutputs, null, aFluidInputs, null, aDuration, aEUt, aMode);
+        if (aMode == 0) {
+            GT_Recipe.GT_Recipe_Map.sSawMill0.addRecipe(true, aInputs, aOutputs, null, aFluidInputs, null, aDuration, aEUt, aMode);
+        } else if (aMode == 1) {
+            GT_Recipe.GT_Recipe_Map.sSawMill1.addRecipe(true, aInputs, aOutputs, null, aFluidInputs, null, aDuration, aEUt, aMode);
+        } else {
+            GT_Recipe.GT_Recipe_Map.sSawMill2.addRecipe(true, aInputs, aOutputs, null, aFluidInputs, null, aDuration, aEUt, aMode);
+        }
+        return true;
+    }
+
+    public boolean addPyrolyseBasic(ItemStack[] aInputs, ItemStack[] aOutputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt) {
+        if (aEUt <= 0) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sPyrolyseBasicVisual.addFakeRecipe(true, aInputs, aOutputs, null, null, aFluidOutputs, aDuration, aEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sPyrolyseBasic.addRecipe(true, aInputs, aOutputs, null, null, null, aDuration, aEUt, 0);
+
+        return true;
+    }
+
 
     public boolean addChemicalRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput, int aDuration) {
         return addChemicalRecipe(aInput1, aInput2, null, null, aOutput, aDuration);

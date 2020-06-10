@@ -102,18 +102,9 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
             mInventory[getInputSlot()] = null;
     }
 
-    public void isIgnoreMap(boolean aIgnoreMap, Fluid aFluid) {
-        mIgnoreMap = aIgnoreMap;
-        mLockedFluid = aFluid;
-        this.mRecipeMap = null;
-    }
-
     @Override
     public boolean isFluidInputAllowed(FluidStack aFluid) {
-        if (mIgnoreMap) {
-            return aFluid.getFluid() == mLockedFluid;
-        } else
-            return mRecipeMap == null || mRecipeMap.containsInput(aFluid);
+        return true;
     }
 
     @Override
