@@ -114,7 +114,7 @@ public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistra
         GT_Values.RA.addPyrolyseRecipe(GT_Utility.copyAmount(16L, new Object[]{logStack}), Materials.Nitrogen.getGas(1000), 10, Materials.Charcoal.getGems(20), Materials.WoodTar.getFluid(1500),          320, 96);
         */
         if (Loader.isModLoaded("impact")) {
-            GT_Values.RA.addPyrolyseBasic(new ItemStack[]{Core_Items1.getRecipe(39, 40)}, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Charcoal, 5)}, new FluidStack[]{Materials.WoodTar.getFluid(1440), Materials.CarbonMonoxide.getGas(72), Materials.Hydrogen.getGas(288), Materials.Methane.getGas(144), Materials.CarbonDioxide.getGas(216)}, 60 * 20, 24);
+            GT_Values.RA.addPyrolyseBasic(new ItemStack[]{Core_Items1.getRecipe(39, 42)}, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Charcoal, 5)}, new FluidStack[]{Materials.WoodTar.getFluid(1440), Materials.CarbonMonoxide.getGas(72), Materials.Hydrogen.getGas(288), Materials.Methane.getGas(144), Materials.CarbonDioxide.getGas(216)}, 60 * 20, 24);
         }
     }
 }
