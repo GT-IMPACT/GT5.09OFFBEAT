@@ -564,7 +564,7 @@ public interface IGT_RecipeAdder {
     /**
      * Adds a Recipe for the Fermenter
      */
-    public boolean addFermentingRecipe(FluidStack aInput, FluidStack aOutput, int aDuration, boolean aHidden);
+    public boolean addFermentingRecipe(ItemStack aIngredient, FluidStack aInput, FluidStack aOutput, int aDuration, boolean aHidden);
 
     /**
      * Adds a Recipe for the Fluid Heater

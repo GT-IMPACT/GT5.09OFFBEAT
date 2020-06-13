@@ -924,22 +924,22 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
-    public boolean addFermentingRecipe(FluidStack aInput, FluidStack aOutput, int aDuration, int aEUt, boolean aHidden) {
+    public boolean addFermentingRecipe(ItemStack aIngredient, FluidStack aInput, FluidStack aOutput, int aDuration, int aEUt, boolean aHidden) {
         if ((aInput == null) || (aOutput == null)) {
             return false;
         }
         if ((aDuration = GregTech_API.sRecipeFile.get("fermenting", aOutput.getFluid().getUnlocalizedName(), aDuration)) <= 0) {
             return false;
         }
-        GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFermentingRecipes.addRecipe(false, null, null, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput}, aDuration, aEUt, 0);
+        GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFermentingRecipes.addRecipe(false, new ItemStack[]{aIngredient}, null, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput}, aDuration, aEUt, 0);
         if ((aHidden) && (tRecipe != null)) {
             tRecipe.mHidden = true;
         }
         return true;
     }
     
-    public boolean addFermentingRecipe(FluidStack aInput, FluidStack aOutput, int aDuration, boolean aHidden) {
-        return addFermentingRecipe(aInput, aOutput, aDuration, 2, aHidden);
+    public boolean addFermentingRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aOutput, int aDuration, boolean aHidden) {
+        return addFermentingRecipe(aInput, aFluidInput, aOutput, aDuration, 2, aHidden);
     }
 
     public boolean addDistilleryRecipe(ItemStack aCircuit, FluidStack aInput, FluidStack aOutput, ItemStack aSolidOutput, int aDuration, int aEUt, boolean aHidden) {
