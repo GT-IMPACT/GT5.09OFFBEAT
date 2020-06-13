@@ -191,9 +191,8 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         if (aEUt <= 0) {
             return false;
         }
-        GT_Recipe.GT_Recipe_Map.sPyrolyseBasicVisual.addFakeRecipe(true, aInputs, aOutputs, null, null, aFluidOutputs, aDuration, aEUt, 0);
-        GT_Recipe.GT_Recipe_Map.sPyrolyseBasic.addRecipe(true, aInputs, aOutputs, null, null, null, aDuration, aEUt, 0);
-
+        GT_Recipe.GT_Recipe_Map.sPyrolyseBasicVisual.addFakeRecipe(true, new ItemStack[] {aInputs[0]}, new ItemStack[] {aOutputs[0]}, null, null, aFluidOutputs, aDuration, aEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sPyrolyseBasic.addRecipe(true, new ItemStack[] {aInputs[0]}, new ItemStack[] {aOutputs[0]}, null, null, new FluidStack[] {aFluidOutputs[0]}, aDuration, aEUt, 0);
         return true;
     }
 
@@ -1488,13 +1487,8 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
     }
 
     @Override
+    @Deprecated
     public boolean addPyrolyseRecipe(ItemStack aInput, FluidStack aFluidInput, int intCircuit, ItemStack aOutput, FluidStack aFluidOutput, int aDuration, int aEUt) {
-        if (aInput == null) {
-            return false;
-        }
-        if ((aDuration = GregTech_API.sRecipeFile.get("pyrolyse", aInput, aDuration)) <= 0) {
-            return false;
-        }
         GT_Recipe.GT_Recipe_Map.sPyrolyseRecipes.addRecipe(false, new ItemStack[]{aInput, ItemList.Circuit_Integrated.getWithDamage(0L, intCircuit, new Object[0])}, new ItemStack[]{aOutput}, null, null, new FluidStack[]{aFluidInput}, new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
         return true;
     }

@@ -764,6 +764,7 @@ public interface IGT_RecipeAdder {
      * @param aDuration
      * @param aEUt
      */
+    @Deprecated
     public boolean addPyrolyseRecipe(ItemStack aInput, FluidStack aFluidInput, int intCircuit, ItemStack aOutput, FluidStack aFluidOutput, int aDuration, int aEUt);
 
     /**
