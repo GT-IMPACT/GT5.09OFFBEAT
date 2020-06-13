@@ -1551,7 +1551,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         	GT_Values.RA.addMixerRecipe(GT_ModHandler.getIC2Item("biochaff", 1), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000), new FluidStack(FluidRegistry.getFluid("ic2biomass"), 1000), GT_Values.NI, 400, 8);
         }
 
-        GT_Values.RA.addCokeOvenRecipes(GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 1), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.CokeCoal, 1L), Materials.Creosote.getFluid(500), 800);
+        GT_Values.RA.addCokeOvenRecipes(GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 2), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.CokeCoal, 1L), Materials.Creosote.getFluid(200), 90*20);
         run2();
 
         GT_Utility.removeSimpleIC2MachineRecipe(new ItemStack(Blocks.cobblestone), GT_ModHandler.getMaceratorRecipeList(), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L));
@@ -3506,7 +3506,7 @@ public class GT_MachineRecipeLoader implements Runnable {
            GT_Values.RA.addMixerRecipe(Materials.AlienOrganic.getDust(8), Materials.MysteriousCrystal.getDust(8), Materials.Oriharukon.getDust(8), GT_Utility.getIntegratedCircuit(1), Materials.Mutagen.getFluid(4000), Materials.BioMediumRaw.getFluid(4000), GT_Values.NI, 300, 122880);
            
            //===
-           
+           GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.AlienOrganic.getDust(1),   GT_Utility.getIntegratedCircuit(1)}, new FluidStack[]{Materials.Radon.getFluid(1000)},  new FluidStack[]{Materials.AlienBiomass.getFluid(1000)}, null, 200, 122880);
            GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.EnrichedMysteriousCrystal.getDustTiny(1),   GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.AlienBiomass.getFluid(900), Materials.Hydrogen.getGas(100)},  new FluidStack[]{Materials.FermentedAlienBiomass.getFluid(1000)}, new ItemStack[]{Materials.MysteriousCrystal.getDustTiny(1)}, 750, 90000);
            GT_Values.RA.addUniversalDistillationRecipe(Materials.FermentedAlienBiomass.getFluid(1000), new FluidStack[]{Materials.Oil.getFluid(200), Materials.Water.getFluid(200), Materials.Ethanol.getFluid(150), Materials.Methanol.getFluid(150), Materials.GrowthMediumRaw.getFluid(75), Materials.GrowthMediumSterilized.getFluid(40), Materials.Bacteria.getFluid(35), Materials.PerroxSuperHeavy.getFluid(65), Materials.PerroxHeavy.getFluid(35), Materials.PerroxLight.getFluid(30), Materials.PerroxSuperLight.getFluid(20)}, Materials.Ash.getDust(1), 500, 500000);
            GT_Values.RA.addCrackingRecipe(24, Materials.PerroxSuperHeavy.getFluid(100), Materials.Nickel.getPlasma(1), Materials.PerroxSuperHeavyCracked.getGas(100), 500, 500000);
