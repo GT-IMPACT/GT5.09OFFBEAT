@@ -9,6 +9,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
+import static gregtech.api.enums.Materials.*;
+
 public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistrator {
     public ProcessingDust() {
         OrePrefixes.dust.add(this);
@@ -33,7 +35,7 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                         GT_RecipeRegistrator.registerReverseArcSmelting(GT_Utility.copyAmount(1L, new Object[]{aStack}), aMaterial, aPrefix.mMaterialAmount, null, null, null);
                     }
                 }
-                if (aWasher) {
+                if (aWasher && !(aMaterial == Basalt || aMaterial == Flint || aMaterial == Stone || aMaterial == Netherrack || aMaterial == Endstone || aMaterial == CokeCoal || aMaterial == Marble)) {
                     GT_Values.RA.addDustWashRecipe(GT_OreDictUnificator.get(OrePrefixes.dustPure, aMaterial, 1L), Materials.Water.getFluid(100L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), 4, 7);
                     GT_Values.RA.addDustWashRecipe(GT_OreDictUnificator.get(OrePrefixes.dustImpure, aMaterial, 1L), Materials.Water.getFluid(100L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), 4, 7);
                 }
