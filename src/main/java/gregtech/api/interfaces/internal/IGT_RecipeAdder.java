@@ -18,7 +18,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1                        = first Input (not null, and respects StackSize)
      * @param aInput2                        = second Input (not null, and respects StackSize)
-     * @param aOutput                        = Output of the Fusion (can be null, and respects StackSize)
+     * @param aOutput1                        = Output of the Fusion (can be null, and respects StackSize)
      * @param aFusionDurationInTicks         = How many ticks the Fusion lasts (must be > 0)
      * @param aFusionEnergyPerTick           = The EU generated per Tick (can even be negative!)
      * @param aEnergyNeededForStartingFusion = EU needed for heating the Reactor up (must be >= 0)
@@ -30,7 +30,7 @@ public interface IGT_RecipeAdder {
      * Adds a Centrifuge Recipe
      *
      * @param aInput1    must be != null
-     * @param aCellInput this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
+     * @param aInput2 this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
      * @param aOutput1   must be != null
      * @param aOutput2   can be null
      * @param aOutput3   can be null
@@ -67,7 +67,7 @@ public interface IGT_RecipeAdder {
      * Adds a Electrolyzer Recipe
      *
      * @param aInput1    must be != null
-     * @param aCellInput this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
+     * @param aInput2 this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
      * @param aOutput1   must be != null
      * @param aOutput2   can be null
      * @param aOutput3   can be null
@@ -81,7 +81,7 @@ public interface IGT_RecipeAdder {
      * Adds a Electrolyzer Recipe
      *
      * @param aInput1    must be != null
-     * @param aCellInput this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
+     * @param aInput2 this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
      * @param aOutput1   must be != null
      * @param aOutput2   can be null
      * @param aOutput3   can be null
@@ -96,7 +96,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1   must be != null
      * @param aInput2   must be != null
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      */
     public boolean addChemicalRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput, int aDuration);
@@ -119,7 +119,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1   must be != null
      * @param aInput2   must be != null
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aOutput2  must be != null
      * @param aDuration must be > 0
      */
@@ -131,7 +131,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1   must be != null
      * @param aInput2   must be != null
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aOutput2  must be != null
      * @param aDuration must be > 0
      */
@@ -150,7 +150,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1   must be != null
      * @param aInput2   must be != null
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      * @param aEUtick   must be > 0
      */
@@ -162,7 +162,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1   must be != null
      * @param aInput2   must be != null
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aOutput2  must be != null
      * @param aDuration must be > 0
      * @param aEUtick   must be > 0
@@ -242,7 +242,6 @@ public interface IGT_RecipeAdder {
      * @param aInput1   must be != null
      * @param aInput2   can be null
      * @param aOutput1  must be != null
-     * @param aOutput2  can be null
      * @param aDuration must be > 0
      * @param aEUt      should be > 0
      */
@@ -376,8 +375,8 @@ public interface IGT_RecipeAdder {
     /**
      * Adds a Wiremill Recipe
      *
-     * @param aInput1   must be != null
-     * @param aOutput1  must be != null
+     * @param aInput   must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      * @param aEUt      should be > 0
      */
@@ -386,8 +385,8 @@ public interface IGT_RecipeAdder {
     /**
      * Adds a Polariser Recipe
      *
-     * @param aInput1   must be != null
-     * @param aOutput1  must be != null
+     * @param aInput   must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      * @param aEUt      should be > 0
      */
@@ -396,8 +395,8 @@ public interface IGT_RecipeAdder {
     /**
      * Adds a Plate Bending Machine Recipe
      *
-     * @param aInput1   must be != null
-     * @param aOutput1  must be != null
+     * @param aInput   must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      * @param aEUt      should be > 0
      */
@@ -406,9 +405,9 @@ public interface IGT_RecipeAdder {
     /**
      * Adds a Extruder Machine Recipe
      *
-     * @param aInput1   must be != null
+     * @param aInput   must be != null
      * @param aShape    must be != null, Set the stackSize to 0 if you don't want to let it consume this Item.
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      * @param aEUt      should be > 0
      */
@@ -417,9 +416,9 @@ public interface IGT_RecipeAdder {
     /**
      * Adds a Slicer Machine Recipe
      *
-     * @param aInput1   must be != null
+     * @param aInput   must be != null
      * @param aShape    must be != null, Set the stackSize to 0 if you don't want to let it consume this Item.
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      * @param aEUt      should be > 0
      */
@@ -461,7 +460,7 @@ public interface IGT_RecipeAdder {
     /**
      * Adds a Distillation Tower Recipe
      *
-     * @param aInput1  must be != null
+     * @param aInput  must be != null
      * @param aOutputs must be != null 1-5 Fluids
      * @param aOutput2 can be null
      */
@@ -640,11 +639,6 @@ public interface IGT_RecipeAdder {
 
     public boolean addAutoclaveSpaceRecipe(ItemStack aInput, FluidStack aFluid, ItemStack aOutput, int aChance, int aDuration, int aEUt, boolean aCleanroom);
 
-    /**
-     * Adds a Recipe for the Mixer
-     * @param itemStack 
-     * @param ni 
-     */
     public boolean addMixerRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, ItemStack aInput4, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt);
 
     public boolean addMixerRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, ItemStack aInput4, ItemStack aInput5, ItemStack aInput6, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt);
@@ -693,10 +687,6 @@ public interface IGT_RecipeAdder {
      */
     public boolean addPulveriserRecipe(ItemStack aInput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt, boolean hidden);
 
-    /**
-     * Adds a Recipe for the GT Industrial Pulveriser. (up to 4 Outputs)
-     * @param i 
-     */
     public boolean addIndustrialPulverizerRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt);
     
     public boolean addFlotationUnitRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, ItemStack aOutput4, ItemStack aOutput5, ItemStack aOutput6, int[] aChances, int aDuration, int aEUt);
@@ -748,7 +738,7 @@ public interface IGT_RecipeAdder {
      * Adds a Distillation Tower Recipe
      * Every Fluid also gets separate distillation recipes
      *
-     * @param aInput1  must be != null
+     * @param aInput  must be != null
      * @param aOutputs must be != null 1-5 Fluids
      * @param aOutput2 can be null
      */

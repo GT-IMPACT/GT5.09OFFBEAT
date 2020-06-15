@@ -33,6 +33,7 @@ public class GT_MetaTileEntity_BronzeBlastFurnace
                 "Useable for Steel and general Pyrometallurgy",
                 "Size(WxHxD): 3x4x3 (Hollow, with opening on top)",
                 "Built from 32 Bronze Plated Bricks",
+                "Recipes are reduced by 4x times",
                 "Causes "+ setPollut() +" Pollution per second"};
     }
 
