@@ -86,8 +86,5 @@ public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistra
     }
     public static void addPyrolyeOvenRecipes(ItemStack logStack){
         GT_Values.RA.addCokeOvenRecipes(GT_Utility.copyAmount(6L, new Object[]{logStack}), Materials.Charcoal.getGems(1), Materials.Creosote.getFluid(100), 90*20);
-        if (Loader.isModLoaded("impact")) {
-            GT_Values.RA.addPyrolyseBasic(new ItemStack[]{Core_Items1.getRecipe(39, 42)}, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Charcoal, 5)}, new FluidStack[]{Materials.WoodTar.getFluid(1440), Materials.CarbonMonoxide.getGas(72), Materials.Hydrogen.getGas(288), Materials.Methane.getGas(144), Materials.CarbonDioxide.getGas(216)}, 60 * 20, 24);
-        }
     }
 }
