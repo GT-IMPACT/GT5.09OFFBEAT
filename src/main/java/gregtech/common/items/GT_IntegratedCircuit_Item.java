@@ -3,6 +3,7 @@ package gregtech.common.items;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -10,15 +11,20 @@ import gregtech.api.items.GT_Generic_Item;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 
 import java.util.List;
 
 import static gregtech.GT_Mod.GT_FML_LOGGER;
+import static gregtech.api.util.GT_Utility.ItemNBT.*;
 
 public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
     private final static String aTextEmptyRow = "   ";
@@ -59,6 +65,22 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
         GT_ModHandler.addCraftingRecipe(ItemList.Circuit_Integrated.getWithDamage(1L, 24L, new Object[0]), bits, new Object[]{aTextEmptyRow, "  d", "P  ", 'P', ItemList.Circuit_Integrated.getWildcard(1L, new Object[0])});
     }
 
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World aWorld, EntityPlayer aPlayer) {
+        int toolMode = getIntegratedAmount(stack);
+        if (!aPlayer.isSneaking()) {
+            ++toolMode;
+            if (toolMode > 24) toolMode = 0;
+        } else {
+            --toolMode;
+            if (toolMode < 0) toolMode = 24;
+        }
+        setIntegratedAmount(stack, toolMode);
+        GT_Utility.sendChatToPlayer(aPlayer, GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated", "Configuration") +": " + EnumChatFormatting.YELLOW + toolMode);
+        setDamage(stack, toolMode);
+        return super.onItemRightClick(stack, aWorld, aPlayer);
+    }
+
     private static String getModeString(int aMetaData) {
         switch ((byte) (aMetaData >>> 8)) {
             case 0:
@@ -79,15 +101,18 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
         return getModeString(aMetaData) + " " + (byte) (aMetaData & 0xFF);
     }
 
+    @SuppressWarnings("unchecked")
     public void addAdditionalToolTips(List aList, ItemStack aStack, EntityPlayer aPlayer) {
         super.addAdditionalToolTips(aList, aStack, aPlayer);
         aList.add(GT_LanguageManager.addStringLocalization(new StringBuilder().append(getUnlocalizedName()).append(".configuration").toString(), "Configuration: ") + getConfigurationString(getDamage(aStack)));
+        aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated1", "Rightclick to set number (+1)"));
+        aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated2", "Rightclick + Shift to set number (-1)"));
     }
 
     public String getUnlocalizedName(ItemStack aStack) {
         return getUnlocalizedName();
     }
-
+    @SuppressWarnings("unchecked")
     @SideOnly(Side.CLIENT)
     public final void getSubItems(Item var1, CreativeTabs aCreativeTab, List aList) {
         aList.add(new ItemStack(this, 1, 0));
