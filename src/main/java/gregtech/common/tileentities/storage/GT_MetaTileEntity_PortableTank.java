@@ -16,12 +16,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import java.text.NumberFormat;
+
 public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_BasicTank {
 
 	public boolean OutputFluid = false;
 
 	public GT_MetaTileEntity_PortableTank(final int aID, final String aName, final String aNameRegional, final int aTier) {
-		super(aID, aName, aNameRegional, aTier, 3, "Stores " + ((int) (Math.pow(2, aTier) * 32000)) + "L of fluid");
+		super(aID, aName, aNameRegional, aTier, 3, "Stores " + NumberFormat.getNumberInstance().format((int) (Math.pow(2, aTier) * 32000)) + "L of fluid");
 	}
 
 	public GT_MetaTileEntity_PortableTank(final String aName, final int aTier, final String aDescription, final ITexture[][][] aTextures) {

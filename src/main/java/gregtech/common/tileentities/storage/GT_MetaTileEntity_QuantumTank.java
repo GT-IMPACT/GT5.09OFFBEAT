@@ -17,13 +17,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import java.text.NumberFormat;
+
 public class GT_MetaTileEntity_QuantumTank
         extends GT_MetaTileEntity_BasicTank {
     public boolean OutputFluid = false;
 
 
     public GT_MetaTileEntity_QuantumTank(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 3, "Stores " + CommonSizeCompute(aTier) + "L of fluid");
+        super(aID, aName, aNameRegional, aTier, 3, "Stores " + NumberFormat.getNumberInstance().format(CommonSizeCompute(aTier)) + "L of fluid");
     }
 
     public GT_MetaTileEntity_QuantumTank(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
@@ -193,15 +195,15 @@ public class GT_MetaTileEntity_QuantumTank
                     "Stored Fluid:",
                     EnumChatFormatting.GOLD + "No Fluid"+ EnumChatFormatting.RESET,
                     EnumChatFormatting.GREEN + Integer.toString(0) + " L"+ EnumChatFormatting.RESET+" "+
-                    EnumChatFormatting.YELLOW + Integer.toString(getCapacity()) + " L"+ EnumChatFormatting.RESET
+                    EnumChatFormatting.YELLOW + NumberFormat.getNumberInstance().format(getCapacity()) + " L"+ EnumChatFormatting.RESET
             };
         }
         return new String[]{
                 EnumChatFormatting.BLUE + "Quantum Tank"+ EnumChatFormatting.RESET,
                 "Stored Fluid:",
                 EnumChatFormatting.GOLD + mFluid.getLocalizedName()+ EnumChatFormatting.RESET,
-                EnumChatFormatting.GREEN + Integer.toString(mFluid.amount) + " L"+ EnumChatFormatting.RESET+" "+
-                EnumChatFormatting.YELLOW+ Integer.toString(getCapacity()) + " L"+ EnumChatFormatting.RESET
+                EnumChatFormatting.GREEN + NumberFormat.getNumberInstance().format(mFluid.amount) + " L"+ EnumChatFormatting.RESET+" "+
+                EnumChatFormatting.YELLOW+ NumberFormat.getNumberInstance().format(getCapacity()) + " L"+ EnumChatFormatting.RESET
         };
     }
 

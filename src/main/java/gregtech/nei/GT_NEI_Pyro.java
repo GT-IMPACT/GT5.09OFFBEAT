@@ -29,6 +29,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -200,10 +201,10 @@ public class GT_NEI_Pyro
         String[] recipeDesc = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.getNeiDesc();
         if (recipeDesc == null) {
             if (tEUt != 0) {
-                drawText(10, 73, trans("152","Total: ") + ((long)tDuration * tEUt) + " EU", -16777216);
-                drawText(10, 83, trans("153","Usage: ") + tEUt + " EU/t", -16777216);
+                drawText(10, 73, trans("152","Total: ") + NumberFormat.getNumberInstance().format(((long)tDuration * tEUt)) + " EU", -16777216);
+                drawText(10, 83, trans("153","Usage: ") + NumberFormat.getNumberInstance().format(tEUt) + " EU/t", -16777216);
                 if (this.mRecipeMap.mShowVoltageAmperageInNEI) {
-                    drawText(10, 93, trans("154","Voltage: ") + tEUt / this.mRecipeMap.mAmperage + " EU", -16777216);
+                    drawText(10, 93, trans("154","Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU", -16777216);
                     drawText(129, 4,  "10", -16777216);
                     drawText(129, 22, "25", -16777216);
                     drawText(129, 40, "50", -16777216);
