@@ -27,7 +27,7 @@ public class ProcessingPlank implements gregtech.api.interfaces.IOreRecipeRegist
             GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 1L), ItemList.Crate_Empty.get(1L, new Object[0]), 200, 1);
             GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 1L, new Object[0]), new ItemStack(Blocks.wooden_button, 1), 100, 4);
             GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(4L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 4L, new Object[0]), new ItemStack(Blocks.crafting_table, 1), 400, 4);
-            GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(8L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 8L, new Object[0]), new ItemStack(Blocks.chest, 1), 800, 4);
+            GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(8L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 8L, new Object[0]), new ItemStack(Blocks.chest, 1), 80, 4);
             GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(6L, new Object[]{aStack}), new ItemStack(Items.book, 3), new ItemStack(Blocks.bookshelf, 1), 400, 4);
 
             if (aStack.getItemDamage() == 32767) {
