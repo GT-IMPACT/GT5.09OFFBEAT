@@ -1452,9 +1452,12 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.TungstenCarbide, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.TungstenCarbide, 1L), ItemList.Casing_RadiationProof.get(2L, new Object[0]), 50, 16);
         if(GT_Mod.gregtechproxy.mComponentAssembler){
 	        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Bronze, 4L), new ItemStack(Blocks.brick_block, 1), ItemList.Casing_BronzePlatedBricks.get(1L, new Object[0]), 60, 4);
+            GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Bronze, 4L), ItemList.Casing_Firebricks.get(1), ItemList.Casing_BronzePlatedBricks.get(1L, new Object[0]), 60, 4);
+
 	    }
 	    GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Bronze, 6L), new ItemStack(Blocks.brick_block, 1), ItemList.Casing_BronzePlatedBricks.get(2L, new Object[0]), 50, 16);
-	    GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Neutronium, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.Neutronium, 1L), ItemList.Casing_RobustNeutronium.get(2L, new Object[0]), 50, 16);
+        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Bronze, 6L), new ItemStack(Blocks.brick_block, 1), ItemList.Casing_BronzePlatedBricks.get(2L, new Object[0]), 50, 16);
+        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Neutronium, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.Neutronium, 1L), ItemList.Casing_RobustNeutronium.get(2L, new Object[0]), 50, 16);
         GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.HSLA, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.HSLA, 1L), ItemList.Casing_HSLA.get(2L, new Object[0]), 50, 16);
         
 	    if (GT_Mod.gregtechproxy.mHardMachineCasings) {
