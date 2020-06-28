@@ -192,6 +192,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Shape_Extruder_Gear_Small.set(addItem(tLastID = 374, "Extruder Shape (Small Gear)", "Extruder Shape for making Small Gears", new Object[0]));
         ItemList.Shape_Extruder_Rotor.set(addItem(tLastID = 375, "Extruder Shape (Rotor)", "Extruder Shape for a Rotor", new Object[0]));
         ItemList.Shape_Extruder_Turbine_Blade.set(addItem(tLastID = 376, "Extruder Shape (Turbine Blade)", "Extruder Shape for a Turbine Blade", new Object[0]));
+        ItemList.Shape_Extruder_Shaft.set(addItem(tLastID = 377, "Extruder Shape (Shaft)", "Extruder Shape for a Shaft"));
 
 
         GT_ModHandler.addCraftingRecipe(ItemList.Shape_Extruder_Bolt.get(1L, new Object[0]), GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"x  ", aTextShape, aTextEmptyRow, 'P', ItemList.Shape_Empty});
@@ -222,7 +223,8 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         GT_ModHandler.addCraftingRecipe(ItemList.Shape_Extruder_Bottle.get(1L, new Object[0]), GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{aTextEmptyRow, "  x", "P  ", 'P', ItemList.Shape_Empty});
         GT_ModHandler.addCraftingRecipe(ItemList.Shape_Extruder_Rotor.get(1L, new Object[0]), GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"x", "P", "F", 'P', ItemList.Shape_Empty, 'F', ToolDictNames.craftingToolFile});
         GT_ModHandler.addCraftingRecipe(ItemList.Shape_Extruder_Turbine_Blade.get(1L, new Object[0]), GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"FPx", 'P', ItemList.Shape_Empty, 'F', ToolDictNames.craftingToolFile});
-        
+        GT_ModHandler.addCraftingRecipe(ItemList.Shape_Extruder_Shaft.get(1L), GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"xPF", 'P', ItemList.Shape_Empty, 'F', ToolDictNames.craftingToolFile});
+
 
         ItemList.Shape_Slicer_Flat.set(addItem(tLastID = 398, "Slicer Blade (Flat)", "Slicer Blade for cutting Flat", new Object[0]));
         ItemList.Shape_Slicer_Stripes.set(addItem(tLastID = 399, "Slicer Blade (Stripes)", "Slicer Blade for cutting Stripes", new Object[0]));
