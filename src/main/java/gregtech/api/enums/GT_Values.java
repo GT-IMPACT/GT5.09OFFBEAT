@@ -21,14 +21,15 @@ public class GT_Values {
     // unused: A, C, D, G, H, I, J, K, N, O, Q, R, S, T
 
     // TODO: Rename Material Units to 'U'
-    // TODO: Rename OrePrefixes Class to 'P'
-    // TODO: Rename Materials Class to 'M'
 
     /**
      * Empty String for an easier Call Hierarchy
      */
     public static final String E = "";
 
+    public static OrePrefixes OP;
+
+    public static Materials MM;
     /**
      * The first 32 Bits
      */
