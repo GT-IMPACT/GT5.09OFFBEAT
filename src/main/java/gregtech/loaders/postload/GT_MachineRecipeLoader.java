@@ -3478,7 +3478,10 @@ public class GT_MachineRecipeLoader implements Runnable {
            GT_Values.RA.addBlastRecipe(ItemList.BioCarbonPlate.get(1L), GT_Values.NI, GT_Values.NF, GT_Values.NF, GT_ModHandler.getIC2Item("carbonPlate", 1L), GT_Values.NI, 1000, 120, 600);
            GT_Values.RA.addBlastRecipe(ItemList.BioChunk.get(1L), GT_Values.NI, GT_Values.NF, GT_Values.NF, GT_ModHandler.getIC2Item("coalChunk", 1L), GT_Values.NI, 1000, 120, 1200);
            GT_Values.RA.addMixerRecipe(GT_ModHandler.getModItem("IC2", "itemFuelPlantBall", 16L, 0), GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Flint, 2), GT_Values.NI, GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.BioBall.get(1L), 200, 16);
-           
+
+           GT_Values.RA.addFluidCannerRecipe(ItemList.Spray_Empty.get(1L), ItemList.IC2_Spray_WeedEx.get(1L), new FluidStack(ItemList.sHerbicide, 1000), GT_Values.NF);
+           GT_Values.RA.addChemicalRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Natrium, 1),GT_ModHandler.getModItem("IC2", "itemWeed", 4L), Materials.SulfuricAcid.getFluid(1000), new FluidStack(ItemList.sHerbicide, 2000), null, 480);
+
            //===
            
            GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(1), Materials.BioMediumRaw.getFluid(200), Materials.BioMediumSterilized.getFluid(200), 20, 30720);
