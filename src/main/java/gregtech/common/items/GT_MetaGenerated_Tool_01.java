@@ -129,10 +129,10 @@ public class GT_MetaGenerated_Tool_01 extends GT_MetaGenerated_Tool {
 //        GregTech_API.registerTool(addTool(SOLDERING_IRON_EV, "Soldering Iron (EV)", "Fixes burned out Circuits. Needs soldering materials in inventory and 10kEU", new GT_Tool_Soldering_Iron(), ToolDictNames.craftingToolSolderingIron), GregTech_API.sSolderingToolList);
 //        GregTech_API.registerTool(addTool(SOLDERING_IRON_IV, "Soldering Iron (IV)", "Fixes burned out Circuits. Needs soldering materials in inventory and 10kEU", new GT_Tool_Soldering_Iron(), ToolDictNames.craftingToolSolderingIron), GregTech_API.sSolderingToolList);
 
-        addTool(TURBINE_SMALL, "Small Turbine", "Turbine Rotors for your power station", new GT_Tool_Turbine_Small());
-        addTool(TURBINE, "Turbine", "Turbine Rotors for your power station", new GT_Tool_Turbine_Normal());
-        addTool(TURBINE_LARGE, "Large Turbine", "Turbine Rotors for your power station", new GT_Tool_Turbine_Large());
-        addTool(TURBINE_HUGE, "Huge Turbine", "Turbine Rotors for your power station", new GT_Tool_Turbine_Huge());
+        addTool(TURBINE_SMALL, "Small Turbine Rotor", "Turbine Rotors for your power station", new GT_Tool_Turbine_Small());
+        addTool(TURBINE, "Normal Turbine Rotor", "Turbine Rotors for your power station", new GT_Tool_Turbine_Normal());
+        addTool(TURBINE_LARGE, "Large Turbine Rotor", "Turbine Rotors for your power station", new GT_Tool_Turbine_Large());
+        addTool(TURBINE_HUGE, "Huge Turbine Rotor", "Turbine Rotors for your power station", new GT_Tool_Turbine_Huge());
 
         GT_ModHandler.addCraftingRecipe(INSTANCE.getToolWithStats(MORTAR, 1, Materials.Flint, Materials.Stone, null), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{" I ", "SIS", "SSS", 'I', new ItemStack(Items.flint, 1), 'S', OrePrefixes.stone});
         GT_ModHandler.addCraftingRecipe(INSTANCE.getToolWithStats(MORTAR, 1, Materials.Bronze, Materials.Stone, null), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{" I ", "SIS", "SSS", 'I', OrePrefixes.ingot.get(Materials.Bronze), 'S', OrePrefixes.stone});
