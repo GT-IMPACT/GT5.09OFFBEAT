@@ -153,7 +153,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Phosphor = new Materials(21, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 32, 255, 255, 0, 0, "Phosphor", "Phosphor", 0, 0, 317, 0, false, false, 2, 1, 1, Dyes.dyeYellow, Element.P);
         Platinum = new Materials(85, TextureSet.SET_SHINY, 12.0F, 64, 2, 1 | 2 | 8 | 32 | 128, 255, 255, 200, 0, "Platinum", "Platinum", 0, 0, 2041, 0, false, false, 6, 1, 1, Dyes.dyeOrange, Element.Pt);
         Plutonium = new Materials(100, TextureSet.SET_METALLIC, 6.0F, 512, 3, 1 | 2 | 8 | 32, 240, 50, 50, 0, "Plutonium", "Plutonium 239", 0, 0, 912, 0, false, false, 6, 1, 1, Dyes.dyeLime, Element.Pu);
-        Plutonium241 = new Materials(101, TextureSet.SET_SHINY, 6.0F, 512, 3, 1 | 2 | 32, 250, 70, 70, 0, "Plutonium241", "Plutonium 241", 0, 0, 912, 0, false, false, 6, 1, 1, Dyes.dyeLime, Element.Pu_241);
+        Plutonium241 = new Materials(101, TextureSet.SET_SHINY, 6.0F, 512, 3, 1 | 2 | 8 | 32, 250, 70, 70, 0, "Plutonium241", "Plutonium 241", 0, 0, 912, 0, false, false, 6, 1, 1, Dyes.dyeLime, Element.Pu_241);
         Potassium = new Materials(25, TextureSet.SET_METALLIC, 1.0F, 0, 1, 1 | 2 | 32, 250, 250, 250, 0, "Potassium", "Potassium", 0, 0, 336, 0, false, false, 2, 1, 1, Dyes.dyeWhite, Element.K);
         Radon = new Materials(93, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 255, 0, 255, 240, "Radon", "Radon", 0, 0, 202, 0, false, true, 5, 1, 1, Dyes.dyePurple, Element.Rn);
         Rubidium = new Materials(-1/*43*/, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 240, 30, 30, 0, "Rubidium", "Rubidium", 0, 0, 312, 0, false, false, 4, 1, 1, Dyes.dyeRed, Element.Rb);
