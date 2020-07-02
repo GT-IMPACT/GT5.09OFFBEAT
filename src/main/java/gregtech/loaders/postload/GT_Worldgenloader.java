@@ -196,7 +196,7 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_Layer("ore.mix.draconiumscheelitegiant", true, 140, 150, 100, 10, 32, false, false, false, Materials.Scheelite, Materials.Draconium, Materials.Scheelite, Materials.Draconium);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.enrichednaquadahgiant", true, 10, 20, 100, 10, 32, false, false, false, Materials.NaquadahEnriched, Materials.Neutronium, Materials.NaquadahEnriched, Materials.Neutronium);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.forcicium", true, 50, 100, 20, 6, 8, false, false, false, Materials.Uranium, Materials.Plutonium, Materials.Forcicium, Materials.Monazite);
-        new GT_Worldgen_GT_Ore_Layer("ore.mix.lapotron", true, 5, 15, 16,2, 16, false, false, false, Materials.MysteriousCrystal, Materials.Mytryl, Materials.Amethyst, Materials.Lapotron);
+        new GT_Worldgen_GT_Ore_Layer("ore.mix.lapotron", true, 5, 15, 16,2, 16, false, false, false, Materials.MysteriousCrystal, Materials.Mithril, Materials.Amethyst, Materials.Lapotron);
 
         /*int i = 0;
         for (int j = GregTech_API.sWorldgenFile.get("worldgen", "AmountOfCustomSmallOreSlots", 16); i < j; i++) {
