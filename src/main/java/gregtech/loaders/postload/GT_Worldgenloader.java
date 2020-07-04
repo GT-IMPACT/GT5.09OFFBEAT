@@ -165,7 +165,7 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_Layer("ore.mix.naqlatigon", true, 5, 15, 40, 4, 16, false, false, false, Materials.Naqlatigon, Materials.Naquadah, Materials.Pyrolusite, Materials.Ilmenite);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.ledox", true, 20, 40, 20, 6, 28, false, false, false, Materials.CassiteriteSand, Materials.Ledox, Materials.Palladium, Materials.Zinc);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.coppertin", true, 80, 200, 80, 3, 24, true, false, false, Materials.Chalcopyrite, Materials.Vermiculite, Materials.Cassiterite, Materials.Alunite);
-        new GT_Worldgen_GT_Ore_Layer("ore.mix.titaniumchrome", true, 10, 70, 16, 2, 16, false, false, false, Materials.Ilmenite, Materials.Chromite, Materials.Uvarovite, Materials.Perlite);
+        new GT_Worldgen_GT_Ore_Layer("ore.mix.titaniumchrome", true, 10, 70, 16, 2, 16, false, false, false, Materials.Rutile, Materials.Chromite, Materials.Uvarovite, Materials.Perlite);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.mineralsand", true, 50, 60, 80, 3, 24, true, false, false, Materials.BasalticMineralSand, Materials.GraniticMineralSand, Materials.FullersEarth, Materials.Gypsum);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.osmirinigon", true, 30, 40, 20, 2, 12, false, false, false, Materials.Cooperite, Materials.Osmirinigon, Materials.Chromite, Materials.MeteoricIron);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.infinitycatalyst", true, 35, 45, 20, 4, 24, false, false, false, Materials.MysteriousCrystal, Materials.Diamond, Materials.InfinityCatalyst, Materials.MysteriousCrystal);
