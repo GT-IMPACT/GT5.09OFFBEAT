@@ -1,5 +1,7 @@
 package gregtech.common.covers;
 
+import com.impact.mods.GregTech.tileentities.storage.GTMTE_LapPowerStation;
+import cpw.mods.fml.common.Loader;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -13,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
+import java.math.BigInteger;
+
 public class GT_Cover_EUMeter
         extends GT_CoverBehavior {
     public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity, long aTimer) {
@@ -24,6 +28,24 @@ public class GT_Cover_EUMeter
             } else {
                 aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
             }
+
+            if (aTileEntity instanceof IGregTechTileEntity) {
+                IGregTechTileEntity tTileEntity = (IGregTechTileEntity) aTileEntity;
+                IMetaTileEntity mTileEntity = tTileEntity.getMetaTileEntity();
+                if (Loader.isModLoaded("impact")) {
+                    if (mTileEntity instanceof GTMTE_LapPowerStation) {
+                        GTMTE_LapPowerStation buffer = (GTMTE_LapPowerStation) mTileEntity;
+                        long tStored = buffer.stored.longValue();
+                        tScale = buffer.capacity.longValue() / 15L;
+                        if (tScale > 0L) {
+                            aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (int) (tStored / tScale) : (byte) (int) (15L - tStored / tScale));
+                        } else {
+                            aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
+                        }
+                    }
+                }
+            }
+
         } else if (aCoverVariable < 4) {
             tScale = aTileEntity.getEUCapacity() / 15L;
             if (tScale > 0L) {
@@ -76,7 +98,6 @@ public class GT_Cover_EUMeter
                                 }
                             }
                         }
-
                     }
                 }
             }
