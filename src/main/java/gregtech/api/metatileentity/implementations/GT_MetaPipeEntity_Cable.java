@@ -996,9 +996,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 		final ForgeDirection tDir = ForgeDirection.getOrientation(tSide);
 
 		// GT Machine handling
-		if ((tTileEntity instanceof IEnergyConnected) && (((IEnergyConnected) tTileEntity).inputEnergyFrom(tSide, false)
-				|| ((IEnergyConnected) tTileEntity).outputsEnergyTo(tSide, false)))
-			return true;
+		if((tTileEntity instanceof IEnergyConnected)) {
+			if ((((IEnergyConnected) tTileEntity).inputEnergyFrom(tSide, false) || ((IEnergyConnected) tTileEntity).outputsEnergyTo(tSide, false)))
+				return true;
+		}
 
 		// Solar Panel Compat
 		if (coverBehavior instanceof GT_Cover_SolarPanel)
