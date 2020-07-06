@@ -139,7 +139,7 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_Layer("ore.mix.platinum", true, 40, 50, 5, 2, 16, false, false, true, Materials.Cooperite, Materials.Palladium, Materials.Platinum, Materials.Iridium);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.pitchblende", true, 30, 60, 40, 2, 16, false, false, false, Materials.Pitchblende, Materials.Pitchblende, Materials.Uraninite, Materials.Uraninite);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.monazite", true, 20, 40, 30, 2, 16, false, false, false, Materials.Bastnasite, Materials.Bastnasite, Materials.Monazite, Materials.Neodymium);
-        new GT_Worldgen_GT_Ore_Layer("ore.mix.molybdenum", true, 20, 50, 5, 2, 16, false, true, true, Materials.Wulfenite, Materials.Molybdenite, Materials.Molybdenum, Materials.Powellite);
+        new GT_Worldgen_GT_Ore_Layer("ore.mix.molybdenum", true, 20, 50, 10, 2, 16, false, true, true, Materials.Wulfenite, Materials.Molybdenite, Materials.Molybdenum, Materials.Powellite);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.tungstate", true, 20, 60, 10, 2, 16, false, false, true, Materials.Scheelite, Materials.Scheelite, Materials.Tungstate, Materials.Lithium);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.sapphire", true, 10, 40, 60, 2, 16, false, false, false, Materials.Almandine, Materials.Pyrope, Materials.Sapphire, Materials.GreenSapphire);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.manganese", true, 20, 30, 20, 2, 16, true, true, false, Materials.Grossular, Materials.Spessartine, Materials.Pyrolusite, Materials.Tantalite);
@@ -165,7 +165,7 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_Layer("ore.mix.naqlatigon", true, 5, 15, 40, 4, 16, false, false, false, Materials.Naqlatigon, Materials.Naquadah, Materials.Pyrolusite, Materials.Ilmenite);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.ledox", true, 20, 40, 20, 6, 28, false, false, false, Materials.CassiteriteSand, Materials.Ledox, Materials.Palladium, Materials.Zinc);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.coppertin", true, 80, 200, 80, 3, 24, true, false, false, Materials.Chalcopyrite, Materials.Vermiculite, Materials.Cassiterite, Materials.Alunite);
-        new GT_Worldgen_GT_Ore_Layer("ore.mix.titaniumchrome", true, 10, 70, 16, 2, 16, false, false, false, Materials.Ilmenite, Materials.Chromite, Materials.Uvarovite, Materials.Perlite);
+        new GT_Worldgen_GT_Ore_Layer("ore.mix.titaniumchrome", true, 10, 70, 16, 2, 16, false, false, false, Materials.Rutile, Materials.Chromite, Materials.Uvarovite, Materials.Perlite);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.mineralsand", true, 50, 60, 80, 3, 24, true, false, false, Materials.BasalticMineralSand, Materials.GraniticMineralSand, Materials.FullersEarth, Materials.Gypsum);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.osmirinigon", true, 30, 40, 20, 2, 12, false, false, false, Materials.Cooperite, Materials.Osmirinigon, Materials.Chromite, Materials.MeteoricIron);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.infinitycatalyst", true, 35, 45, 20, 4, 24, false, false, false, Materials.MysteriousCrystal, Materials.Diamond, Materials.InfinityCatalyst, Materials.MysteriousCrystal);
@@ -196,7 +196,7 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_Layer("ore.mix.draconiumscheelitegiant", true, 140, 150, 100, 10, 32, false, false, false, Materials.Scheelite, Materials.Draconium, Materials.Scheelite, Materials.Draconium);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.enrichednaquadahgiant", true, 10, 20, 100, 10, 32, false, false, false, Materials.NaquadahEnriched, Materials.Neutronium, Materials.NaquadahEnriched, Materials.Neutronium);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.forcicium", true, 50, 100, 20, 6, 8, false, false, false, Materials.Uranium, Materials.Plutonium, Materials.Forcicium, Materials.Monazite);
-        new GT_Worldgen_GT_Ore_Layer("ore.mix.lapotron", true, 5, 15, 16,2, 16, false, false, false, Materials.MysteriousCrystal, Materials.Mytryl, Materials.Amethyst, Materials.Lapotron);
+        new GT_Worldgen_GT_Ore_Layer("ore.mix.lapotron", true, 5, 15, 16,2, 16, false, false, false, Materials.MysteriousCrystal, Materials.Mithril, Materials.Amethyst, Materials.Lapotron);
 
         /*int i = 0;
         for (int j = GregTech_API.sWorldgenFile.get("worldgen", "AmountOfCustomSmallOreSlots", 16); i < j; i++) {
