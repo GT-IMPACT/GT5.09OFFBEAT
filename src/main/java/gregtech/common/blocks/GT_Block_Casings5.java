@@ -41,7 +41,7 @@ public class GT_Block_Casings5
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".9.name", "Fusion Machine Casing MK III");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".10.name", "Fusion Machine Casing MK IV");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".11.name", "Superconductor Fusion Coil Block MK I");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".12.name", "Magnetic Coil Block");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".12.name", "Extraterrestrial Heating Coil Block");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".13.name", "Intermix Chamber Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".14.name", "Dyson Ring Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".15.name", "Core Chamber Casing");
@@ -54,12 +54,12 @@ public class GT_Block_Casings5
         ItemList.Casing_Coil_HSSG.set(new ItemStack(this, 1, 4));
         ItemList.Casing_Coil_Naquadah.set(new ItemStack(this, 1, 5));
         ItemList.Casing_Coil_NaquadahAlloy.set(new ItemStack(this, 1, 6));
-	ItemList.Casing_Coil_ElectrumFlux.set(new ItemStack(this, 1, 7));
+	    ItemList.Casing_Coil_ElectrumFlux.set(new ItemStack(this, 1, 7));
         ItemList.Casing_Coil_Diamericiumtitanium.set(new ItemStack(this, 1, 8));
         ItemList.Casing_Fusion3.set(new ItemStack(this, 1, 9));
         ItemList.Casing_Fusion4.set(new ItemStack(this, 1, 10));
         ItemList.Casing_Fusion_Coil2.set(new ItemStack(this, 1, 11));
-        ItemList.Block_Magnetic_Coil.set(new ItemStack(this, 1, 12));
+        ItemList.Casing_Coil_Infinity.set(new ItemStack(this, 1, 12));
         ItemList.Casing_Internix_Chamber.set(new ItemStack(this, 1, 13));
         ItemList.Casing_Dyson_Ring.set(new ItemStack(this, 1, 14));
         ItemList.Casing_Core_Chamber.set(new ItemStack(this, 1, 15));
@@ -97,7 +97,7 @@ public class GT_Block_Casings5
             case 11:
                 return Textures.BlockIcons.MACHINE_CASING_FUSION_COIL2.getIcon();
             case 12:
-                return Textures.BlockIcons.MACHINE_COIL_MAGNETIC.getIcon();
+                return Textures.BlockIcons.MACHINE_COIL_INFINITY.getIcon();
             case 13:
             	return Textures.BlockIcons.MACHINE_INTERMIX_CHAMBER.getIcon();
             case 14:

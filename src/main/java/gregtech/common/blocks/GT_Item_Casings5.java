@@ -45,6 +45,9 @@ public class GT_Item_Casings5
             case 8:
                 aList.add(this.mCoil09Tooltip);
                 break;
+            case 12:
+                aList.add(this.mCoil10Tooltip);
+                break;
         }
     }
 }

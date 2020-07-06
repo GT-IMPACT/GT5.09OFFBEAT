@@ -1418,6 +1418,8 @@ public class GT_MachineRecipeLoader implements Runnable {
         }else {
             GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.Diamericiumtitanium, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Infuscolium, 8L)}, Materials.Neutronium.getMolten(144L), ItemList.Casing_Coil_Diamericiumtitanium.get(1L), 1000, 2000000, false);
         }
+        GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.CosmicNeutronium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.DraconiumAwakened, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Quantum, 8L)}, Materials.Phoenixite.getMolten(144L), ItemList.Casing_Coil_Infinity.get(1L), 1200, 8000000, false);
+
 		GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Steel, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.Steel, 1L), ItemList.Casing_SolidSteel.get(2L, new Object[0]), 50, 16);
         GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Aluminium, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.Aluminium, 1L), ItemList.Casing_FrostProof.get(2L, new Object[0]), 50, 16);
         GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.TungstenSteel, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.TungstenSteel, 1L), ItemList.Casing_RobustTungstenSteel.get(2L, new Object[0]), 50, 16);

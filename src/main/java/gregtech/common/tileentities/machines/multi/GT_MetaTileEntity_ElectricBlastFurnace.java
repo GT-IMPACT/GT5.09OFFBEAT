@@ -247,6 +247,9 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
             case 8:
                 this.mHeatingCapacity = 12601;
                 break;
+            case 12:
+                this.mHeatingCapacity = 19801;
+                break;
             default:
                 return false;
         }
@@ -259,12 +262,14 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                     if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 2, zDir + j) != tUsedMeta) {
                         return false;
                     }
+
                     if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 1, zDir + j) != GregTech_API.sBlockCasings5) {
                         return false;
                     }
                     if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 1, zDir + j) != tUsedMeta) {
                         return false;
                     }
+
                     if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j), 11)) {
                         if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 3, zDir + j) != GregTech_API.sBlockCasings1) {
                             return false;
