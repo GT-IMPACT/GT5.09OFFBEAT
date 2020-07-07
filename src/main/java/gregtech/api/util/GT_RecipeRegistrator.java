@@ -257,7 +257,7 @@ public class GT_RecipeRegistrator {
         long tAmount = 0;
         for (MaterialStack tMaterial : aData.getAllMaterialStacks())
             tAmount += tMaterial.mAmount * tMaterial.mMaterial.getMass();
-        boolean tHide = (aData.mMaterial.mMaterial != Materials.Iron)&&(GT_Mod.gregtechproxy.mHideRecyclingRecipes);
+        boolean tHide = (aData.mMaterial.mMaterial != Materials.Iron) && (GT_Mod.gregtechproxy.mHideRecyclingRecipes);
         RA.addPulveriserRecipe(aStack, new ItemStack[]{GT_OreDictUnificator.getDust(aData.mMaterial), GT_OreDictUnificator.getDust(aData.getByProduct(0)), GT_OreDictUnificator.getDust(aData.getByProduct(1)), GT_OreDictUnificator.getDust(aData.getByProduct(2))}, null, aData.mMaterial.mMaterial==Materials.Marble ? 1 : (int) Math.max(16, tAmount / M), 4, tHide);
 
         if (aAllowHammer) for (MaterialStack tMaterial : aData.getAllMaterialStacks())
@@ -265,8 +265,9 @@ public class GT_RecipeRegistrator {
                 if (RA.addForgeHammerRecipe(GT_Utility.copyAmount(1, aStack), GT_OreDictUnificator.getDust(aData.mMaterial), 200, 30))
                     break;
             }
+        if (aData.mMaterial.mMaterial != Materials.Wood) {
         ItemStack tDust = GT_OreDictUnificator.getDust(aData.mMaterial);
-        if (tDust != null && GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1, aStack), tDust, GT_OreDictUnificator.getDust(aData.getByProduct(0)), 100, GT_OreDictUnificator.getDust(aData.getByProduct(1)), 100, true)) {
+        if (tDust != null && GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1, aStack), tDust, GT_OreDictUnificator.getDust(aData.getByProduct(0)), 100, GT_OreDictUnificator.getDust(aData.getByProduct(1)), 100, true)) {}
         }
     }
 
