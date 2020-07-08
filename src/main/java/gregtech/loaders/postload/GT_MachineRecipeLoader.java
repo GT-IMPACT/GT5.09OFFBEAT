@@ -3546,7 +3546,7 @@ public class GT_MachineRecipeLoader implements Runnable {
 
            GT_Values.RA.addCentrifugeRecipe(null,null,Materials.PerroxSuperLight.getFluid(2000),Materials.PerroxLight.getFluid(1000),null,null,null,null,null,null,null,60000, 500000);
 
-           GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Chlorine.getFluid(1000), Materials.PerroxHeavy.getFluid(4000)},  new FluidStack[]{Materials.Fluorine.getFluid(1000)}, null, 350, 122880);
+           GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Chlorine.getGas(1000), Materials.PerroxHeavy.getFluid(4000)},  new FluidStack[]{Materials.Fluorine.getGas(3000)}, null, 350, 122880);
            
            
 		   //GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Nitrogen.getGas(2000), new FluidStack(FluidRegistry.getFluid("ic2coolant"), 1000), Materials.Ledox.getMolten(144)},  new FluidStack[]{Materials.SuperCoolant.getFluid(3000)}, null, 700, 122880);
