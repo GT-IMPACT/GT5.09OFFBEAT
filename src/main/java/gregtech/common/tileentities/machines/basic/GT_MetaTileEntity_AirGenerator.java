@@ -4,6 +4,8 @@ import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.enums.Textures.BlockIcons;
+import gregtech.api.gui.GT_Container_BasicTank;
+import gregtech.api.gui.GT_GUIContainer_BasicTank;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -11,6 +13,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.objects.GT_RenderedTexture;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,39 +22,39 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 public class GT_MetaTileEntity_AirGenerator extends GT_MetaTileEntity_Hatch {
 
-    public GT_MetaTileEntity_AirGenerator(final int aID, final String aName, final String aNameRegional, final int aTier) {
+
+
+    public GT_MetaTileEntity_AirGenerator(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 3, "Condense " + 100 * (1 << aTier - 1) * (1 << aTier - 1)  + " L per tick of Air.");
     }
 
-    public GT_MetaTileEntity_AirGenerator(final String aName, final int aTier, final String aDescription, final ITexture[][][] aTextures) {
+    public GT_MetaTileEntity_AirGenerator(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
+        super(aName, aTier, 3, "Condense " + 100 * (1 << aTier - 1) * (1 << aTier - 1)  + " L per tick of Air.", aTextures);
+    }
+
+    public GT_MetaTileEntity_AirGenerator(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, 3, "Condense " + 100 * (1 << aTier - 1) * (1 << aTier - 1)  + " L per tick of Air.", aTextures);
     }
 
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_AirGenerator(this.mName, this.mTier, this.mDescription, this.mTextures);
-    }
-
-    public ITexture[][][] getTextureSet(ITexture[] aTextures) {
-        return new ITexture[0][0][0];
+        return new GT_MetaTileEntity_AirGenerator(this.mName, this.mTier, this.mDescriptionArray, this.mTextures);
     }
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        return aSide != aFacing
-                ? (aSide == 0 || aSide == 1)
-                ? new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1]}
-                : new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN)} :
-                aActive
-                        ? getTexturesActive(Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1])
-                        : getTexturesInactive(Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1]);
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1], (aSide == 0 || aSide == 1) ? new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT) : new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN)};
     }
 
+    @Override
     public ITexture[] getTexturesActive(ITexture aBaseTexture) {
-        return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return getTexturesInactive(aBaseTexture);
     }
 
+    @Override
     public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
-        return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return new ITexture[]{
+                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),
+                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),};
     }
 
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
@@ -63,7 +66,7 @@ public class GT_MetaTileEntity_AirGenerator extends GT_MetaTileEntity_Hatch {
                         this.mFluid = null;
                     }
 
-                    this.fill(Materials.Air.getGas((long) this.generateAirAmount()), true);
+                    this.fill(Materials.Air.getGas(this.generateAirAmount()), true);
                 }
 
                 this.getBaseMetaTileEntity().setActive(true);
@@ -105,6 +108,16 @@ public class GT_MetaTileEntity_AirGenerator extends GT_MetaTileEntity_Hatch {
             }
         }
 
+    }
+
+    @Override
+    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
+        return new GT_Container_BasicTank(aPlayerInventory, aBaseMetaTileEntity);
+    }
+
+    @Override
+    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
+        return new GT_GUIContainer_BasicTank(aPlayerInventory, aBaseMetaTileEntity, getLocalName());
     }
 
     @Override
@@ -163,7 +176,7 @@ public class GT_MetaTileEntity_AirGenerator extends GT_MetaTileEntity_Hatch {
     }
 
     public long maxAmperesIn() {
-        return 1L;
+        return 2L;
     }
 
     public int getStackDisplaySlot() {
