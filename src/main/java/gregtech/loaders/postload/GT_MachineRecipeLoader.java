@@ -1271,6 +1271,7 @@ public class GT_MachineRecipeLoader implements Runnable {
 	    GT_Values.RA.addVacuumFreezerRecipe(ItemList.Reactor_Coolant_Le_1.getWildcard(1L, new Object[0]), ItemList.Reactor_Coolant_Le_1.get(1L, new Object[0]), 600);
         GT_Values.RA.addVacuumFreezerRecipe(ItemList.Reactor_Coolant_Le_2.getWildcard(1L, new Object[0]), ItemList.Reactor_Coolant_Le_2.get(1L, new Object[0]), 1800);
         GT_Values.RA.addVacuumFreezerRecipe(ItemList.Reactor_Coolant_Le_3.getWildcard(1L, new Object[0]), ItemList.Reactor_Coolant_Le_3.get(1L, new Object[0]), 3600);
+		GT_Values.RA.addVacuumFreezerRecipe(ItemList.Reactor_Coolant_Le_6.getWildcard(1L, new Object[0]), ItemList.Reactor_Coolant_Le_6.get(1L, new Object[0]), 7200);
 		
 	    GT_Values.RA.addVacuumFreezerRecipe(ItemList.neutroniumHeatCapacitor.getWildcard(1L), ItemList.neutroniumHeatCapacitor.get(1L), 10000000);
 	    GT_Values.RA.addVacuumFreezerRecipe(GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Water, 1L), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Ice, 1L), 50);
