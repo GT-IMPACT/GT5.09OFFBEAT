@@ -248,7 +248,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
 
         ItemList.ThermosCan_Empty.set(addItem(tLastID = 404, "Empty Thermos Can", "Keeping hot things hot and cold things cold", new Object[]{new ItemData(Materials.Aluminium, OrePrefixes.plate.mMaterialAmount * 1L + 2L * OrePrefixes.ring.mMaterialAmount, new MaterialStack[0]),}));
 
-        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Aluminium, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Aluminium, 2L), ItemList.ThermosCan_Empty.get(1L, new Object[0]), 800, 1);
+        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Aluminium, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Silver, 2L), ItemList.ThermosCan_Empty.get(1L, new Object[0]), 800, 1);
 
         ItemList.Large_Fluid_Cell_Steel.set(addItem(tLastID = 405, "Large Steel Fluid Cell", "", new Object[]{new ItemData(Materials.Steel, OrePrefixes.plateDouble.mMaterialAmount * 4L, new MaterialStack(Materials.Steel, OrePrefixes.ring.mMaterialAmount * 4L)), }));
         setFluidContainerStats(32000 + tLastID, 8000L, 64L);
@@ -263,7 +263,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Large_Fluid_Cell_Aluminium.set(addItem(tLastID = 407, "Large Aluminium Fluid Cell", "", new Object[]{new ItemData(Materials.Aluminium, OrePrefixes.plateDouble.mMaterialAmount * 4L, new MaterialStack(Materials.Aluminium, OrePrefixes.ring.mMaterialAmount * 4L)),}));
         setFluidContainerStats(32000 + tLastID, 32000L, 64L);
 
-        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Aluminium, 4L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Silver, 4L), ItemList.Large_Fluid_Cell_Aluminium.get(1L, new Object[0]), 200, 64);
+        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Aluminium, 4L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Aluminium, 4L), ItemList.Large_Fluid_Cell_Aluminium.get(1L, new Object[0]), 200, 64);
 
         ItemList.Large_Fluid_Cell_StainlessSteel.set(addItem(tLastID = 408, "Large StainlessSteel Fluid Cell", "", new Object[]{new ItemData(Materials.StainlessSteel, OrePrefixes.plateDouble.mMaterialAmount * 4L, new MaterialStack(Materials.StainlessSteel, OrePrefixes.ring.mMaterialAmount * 4L)),}));
         setFluidContainerStats(32000 + tLastID, 64000L, 64L);
@@ -465,16 +465,16 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Energy_Cluster.set(addItem(tLastID = 737, "Energy Cluster", "Reusable battery"));
         setElectricStats(32000 + tLastID, 100000000000L, GT_Values.V[8], 8L, -3L, true);
 
-        ItemList.Electric_Motor_LV.set(addItem(tLastID = 600, "Electric Motor (LV)", ""));
-        ItemList.Electric_Motor_MV.set(addItem(tLastID = 601, "Electric Motor (MV)", ""));
-        ItemList.Electric_Motor_HV.set(addItem(tLastID = 602, "Electric Motor (HV)", ""));
-        ItemList.Electric_Motor_EV.set(addItem(tLastID = 603, "Electric Motor (EV)", ""));
-        ItemList.Electric_Motor_IV.set(addItem(tLastID = 604, "Electric Motor (IV)", ""));
-        ItemList.Electric_Motor_LuV.set(addItem(tLastID = 606, "Electric Motor (LuV)", ""));
-        ItemList.Electric_Motor_ZPM.set(addItem(tLastID = 607, "Electric Motor (ZPM)", ""));
-        ItemList.Electric_Motor_UV.set(addItem(tLastID = 608, "Electric Motor (UV)", ""));
-        ItemList.Electric_Motor_UHV.set(addItem(tLastID = 609, "Electric Motor (UHV)", ""));
-        ItemList.Electric_Motor_UEV.set(addItem(tLastID = 624, "Electric Motor (UEV)", ""));
+        ItemList.Electric_Motor_LV.set(addItem(tLastID = 600, "Electric Motor (LV)", "LV Motor"));
+        ItemList.Electric_Motor_MV.set(addItem(tLastID = 601, "Electric Motor (MV)", "MV Motor"));
+        ItemList.Electric_Motor_HV.set(addItem(tLastID = 602, "Electric Motor (HV)", "HV Motor"));
+        ItemList.Electric_Motor_EV.set(addItem(tLastID = 603, "Electric Motor (EV)", "EV Motor"));
+        ItemList.Electric_Motor_IV.set(addItem(tLastID = 604, "Electric Motor (IV)", "IV Motor"));
+        ItemList.Electric_Motor_LuV.set(addItem(tLastID = 606, "Electric Motor (LuV)", "LuV Motor"));
+        ItemList.Electric_Motor_ZPM.set(addItem(tLastID = 607, "Electric Motor (ZPM)", "ZPM Motor"));
+        ItemList.Electric_Motor_UV.set(addItem(tLastID = 608, "Electric Motor (UV)", "UV Motor"));
+        ItemList.Electric_Motor_UHV.set(addItem(tLastID = 609, "Electric Motor (UHV)", "UHV Motor"));
+        ItemList.Electric_Motor_UEV.set(addItem(tLastID = 624, "Electric Motor (UEV)", "UEV Motor"));
         
 
         ItemList.Electric_Pump_LV.set(addItem(tLastID = 610, "Electric Pump (LV)", "2560 L/sec (as Cover)"          ));
