@@ -34,7 +34,7 @@ import static java.lang.Math.min;
  */
 public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBase {
     protected int mPollutionReduction=0;
-    protected int baseEff = 2500;
+    protected int baseEff = 2500*4;
     protected boolean hasPollution=false;
     static final GT_Recipe tRecipe= new GT_Recipe(
             new ItemStack[]{ItemList.AdsorptionFilter.get(1L, new Object())},
@@ -109,13 +109,13 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
             if(aStack.getItem() instanceof GT_MetaGenerated_Tool_01 &&
                     ((GT_MetaGenerated_Tool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier()>0 &&
                     ((GT_MetaGenerated_Tool) aStack.getItem()).getPrimaryMaterial(aStack).mToolSpeed>0 ) {
-                baseEff = GT_Utility.safeInt((long) ((50.0F
-                        + 10.0F * ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack)) * 100));
+                baseEff = (GT_Utility.safeInt((long) ((50.0F
+                        + 10.0F * ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack)) * 100))) * 4;
             } else {
-                baseEff = 2500;
+                baseEff = 2500*4;
             }
         }catch (Exception e){
-            baseEff = 2500;
+            baseEff = 2500*4;
         }
 
         long tVoltage = getMaxInputVoltage();
@@ -167,7 +167,7 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
         if(mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01 &&
                 ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getToolStats(mInventory[1]).getSpeedMultiplier()>0 &&
                 ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getPrimaryMaterial(mInventory[1]).mToolSpeed>0 ) {
-            ((GT_MetaGenerated_Tool) mInventory[1].getItem()).doDamage(mInventory[1], 10L*(long) min(-mEUt / (float)damageFactorLow, Math.pow(-mEUt, damageFactorHigh)));
+            ((GT_MetaGenerated_Tool) mInventory[1].getItem()).doDamage(mInventory[1], 50L);
         }
         return true;
     }
