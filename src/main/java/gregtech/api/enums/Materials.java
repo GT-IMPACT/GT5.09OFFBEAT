@@ -115,7 +115,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Boron = new Materials(9, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 32, 210, 250, 210, 0, "Boron", "Boron", 0, 0, 2349, 0, false, false, 1, 1, 1, Dyes.dyeWhite, Element.B);
         Caesium = new Materials(62, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Caesium", "Caesium", 0, 0, 301, 0, false, false, 4, 1, 1, Dyes._NULL, Element.Cs);
         Calcium = new Materials(26, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 32, 255, 245, 245, 0, "Calcium", "Calcium", 0, 0, 1115, 0, false, false, 4, 1, 1, Dyes.dyePink, Element.Ca);
-        Carbon = new Materials(10, TextureSet.SET_DULL, 1.0F, 64, 2, 1 | 2 | 16 | 32 | 128, 20, 20, 20, 0, "Carbon", "Carbon", 0, 0, 3800, 0, false, false, 2, 1, 1, Dyes.dyeBlack, Element.C);
+        Carbon = new Materials(10, TextureSet.SET_DULL, 1.0F, 64, 2, 1 | 2 | 16 | 32 | 64 | 128, 20, 20, 20, 0, "Carbon", "Carbon", 0, 0, 3800, 0, false, false, 2, 1, 1, Dyes.dyeBlack, Element.C);
         Cadmium = new Materials(55, TextureSet.SET_SHINY, 1.0F, 0, 2, 1 | 32, 50, 50, 60, 0, "Cadmium", "Cadmium", 0, 0, 594, 0, false, false, 3, 1, 1, Dyes.dyeGray, Element.Cd);
         Cerium = new Materials(65, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Cerium", "Cerium", 0, 0, 1068, 1068, true, false, 4, 1, 1, Dyes._NULL, Element.Ce);
         Chlorine = new Materials(23, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 255, 255, 255, 0, "Chlorine", "Chlorine", 0, 0, 171, 0, false, false, 2, 1, 1, Dyes.dyeCyan, Element.Cl);
