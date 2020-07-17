@@ -9,14 +9,18 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicHull;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_GT_Recipe;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
+import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.api.enums.GT_Values.debugCleanroom;
 
 public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBase {
@@ -42,19 +46,20 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 "Controller (Top center)",
                 "Top besides contoller and edges: Filter Casings",
                 "1 Reinforced Door (keep closed for 100% efficency)",
-				"1x LV or 1x MV Energy Hatch, 1x Maintainance Hatch",
-				"Up to 20 Machine Hull Item & Energy transfer through walls",
+				"1x Energy Hatch, 1x Maintainance Hatch",
+				"Up to 20 Diode Cable or Machine Hull Item & Energy transfer through walls",
 				"Remaining Blocks: Plascrete, 20 min",
 				GT_Values.cleanroomGlass+"% of the Plascrete can be Cleanroom Glass (min 20 Plascrete still apply)",
 				"Consumes 40 EU/t when first turned on and 4 EU/t once at 100% efficiency",
-				"An energy hatch accepts up to 2A, so you can use 2A LV or 1A MV",
-				"2 LV batteries + 1 LV generator or 1 MV generator",
-				"Make sure your Energy Hatch matches!"};
+				"Efficiency Increase (in 1 second) is calculated by the formula: 1% * Tier Energy Hatch",
+        };
     }
 
 	@Override
 	public boolean checkRecipe(ItemStack aStack) {
-		mEfficiencyIncrease = 100;
+    	int tierHatch = 0;
+    	for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) tierHatch = tHatch.mTier;
+		mEfficiencyIncrease = 100 * tierHatch;
 		mMaxProgresstime = 100;
 		mEUt = -4;
 		return true;
@@ -72,11 +77,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 		boolean doorState = false;
 		this.mUpdate = 100;
 		
-		if (debugCleanroom) {
-			GT_Log.out.println(
-							"Cleanroom: Checking machine"
-			);
-		}
+		if (debugCleanroom) GT_Log.out.println("Cleanroom: Checking machine");
+
 		for (int i = 1; i < 8; i++) {
 			Block tBlock = aBaseMetaTileEntity.getBlockOffset(i, 0, 0);
 			int tMeta = aBaseMetaTileEntity.getMetaIDOffset(i, 0, 0);
@@ -86,11 +88,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 					z = i;
 					break;
 				} else {
-					if (debugCleanroom) {
-						GT_Log.out.println(
-							"Cleanroom: Unable to detect room edge?"
-						);
-					}
+					if (debugCleanroom) GT_Log.out.println("Cleanroom: Unable to detect room edge?");
 					return false;
 				}
 			}
@@ -104,11 +102,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 			}
 		}
 		if (y > -2) {
-			if (debugCleanroom) {
-				GT_Log.out.println(
-					"Cleanroom: Room not tall enough?"
-				);
-			}
+			if (debugCleanroom) GT_Log.out.println("Cleanroom: Room not tall enough?");
+
 			return false;
 		}
 		for (int dX = -x; dX <= x; dX++) {
@@ -120,21 +115,14 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 						if (y == 0) {
 							if (dX == -x || dX == x || dZ == -z || dZ == z) {
 								if (tBlock != GregTech_API.sBlockReinforced || tMeta != 2) {
-									if (debugCleanroom) {
-										GT_Log.out.println(
-											"Cleanroom: Non reinforced block on top edge? tMeta != 2"
-										);
-									}
+									if (debugCleanroom) GT_Log.out.println("Cleanroom: Non reinforced block on top edge? tMeta != 2");
+
 									return false;
 								}
 							} else if (dX == 0 && dZ == 0) {
 							} else {
 								if (tBlock != GregTech_API.sBlockCasings3 || tMeta != 11) {
-									if (debugCleanroom) {
-										GT_Log.out.println(
-											"Cleanroom: Non reinforced block on top face interior? tMeta != 11"
-										);
-									}
+									if (debugCleanroom) GT_Log.out.println("Cleanroom: Non reinforced block on top face interior? tMeta != 11");
 									return false;
 								}
 							}
@@ -152,30 +140,18 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 									mDoorCount++;
 								} else {
 									if (tTileEntity == null) {
-											if (debugCleanroom) {
-												GT_Log.out.println(
-													"Cleanroom: Missing block? Not a tTileEntity"
-												);
-											}
-											return false;
+										if (debugCleanroom) GT_Log.out.println("Cleanroom: Missing block? Not a tTileEntity");
+										return false;
 									}
 									IMetaTileEntity aMetaTileEntity = tTileEntity.getMetaTileEntity();
 									if (aMetaTileEntity == null) {
-										if (debugCleanroom) {
-											GT_Log.out.println(
-												"Cleanroom: Missing block? Not a aMetaTileEntity"
-											);
-										}
+										if (debugCleanroom) GT_Log.out.println("Cleanroom: Missing block? Not a aMetaTileEntity");
 										return false;
 									}
 									if (aMetaTileEntity instanceof GT_MetaTileEntity_BasicHull) {
 										mHullCount++;
 									} else {
-										if (debugCleanroom) {
-											GT_Log.out.println(
-												"Cleanroom: Incorrect block?"
-											);
-										}
+										if (debugCleanroom) GT_Log.out.println("Cleanroom: Incorrect block?");
 										return false;
 									}
 								}
@@ -194,20 +170,16 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 					IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(dX, dY, dZ);
 					if (tTileEntity != null) {
 						IMetaTileEntity aMetaTileEntity = tTileEntity.getMetaTileEntity();
-						if (aMetaTileEntity != null && aMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
-							if (debugCleanroom) {
-								GT_Log.out.println(
-									"Cleanroom: Machine detected, adding pointer back to cleanroom"
-								);
-							}
+						if (aMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
+
+							if (debugCleanroom) GT_Log.out.println("Cleanroom: Machine detected, adding pointer back to cleanroom");
+
 							((GT_MetaTileEntity_BasicMachine_GT_Recipe) aMetaTileEntity).mCleanroom = this;
 						} else
-						if (aMetaTileEntity != null && aMetaTileEntity instanceof GT_MetaTileEntity_MultiBlockBase) {
-							if (debugCleanroom) {
-								GT_Log.out.println(
-										"Cleanroom: Machine detected, adding pointer back to cleanroom"
-								);
-							}
+						if (aMetaTileEntity instanceof GT_MetaTileEntity_MultiBlockBase) {
+
+							if (debugCleanroom)  GT_Log.out.println("Cleanroom: Machine detected, adding pointer back to cleanroom");
+
 							((GT_MetaTileEntity_MultiBlockBase) aMetaTileEntity).mCleanroom = this;
 						}
 					}
@@ -280,5 +252,18 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 	@Override
 	public boolean explodesOnComponentBreak(ItemStack aStack) {
 		return false;
+	}
+
+	@Override
+	public String[] getInfoData() {
+		int tierHatch = 0;
+		for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) tierHatch = tHatch.mTier;
+
+		return new String[]{
+				"Progress: " + EnumChatFormatting.GREEN + mProgresstime / 20 + EnumChatFormatting.RESET +" s / " + EnumChatFormatting.YELLOW + mMaxProgresstime / 20 + EnumChatFormatting.RESET +" s",
+				"Probably uses: " + EnumChatFormatting.RED + Integer.toString(-mEUt) + EnumChatFormatting.RESET + " EU/t",
+				"Efficiency Increase" + tierHatch + " % " + "Tier: " + EnumChatFormatting.YELLOW + VN[GT_Utility.getTier(getMaxInputVoltage())] + EnumChatFormatting.RESET,
+				"Problems: " + EnumChatFormatting.RED + (getIdealStatus() - getRepairStatus()) + EnumChatFormatting.RESET + " Efficiency: "+ EnumChatFormatting.YELLOW + mEfficiency / 100.0F + EnumChatFormatting.RESET + " %",
+		};
 	}
 }
