@@ -1,7 +1,6 @@
 package gregtech.common.tileentities.machines.multi;
 
-import java.util.ArrayList;
-
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaGenerated_Tool;
@@ -9,7 +8,6 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Dynamo;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
@@ -19,6 +17,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
 
 public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_MultiBlockBase {
 
@@ -49,19 +49,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         byte tSide = getBaseMetaTileEntity().getBackFacing();
         if ((getBaseMetaTileEntity().getAirAtSideAndDistance(getBaseMetaTileEntity().getBackFacing(), 1)) && (getBaseMetaTileEntity().getAirAtSideAndDistance(getBaseMetaTileEntity().getBackFacing(), 2))) {
-            int tAirCount = 0;
-            for (byte i = -1; i < 2; i = (byte) (i + 1)) {
-                for (byte j = -1; j < 2; j = (byte) (j + 1)) {
-                    for (byte k = -1; k < 2; k = (byte) (k + 1)) {
-                        if (getBaseMetaTileEntity().getAirOffset(i, j, k)) {
-                            tAirCount++;
-                        }
-                    }
-                }
-            }
-            if (tAirCount != 10) {
-                return false;
-            }
+
             for (byte i = 2; i < 6; i = (byte) (i + 1)) {
                 IGregTechTileEntity tTileEntity;
                 if ((null != (tTileEntity = getBaseMetaTileEntity().getIGregTechTileEntityAtSideAndDistance(i, 2))) &&
@@ -91,10 +79,14 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 }
             }
             this.mDynamoHatches.clear();
+            this.mDynamoHatchesTT.clear();
             IGregTechTileEntity tTileEntity = getBaseMetaTileEntity().getIGregTechTileEntityAtSideAndDistance(getBaseMetaTileEntity().getBackFacing(), 3);
             if ((tTileEntity != null) && (tTileEntity.getMetaTileEntity() != null)) {
                 if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Dynamo)) {
                     this.mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) tTileEntity.getMetaTileEntity());
+                    ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
+                } else if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_DynamoMulti)) {
+                    this.mDynamoHatchesTT.add((GT_MetaTileEntity_Hatch_DynamoMulti) tTileEntity.getMetaTileEntity());
                     ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
                 } else {
                     return false;
@@ -234,10 +226,19 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
 
         long storedEnergy=0;
         long maxEnergy=0;
+        long maxAmp=0;
         for(GT_MetaTileEntity_Hatch_Dynamo tHatch : mDynamoHatches) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
                 maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+                maxAmp+=tHatch.getBaseMetaTileEntity().getOutputAmperage();
+            }
+        }
+        for(GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
+            if (isValidMetaTileEntity(tHatch)) {
+                storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
+                maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+                maxAmp+=tHatch.getBaseMetaTileEntity().getOutputAmperage();
             }
         }
         String[] ret = new String[]{
@@ -246,7 +247,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 tMaintainance, /* 2 */
                 StatCollector.translateToLocal("GT5U.turbine.efficiency")+": "+EnumChatFormatting.YELLOW+(mEfficiency/100F)+EnumChatFormatting.RESET+"%", /* 2 */
                 StatCollector.translateToLocal("GT5U.multiblock.energy")+": " + EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET +" EU / "+ /* 3 */
-                        EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET +" EU", 
+                        EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET +" EU" + EnumChatFormatting.YELLOW + " " + Long.toString(maxAmp)  + EnumChatFormatting.RESET + " A",
                 StatCollector.translateToLocal("GT5U.turbine.flow")+": "+EnumChatFormatting.YELLOW+GT_Utility.safeInt((long)realOptFlow)+EnumChatFormatting.RESET+" L/t" + /* 4 */
                         EnumChatFormatting.YELLOW+" ("+(looseFit?StatCollector.translateToLocal("GT5U.turbine.loose"):StatCollector.translateToLocal("GT5U.turbine.tight"))+")", /* 5 */
                 StatCollector.translateToLocal("GT5U.turbine.fuel")+": "+EnumChatFormatting.GOLD+storedFluid+EnumChatFormatting.RESET+"L", /* 6 */
