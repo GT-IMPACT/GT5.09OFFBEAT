@@ -3558,8 +3558,50 @@ public class GT_MachineRecipeLoader implements Runnable {
            
 		   //GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Nitrogen.getGas(2000), new FluidStack(FluidRegistry.getFluid("ic2coolant"), 1000), Materials.Ledox.getMolten(144)},  new FluidStack[]{Materials.SuperCoolant.getFluid(3000)}, null, 700, 122880);
 
-		
-      //EnderIO Fused Quartz and Glass
+			//NaquadahChemistry
+			//1
+			GT_Values.RA.addChemicalRecipe(Materials.Ammonia.getCells(1), GT_Utility.getIntegratedCircuit(1),  Materials.NitricAcid.getFluid(1000), Materials.AmmoniaNitrate.getGas(1000), Materials.Empty.getCells(1), 380, 496);
+			GT_Values.RA.addChemicalRecipe(Materials.NitricAcid.getCells(1), GT_Utility.getIntegratedCircuit(1),  Materials.Ammonia.getGas(1000), Materials.AmmoniaNitrate.getGas(1000), Materials.Empty.getCells(1), 380, 496);
+			GT_Values.RA.addChemicalRecipe(Materials.Ammonia.getCells(1), GT_Utility.getIntegratedCircuit(11), Materials.NitricAcid.getFluid(1000), GT_Values.NF, Materials.AmmoniaNitrate.getCells(1), 380, 496);
+			GT_Values.RA.addChemicalRecipe(Materials.NitricAcid.getCells(1), GT_Utility.getIntegratedCircuit(11), Materials.Ammonia.getGas(1000), GT_Values.NF, Materials.AmmoniaNitrate.getCells(1), 380, 496);
+
+			GT_Values.RA.addChemicalRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Naquadah, 1),null, Materials.AmmoniaNitrate.getGas(1000), Materials.NaquadahSollution.getFluid(1000), null, 600, 1024);
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.NaquadahSollution.getFluid(2000),Materials.NaquadahLiquidClear.getFluid(1000), Materials.Platinum.getDustTiny(5), Materials.Iridium.getDustTiny(3), Materials.Naquadah.getDustTiny(1),null,null,null,new int[]{10000, 10000, 10000},200, 4096);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahLiquidClear.getFluid(1000), new FluidStack[]{Materials.ComplicatedNaquadahSever.getFluid(440), Materials.ComplicatedNaquadahModer.getFluid(320), Materials.ComplicatedNaquadahLight.getFluid(180), Materials.ComplicatedNaquadhaGas.getGas(150)}, null, 90, 7680);
+			//IT'S HEAVY METAL CYCLONE!!!
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.ComplicatedNaquadahSever.getFluid(2000),Materials.NaquadahHeavy.getFluid(1000), Materials.Iridium.getDust(1), null, null,null,null,null, new int[]{10000},200, 7680);
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.ComplicatedNaquadahModer.getFluid(2000),Materials.NaquadahMedium.getFluid(1000), Materials.Iridium.getDust(1), null, null,null,null,null, new int[]{10000},140, 7680);
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.ComplicatedNaquadahLight.getFluid(2000),Materials.NaquadahLight.getFluid(1000), Materials.Iridium.getDust(1), null, null,null,null,null, new int[]{10000},90, 7680);
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.ComplicatedNaquadhaGas.getGas(2000),Materials.NaquadhaGas.getGas(1000), Materials.Iridium.getDust(1), null, null,null,null,null, new int[]{10000},50, 7680);
+			//---
+			GT_Values.RA.addCrackingRecipe(24, Materials.NaquadahHeavy.getFluid(1000), Materials.Fluorine.getGas(6000), Materials.NaquadahHeavyFluorine.getFluid(2000), 300, 9870);
+			GT_Values.RA.addCrackingRecipe(24, Materials.NaquadahMedium.getFluid(1000), Materials.Fluorine.getGas(4000), Materials.NaquadahMediumFluorine.getFluid(1600), 250, 9870);
+			GT_Values.RA.addCrackingRecipe(24, Materials.NaquadahLight.getFluid(1000), Materials.Fluorine.getGas(2000), Materials.NaquadahLightFluorine.getFluid(1200), 200, 9870);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahHeavyFluorine.getFluid(1000), new FluidStack[]{Materials.Fluorine.getGas(250), Materials.NaquadahHeavyFuel.getFluid(400), Materials.NaquadahMediumFuel.getFluid(200), Materials.NaquadahLightFuel.getFluid(100), Materials.NaquadhaGas.getGas(50)}, null, 160, 16380);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahMediumFluorine.getFluid(1000), new FluidStack[]{Materials.Fluorine.getGas(150), Materials.NaquadahHeavyFuel.getFluid(100), Materials.NaquadahMediumFuel.getFluid(400), Materials.NaquadahLightFuel.getFluid(200), Materials.NaquadhaGas.getGas(150)}, null, 140, 16380);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahLightFluorine.getFluid(1000), new FluidStack[]{Materials.Fluorine.getGas(50), Materials.NaquadahHeavyFuel.getFluid(50), Materials.NaquadahMediumFuel.getFluid(150), Materials.NaquadahLightFuel.getFluid(400), Materials.NaquadhaGas.getGas(350)}, null, 120, 16380);
+			
+			//2
+			GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.NaquadahEnriched.getDust(1)}, new FluidStack[]{Materials.NaquadhaGas.getGas(100), new FluidStack(ItemList.sBlueVitriol,900)},  new FluidStack[]{Materials.NaquadahESollution.getFluid(1000)}, null, 200, 30720);
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.NaquadahESollution.getFluid(2000),Materials.NaquadahELiquidClear.getFluid(1000), Materials.Platinum.getDustTiny(5), Materials.Osmium.getDustTiny(3), Materials.NaquadahEnriched.getDustTiny(1),null,null,null,new int[]{10000, 10000, 10000},300, 96870);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahELiquidClear.getFluid(1000), new FluidStack[]{Materials.ComplicatedNaquadahESever.getFluid(440), Materials.ComplicatedNaquadahEModer.getFluid(320), Materials.ComplicatedNaquadahELight.getFluid(180), Materials.ComplicatedNaquadhaGas.getGas(150)}, null, 140, 46200);
+			//IT'S HEAVY METAL CYCLONE!!!
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.ComplicatedNaquadahESever.getFluid(2000),Materials.NaquadahEHeavy.getFluid(1000), Materials.Iridium.getDustSmall(2), Materials.Osmium.getDustSmall(3), Materials.Naquadria.getDustSmall(1),null,null,null, new int[]{10000, 10000, 10000},300, 122880);
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.ComplicatedNaquadahEModer.getFluid(2000),Materials.NaquadahEMedium.getFluid(1000), Materials.Iridium.getDustSmall(2), Materials.Osmium.getDustSmall(3), Materials.Naquadria.getDustSmall(1),null,null,null, new int[]{10000, 10000, 10000},240, 122880);
+			GT_Values.RA.addCentrifugeRecipe(null,null,Materials.ComplicatedNaquadahELight.getFluid(2000),Materials.NaquadahELight.getFluid(1000), Materials.Iridium.getDustSmall(2), Materials.Osmium.getDustSmall(3), Materials.Naquadria.getDustSmall(1),null,null,null, new int[]{10000, 10000, 10000},190, 122880);
+			//---
+			GT_Values.RA.addCrackingRecipe(24, Materials.NaquadahEHeavy.getFluid(1000), Materials.Radon.getGas(6000), Materials.NaquadahEHeavyRadon.getFluid(2000), 300, 48670);
+			GT_Values.RA.addCrackingRecipe(24, Materials.NaquadahEMedium.getFluid(1000), Materials.Radon.getGas(4000), Materials.NaquadahEMediumRadon.getFluid(1600), 250, 48670);
+			GT_Values.RA.addCrackingRecipe(24, Materials.NaquadahELight.getFluid(1000), Materials.Radon.getGas(2000), Materials.NaquadahELightRadon.getFluid(1200), 200, 48670);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahEHeavyRadon.getFluid(1000), new FluidStack[]{Materials.Radon.getGas(250), Materials.NaquadahEHeavyFuel.getFluid(400), Materials.NaquadahEMediumFuel.getFluid(200), Materials.NaquadahELightFuel.getFluid(100), Materials.NaquadhaGas.getGas(50)}, null, 240, 96870);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahEMediumRadon.getFluid(1000), new FluidStack[]{Materials.Radon.getGas(150), Materials.NaquadahEHeavyFuel.getFluid(100), Materials.NaquadahEMediumFuel.getFluid(400), Materials.NaquadahELightFuel.getFluid(200), Materials.NaquadhaGas.getGas(150)}, null, 200, 96870);
+			GT_Values.RA.addUniversalDistillationRecipe(Materials.NaquadahELightRadon.getFluid(1000), new FluidStack[]{Materials.Radon.getGas(50), Materials.NaquadahEHeavyFuel.getFluid(50), Materials.NaquadahEMediumFuel.getFluid(150), Materials.NaquadahELightFuel.getFluid(400), Materials.NaquadhaGas.getGas(350)}, null, 160, 96870);
+			
+		   
+		   
+		   
+
+           //EnderIO Fused Quartz and Glass
         if (Loader.isModLoaded("EnderIO")){
         	GT_Values.RA.addAlloySmelterRecipe(Materials.CertusQuartz.getDust(2), Materials.Glass.getDust(1), GT_ModHandler.getModItem("EnderIO", "blockFusedQuartz", 1L), 500, 30);
         	GT_Values.RA.addAlloySmelterRecipe(Materials.NetherQuartz.getDust(2), Materials.Glass.getDust(1), GT_ModHandler.getModItem("EnderIO", "blockFusedQuartz", 1L), 500, 30);

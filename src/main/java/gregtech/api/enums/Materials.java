@@ -100,6 +100,12 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
             CrackedLightFuel, CrackedHeavyFuel, CreosoteOil, Chromium, Diesel, Enderpearl, Endereye, EyeOfEnder, Eyeofender, Flour, Meat, Garnet, Granite, Goethite, Kalium, Lapislazuli, LapisLazuli, Monazit, Natrium,
             Mythril, NitroDiesel, Naquadriah, Obby, Peridot, Phosphorite, Quarried, Quicksilver, QuickSilver, RedRock, RefinedIron, RedGranite, Sheldonite, Soulsand, Titan, Uran, Wolframite, Wolframium, Wolfram, Nikolite,
 
+            //NaquadahChemistry
+            AmmoniaNitrate, NaquadahSollution, NaquadahLiquidClear, ComplicatedNaquadhaGas, ComplicatedNaquadahLight, ComplicatedNaquadahModer, ComplicatedNaquadahSever, NaquadhaGas, NaquadahLight, NaquadahMedium, NaquadahHeavy,
+            NaquadahLightFluorine, NaquadahMediumFluorine, NaquadahHeavyFluorine, NaquadahLightFuel, NaquadahMediumFuel, NaquadahHeavyFuel, 
+			NaquadahESollution, NaquadahELiquidClear, ComplicatedNaquadahELight, ComplicatedNaquadahEModer, ComplicatedNaquadahESever, NaquadahELight, NaquadahEMedium, NaquadahEHeavy, NaquadahELightRadon, NaquadahEMediumRadon, 
+			NaquadahEHeavyRadon, NaquadahELightFuel, NaquadahEMediumFuel, NaquadahEHeavyFuel,
+
     EndStatic;
 
     public static void genMaterials() {
@@ -809,7 +815,47 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         DraconiumPlasma = new MaterialBuilder(-1, TextureSet.SET_DULL, "Draconium Plasma").setRGB(122, 68, 176).addFluid().constructMaterial().setLiquidTemperature(10000);
         DraconiumAwakenedPlasma = new MaterialBuilder(-1, TextureSet.SET_DULL, "Awakened Draconium Plasma").setRGB(244, 78, 0).addFluid().constructMaterial().setLiquidTemperature(10800);
 
-
+        //NaquadahChemistry
+        AmmoniaNitrate = new MaterialBuilder(200, TextureSet.SET_FLUID, "Ammonia Nitrate").addCell().addGas().setRGB(72, 44, 131).setColor(Dyes.dyeBlue).setMaterialList(new MaterialStack(Nitrogen, 2), new MaterialStack(Hydrogen, 4), new MaterialStack(Oxygen, 3)).addElectrolyzerRecipe().constructMaterial();
+        NaquadahSollution = new MaterialBuilder(201, TextureSet.SET_FLUID, "Naquadah Sollution").addCell().addFluid().setRGB(30, 36, 48).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahLiquidClear = new MaterialBuilder(202, TextureSet.SET_FLUID, "Clearly Naquadah Liquid").addCell().addFluid().setRGB(30, 30, 30).setColor(Dyes.dyeBlack).constructMaterial();
+        ComplicatedNaquadhaGas = new MaterialBuilder(203, TextureSet.SET_FLUID, "Complicated Naquadha Gas").addCell().addGas().setRGB(28, 28, 28).setColor(Dyes.dyeBlack).constructMaterial();
+        ComplicatedNaquadahLight = new MaterialBuilder(204, TextureSet.SET_FLUID, "Complicated Lightly Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        ComplicatedNaquadahModer = new MaterialBuilder(205, TextureSet.SET_FLUID, "Complicated Moderately Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        ComplicatedNaquadahSever = new MaterialBuilder(206, TextureSet.SET_FLUID, "Complicated Severely Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadhaGas = new MaterialBuilder(207, TextureSet.SET_FLUID, "Naquadha Gas").addCell().addGas().setRGB(28, 28, 28).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahLight = new MaterialBuilder(208, TextureSet.SET_FLUID, "Lightly Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahMedium = new MaterialBuilder(209, TextureSet.SET_FLUID, "Medium Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahHeavy = new MaterialBuilder(210, TextureSet.SET_FLUID, "Heavy Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+		NaquadahLightFluorine = new MaterialBuilder(211, TextureSet.SET_FLUID, "Fluorine-Cracked Lightly Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahMediumFluorine = new MaterialBuilder(212, TextureSet.SET_FLUID, "Fluorine-Cracked Medium Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahHeavyFluorine = new MaterialBuilder(213, TextureSet.SET_FLUID, "Fluorine-Cracked Heavy Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahLightFuel = new MaterialBuilder(214, TextureSet.SET_FLUID, "Light Naquadah Fuel").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahMediumFuel = new MaterialBuilder(215, TextureSet.SET_FLUID, "Medium Naquadah Fuel").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahHeavyFuel = new MaterialBuilder(216, TextureSet.SET_FLUID, "Heavy Naquadah Fuel").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+		
+		NaquadahESollution = new MaterialBuilder(217, TextureSet.SET_FLUID, "Enriched Naquadah Sollution").addCell().addFluid().setRGB(40, 12, 38).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahELiquidClear = new MaterialBuilder(218, TextureSet.SET_FLUID, "Clearly Enriched Naquadah Liquid").addCell().addFluid().setRGB(16, 16, 16).setColor(Dyes.dyeBlack).constructMaterial();
+        ComplicatedNaquadahELight = new MaterialBuilder(219, TextureSet.SET_FLUID, "Complicated Lightly Enriched Naquadah Liquid").addCell().addFluid().setRGB(6, 6, 6).setColor(Dyes.dyeBlack).constructMaterial();
+        ComplicatedNaquadahEModer = new MaterialBuilder(220, TextureSet.SET_FLUID, "Complicated Moderately Enriched Naquadah Liquid").addCell().addFluid().setRGB(8, 8, 8).setColor(Dyes.dyeBlack).constructMaterial();
+        ComplicatedNaquadahESever = new MaterialBuilder(221, TextureSet.SET_FLUID, "Complicated Severely Enriched Naquadah Liquid").addCell().addFluid().setRGB(10, 10, 10).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahELight = new MaterialBuilder(222, TextureSet.SET_FLUID, "Lightly Enriched Naquadah Liquid").addCell().addFluid().setRGB(6, 6, 6).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahEMedium = new MaterialBuilder(223, TextureSet.SET_FLUID, "Medium Enriched Naquadah Liquid").addCell().addFluid().setRGB(8, 8, 8).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahEHeavy = new MaterialBuilder(224, TextureSet.SET_FLUID, "Heavy Enriched Naquadah Liquid").addCell().addFluid().setRGB(10, 10, 10).setColor(Dyes.dyeBlack).constructMaterial();
+		NaquadahELightRadon = new MaterialBuilder(225, TextureSet.SET_FLUID, "Radon-Cracked Lightly Enriched Naquadah Liquid").addCell().addFluid().setRGB(50, 0, 50).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahEMediumRadon = new MaterialBuilder(226, TextureSet.SET_FLUID, "Radon-Cracked Medium Enriched Naquadah Liquid").addCell().addFluid().setRGB(40, 20, 40).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahEHeavyRadon = new MaterialBuilder(227, TextureSet.SET_FLUID, "Radon-Cracked Heavy Enriched Naquadah Liquid").addCell().addFluid().setRGB(30, 0, 30).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahELightFuel = new MaterialBuilder(228, TextureSet.SET_FLUID, "Light Enriched Naquadah Fuel").addCell().addFluid().setRGB(6, 6, 6).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahEMediumFuel = new MaterialBuilder(229, TextureSet.SET_FLUID, "Medium Enriched Naquadah Fuel").addCell().addFluid().setRGB(8, 8, 8).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadahEHeavyFuel = new MaterialBuilder(230, TextureSet.SET_FLUID, "Heavy Enriched Naquadah Fuel").addCell().addFluid().setRGB(10, 10, 10).setColor(Dyes.dyeBlack).constructMaterial();
+		
+		NaquadriaLiquid = new MaterialBuilder(231, TextureSet.SET_FLUID, "Naquadria Liquid").addCell().addFluid().setRGB(5, 5, 5).setColor(Dyes.dyeBlack).constructMaterial();
+        HyperFuelI = new MaterialBuilder(232, TextureSet.SET_FLUID, "Hyper Fuel (I)").addCell().addFluid().setRGB(140, 20, 140).setColor(Dyes.dyeBlack).constructMaterial();
+        HyperFuelII = new MaterialBuilder(233, TextureSet.SET_FLUID, "Hyper Fuel (II)").addCell().addFluid().setRGB(220, 10, 10).setColor(Dyes.dyeBlack).constructMaterial();
+        HyperFuelIII = new MaterialBuilder(234, TextureSet.SET_FLUID, "Hyper Fuel (III)").addCell().addFluid().setRGB(30, 80, 100).setColor(Dyes.dyeBlack).constructMaterial();
+        
+		
+		
         //Materials which are renamed automatically
         Palygorskite = new Materials(FullersEarth, false);
         Adamantine = new Materials(Adamantium, true);
