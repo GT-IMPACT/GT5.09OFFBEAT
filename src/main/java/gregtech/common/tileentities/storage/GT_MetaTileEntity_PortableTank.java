@@ -5,22 +5,18 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_StorageTank;
 import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.text.NumberFormat;
 
-public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_BasicTank {
-
-	public boolean OutputFluid = false;
+public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_StorageTank {
 
 	public GT_MetaTileEntity_PortableTank(final int aID, final String aName, final String aNameRegional, final int aTier) {
 		super(aID, aName, aNameRegional, aTier, 3, "Stores " + NumberFormat.getNumberInstance().format((int) (Math.pow(2, aTier) * 32000)) + "L of fluid");
@@ -60,7 +56,7 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_BasicTank 
 
 	@Override
 	public String[] getDescription() {
-		return new String[] { this.mDescription, "Portable Tank", EnumChatFormatting.GREEN +"SHIFT + Screwdriver" +EnumChatFormatting.RESET+ " for on/off mode auto output fluid"};
+		return new String[] { this.mDescription};
 	}
 
 	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
@@ -84,27 +80,6 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_BasicTank 
 				}
 			}
 		}
-	}
-
-	public void saveNBTData(NBTTagCompound aNBT) {
-		super.saveNBTData(aNBT);
-		aNBT.setBoolean("OutputFluid", this.OutputFluid);	}
-
-	public void loadNBTData(NBTTagCompound aNBT) {
-		super.loadNBTData(aNBT);
-		this.OutputFluid = aNBT.getBoolean("OutputFluid");	}
-
-	public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
-		this.OutputFluid = !OutputFluid;
-		if (aPlayer.isSneaking()) {
-			if (!this.OutputFluid) {
-				GT_Utility.sendChatToPlayer(aPlayer, "Fluid Output Disabled");
-			} else {
-				GT_Utility.sendChatToPlayer(aPlayer, "Fluid Output Enabled");
-			}
-		}
-		if (!aPlayer.isSneaking()) {}
 	}
 
 	@Override
