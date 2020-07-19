@@ -251,11 +251,8 @@ public class GT_NEI_DefaultHandler
             }   else if (tSpecial == -1100 && GT_Mod.gregtechproxy.mPlanetTier7){
                 drawText(10, 123, trans("225","Needs planets and SRS: Tier 7"), 0x602487);
             } else if ((GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePre)) || (GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePost))) {
-				drawText(10, 123, this.mRecipeMap.mNEISpecialValuePre + tSpecial * this.mRecipeMap.mNEISpecialValueMultiplier + this.mRecipeMap.mNEISpecialValuePost, -16777216);
+				drawText(10, 123,this.mRecipeMap.mNEISpecialValuePre + NumberFormat.getNumberInstance().format(tSpecial * this.mRecipeMap.mNEISpecialValueMultiplier) + this.mRecipeMap.mNEISpecialValuePost, -16777216);
 			}
-
-
-
 		} else {
 			int i = 0;
 			for (String descLine : recipeDesc) {
