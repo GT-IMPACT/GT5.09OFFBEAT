@@ -11,6 +11,7 @@ import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_Boiler;
 import gregtech.common.gui.GT_GUIContainer_Boiler;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -78,6 +79,14 @@ public class GT_MetaTileEntity_Boiler_Solar
         return new GT_MetaTileEntity_Boiler_Solar(this.mName, this.mTier, this.mDescriptionArray, this.mTextures);
     }
 
+    @Override
+    public void onHammerRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        super.onHammerRightClick(aSide, aPlayer, aX, aY, aZ);
+            mRunTime = 0;
+
+            GT_Utility.sendChatToPlayer(aPlayer, "Solar clear");
+    }
+
     private int mRunTime = 0;
 
     @Override
@@ -99,7 +108,9 @@ public class GT_MetaTileEntity_Boiler_Solar
                         + "    Hot time: " + EnumChatFormatting.RED + GT_Utility.formatNumbers(this.mRunTime*25/20)+EnumChatFormatting.RESET+" s",
                 "Min output: " + EnumChatFormatting.RED + GT_Utility.formatNumbers(this.basicMaxOuput*20/25)+EnumChatFormatting.RESET+ " L/s"
                         + "    Max output: " + EnumChatFormatting.RED + GT_Utility.formatNumbers(this.basicOutput*20/25)+EnumChatFormatting.RESET+" L/s",
-                "Current Output: " + EnumChatFormatting.YELLOW + GT_Utility.formatNumbers(getCalcificationOutput()*20/25) +EnumChatFormatting.RESET+" L/s"};
+                "Current Output: " + EnumChatFormatting.YELLOW + GT_Utility.formatNumbers(getCalcificationOutput()*20/25) +EnumChatFormatting.RESET+" L/s",
+                "Full Calcification via: " + EnumChatFormatting.YELLOW + GT_Utility.formatNumbers(CALCIFICATION_TIME - mRunTime) + EnumChatFormatting.RESET + " s",
+        };
     }
 
     @Override

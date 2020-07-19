@@ -14,6 +14,7 @@ import gregtech.api.net.GT_Packet_TileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.*;
 import gregtech.common.GT_Pollution;
+import gregtech.common.tileentities.boilers.GT_MetaTileEntity_Boiler;
 import ic2.api.Direction;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
@@ -1293,9 +1294,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
 
                     if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sHardHammerList)) {
                         if (GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer)) {
-                            mInputDisabled = !mInputDisabled;
-                            if (mInputDisabled) mOutputDisabled = !mOutputDisabled;
-                            GT_Utility.sendChatToPlayer(aPlayer, trans("086","Auto-Input: ") + (mInputDisabled ? trans("087","Disabled") : trans("088","Enabled") + trans("089","  Auto-Output: ") + (mOutputDisabled ? trans("087","Disabled") : trans("088","Enabled"))));
+                            if (!(mMetaTileEntity instanceof GT_MetaTileEntity_Boiler)) {
+                                mInputDisabled = !mInputDisabled;
+                                if (mInputDisabled) mOutputDisabled = !mOutputDisabled;
+                                GT_Utility.sendChatToPlayer(aPlayer, trans("086", "Auto-Input: ") + (mInputDisabled ? trans("087", "Disabled") : trans("088", "Enabled") + trans("089", "  Auto-Output: ") + (mOutputDisabled ? trans("087", "Disabled") : trans("088", "Enabled"))));
+                            } else mMetaTileEntity.onHammerRightClick(aSide, aPlayer, aX, aY, aZ);
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(1), 1.0F, -1, xCoord, yCoord, zCoord);
                         }
                         return true;

@@ -152,6 +152,9 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     }
 
     @Override
+    public void onHammerRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {/*Do nothing*/}
+
+    @Override
     public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {/*Do nothing*/}
 
     @Override

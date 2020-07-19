@@ -129,6 +129,11 @@ public interface IMetaTileEntity extends ISidedInventory, IFluidTank, IFluidHand
     void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ);
 
     /**
+     * When a Player rightclicks the Facing with a Hard Hammer.
+     */
+    void onHammerRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ);
+
+    /**
      * When a Player rightclicks the Facing with a Wrench.
      */
     boolean onWrenchRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ);
