@@ -3,14 +3,12 @@ package gregtech.common.tileentities.machines.basic;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
-import gregtech.api.enums.Textures.BlockIcons;
 import gregtech.api.gui.GT_Container_BasicTank;
 import gregtech.api.gui.GT_GUIContainer_BasicTank;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.objects.GT_RenderedTexture;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,7 +18,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class GT_MetaTileEntity_AirGenerator extends GT_MetaTileEntity_Hatch {
+public class GT_MetaTileEntity_AirGenerator extends GT_MetaTileEntity_BasicTank {
 
 
 
@@ -46,15 +44,61 @@ public class GT_MetaTileEntity_AirGenerator extends GT_MetaTileEntity_Hatch {
     }
 
     @Override
-    public ITexture[] getTexturesActive(ITexture aBaseTexture) {
-        return getTexturesInactive(aBaseTexture);
+    public ITexture[][][] getTextureSet(ITexture[] aTextures) {
+        ITexture[][][] rTextures = new ITexture[10][17][];
+        for (byte i = -1; i < 16; i++) {
+            rTextures[0][i + 1] = getFront(i);
+            rTextures[1][i + 1] = getBack(i);
+            rTextures[2][i + 1] = getBottom(i);
+            rTextures[3][i + 1] = getTop(i);
+            rTextures[4][i + 1] = getSides(i);
+            rTextures[5][i + 1] = getFrontActive(i);
+            rTextures[6][i + 1] = getBackActive(i);
+            rTextures[7][i + 1] = getBottomActive(i);
+            rTextures[8][i + 1] = getTopActive(i);
+            rTextures[9][i + 1] = getSidesActive(i);
+        }
+        return rTextures;
     }
 
-    @Override
-    public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
-        return new ITexture[]{
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),};
+    public ITexture[] getFront(byte aColor) {
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1]};
+    }
+
+    public ITexture[] getBack(byte aColor) {
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1]};
+    }
+
+    public ITexture[] getBottom(byte aColor) {
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1]};
+    }
+
+    public ITexture[] getTop(byte aColor) {
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1]};
+    }
+
+    public ITexture[] getSides(byte aColor) {
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1]};
+    }
+
+    public ITexture[] getFrontActive(byte aColor) {
+        return getFront(aColor);
+    }
+
+    public ITexture[] getBackActive(byte aColor) {
+        return getBack(aColor);
+    }
+
+    public ITexture[] getBottomActive(byte aColor) {
+        return getBottom(aColor);
+    }
+
+    public ITexture[] getTopActive(byte aColor) {
+        return getTop(aColor);
+    }
+
+    public ITexture[] getSidesActive(byte aColor) {
+        return getSides(aColor);
     }
 
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {

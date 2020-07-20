@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-
+@Deprecated
 public class GT_MetaTileEntity_WaterGenerator extends GT_MetaTileEntity_Hatch {
 
     public GT_MetaTileEntity_WaterGenerator(final int aID, final String aName, final String aNameRegional, final int aTier) {
