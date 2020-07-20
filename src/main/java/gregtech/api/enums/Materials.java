@@ -104,7 +104,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
             AmmoniaNitrate, NaquadahSollution, NaquadahLiquidClear, ComplicatedNaquadhaGas, ComplicatedNaquadahLight, ComplicatedNaquadahModer, ComplicatedNaquadahSever, NaquadhaGas, NaquadahLight, NaquadahMedium, NaquadahHeavy,
             NaquadahLightFluorine, NaquadahMediumFluorine, NaquadahHeavyFluorine, NaquadahLightFuel, NaquadahMediumFuel, NaquadahHeavyFuel, 
 			NaquadahESollution, NaquadahELiquidClear, ComplicatedNaquadahELight, ComplicatedNaquadahEModer, ComplicatedNaquadahESever, NaquadahELight, NaquadahEMedium, NaquadahEHeavy, NaquadahELightRadon, NaquadahEMediumRadon, 
-			NaquadahEHeavyRadon, NaquadahELightFuel, NaquadahEMediumFuel, NaquadahEHeavyFuel,
+			NaquadahEHeavyRadon, NaquadahELightFuel, NaquadahEMediumFuel, NaquadahEHeavyFuel, NaquadriaLiquid, HyperFuelI, HyperFuelII, HyperFuelIII,
 
     EndStatic;
 
@@ -849,7 +849,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         NaquadahEMediumFuel = new MaterialBuilder(229, TextureSet.SET_FLUID, "Medium Enriched Naquadah Fuel").addCell().addFluid().setRGB(8, 8, 8).setColor(Dyes.dyeBlack).constructMaterial();
         NaquadahEHeavyFuel = new MaterialBuilder(230, TextureSet.SET_FLUID, "Heavy Enriched Naquadah Fuel").addCell().addFluid().setRGB(10, 10, 10).setColor(Dyes.dyeBlack).constructMaterial();
 		
-		NaquadriaLiquid = new MaterialBuilder(231, TextureSet.SET_FLUID, "Naquadria Liquid").addCell().addFluid().setRGB(5, 5, 5).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadriaLiquid = new MaterialBuilder(231, TextureSet.SET_FLUID, "Naquadria Liquid").addCell().addFluid().setRGB(5, 5, 5).setColor(Dyes.dyeBlack).constructMaterial();
         HyperFuelI = new MaterialBuilder(232, TextureSet.SET_FLUID, "Hyper Fuel (I)").addCell().addFluid().setRGB(140, 20, 140).setColor(Dyes.dyeBlack).constructMaterial();
         HyperFuelII = new MaterialBuilder(233, TextureSet.SET_FLUID, "Hyper Fuel (II)").addCell().addFluid().setRGB(220, 10, 10).setColor(Dyes.dyeBlack).constructMaterial();
         HyperFuelIII = new MaterialBuilder(234, TextureSet.SET_FLUID, "Hyper Fuel (III)").addCell().addFluid().setRGB(30, 80, 100).setColor(Dyes.dyeBlack).constructMaterial();
