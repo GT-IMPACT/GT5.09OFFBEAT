@@ -591,6 +591,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sDustWashRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(300), "gt.recipe.dustwash", "Dust Washer", null, RES_PATH_GUI + "basicmachines/Autoclave", 1, 1, 1, 1, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sCokeOvenRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(200), "gt.recipe.cokeoven", "Coke Oven", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sSpaceResearchRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(900), "gt.recipe.spaceresearch", "Space Research Station", null, RES_PATH_GUI + "basicmachines/SpaceResearch", 6, 1, 1, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sCyclonRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.cyclon", "Heavy Metal Cyclon", null, RES_PATH_GUI + "basicmachines/Default", 6, 6, 0, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sMultiblockChemicalRecipes = new GT_Recipe_Map_LargeChemicalReactor();
         public static final GT_Recipe_Map sDistillationRecipes = new GT_Recipe_Map_DistillationTower();
         public static final GT_Recipe_Map sCrakingRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(70), "gt.recipe.craker", "Oil Cracker", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 1, 2, 1, E, 1, E, true, true);

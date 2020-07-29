@@ -1486,6 +1486,11 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
+    public boolean addCyclonRecipe(ItemStack[] aInputs, FluidStack[] aFluidInputs, FluidStack aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sCyclonRecipes.addRecipe(true, aInputs,  aOutputs, null, aChances, aFluidInputs, new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+        return true;
+    }
+
     @Override
     @Deprecated
     public boolean addPyrolyseRecipe(ItemStack aInput, FluidStack aFluidInput, int intCircuit, ItemStack aOutput, FluidStack aFluidOutput, int aDuration, int aEUt) {
