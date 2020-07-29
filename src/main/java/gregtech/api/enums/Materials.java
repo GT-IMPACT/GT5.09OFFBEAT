@@ -1202,7 +1202,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Infinity.mChemicalFormula="If*";
         InfinityCatalyst.mChemicalFormula="If";
         CosmicNeutronium.mChemicalFormula="SpNt";
-        Grisium.mChemicalFormula="T\u2089C\u2089K\u2089Li\u2089S\u2089";
+        Grisium.mChemicalFormula="Ti\u2089C\u2089K\u2089Li\u2089S\u2089";
     }
 
     private static void initSubTags() {
