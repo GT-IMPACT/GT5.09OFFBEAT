@@ -1582,9 +1582,32 @@ public class GT_Utility {
         return true;
     }
 
+    public static int getOnlySensorInfo(ArrayList<String> aList, EntityPlayer aPlayer, World aWorld, int aScanLevel, int aX, int aY, int aZ, int aSide, float aClickX, float aClickY, float aClickZ) {
+        if (aList == null) return 0;
+        ArrayList<String> tList = new ArrayList<String>();
+        Block tBlock = aWorld.getBlock(aX, aY, aZ);
+        int rEUAmount = 0;
+        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+        try {
+            if (tTileEntity instanceof IGregTechDeviceInformation && ((IGregTechDeviceInformation) tTileEntity).isGivingInformation()) {
+                rEUAmount += 50;
+                tList.addAll(Arrays.asList(((IGregTechDeviceInformation) tTileEntity).getInfoData()));
+            }
+        } catch (Throwable e) {
+            if (D1) e.printStackTrace(GT_Log.err);
+        }
+        BlockScanningEvent tEvent = new BlockScanningEvent(aWorld, aPlayer, aX, aY, aZ, (byte) aSide, aScanLevel, tBlock, tTileEntity, tList, aClickX, aClickY, aClickZ);
+        tEvent.mEUCost = rEUAmount;
+        MinecraftForge.EVENT_BUS.post(tEvent);
+        if (!tEvent.isCanceled()) aList.addAll(tList);
+        return tEvent.mEUCost;
+    }
+
     public static int getScaleCoordinates(double aValue, int aScale) {
         return (int)Math.floor(aValue / aScale);
     }
+
+
 
     public static int getCoordinateScan(ArrayList<String> aList, EntityPlayer aPlayer, World aWorld, int aScanLevel, int aX, int aY, int aZ, int aSide, float aClickX, float aClickY, float aClickZ) {
         if (aList == null) return 0;
@@ -1737,13 +1760,6 @@ public class GT_Utility {
             try {
                 if (tTileEntity instanceof IGregTechTileEntity) {
                     tList.add(trans("186","Owned by: ") +EnumChatFormatting.BLUE+ ((IGregTechTileEntity) tTileEntity).getOwnerName()+EnumChatFormatting.RESET);
-                }
-            } catch (Throwable e) {
-                if (D1) e.printStackTrace(GT_Log.err);
-            }
-            try {
-                if (tTileEntity instanceof IGregTechDeviceInformation && ((IGregTechDeviceInformation) tTileEntity).isGivingInformation()) {
-                    tList.addAll(Arrays.asList(((IGregTechDeviceInformation) tTileEntity).getInfoData()));
                 }
             } catch (Throwable e) {
                 if (D1) e.printStackTrace(GT_Log.err);

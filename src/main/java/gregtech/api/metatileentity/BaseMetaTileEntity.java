@@ -1272,6 +1272,14 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                         setColorization((byte) (getColorization() >= 16 ? -2 : -1));
                         return true;
                     }
+
+                    if (ItemList.Tool_NoteBook.getItem() == tCurrentItem.getItem()) {
+                            GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 100, aPlayer);
+                            mMetaTileEntity.onNotePadRightClick(aSide, aPlayer, aX, aY, aZ);
+                            GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(100), 1.0F, -1, xCoord, yCoord, zCoord);
+                        return true;
+                    }
+
                     if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWrenchList)) {
                     	if(aPlayer.isSneaking() && mMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine && ((GT_MetaTileEntity_BasicMachine)mMetaTileEntity).setMainFacing(GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ))){
                             GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer);

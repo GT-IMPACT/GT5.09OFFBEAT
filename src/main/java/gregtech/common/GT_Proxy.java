@@ -12,7 +12,6 @@ import forestry.api.genetics.AlleleManager;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.IBlockOnWalkOver;
-import gregtech.api.interfaces.IProjectileItem;
 import gregtech.api.interfaces.internal.IGT_Mod;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -39,7 +38,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
@@ -1286,6 +1284,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public Object getServerGuiElement(int aID, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ) {
+        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if(aID>=1000){
             int ID = aID-1000;
             switch(ID){
@@ -1297,25 +1296,30 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                     return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getCurrentEquippedItem()));
                 case 10:
                     return new GT_ContainerVolumetricFlask(aPlayer.inventory);
+//                case 20: //todo add new gui
+//                    if (tTileEntity instanceof IGregTechTileEntity) {
+//                        IGregTechTileEntity te = (IGregTechTileEntity) aWorld.getTileEntity(aX, aY, aZ);
+//                        return new GT_Container_MultiMachine(aPlayer.inventory, te);
+//                    }
                 default:
                     return getRightItem(aPlayer, ID);
             }
         }
         if(aID>=100){
         	int tSlot = aID / 100;
-            int ID = aID%100;
-            switch(ID){
-            case 0:
-                return new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
-            case 1:
-                return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
-            case 2:
-                return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
-            default:
-                return getRightItem(aPlayer, ID);
+        	int ID = aID%100;
+        	switch(ID){
+                case 0:
+                    return new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
+                case 1:
+                    return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
+                case 2:
+                    return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
+                default:
+                    return getRightItem(aPlayer, ID);
+        	}
         }
-        }
-        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+
         if ((tTileEntity instanceof IGregTechTileEntity)) {
             IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
             if (tMetaTileEntity != null) {
@@ -1342,6 +1346,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public Object getClientGuiElement(int aID, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ) {
+        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if(aID>=1000){
             int ID = aID-1000;
             switch(ID){
@@ -1353,25 +1358,29 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                     return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getCurrentEquippedItem())), aPlayer);
                 case 10:
                     return new GT_GUIContainerVolumetricFlask(new GT_ContainerVolumetricFlask(aPlayer.inventory));
+//                case 20: //todo add new gui
+//                    if (tTileEntity instanceof IGregTechTileEntity) {
+//                        IGregTechTileEntity te = (IGregTechTileEntity) aWorld.getTileEntity(aX, aY, aZ);
+//                        return new GT_GUIContainer_MultiMachine(aPlayer.inventory, te, "Computer", null);
+//                    }
                 default:
                     return getRightItemGui(aPlayer, ID);
             }
         }
         if(aID>=100){
-        	int tSlot = aID / 100;
+            int tSlot = aID / 100;
             int ID = aID%100;
             switch(ID){
-            case 0:
-                return new GuiModularArmor(new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
-            case 1:
-                return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
-            case 2:
-                return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
-            default:
-                return getRightItem(aPlayer, ID);
+                case 0:
+                    return new GuiModularArmor(new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
+                case 1:
+                    return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
+                case 2:
+                    return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
+                default:
+                    return getRightItem(aPlayer, ID);
+            }
         }
-        }
-        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
             IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
             if (tMetaTileEntity != null) {

@@ -738,7 +738,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     @Override
     public String[] getInfoData() {
         return new String[]{
-                EnumChatFormatting.BLUE + mNEIName + EnumChatFormatting.RESET,
+                EnumChatFormatting.BLUE + getLocalName() + EnumChatFormatting.RESET,
                 "Progress:",
                 EnumChatFormatting.GREEN + Integer.toString(mProgresstime/20) + EnumChatFormatting.RESET +" s / "+
                 EnumChatFormatting.YELLOW + Integer.toString(mMaxProgresstime/20) + EnumChatFormatting.RESET +" s",
