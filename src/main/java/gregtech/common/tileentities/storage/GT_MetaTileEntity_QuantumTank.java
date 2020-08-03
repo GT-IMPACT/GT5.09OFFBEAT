@@ -98,7 +98,7 @@ public class GT_MetaTileEntity_QuantumTank extends GT_MetaTileEntity_StorageTank
 
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return aSide == aBaseMetaTileEntity.getFrontFacing() && aIndex == 0;
+        return true;
     }
 
     @Override

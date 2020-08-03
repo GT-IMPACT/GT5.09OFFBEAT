@@ -89,7 +89,7 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_StorageTan
 
 	@Override
 	public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-		return aSide == aBaseMetaTileEntity.getFrontFacing() && aIndex == 0;
+		return true;
 	}
 
 	@Override
