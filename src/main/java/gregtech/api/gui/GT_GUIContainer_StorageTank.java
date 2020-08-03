@@ -3,6 +3,7 @@ package gregtech.api.gui;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +30,18 @@ public class GT_GUIContainer_StorageTank extends GT_GUIContainerMetaTile_Machine
         int yStart = (height - ySize) / 2;
         int x = x2 - xStart;
         int y = y2 - yStart + 5;
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         if (y >= 68 && y <= 84) {
             if (x >= 8 && x <= 24) {
                 list.add("Fluid Auto-Output");
+            } else
+            if (x >= 26 && x <= 42) {
+                list.add("Lock Fluid Mode");
+                list.add(EnumChatFormatting.GRAY + "First you need to a fill this tank fluid, then press the button");
+                list.add(EnumChatFormatting.GRAY + "No liquids will be poured in here except this one");
             }
         }
+
         if (!list.isEmpty())
             drawHoveringText(list, x2, y2, fontRendererObj);
     }
@@ -57,6 +64,8 @@ public class GT_GUIContainer_StorageTank extends GT_GUIContainerMetaTile_Machine
         if (mContainer != null) {
             if (((GT_Container_StorageTank) mContainer).OutputFluid)
                 drawTexturedModalRect(x + 7, y + 63, 176, 18, 18, 18);
+            if (((GT_Container_StorageTank) mContainer).mMode)
+                drawTexturedModalRect(x + 25, y + 63, 176, 0, 18, 18);
         }
     }
 }

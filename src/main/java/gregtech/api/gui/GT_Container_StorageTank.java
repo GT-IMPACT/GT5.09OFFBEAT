@@ -17,7 +17,7 @@ import java.util.Iterator;
 public class GT_Container_StorageTank extends GT_Container_BasicTank {
 
     public int mContent = 0;
-    public boolean OutputFluid = false;
+    public boolean OutputFluid = false, mMode = false;
 
     public GT_Container_StorageTank(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
         super(aInventoryPlayer, aTileEntity);
@@ -29,6 +29,7 @@ public class GT_Container_StorageTank extends GT_Container_BasicTank {
         addSlotToContainer(new GT_Slot_Output(mTileEntity, 1, 80, 53));
         addSlotToContainer(new GT_Slot_Render(mTileEntity, 2, 59, 42));
         addSlotToContainer(new GT_Slot_Holo(mTileEntity, 3, 8, 64, false, true, 1));
+        addSlotToContainer(new GT_Slot_Holo(mTileEntity, 4, 26, 64, false, true, 1));
     }
 
     @Override
@@ -39,6 +40,25 @@ public class GT_Container_StorageTank extends GT_Container_BasicTank {
             if (!((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).OutputFluid)
                 GT_Utility.sendChatToPlayer(aPlayer, "Fluid Output Disabled");
             else GT_Utility.sendChatToPlayer(aPlayer, "Fluid Output Enabled");
+            return null;
+        }
+        if (aSlotIndex == 4) {
+            String inBrackets;
+            if (mTileEntity.getMetaTileEntity() == null) return null;
+            ((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).mMode = !((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).mMode;
+            if (((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).mMode) {
+
+                if (((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).mFluid == null) {
+                    ((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).setLockedFluidName(null);
+                    inBrackets = "currently none, will be locked to the next that is put in";
+                } else {
+                    ((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).setLockedFluidName(
+                            ((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).getDrainableStack().getUnlocalizedName());
+                    inBrackets = ((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).getDrainableStack().getLocalizedName();
+                }
+
+                GT_Utility.sendChatToPlayer(aPlayer, String.format("%s (%s)", "1 specific Fluid", inBrackets));
+            } else GT_Utility.sendChatToPlayer(aPlayer, "Lock Fluid Mode Disabled");
             return null;
         }
         return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
@@ -54,6 +74,7 @@ public class GT_Container_StorageTank extends GT_Container_BasicTank {
             mContent = 0;
 
         OutputFluid = ((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).OutputFluid;
+        mMode = ((GT_MetaTileEntity_StorageTank) mTileEntity.getMetaTileEntity()).mMode;
 
         Iterator var2 = this.crafters.iterator();
         while (var2.hasNext()) {
@@ -61,6 +82,7 @@ public class GT_Container_StorageTank extends GT_Container_BasicTank {
             var1.sendProgressBarUpdate(this, 100, mContent & 65535);
             var1.sendProgressBarUpdate(this, 101, mContent >>> 16);
             var1.sendProgressBarUpdate(this, 103, OutputFluid ? 1 : 0);
+            var1.sendProgressBarUpdate(this, 104, mMode ? 1 : 0);
         }
     }
 
@@ -77,6 +99,9 @@ public class GT_Container_StorageTank extends GT_Container_BasicTank {
                 break;
             case 103:
                 OutputFluid = (par2 != 0);
+                break;
+            case 104:
+                mMode = (par2 != 0);
                 break;
         }
     }
