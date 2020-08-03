@@ -262,16 +262,16 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_HighEnergyFlow.set(addItem(tLastID = 126, "High Energy Flow Circuit", "Energy Circuit",  new Object[]{OrePrefixes.circuit.get(Materials.Energy), SubTag.NO_UNIFICATION}));
         
         
-        ItemList.EnergyCrystal_LV.set(addItem(tLastID = 200, "Small Energium Crystall (T1)", "Reusable"));
+        ItemList.EnergyCrystal_LV.set(addItem(tLastID = 200, "Small Energium Crystal (T1)", "Reusable"));
 	    setElectricStats(32000 + tLastID, 3200000L, GT_Values.V[1], 1L, -3L, true);	    
 		
-	    ItemList.EnergyCrystal_MV.set(addItem(tLastID = 201, "Medium Energium Crystall (T2)", "Reusable"));
+	    ItemList.EnergyCrystal_MV.set(addItem(tLastID = 201, "Medium Energium Crystal (T2)", "Reusable"));
 	    setElectricStats(32000 + tLastID, 12800000L, GT_Values.V[2], 2L, -3L, true);	    
 		
-	    ItemList.EnergyCrystal_HV.set(addItem(tLastID = 202, "Large Energium Crystall (T3)", "Reusable"));
+	    ItemList.EnergyCrystal_HV.set(addItem(tLastID = 202, "Large Energium Crystal (T3)", "Reusable"));
 	    setElectricStats(32000 + tLastID, 51200000L, GT_Values.V[3], 3L, -3L, true);	    
 		
-	    ItemList.EnergyCrystal_EV.set(addItem(tLastID = 203, "Huge Energium Crystall (T4)", "Reusable"));
+	    ItemList.EnergyCrystal_EV.set(addItem(tLastID = 203, "Huge Energium Crystal (T4)", "Reusable"));
 	    setElectricStats(32000 + tLastID, 204800000L, GT_Values.V[4], 4L, -3L, true);	    
 		
 	    ItemList.EnergyCrystal_IV.set(addItem(tLastID = 204, "Energium Orb (T5)", "Reusable"));
