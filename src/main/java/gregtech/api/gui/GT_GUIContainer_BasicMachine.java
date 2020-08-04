@@ -2,6 +2,7 @@ package gregtech.api.gui;
 
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +52,13 @@ public class GT_GUIContainer_BasicMachine extends GT_GUIContainerMetaTile_Machin
         List<String> list = new ArrayList<String>();
         if (y >= 67 && y <= 84) {
             if (x >= 7 && x <= 24) {
-                list.add("Fluid Auto-Output");
+                list.add("Fluid Manipulation");
+                list.add(EnumChatFormatting.GRAY + "Click to Auto-Output");
+                list.add(EnumChatFormatting.GRAY + "Shift + Click to Swap Fluids");
             }
             if (x >= 25 && x <= 42) {
-                list.add("Item Auto-Output");
+                list.add("Item Manipulation");
+                list.add(EnumChatFormatting.GRAY + "Click to Auto-Output");
             }
         }
         if (!list.isEmpty())

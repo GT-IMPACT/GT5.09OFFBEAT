@@ -53,11 +53,13 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     public FluidStack mOutputFluid;
     public String mGUIName = "", mNEIName = "";
     public GT_MetaTileEntity_MultiBlockBase mCleanroom;
+    public boolean fluidChange = false;
     /**
      * Contains the Recipe which has been previously used, or null if there was no previous Recipe, which could have been buffered
      */
     protected GT_Recipe mLastRecipe = null;
-    private FluidStack mFluidOut;
+    public FluidStack mFluidOut;
+    public FluidStack mFluid1, mFluid2;
 
     /**
      * @param aOverlays 0 = SideFacingActive
@@ -529,6 +531,24 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
                 }
             }
         }
+
+    }
+
+    public void changeFluid(EntityPlayer aPlayer) {
+        fluidChange = !fluidChange;
+
+            mFluid1 = mFluid;
+            mFluid2 = mFluidOut;
+            if (fluidChange) {
+                mFluid = mFluid2;
+                mFluidOut = mFluid1;
+                fluidChange = false;
+                GT_Utility.sendChatToPlayer(aPlayer, (mFluid1 == null ? null : EnumChatFormatting.RED +  mFluid1.getLocalizedName() + EnumChatFormatting.RESET +  " on Output Slot"));
+                GT_Utility.sendChatToPlayer(aPlayer, (mFluid2 == null ? null : EnumChatFormatting.GREEN + mFluid2.getLocalizedName() + EnumChatFormatting.RESET + " on Input Slot"));
+            }
+
+        if (mFluid == null && mFluidOut == null)
+            GT_Utility.sendChatToPlayer(aPlayer, "No fluids");
     }
 
     protected void doDisplayThings() {
