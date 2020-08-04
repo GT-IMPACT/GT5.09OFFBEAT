@@ -182,7 +182,7 @@ public abstract class MetaPipeEntity implements IMetaTileEntity, IConnectable {
         	tCovered = true;
         }
         //System.out.println("Cover: "+mBaseMetaTileEntity.getCoverIDAtSide(aSide));
-        //toDo: filter cover ids that actually protect against temperature (rubber/plastic maybe?)
+        //filter cover ids that actually protect against temperature (rubber/plastic maybe?)
         return tCovered;
     }
 

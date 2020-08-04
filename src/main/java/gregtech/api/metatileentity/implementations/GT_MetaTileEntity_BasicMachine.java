@@ -824,7 +824,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     }
 
     public static boolean isValidForLowGravity(GT_Recipe tRecipe, int dimId){
-        return //TODO check or get a better solution
+        return
                 DimensionManager.getProvider(dimId).getClass().getName().contains("Orbit") ||
                 DimensionManager.getProvider(dimId).getClass().getName().endsWith("Space") ||
                 DimensionManager.getProvider(dimId).getClass().getName().endsWith("Asteroids") ||

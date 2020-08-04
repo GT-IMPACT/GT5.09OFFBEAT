@@ -15,7 +15,7 @@ public class GT_UO_Fluid {
 	public int Chance = 0;
 	public int DecreasePerOperationAmount = 5;
 
-	public GT_UO_Fluid(ConfigCategory aConfigCategory) {//TODO CONFIGURE
+	public GT_UO_Fluid(ConfigCategory aConfigCategory) {
 		if (aConfigCategory.containsKey("Registry"))
 		{
 			aConfigCategory.get("Registry").comment = "Fluid registry name";

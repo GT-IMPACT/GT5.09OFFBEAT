@@ -1,15 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import static gregtech.api.enums.GT_Values.VN;
-import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
-
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
@@ -29,6 +19,15 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static gregtech.api.enums.GT_Values.VN;
+import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
 
 public class GT_MetaTileEntity_ProcessingArray3 extends GT_MetaTileEntity_MultiBlockBase {
 
@@ -72,22 +71,6 @@ public class GT_MetaTileEntity_ProcessingArray3 extends GT_MetaTileEntity_MultiB
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "ProcessingArray.png");
     }
-
-    //TODO: Expand so it also does the non recipe map recipes
-    /*
-    public void remoteRecipeCheck() {
-        if (mInventory[1] == null) return;
-        String tmp = mInventory[1].getUnlocalizedName().replaceAll("gt.blockmachines.basicmachine.", "");
-        if (tmp.startsWith("replicator")) {
-        } else if (tmp.startsWith("brewery")) {
-        } else if (tmp.startsWith("packer")) {
-        } else if (tmp.startsWith("printer")) {
-        } else if (tmp.startsWith("disassembler")) {
-        } else if (tmp.startsWith("massfab")) {
-        } else if (tmp.startsWith("scanner")) {
-        }
-    }
-    */
 
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {
         if (mInventory[1] == null) return null;

@@ -73,22 +73,6 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
         return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "ProcessingArray.png");
     }
 
-    //TODO: Expand so it also does the non recipe map recipes
-    /*
-    public void remoteRecipeCheck() {
-        if (mInventory[1] == null) return;
-        String tmp = mInventory[1].getUnlocalizedName().replaceAll("gt.blockmachines.basicmachine.", "");
-        if (tmp.startsWith("replicator")) {
-        } else if (tmp.startsWith("brewery")) {
-        } else if (tmp.startsWith("packer")) {
-        } else if (tmp.startsWith("printer")) {
-        } else if (tmp.startsWith("disassembler")) {
-        } else if (tmp.startsWith("massfab")) {
-        } else if (tmp.startsWith("scanner")) {
-        }
-    }
-    */
-
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {
         if (mInventory[1] == null) return null;
         String tmp = mInventory[1].getUnlocalizedName().replaceAll("gt\\.blockmachines\\.basicmachine\\.", "");

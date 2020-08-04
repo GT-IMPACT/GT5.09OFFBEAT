@@ -309,7 +309,6 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_Hatch {
     private int getYOfPumpHead() {
         // Let's play find the pump head!
 
-        // TODO: Handle pipe|pipe|head|pipe|pipe
         int y = getBaseMetaTileEntity().getYCoord() - 1, x = getBaseMetaTileEntity().getXCoord(), z = getBaseMetaTileEntity().getZCoord();
 
         while(y > 0) {

@@ -1,17 +1,5 @@
 package gregtech.common;
 
-import static gregtech.api.enums.GT_Values.debugOrevein;
-import static gregtech.api.enums.GT_Values.debugWorldGen;
-import static gregtech.api.enums.GT_Values.oreveinAttempts;
-import static gregtech.api.enums.GT_Values.oreveinMaxPlacementAttempts;
-import static gregtech.api.enums.GT_Values.oreveinPercentage;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
-
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
@@ -25,6 +13,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+
+import java.util.*;
+
+import static gregtech.api.enums.GT_Values.*;
 
 // Disabled for hardcoded value.    import static gregtech.api.enums.GT_Values.oreveinMaxSize;
 
@@ -210,21 +202,6 @@ implements IWorldGenerator {
                     boolean oreveinFound = false;
                     int i;
 
-                    // Used for outputting orevein weights and bins
-                    /*
-                    if( test==0 )
-                        {
-                        test = 1;
-                        GT_Log.out.println(
-                            "sWeight = " + GT_Worldgen_GT_Ore_Layer.sWeight
-                            );
-                        for (GT_Worldgen_GT_Ore_Layer tWorldGen : GT_Worldgen_GT_Ore_Layer.sList) {
-                            GT_Log.out.println(
-                                ( tWorldGen).mWorldGenName + " mWeight = " + ( tWorldGen).mWeight + " mSize = " + (tWorldGen).mSize
-                                );
-                            }
-                        }
-                    */
                     for( i = 0; (i < oreveinAttempts) && (!oreveinFound) && (placementAttempts<oreveinMaxPlacementAttempts); i++ ) {
                         int tRandomWeight = oreveinRNG.nextInt(GT_Worldgen_GT_Ore_Layer.sWeight);
                         for (GT_Worldgen_GT_Ore_Layer tWorldGen : GT_Worldgen_GT_Ore_Layer.sList) {
@@ -346,11 +323,6 @@ implements IWorldGenerator {
             // Do GT_Stones and GT_small_ores oregen for this chunk
             try {
                 for (GT_Worldgen tWorldGen : GregTech_API.sWorldgenList) {
-                    /*
-                    if (debugWorldGen) GT_Log.out.println(
-                        "tWorldGen.mWorldGenName="+tWorldGen.mWorldGenName
-                    );
-                    */
                     tWorldGen.executeWorldgen(this.mWorld, this.mRandom, this.mBiome, this.mDimensionType, this.mX*16, this.mZ*16, this.mChunkGenerator, this.mChunkProvider);
                 }
             } catch (Throwable e) {
@@ -398,9 +370,7 @@ implements IWorldGenerator {
 
             //Asteroid Worldgen
             int tDimensionType = this.mWorld.provider.dimensionId;
-            //String tDimensionName = this.mWorld.provider.getDimensionName();
             Random aRandom = new Random();
-            //if (((tDimensionType == 1) && endAsteroids && ((mEndAsteroidProbability <= 1) || (aRandom.nextInt(mEndAsteroidProbability) == 0))) || ((tDimensionName.equals("Asteroids")) && gcAsteroids && ((mGCAsteroidProbability <= 1) || (aRandom.nextInt(mGCAsteroidProbability) == 0)))) {
             if (((tDimensionType == 1) && endAsteroids && ((mEndAsteroidProbability <= 1) || (aRandom.nextInt(mEndAsteroidProbability) == 0)))) {
                 short primaryMeta = 0;
                 short secondaryMeta = 0;
@@ -412,10 +382,9 @@ implements IWorldGenerator {
                     for (int i = 0; (i < oreveinAttempts) && (temp); i++) {
                         tRandomWeight = aRandom.nextInt(GT_Worldgen_GT_Ore_Layer.sWeight);
                         for (GT_Worldgen_GT_Ore_Layer tWorldGen : GT_Worldgen_GT_Ore_Layer.sList) {
-                            tRandomWeight -= ((GT_Worldgen_GT_Ore_Layer) tWorldGen).mWeight;
+                            tRandomWeight -= (tWorldGen).mWeight;
                             if (tRandomWeight <= 0) {
                                 try {
-                                    //if ((tWorldGen.mEndAsteroid && tDimensionType == 1) || (tWorldGen.mAsteroid && tDimensionType == -30)) {
                                     if (tWorldGen.mEndAsteroid && tDimensionType == 1) {
                                         primaryMeta = tWorldGen.mPrimaryMeta;
                                         secondaryMeta = tWorldGen.mSecondaryMeta;
@@ -431,7 +400,6 @@ implements IWorldGenerator {
                         }
                     }
                 }
-                //if(GT_Values.D1)GT_FML_LOGGER.info("do asteroid gen: "+this.mX+" "+this.mZ);
                 int tX = mX * 16 + aRandom.nextInt(16);
                 int tY = 50 + aRandom.nextInt(200 - 50);
                 int tZ = mZ * 16 + aRandom.nextInt(16);
@@ -480,16 +448,7 @@ implements IWorldGenerator {
                                                 } else if (ranOre < 10) {
                                                     GT_TileEntity_Ores.setOreBlock(mWorld, eX, eY, eZ, sporadicMeta, false);
                                                 } else {
-                                                    //if (tDimensionType == 1) {//TODO CHECK
                                                     mWorld.setBlock(eX, eY, eZ, Blocks.end_stone, 0, 0);
-                                                    //} else if (tDimensionName.equals("Asteroids")) {
-                                                    ////int asteroidType = aRandom.nextInt(20);
-                                                    ////if (asteroidType == 19) { //Rare Asteroid?
-                                                    ////mWorld.setBlock(eX, eY, eZ, GregTech_API.sBlockGranites, 8, 3);
-                                                    ////} else {
-                                                    //mWorld.setBlock(eX, eY, eZ, GregTech_API.sBlockGranites, 8, 3);
-                                                    ////}
-                                                    //}
                                                 }
                                             }
                                         }

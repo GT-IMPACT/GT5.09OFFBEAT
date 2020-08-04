@@ -125,7 +125,7 @@ public class GT_Pollution {
 
 
 				//Create Pollution effects
-				//Smog filter TODO
+				//Smog filter
 				if(tPollution > GT_Mod.gregtechproxy.mPollutionSmogLimit) {
 					AxisAlignedBB chunk = AxisAlignedBB.getBoundingBox(actualPos.chunkXPos << 4, 0, actualPos.chunkZPos << 4, (actualPos.chunkXPos << 4) + 16, 256, (actualPos.chunkZPos << 4) + 16);
 					List<EntityLivingBase> tEntitys = aWorld.getEntitiesWithinAABB(EntityLivingBase.class, chunk);

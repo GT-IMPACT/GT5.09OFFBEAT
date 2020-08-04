@@ -12,7 +12,7 @@ public class GT_UO_Dimension {
 	private int maxChance;
 	public String Dimension = "null";
 
-	public GT_UO_Dimension(ConfigCategory aConfigCategory) {//TODO CONFIGURE
+	public GT_UO_Dimension(ConfigCategory aConfigCategory) {
 		fFluids = HashBiMap.create();
 		if (aConfigCategory.containsKey("Dimension"))
 		{

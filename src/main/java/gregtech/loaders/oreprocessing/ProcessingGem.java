@@ -9,7 +9,7 @@ import gregtech.common.GT_Proxy;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ProcessingGem implements gregtech.api.interfaces.IOreRecipeRegistrator {//TODO COMPARE WITH GEM??? generators
+public class ProcessingGem implements gregtech.api.interfaces.IOreRecipeRegistrator {
     public ProcessingGem() {
         OrePrefixes.gem.add(this);
         OrePrefixes.gemChipped.add(this);

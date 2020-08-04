@@ -1296,7 +1296,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                     return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getCurrentEquippedItem()));
                 case 10:
                     return new GT_ContainerVolumetricFlask(aPlayer.inventory);
-//                case 20: //todo add new gui
+//                case 20: //todo Laptop server gui?
 //                    if (tTileEntity instanceof IGregTechTileEntity) {
 //                        IGregTechTileEntity te = (IGregTechTileEntity) aWorld.getTileEntity(aX, aY, aZ);
 //                        return new GT_Container_MultiMachine(aPlayer.inventory, te);
@@ -1358,7 +1358,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                     return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getCurrentEquippedItem())), aPlayer);
                 case 10:
                     return new GT_GUIContainerVolumetricFlask(new GT_ContainerVolumetricFlask(aPlayer.inventory));
-//                case 20: //todo add new gui
+//                case 20: //todo Laptop client gui?
 //                    if (tTileEntity instanceof IGregTechTileEntity) {
 //                        IGregTechTileEntity te = (IGregTechTileEntity) aWorld.getTileEntity(aX, aY, aZ);
 //                        return new GT_GUIContainer_MultiMachine(aPlayer.inventory, te, "Computer", null);

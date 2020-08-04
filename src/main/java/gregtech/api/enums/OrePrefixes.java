@@ -605,8 +605,8 @@ public enum OrePrefixes {
         boolean enableUnusedGems = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedGems", false);
         boolean enableUnusedItemCasing = GregTech_API.sMaterialComponents.get("globalcomponents", "enableUnusedItemCasing", false);
         
-        //TODO possibly use OrePrefix mNotGeneratedItems/mGeneratedItems instead of a static List for every material instance?
-        //TODO Make sure stuff like gem plates / standard plates / paper plates all generate with the current condition
+        //possibly use OrePrefix mNotGeneratedItems/mGeneratedItems instead of a static List for every material instance?
+        //Make sure stuff like gem plates / standard plates / paper plates all generate with the current condition
         for (Materials aMaterial : Materials.values()) {
             if (aMaterial.mMetaItemSubID > 0) {
                 if (aMaterial.mBlastFurnaceTemp <= 1750) ingotHot.mDisabledItems.add(aMaterial); //Moved HotIngot code from GT_MetaGenerated_Item_01 so all this is in once place
