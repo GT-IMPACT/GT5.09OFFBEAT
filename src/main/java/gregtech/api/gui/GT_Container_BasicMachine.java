@@ -21,7 +21,7 @@ import java.util.Iterator;
  */
 public class GT_Container_BasicMachine extends GT_Container_BasicTank {
 
-    public boolean mFluidTransfer = false, mItemTransfer = false, mStuttering = false, fluidChange = false;
+    public boolean mFluidTransfer = false, mItemTransfer = false, mStuttering = false;
 
     public GT_Container_BasicMachine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
         super(aInventoryPlayer, aTileEntity);
@@ -31,7 +31,6 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
     public void addSlots(InventoryPlayer aInventoryPlayer) {
         addSlotToContainer(new GT_Slot_Holo(mTileEntity, 0, 8, 63, false, true, 1));
         addSlotToContainer(new GT_Slot_Holo(mTileEntity, 0, 26, 63, false, true, 1));
-        addSlotToContainer(new GT_Slot_Holo(mTileEntity, 0, -18, 5, false, true, 1));
         addSlotToContainer(new GT_Slot_Render(mTileEntity, 2, 107, 63));
 
         int tStartIndex = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).getInputSlot();
@@ -209,8 +208,6 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
                 if (mTileEntity.getMetaTileEntity() == null) return null;
                 ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer;
                 return null;
-            case 2:
-                if (mTileEntity.getMetaTileEntity() == null) return null;
 
             default:
                 return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
