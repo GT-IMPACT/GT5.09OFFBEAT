@@ -1,6 +1,5 @@
 package gregtech.api.interfaces.internal;
 
-import gregtech.api.util.GT_Recipe;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -734,7 +733,7 @@ public interface IGT_RecipeAdder {
 
     public boolean addSpaceResearch7Recipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, ItemStack aInput4, ItemStack aInput5, ItemStack aInput6, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt, boolean aPlanetTier7);
 
-    public boolean addCyclonRecipe(ItemStack[] aInputs, FluidStack[] aFluidInputs, FluidStack aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt);
+    public boolean addCyclonRecipe(ItemStack[] aInputs, FluidStack[] aFluidInputs, FluidStack[] aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt);
 
     /**
      * Adds a Distillation Tower Recipe
