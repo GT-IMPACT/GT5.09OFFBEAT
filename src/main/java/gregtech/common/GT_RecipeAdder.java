@@ -1,10 +1,5 @@
 package gregtech.common;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import cpw.mods.fml.common.Loader;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
@@ -25,6 +20,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static gregtech.GT_Mod.GT_FML_LOGGER;
 
@@ -1483,6 +1482,11 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
 
     public boolean addFarmRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt) {
         GT_Recipe.GT_Recipe_Map.sFarmRecipes.addRecipe(true, new ItemStack[] {aInput1, aInput2, aInput3},  aOutputs, null, aChances, new FluidStack[]{aFluidInput}, new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+        return true;
+    }
+
+    public boolean addCyclonRecipe(ItemStack[] aInputs, FluidStack[] aFluidInputs, FluidStack[] aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sCyclonRecipes.addRecipe(true, aInputs,  aOutputs, null, aChances, aFluidInputs, aFluidOutput, aDuration, aEUt, 0);
         return true;
     }
 
