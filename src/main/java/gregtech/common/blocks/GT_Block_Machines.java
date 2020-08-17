@@ -44,9 +44,7 @@ import java.util.List;
 import static gregtech.GT_Mod.GT_FML_LOGGER;
 import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
 
-public class GT_Block_Machines
-        extends GT_Generic_Block
-        implements IDebugableBlock, ITileEntityProvider {
+public class GT_Block_Machines extends GT_Generic_Block implements IDebugableBlock, ITileEntityProvider {
     public static ThreadLocal<IGregTechTileEntity> mTemporaryTileEntity = new ThreadLocal();
 
     public GT_Block_Machines() {
@@ -295,7 +293,7 @@ public class GT_Block_Machines
         		if(!GT_Utility.isStackInList(tCurrentItem, GregTech_API.sScrewdriverList) && !GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWrenchList) && !GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWireCutterList) && !GT_Utility.isStackInList(tCurrentItem, GregTech_API.sSolderingToolList)){
         			return false;
         		}
-        	}else {return false;}
+        	}
         }
         if ((tTileEntity instanceof IGregTechTileEntity)) {
             if (((IGregTechTileEntity) tTileEntity).getTimer() < 50L) {

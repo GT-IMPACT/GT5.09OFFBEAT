@@ -211,6 +211,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean gt6Cable = true;
     public boolean ic2EnergySourceCompat = true;
     public boolean costlyCableConnection = false;
+    public static final int GUI_ID_COVER_SIDE_BASE = 10; // Takes GUI ID 10 - 15
     public boolean mMoreComplicatedChemicalRecipes = false;
     public boolean mHardRadonRecipe = true;
     public boolean mComponentAssembler = false;
@@ -1321,6 +1322,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         }
 
         if ((tTileEntity instanceof IGregTechTileEntity)) {
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                return null;
+            }
             IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
             if (tMetaTileEntity != null) {
                 return tMetaTileEntity.getServerGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
@@ -1345,6 +1349,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
     }
 
+    @Override
     public Object getClientGuiElement(int aID, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if(aID>=1000){
@@ -1382,9 +1387,20 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
             }
         }
         if ((tTileEntity instanceof IGregTechTileEntity)) {
-            IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
+            IGregTechTileEntity tile = (IGregTechTileEntity) tTileEntity;
+
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                byte side = (byte) (aID - GT_Proxy.GUI_ID_COVER_SIDE_BASE);
+                GT_CoverBehavior cover = tile.getCoverBehaviorAtSide(side);
+
+                if (cover.hasCoverGUI()) {
+                    return cover.getClientGUI(side, tile.getCoverIDAtSide(side), tile.getCoverDataAtSide(side), tile);
+                }
+                return null;
+            }
+            IMetaTileEntity tMetaTileEntity = tile.getMetaTileEntity();
             if (tMetaTileEntity != null) {
-                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
+                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, tile);
             }
         }
         return null;
