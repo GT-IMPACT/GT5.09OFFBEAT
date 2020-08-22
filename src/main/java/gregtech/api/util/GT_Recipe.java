@@ -211,6 +211,9 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 case 9:
                     GT_Recipe_Map.sLiquidENqGenerator.addRecipe(this);
                     break;
+                case 10:
+                    GT_Recipe_Map.sHyperGenerator.addRecipe(this);
+                    break;
                 // Fluid Generator. Usually 3. Every wrong Type ends up in the Semifluid Generator
                 default:
                     GT_Recipe_Map.sDenseLiquidFuels.addRecipe(this);
@@ -655,8 +658,9 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             public static final GT_Recipe_Map sPyrolyseBasic = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), E, E, null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
 
         public static final GT_Recipe_Map_Fuel sLiquidNqGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.liquidnaquadahgenerator", "Liquid Nq Generator", null, RES_PATH_GUI + "NaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
-        public static final GT_Recipe_Map_Fuel sLiquidENqGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.liquidenaquadahgenerator", "Liquid Enriched Nq Generator", null, RES_PATH_GUI + "EnrichedNaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
+        public static final GT_Recipe_Map_Fuel sLiquidENqGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.liquidenaquadahengenerator", "Liquid Enriched Nq Generator", null, RES_PATH_GUI + "NaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
         public static final GT_Recipe_Map sCyclonRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.cyclone", "Heavy Metal Cyclone", null, RES_PATH_GUI + "basicmachines/Default", 6, 6, 0, 0, 3, E, 1, E, true, false);
+        public static final GT_Recipe_Map_Fuel sHyperGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.hypergenerator", "Hyper Generator", null, RES_PATH_GUI + "NaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
 
 
         @Deprecated
