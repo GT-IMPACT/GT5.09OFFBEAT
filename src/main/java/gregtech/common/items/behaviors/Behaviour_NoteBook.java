@@ -28,7 +28,6 @@ public class Behaviour_NoteBook extends Behaviour_None {
             if (aItem.use(aStack, GT_Utility.getOnlySensorInfo(tList, aPlayer, aWorld, 1, aX, aY, aZ, aSide, hitX, hitY, hitZ), aPlayer)) {
                 int tList_sS=tList.size();
                 tNBT.setInteger("dataLinesCount",tList_sS);
-                GT_Utility.sendChatToPlayer(aPlayer, EnumChatFormatting.RESET + "------------------------");
                 for (int i = 0; i < tList_sS; i++) {
                     tNBT.setString("dataLines" + i, tList.get(i));
                     GT_Utility.sendChatToPlayer(aPlayer, tList.get(i));
