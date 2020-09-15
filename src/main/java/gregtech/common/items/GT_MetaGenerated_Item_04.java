@@ -18,7 +18,7 @@ public class GT_MetaGenerated_Item_04
 
 
         ItemList.Tool_NoteBook.set(addItem(tLastID = 0, "Laptop", "Personal Computer", Behaviour_NoteBook.INSTANCE));
-        setElectricStats(32000 + tLastID, 100000L, GT_Values.V[1], 2L, -1L, false);
+        setElectricStats(32000 + tLastID, 400000L, GT_Values.V[1], 2L, -1L, false);
     }
 
     public boolean doesShowInCreative(OrePrefixes aPrefix, Materials aMaterial, boolean aDoShowAllItems) {

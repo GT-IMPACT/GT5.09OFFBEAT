@@ -44,13 +44,14 @@ public class Behaviour_NoteBook extends Behaviour_None {
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         String[] mTooltip = new String[] {
                 "Your manual assistant",
-                "Use" + EnumChatFormatting.YELLOW + " Shift + Right click " + EnumChatFormatting.GRAY + "on Controller or Basic Machine to display the information sensor",
-                EnumChatFormatting.RED + "[WIP] " + EnumChatFormatting.GRAY + "Use" + EnumChatFormatting.YELLOW + " Right click " + EnumChatFormatting.GRAY + "on Controller to settings machines",
+                EnumChatFormatting.YELLOW + "RightClick Function:",
+                "[Applied Energistics 2] Blocks and Parts renamed",
+                EnumChatFormatting.YELLOW + "Shift + RightClick Function:",
+                "[Gregtech] Controllers and Basic Machines information sensor",
         };
 
-        aList.add(mTooltip[0]);
-        aList.add(mTooltip[1]);
-        aList.add(mTooltip[2]);
+        for (int i = 0; i < mTooltip.length; i++)
+            aList.add(mTooltip[i]);
 
         try {
             NBTTagCompound tNBT = aStack.getTagCompound();
