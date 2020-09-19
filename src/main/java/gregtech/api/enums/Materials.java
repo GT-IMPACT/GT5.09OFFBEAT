@@ -820,7 +820,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         ComplicatedNaquadahLight = new MaterialBuilder(204, TextureSet.SET_FLUID, "Complicated Lightly Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
         ComplicatedNaquadahModer = new MaterialBuilder(205, TextureSet.SET_FLUID, "Complicated Moderately Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
         ComplicatedNaquadahSever = new MaterialBuilder(206, TextureSet.SET_FLUID, "Complicated Severely Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
-        NaquadhaGas = new MaterialBuilder(207, TextureSet.SET_FLUID, "Naquadha Gas").addCell().addGas().setRGB(28, 28, 28).setColor(Dyes.dyeBlack).constructMaterial();
+        NaquadhaGas = new MaterialBuilder(207, TextureSet.SET_FLUID, "Naquadha Gas").addCell().addGas().setRGB(28, 28, 28).setColor(Dyes.dyeBlack).setFuelType(MaterialBuilder.GAS).setFuelPower(1048).constructMaterial();
         NaquadahLight = new MaterialBuilder(208, TextureSet.SET_FLUID, "Lightly Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
         NaquadahMedium = new MaterialBuilder(209, TextureSet.SET_FLUID, "Medium Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
         NaquadahHeavy = new MaterialBuilder(210, TextureSet.SET_FLUID, "Heavy Naquadah Liquid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
