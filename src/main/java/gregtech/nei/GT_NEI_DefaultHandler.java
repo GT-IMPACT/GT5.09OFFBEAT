@@ -214,13 +214,13 @@ public class GT_NEI_DefaultHandler
 			if (tEUt != 0) {
 				drawText(10, 73, trans("152","Total: ") + NumberFormat.getNumberInstance().format(((long)tDuration * tEUt)) + " EU", -16777216);
 				drawText(10, 83, trans("153","Usage: ") + NumberFormat.getNumberInstance().format(tEUt) + " EU/t", -16777216);
-				if (this.mRecipeMap.mShowVoltageAmperageInNEI) {
+//				if (this.mRecipeMap.mShowVoltageAmperageInNEI) {
 					drawText(10, 93, trans("154","Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU ("+GT_Values.VN[GT_Utility.getTier(tEUt / this.mRecipeMap.mAmperage)]+")", -16777216);
 					drawText(10, 103, trans("155","Amperage: ") + this.mRecipeMap.mAmperage, -16777216);
-				} else {
-					drawText(10, 93, trans("156","Voltage: unspecified"), -16777216);
-					drawText(10, 103, trans("157","Amperage: unspecified"), -16777216);
-				}
+//				} else {
+//					drawText(10, 93, trans("156","Voltage: unspecified"), -16777216);
+//					drawText(10, 103, trans("157","Amperage: unspecified"), -16777216);
+//				}
 			}
 			if (tDuration > 0) {
 				drawText(10, 113, trans("158","Time: ")+String.format("%.2f " + trans("161"," secs"), 0.05F * tDuration), -16777216);
