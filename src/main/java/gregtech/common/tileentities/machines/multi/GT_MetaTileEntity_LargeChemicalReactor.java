@@ -1,5 +1,6 @@
 package gregtech.common.tileentities.machines.multi;
 
+import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
@@ -17,6 +18,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+
+import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
 
 public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_MultiBlockBase {
 
@@ -120,6 +123,13 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 			GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sMultiblockChemicalRecipes.findRecipe(getBaseMetaTileEntity(), false,
 					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs);
 			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
+
+				if (GT_Mod.gregtechproxy.mLowGravProcessing && (recipe.mSpecialValue == -100) && !isValidForLowGravity(recipe, getBaseMetaTileEntity().getWorld().provider.dimensionId))
+					return false;
+
+				if (recipe.mSpecialValue == -200 && (mCleanroom == null || mCleanroom.mEfficiency == 0))
+					return false;
+
 				this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;
 
