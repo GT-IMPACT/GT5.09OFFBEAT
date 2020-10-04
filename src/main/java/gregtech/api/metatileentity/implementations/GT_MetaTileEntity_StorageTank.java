@@ -71,4 +71,14 @@ public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_Ba
             this.setLockedFluidName(this.mFluid.getUnlocalizedName());
         }
     }
+
+    @Override
+    public boolean isLiquidInput(byte aSide) {
+        return aSide != getBaseMetaTileEntity().getFrontFacing();
+    }
+
+    @Override
+    public boolean isLiquidOutput(byte aSide) {
+        return aSide == getBaseMetaTileEntity().getFrontFacing();
+    }
 }

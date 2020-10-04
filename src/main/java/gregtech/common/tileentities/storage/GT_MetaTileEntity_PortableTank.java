@@ -61,7 +61,7 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_StorageTan
 
 	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
 		super.onPostTick(aBaseMetaTileEntity, aTick);
-		if (this.getBaseMetaTileEntity().isServerSide()) {
+		if (this.getBaseMetaTileEntity().isServerSide() && (aTick&0x7)==0) {
 			IFluidHandler tTileEntity = aBaseMetaTileEntity.getITankContainerAtSide(aBaseMetaTileEntity.getFrontFacing());
 			if (tTileEntity != null) {
 
@@ -84,7 +84,7 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_StorageTan
 
 	@Override
 	public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-		return aSide == aBaseMetaTileEntity.getFrontFacing() && aIndex == 1;
+		return true;
 	}
 
 	@Override
