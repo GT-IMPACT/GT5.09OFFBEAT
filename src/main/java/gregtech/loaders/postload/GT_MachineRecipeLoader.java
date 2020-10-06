@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.impact.item.Core_Items.Core_Items1;
+import static com.impact.common.item.Core_Items.Core_Items1;
 
 public class GT_MachineRecipeLoader implements Runnable {
     private final static String aTextAE = "appliedenergistics2";

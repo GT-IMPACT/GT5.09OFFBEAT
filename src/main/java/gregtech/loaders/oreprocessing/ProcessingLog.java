@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import static com.impact.item.Core_Items.Core_Items1;
+import static com.impact.common.item.Core_Items.Core_Items1;
 
 public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistrator {
     public ProcessingLog() {
