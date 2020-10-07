@@ -111,12 +111,6 @@ public class ProcessingCrafting implements gregtech.api.interfaces.IOreRecipeReg
                 GT_Values.RA.addLaserEngraverRecipe(ItemList.Circuit_Silicon_Wafer5.get(1, new Object[0]), GT_Utility.copyAmount(0L, new Object[]{aStack}), ItemList.Circuit_Wafer_CPU.get(16, new Object[0]), 50, 7680, true);
                 GT_Values.RA.addLaserEngraverRecipe(ItemList.Circuit_Silicon_Wafer9.get(1, new Object[0]), GT_Utility.copyAmount(0L, new Object[]{aStack}), ItemList.Circuit_Wafer_CPU.get(6, new Object[0]), 700, 1024, true);
                 break;
-            case "craftingLensGray":
-                if (Loader.isModLoaded("GalacticraftCore")) {
-                    GT_Values.RA.addLaserEngraverRecipe(ItemList.Circuit_Wafer_ILC.get(1L), GT_Utility.copyAmount(0L, new Object[]{aStack}), GT_ModHandler.getModItem("GalacticraftCore", "item.basicItem", 1L, 13), 200, 256);
-                    GT_Values.RA.addLaserEngraverRecipe(ItemList.Circuit_Wafer_NAND.get(1L), GT_Utility.copyAmount(0L, new Object[]{aStack}), GT_ModHandler.getModItem("GalacticraftCore", "item.basicItem", 1L, 14), 200, 480);
-                }
-                break;
         }
     }
 }
