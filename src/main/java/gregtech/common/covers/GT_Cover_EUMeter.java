@@ -1,5 +1,7 @@
 package gregtech.common.covers;
 
+import com.impact.mods.GregTech.tileentities.storage.GTMTE_LapPowerStation;
+import cpw.mods.fml.common.Loader;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.gui.GT_GUICover;
 import gregtech.api.gui.widgets.GT_GuiIcon;
@@ -29,6 +31,22 @@ public class GT_Cover_EUMeter
                 aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (int) (aTileEntity.getUniversalEnergyStored() / tScale) : (byte) (int) (15L - aTileEntity.getUniversalEnergyStored() / tScale));
             } else {
                 aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
+            }
+            if (aTileEntity instanceof IGregTechTileEntity) {
+                IGregTechTileEntity tTileEntity = (IGregTechTileEntity) aTileEntity;
+                IMetaTileEntity mTileEntity = tTileEntity.getMetaTileEntity();
+                if (Loader.isModLoaded("impact")) {
+                    if (mTileEntity instanceof GTMTE_LapPowerStation) {
+                        GTMTE_LapPowerStation buffer = (GTMTE_LapPowerStation) mTileEntity;
+                        long tStored = buffer.stored.longValue();
+                        tScale = buffer.capacity.longValue() / 15L;
+                        if (tScale > 0L) {
+                            aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (int) (tStored / tScale) : (byte) (int) (15L - tStored / tScale));
+                        } else {
+                            aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
+                        }
+                    }
+                }
             }
         } else if (aCoverVariable < 4) {
             tScale = aTileEntity.getEUCapacity() / 15L;
