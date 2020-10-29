@@ -27,6 +27,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_BasicMachine {
 
     boolean ready = false;
