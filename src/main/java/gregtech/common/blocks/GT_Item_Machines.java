@@ -5,10 +5,7 @@ import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.metatileentity.IConnectable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Fluid;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Frame;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Item;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.util.GT_ItsNotMyFaultException;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Log;
@@ -67,6 +64,10 @@ public class GT_Item_Machines
                             }
                         } else i++;
                     }
+                }
+                if (tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
+                    if (tTileEntity.getMetaTileEntity().getCapacity() > 0)
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_Fluid_CAPACITY", "Fluid Tank: ", !GregTech_API.sPostloadFinished) + tTileEntity.getMetaTileEntity().getCapacity() + "L");
                 }
                 if (tTileEntity.getEUCapacity() > 0L) {
                     if (tTileEntity.getInputVoltage() > 0L) {
