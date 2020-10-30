@@ -63,7 +63,7 @@ public class GT_NEI_Pyro
     }
 
     public TemplateRecipeHandler newInstance() {
-        NEI_GT_Config.PYRO=new GT_NEI_Pyro(this.mRecipeMap);
+        NEI_GT_Config.PYRO = new GT_NEI_Pyro(this.mRecipeMap);
         return NEI_GT_Config.PYRO;
     }
 
@@ -201,45 +201,25 @@ public class GT_NEI_Pyro
         String[] recipeDesc = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.getNeiDesc();
         if (recipeDesc == null) {
             if (tEUt != 0) {
-                drawText(10, 73, trans("152","Total: ") + NumberFormat.getNumberInstance().format(((long)tDuration * tEUt)) + " EU", -16777216);
-                drawText(10, 83, trans("153","Usage: ") + NumberFormat.getNumberInstance().format(tEUt) + " EU/t", -16777216);
+                drawText(10, 73, trans("152", "Total: ") + NumberFormat.getNumberInstance().format(((long) tDuration * tEUt)) + " EU", -16777216);
+                drawText(10, 83, trans("153", "Usage: ") + NumberFormat.getNumberInstance().format(tEUt) + " EU/t", -16777216);
                 if (this.mRecipeMap.mShowVoltageAmperageInNEI) {
-                    drawText(10, 93, trans("154","Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU", -16777216);
-                    drawText(129, 4,  "10", -16777216);
-                    drawText(129, 22, "25", -16777216);
-                    drawText(129, 40, "50", -16777216);
-                    drawText(129, 58, "90", -16777216);
+                    drawText(10, 93, trans("154", "Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU", -16777216);
+                    drawText(129, 4, "18", -16777216);
+                    drawText(129, 22, "35", -16777216);
+                    drawText(129, 40, "52", -16777216);
+                    drawText(129, 58, "70", -16777216);
                     drawText(147, 31, "T%", -16777216);
                 } else {
-                    drawText(10, 93, trans("156","Voltage: unspecified"), -16777216);
-                    drawText(10, 103, trans("157","Amperage: unspecified"), -16777216);
+                    drawText(10, 93, trans("156", "Voltage: unspecified"), -16777216);
+                    drawText(10, 103, trans("157", "Amperage: unspecified"), -16777216);
                 }
             }
             if (tDuration > 0) {
-                drawText(10, 103, trans("158","Time (T): ")+String.format("%.2f " + trans("161"," secs"), 0.05F * tDuration), -16777216);
+                drawText(10, 103, trans("158", "Time (T): ") + String.format("%.2f " + trans("161", " secs"), 0.05F * tDuration), -16777216);
             }
             int tSpecial = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.mSpecialValue;
-            if (tSpecial == -100 && GT_Mod.gregtechproxy.mLowGravProcessing) {
-                drawText(10, 123, trans("159","Needs Low Gravity"), -16777216);
-            } else if (tSpecial == -200 && GT_Mod.gregtechproxy.mEnableCleanroom) {
-                drawText(10, 123, trans("160","Needs Cleanroom"), -16777216);
-            } else if (tSpecial == -201) {
-                drawText(10, 123, trans("206","Scan for Assembly Line"), -16777216);
-            }   else if (tSpecial == -500 && GT_Mod.gregtechproxy.mPlanetTier1){
-                drawText(10, 123, trans("219","Needs Moon"), 0x602487);
-            }   else if (tSpecial == -600 && GT_Mod.gregtechproxy.mPlanetTier2){
-                drawText(10, 123, trans("220","Needs Mars, Deimos or Phobos"), 0x602487);
-            }   else if (tSpecial == -700 && GT_Mod.gregtechproxy.mPlanetTier3){
-                drawText(10, 123, trans("221","Needs Ceres, Europa, Ganymed or Callisto"), 0x602487);
-            }   else if (tSpecial == -800 && GT_Mod.gregtechproxy.mPlanetTier4){
-                drawText(10, 123, trans("222","Needs Io, Venus or Mercury"), 0x602487);
-            }   else if (tSpecial == -900 && GT_Mod.gregtechproxy.mPlanetTier5){
-                drawText(10, 123, trans("223","Needs Enceladus, Titan, Oberon or Miranda"), 0x602487);
-            }   else if (tSpecial == -1000 && GT_Mod.gregtechproxy.mPlanetTier6){
-                drawText(10, 123, trans("224","Needs Triton or Proteus"), 0x602487);
-            }   else if (tSpecial == -1100 && GT_Mod.gregtechproxy.mPlanetTier7){
-                drawText(10, 123, trans("225","Needs Pluto, MakeMake or Haumea"), 0x602487);
-            } else if ((GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePre)) || (GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePost))) {
+            if ((GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePre)) || (GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePost))) {
                 drawText(10, 123, this.mRecipeMap.mNEISpecialValuePre + tSpecial * this.mRecipeMap.mNEISpecialValueMultiplier + this.mRecipeMap.mNEISpecialValuePost, -16777216);
             }
         } else {
