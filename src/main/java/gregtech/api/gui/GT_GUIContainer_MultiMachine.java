@@ -1,5 +1,6 @@
 package gregtech.api.gui;
 
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_ModHandler;
@@ -64,9 +65,10 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
                         fontRendererObj.drawString(trans("143", "Missing Mining Pipe"), 10, ((GT_Container_MultiMachine) mContainer).mActive == 0 ? 40 : 24, 16448255);
                     }
                 } else if (mContainer.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_LargeTurbine) {
-                    ItemStack tItem = mContainer.mTileEntity.getMetaTileEntity().getStackInSlot(1);
-                    if (tItem == null || !(tItem.getItem() == GT_MetaGenerated_Tool_01.INSTANCE && tItem.getItemDamage() >= 170 && tItem.getItemDamage() <= 177)) {
-                        fontRendererObj.drawString(trans("144", "Missing Turbine Rotor"), 10, ((GT_Container_MultiMachine) mContainer).mActive == 0 ? 40 : 24, 16448255);
+                    if (((GT_Container_MultiMachine) mContainer).mActive == 0) {
+                        fontRendererObj.drawString("For turbine to retain", 10, 46, 16448255);
+                        fontRendererObj.drawString("properties of rotor,", 10, 54, 16448255);
+                        fontRendererObj.drawString("start it", 10, 62, 16448255);
                     }
                 }
             }

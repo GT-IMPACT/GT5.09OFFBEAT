@@ -48,7 +48,8 @@ public class GT_MetaTileEntity_LargeTurbine_Steam extends GT_MetaTileEntity_Larg
                 "1x Dynamo Hatch (Back centered)",
                 "1x Output Hatch for Distilled Water (Side centered)",
                 "Turbine Casings for the rest (24 at least!)",
-                "Needs a Turbine Item (Inside controller GUI)",
+                "Needs a Turbine Rotor (Inside controller GUI) in order for",
+                "Turbine to remember the characteristics of Turbine Rotor (after that Turbine Rotor will be removed)",
                 "Output depending on Rotor and fitting",
                 "Use screwdriver to adjust fitting of turbine"};
     }

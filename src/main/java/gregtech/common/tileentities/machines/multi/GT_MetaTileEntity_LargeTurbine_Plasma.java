@@ -46,7 +46,8 @@ public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_Lar
                 "1x Maintenance Hatch (Side centered)",
                 "1x Dynamo Hatch (Back centered)",
                 "Tungstensteel Turbine Casings for the rest (24 at least!)",
-                "Needs a Turbine Item (Inside controller GUI)"};
+                "Needs a Turbine Rotor (Inside controller GUI) in order for",
+                "Turbine to remember the characteristics of Turbine Rotor (after that Turbine Rotor will be removed)",};
     }
 
     public int getFuelValue(FluidStack aLiquid) {

@@ -1,6 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
+import gregtech.api.enums.Materials;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaGenerated_Tool;
@@ -12,6 +13,7 @@ import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -22,9 +24,9 @@ import java.util.ArrayList;
 
 public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_MultiBlockBase {
 
-    protected int baseEff = 0;
-    protected int optFlow = 0;
-    protected double realOptFlow = 0;
+    public int baseEff = 0;
+    public int optFlow = 0;
+    public double realOptFlow = 0;
     protected int storedFluid = 0;
     protected int counter = 0;
     protected boolean looseFit=false;
@@ -110,34 +112,51 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
         return ((addMaintenanceToMachineList(tTileEntity, getCasingTextureIndex())) || (addInputToMachineList(tTileEntity, getCasingTextureIndex())) || (addOutputToMachineList(tTileEntity, getCasingTextureIndex())) || (addMufflerToMachineList(tTileEntity, getCasingTextureIndex())));
     }
 
-
+    public boolean checkguislot = true;
+    public String mNameRotorMaterial = "";
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
+        aNBT.setInteger("baseEff", baseEff);
+        aNBT.setInteger("optFlow", optFlow);
+        aNBT.setBoolean("checkguislot", checkguislot);
+        aNBT.setString("mNameRotorMaterial", mNameRotorMaterial);
         super.saveNBTData(aNBT);
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
+        baseEff = aNBT.getInteger("baseEff");
+        optFlow = aNBT.getInteger("optFlow");
+        checkguislot = aNBT.getBoolean("checkguislot");
+        mNameRotorMaterial = aNBT.getString("mNameRotorMaterial");
         super.loadNBTData(aNBT);
     }
 
     @Override
     public boolean checkRecipe(ItemStack aStack) {
-    	if((counter&7)==0 && (aStack==null || !(aStack.getItem() instanceof GT_MetaGenerated_Tool)  || aStack.getItemDamage() < 170 || aStack.getItemDamage() >179)) {
-    	    stopMachine();
-    	    return false;
-        }
+
+       if (aStack != null && aStack.getItem() instanceof GT_MetaGenerated_Tool && checkguislot) {
+           baseEff = GT_Utility.safeInt((long)((5F + ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack)) * 1000F));
+           optFlow = GT_Utility.safeInt((long)Math.max(Float.MIN_NORMAL, ((GT_MetaGenerated_Tool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier()
+                   * GT_MetaGenerated_Tool.getPrimaryMaterial(aStack).mToolSpeed * 50));
+           Materials tMaterial = GT_MetaGenerated_Tool.getPrimaryMaterial(aStack);
+           mNameRotorMaterial =  StatCollector.translateToLocal(aStack.getUnlocalizedName() + ".name") + " | Material Rotor: " +  tMaterial.mLocalizedName;
+           mInventory[1] = null;
+           checkguislot = false;
+       }
+
+    	//if((counter&7)==0) {
+    	//    stopMachine();
+    	//    return false;
+        //}
+
         ArrayList<FluidStack> tFluids = getStoredFluids();
         if (tFluids.size() > 0) {
-            if (baseEff == 0 || optFlow == 0 || counter >= 512 || this.getBaseMetaTileEntity().hasWorkJustBeenEnabled()
-                    || this.getBaseMetaTileEntity().hasInventoryBeenModified()) {
+            if (counter >= 512 || this.getBaseMetaTileEntity().hasWorkJustBeenEnabled() || this.getBaseMetaTileEntity().hasInventoryBeenModified()) {
                 counter = 0;
-                baseEff = GT_Utility.safeInt((long)((5F + ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack)) * 1000F));
-                optFlow = GT_Utility.safeInt((long)Math.max(Float.MIN_NORMAL,
-                        ((GT_MetaGenerated_Tool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier()
-                                * ((GT_MetaGenerated_Tool) aStack.getItem()).getPrimaryMaterial(aStack).mToolSpeed
-                                * 50));
+
                 if(optFlow<=0 || baseEff<=0){
+                    checkguislot = true;
                     stopMachine();//in case the turbine got removed
                     return false;
                 }
@@ -185,16 +204,13 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
 
     @Override
     public int getDamageToComponent(ItemStack aStack) {
-        return 1;
+        return 0;
     }
 
     public int getMaxEfficiency(ItemStack aStack) {
-        if (GT_Utility.isStackInvalid(aStack)) {
-            return 0;
-        }
-        if (aStack.getItem() instanceof GT_MetaGenerated_Tool_01) {
-            return 10000;
-        }
+       if ((aStack != null && aStack.getItem() instanceof GT_MetaGenerated_Tool_01) || !checkguislot) {
+           return 10000;
+       }
         return 0;
     }
     @Override
@@ -212,21 +228,17 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
         }
 
         String tRunning = mMaxProgresstime>0 ?
-
                 EnumChatFormatting.GREEN+StatCollector.translateToLocal("GT5U.turbine.running.true")+EnumChatFormatting.RESET :
                 EnumChatFormatting.RED+StatCollector.translateToLocal("GT5U.turbine.running.false")+EnumChatFormatting.RESET;
+
         String tMaintainance = getIdealStatus() == getRepairStatus() ?
                 EnumChatFormatting.GREEN+StatCollector.translateToLocal("GT5U.turbine.maintenance.false")+EnumChatFormatting.RESET :
-                EnumChatFormatting.RED+StatCollector.translateToLocal("GT5U.turbine.maintenance.true")+EnumChatFormatting.RESET ;
-        int tDura = 0;
-
-        if (mInventory[1] != null && mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01) {
-            tDura = GT_Utility.safeInt((long)(100.0f / GT_MetaGenerated_Tool.getToolMaxDamage(mInventory[1]) * (GT_MetaGenerated_Tool.getToolDamage(mInventory[1]))+1));
-        }
+                EnumChatFormatting.RED+StatCollector.translateToLocal("GT5U.turbine.maintenance.true")+EnumChatFormatting.RESET;
 
         long storedEnergy=0;
         long maxEnergy=0;
         long maxAmp=0;
+
         for(GT_MetaTileEntity_Hatch_Dynamo tHatch : mDynamoHatches) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
@@ -234,6 +246,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 maxAmp+=tHatch.getBaseMetaTileEntity().getOutputAmperage();
             }
         }
+
         for(GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
@@ -241,6 +254,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 maxAmp+=tHatch.getBaseMetaTileEntity().getOutputAmperage();
             }
         }
+
         String[] ret = new String[]{
                 // 8 Lines available for information panels
                 tRunning + ": " + EnumChatFormatting.RED+mEUt+EnumChatFormatting.RESET+" EU/t", /* 1 */
@@ -251,14 +265,16 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 StatCollector.translateToLocal("GT5U.turbine.flow")+": "+EnumChatFormatting.YELLOW+GT_Utility.safeInt((long)realOptFlow)+EnumChatFormatting.RESET+" L/t" + /* 4 */
                         EnumChatFormatting.YELLOW+" ("+(looseFit?StatCollector.translateToLocal("GT5U.turbine.loose"):StatCollector.translateToLocal("GT5U.turbine.tight"))+")", /* 5 */
                 StatCollector.translateToLocal("GT5U.turbine.fuel")+": "+EnumChatFormatting.GOLD+storedFluid+EnumChatFormatting.RESET+"L", /* 6 */
-                StatCollector.translateToLocal("GT5U.turbine.dmg")+": "+EnumChatFormatting.RED+Integer.toString(tDura)+EnumChatFormatting.RESET+"%", /* 7 */
-                StatCollector.translateToLocal("GT5U.multiblock.pollution")+": "+ EnumChatFormatting.GREEN + mPollutionReduction+ EnumChatFormatting.RESET+" %" /* 8 */
+                StatCollector.translateToLocal("GT5U.multiblock.pollution")+": "+ EnumChatFormatting.GREEN + mPollutionReduction+ EnumChatFormatting.RESET+" %", /* 7 */
+                mNameRotorMaterial, /* 8 */
+                "Turbine Effeciency: " + EnumChatFormatting.GREEN + baseEff/100 + ".0", /* 9 */
+
         };
-        if (!this.getClass().getName().contains("Steam"))
-        	ret[4]=StatCollector.translateToLocal("GT5U.turbine.flow")+": "+EnumChatFormatting.YELLOW+GT_Utility.safeInt((long)realOptFlow)+EnumChatFormatting.RESET+" L/t";
+
+        if (!this.getClass().getName().contains("Steam")) {
+            ret[4] = StatCollector.translateToLocal("GT5U.turbine.flow") + ": " + EnumChatFormatting.YELLOW + GT_Utility.safeInt((long) realOptFlow) + EnumChatFormatting.RESET + " L/t";
+        }
         return ret;
-       
-        	
     }
 
     @Override

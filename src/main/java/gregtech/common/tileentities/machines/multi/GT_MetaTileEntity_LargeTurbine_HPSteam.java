@@ -46,7 +46,8 @@ public class GT_MetaTileEntity_LargeTurbine_HPSteam extends GT_MetaTileEntity_La
                 "1x Dynamo Hatch (Back centered)",
                 "1x Output Hatch for Steam (Side centered)",
                 "Titanium Turbine Casings for the rest (24 at least!)",
-                "Needs a Turbine Item (Inside controller GUI)",
+                "Needs a Turbine Rotor (Inside controller GUI) in order for",
+                "Turbine to remember the characteristics of Turbine Rotor (after that Turbine Rotor will be removed)",
                 "Output depending on Rotor and fitting",
                 "Use screwdriver to adjust fitting of turbine"};
     }
