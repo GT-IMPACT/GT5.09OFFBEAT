@@ -365,8 +365,6 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
                     }else{
                         aBaseEff*=0.75f;
                     }
-                    aList.add(tOffset + 4, EnumChatFormatting.GRAY + String.format(trans("500", "Turbine Efficiency (Loose): %s"), "" + EnumChatFormatting.BLUE + aBaseEff/100f) + EnumChatFormatting.DARK_GRAY);
-                    aList.add(tOffset + 5, EnumChatFormatting.GRAY + String.format(trans("501", "Optimal Steam flow (Loose): %s L/t"), "" + EnumChatFormatting.GOLD + aOptFlowLoose + EnumChatFormatting.DARK_GRAY));
                 }
                 aList.add(tOffset + 6, EnumChatFormatting.WHITE + String.format(trans("007", "Optimal Gas flow(EU burnvalue per tick): %sEU/t"), "" + EnumChatFormatting.GOLD + Math.max(Float.MIN_NORMAL, tStats.getSpeedMultiplier() * getPrimaryMaterial(aStack).mToolSpeed * 50) + EnumChatFormatting.GRAY));
                 aList.add(tOffset + 7, EnumChatFormatting.WHITE + String.format(trans("008", "Optimal Plasma flow(Plasma energyvalue per tick): %sEU/t"), "" + EnumChatFormatting.GOLD + Math.max(Float.MIN_NORMAL, tStats.getSpeedMultiplier() * getPrimaryMaterial(aStack).mToolSpeed * 2000) + EnumChatFormatting.GRAY));

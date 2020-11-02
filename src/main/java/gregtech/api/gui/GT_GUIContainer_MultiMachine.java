@@ -66,9 +66,9 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
                     }
                 } else if (mContainer.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_LargeTurbine) {
                     if (((GT_Container_MultiMachine) mContainer).mActive == 0) {
-                        fontRendererObj.drawString("For turbine to retain", 10, 46, 16448255);
-                        fontRendererObj.drawString("properties of rotor,", 10, 54, 16448255);
-                        fontRendererObj.drawString("start it", 10, 62, 16448255);
+                        fontRendererObj.drawString("For turbine to retain merit", 10, 46, 16448255);
+                        fontRendererObj.drawString("of rotor, insert him in gui", 10, 54, 16448255);
+                        fontRendererObj.drawString("and wait 5 sec", 10, 62, 16448255);
                     }
                 }
             }

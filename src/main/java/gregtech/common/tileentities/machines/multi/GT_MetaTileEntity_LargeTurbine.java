@@ -133,17 +133,23 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
     }
 
     @Override
-    public boolean checkRecipe(ItemStack aStack) {
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        ItemStack aStack = this.mInventory[1];
+        if (aTick % 100 == 0) {
+            if (aStack != null && aStack.getItem() instanceof GT_MetaGenerated_Tool && checkguislot) {
+                baseEff = GT_Utility.safeInt((long) ((5F + ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack)) * 1000F));
+                optFlow = GT_Utility.safeInt((long) Math.max(Float.MIN_NORMAL, ((GT_MetaGenerated_Tool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier() * GT_MetaGenerated_Tool.getPrimaryMaterial(aStack).mToolSpeed * 50));
+                Materials tMaterial = GT_MetaGenerated_Tool.getPrimaryMaterial(aStack);
+                this.mNameRotorMaterial = StatCollector.translateToLocal(aStack.getUnlocalizedName() + ".name") + " | Material Rotor: " + tMaterial.mLocalizedName;
+                this.mInventory[1] = null;
+                this.checkguislot = false;
+            }
+        }
+        super.onPostTick(aBaseMetaTileEntity, aTick);
+    }
 
-       if (aStack != null && aStack.getItem() instanceof GT_MetaGenerated_Tool && checkguislot) {
-           baseEff = GT_Utility.safeInt((long)((5F + ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack)) * 1000F));
-           optFlow = GT_Utility.safeInt((long)Math.max(Float.MIN_NORMAL, ((GT_MetaGenerated_Tool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier()
-                   * GT_MetaGenerated_Tool.getPrimaryMaterial(aStack).mToolSpeed * 50));
-           Materials tMaterial = GT_MetaGenerated_Tool.getPrimaryMaterial(aStack);
-           mNameRotorMaterial =  StatCollector.translateToLocal(aStack.getUnlocalizedName() + ".name") + " | Material Rotor: " +  tMaterial.mLocalizedName;
-           mInventory[1] = null;
-           checkguislot = false;
-       }
+    @Override
+    public boolean checkRecipe(ItemStack aStack) {
 
     	//if((counter&7)==0) {
     	//    stopMachine();
