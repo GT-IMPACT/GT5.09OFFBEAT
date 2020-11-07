@@ -465,28 +465,28 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Energy_Cluster.set(addItem(tLastID = 737, "Energy Cluster", "Reusable battery"));
         setElectricStats(32000 + tLastID, 100000000000L, GT_Values.V[8], 8L, -3L, true);
 
-        ItemList.Electric_Motor_LV.set(addItem(tLastID = 600, "Electric Motor (LV)", "LV Motor"));
-        ItemList.Electric_Motor_MV.set(addItem(tLastID = 601, "Electric Motor (MV)", "MV Motor"));
-        ItemList.Electric_Motor_HV.set(addItem(tLastID = 602, "Electric Motor (HV)", "HV Motor"));
-        ItemList.Electric_Motor_EV.set(addItem(tLastID = 603, "Electric Motor (EV)", "EV Motor"));
-        ItemList.Electric_Motor_IV.set(addItem(tLastID = 604, "Electric Motor (IV)", "IV Motor"));
-        ItemList.Electric_Motor_LuV.set(addItem(tLastID = 606, "Electric Motor (LuV)", "LuV Motor"));
-        ItemList.Electric_Motor_ZPM.set(addItem(tLastID = 607, "Electric Motor (ZPM)", "ZPM Motor"));
-        ItemList.Electric_Motor_UV.set(addItem(tLastID = 608, "Electric Motor (UV)", "UV Motor"));
-        ItemList.Electric_Motor_UHV.set(addItem(tLastID = 609, "Electric Motor (UHV)", "UHV Motor"));
-        ItemList.Electric_Motor_UEV.set(addItem(tLastID = 624, "Electric Motor (UEV)", "UEV Motor"));
+        ItemList.Electric_Motor_LV.set(addItem(tLastID = 600, "LV Electric Motor", "LV Motor"));
+        ItemList.Electric_Motor_MV.set(addItem(tLastID = 601, "MV Electric Motor", "MV Motor"));
+        ItemList.Electric_Motor_HV.set(addItem(tLastID = 602, "HV Electric Motor", "HV Motor"));
+        ItemList.Electric_Motor_EV.set(addItem(tLastID = 603, "EV Electric Motor", "EV Motor"));
+        ItemList.Electric_Motor_IV.set(addItem(tLastID = 604, "IV Electric Motor", "IV Motor"));
+        ItemList.Electric_Motor_LuV.set(addItem(tLastID = 606, "LuV Electric Motor", "LuV Motor"));
+        ItemList.Electric_Motor_ZPM.set(addItem(tLastID = 607, "ZPM Electric Motor", "ZPM Motor"));
+        ItemList.Electric_Motor_UV.set(addItem(tLastID = 608, "UV Electric Motor", "UV Motor"));
+        ItemList.Electric_Motor_UHV.set(addItem(tLastID = 609, "UHV Electric Motor", "UHV Motor"));
+        ItemList.Electric_Motor_UEV.set(addItem(tLastID = 624, "UEV Electric Motor", "UEV Motor"));
         
 
-        ItemList.Electric_Pump_LV.set(addItem(tLastID = 610, "Electric Pump (LV)", "2560 L/sec (as Cover)"          ));
-        ItemList.Electric_Pump_MV.set(addItem(tLastID = 611, "Electric Pump (MV)", "10240 L/sec (as Cover)"         ));
-        ItemList.Electric_Pump_HV.set(addItem(tLastID = 612, "Electric Pump (HV)", "40.960 L/sec (as Cover)"        ));
-        ItemList.Electric_Pump_EV.set(addItem(tLastID = 613, "Electric Pump (EV)", "163.840 L/sec (as Cover)"       ));
-        ItemList.Electric_Pump_IV.set(addItem(tLastID = 614, "Electric Pump (IV)", "655.360 L/sec (as Cover)"       ));
-        ItemList.Electric_Pump_LuV.set(addItem(tLastID = 620, "Electric Pump (LuV)", "2.621.440 L/sec (as Cover)"   ));
-        ItemList.Electric_Pump_ZPM.set(addItem(tLastID = 621, "Electric Pump (ZPM)", "10.485.760 L/sec (as Cover)"  ));
-        ItemList.Electric_Pump_UV.set(addItem(tLastID = 622, "Electric Pump (UV)", "41.943.040 L/sec (as Cover)"    ));
-        ItemList.Electric_Pump_UHV.set(addItem(tLastID = 623, "Electric Pump (UHV)", "(not Cover)"                  ));
-        ItemList.Electric_Pump_UEV.set(addItem(tLastID = 625, "Electric Pump (UEV)", "(not Cover)"                  ));
+        ItemList.Electric_Pump_LV.set(addItem(tLastID = 610, "LV Electric Pump", "2560 L/sec (as Cover)"          ));
+        ItemList.Electric_Pump_MV.set(addItem(tLastID = 611, "MV Electric Pump", "10240 L/sec (as Cover)"         ));
+        ItemList.Electric_Pump_HV.set(addItem(tLastID = 612, "HV Electric Pump", "40.960 L/sec (as Cover)"        ));
+        ItemList.Electric_Pump_EV.set(addItem(tLastID = 613, "EV Electric Pump", "163.840 L/sec (as Cover)"       ));
+        ItemList.Electric_Pump_IV.set(addItem(tLastID = 614, "IV Electric Pump", "655.360 L/sec (as Cover)"       ));
+        ItemList.Electric_Pump_LuV.set(addItem(tLastID = 620, "LuV Electric Pump", "2.621.440 L/sec (as Cover)"   ));
+        ItemList.Electric_Pump_ZPM.set(addItem(tLastID = 621, "ZPM Electric Pump", "10.485.760 L/sec (as Cover)"  ));
+        ItemList.Electric_Pump_UV.set(addItem(tLastID = 622, "UV Electric Pump", "41.943.040 L/sec (as Cover)"    ));
+        ItemList.Electric_Pump_UHV.set(addItem(tLastID = 623, "UHV Electric Pump", "(not Cover)"                  ));
+        ItemList.Electric_Pump_UEV.set(addItem(tLastID = 625, "UEV Electric Pump", "(not Cover)"                  ));
         
         GregTech_API.registerCover(ItemList.Electric_Pump_LV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_Pump(128));
         GregTech_API.registerCover(ItemList.Electric_Pump_MV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[2][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_Pump(512));
@@ -497,11 +497,11 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         GregTech_API.registerCover(ItemList.Electric_Pump_ZPM.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[7][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_Pump(524288));
         GregTech_API.registerCover(ItemList.Electric_Pump_UV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[8][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_Pump(2097152));
 
-        ItemList.FluidRegulator_LV.set(addItem(tLastID = 615, "Fluid Regulator (LV)", "Configuable up to 640 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_MV.set(addItem(tLastID = 616, "Fluid Regulator (MV)", "Configuable up to 2560 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_HV.set(addItem(tLastID = 617, "Fluid Regulator (HV)", "Configuable up to 10240 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_EV.set(addItem(tLastID = 618, "Fluid Regulator (EV)", "Configuable up to 40960 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_IV.set(addItem(tLastID = 619, "Fluid Regulator (IV)", "Configuable up to 163840 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
+        ItemList.FluidRegulator_LV.set(addItem(tLastID = 615, "LV Fluid Regulator", "Configuable up to 640 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
+        ItemList.FluidRegulator_MV.set(addItem(tLastID = 616, "MV Fluid Regulator", "Configuable up to 2560 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
+        ItemList.FluidRegulator_HV.set(addItem(tLastID = 617, "HV Fluid Regulator", "Configuable up to 10240 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
+        ItemList.FluidRegulator_EV.set(addItem(tLastID = 618, "EV Fluid Regulator", "Configuable up to 40960 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
+        ItemList.FluidRegulator_IV.set(addItem(tLastID = 619, "IV Fluid Regulator", "Configuable up to 163840 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
 
         GregTech_API.registerCover(ItemList.FluidRegulator_LV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(32));
         GregTech_API.registerCover(ItemList.FluidRegulator_MV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[2][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(128));
@@ -521,16 +521,16 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
          ItemList.Rotor_ZPM.set(ItemList.Rotor_LuV.get(1L, new Object[0]));
          ItemList.Rotor_UV.set(ItemList.Rotor_ZPM.get(1L, new Object[0]));**/
 
-        ItemList.Conveyor_Module_LV.set(addItem(tLastID = 630, "Conveyor Module (LV)", "1 Stack every 20 secs (as Cover)"));
-        ItemList.Conveyor_Module_MV.set(addItem(tLastID = 631, "Conveyor Module (MV)", "1 Stack every 5 secs (as Cover)"));
-        ItemList.Conveyor_Module_HV.set(addItem(tLastID = 632, "Conveyor Module (HV)", "1 Stack every 1 sec (as Cover)"));
-        ItemList.Conveyor_Module_EV.set(addItem(tLastID = 633, "Conveyor Module (EV)", "1 Stack every 1/5 sec (as Cover)"));
-        ItemList.Conveyor_Module_IV.set(addItem(tLastID = 634, "Conveyor Module (IV)", "1 Stack every 1/20 sec (as Cover)"));
-        ItemList.Conveyor_Module_LuV.set(addItem(tLastID = 636, "Conveyor Module (LuV)", "2 Stack every 1/20 sec (as Cover)"));
-        ItemList.Conveyor_Module_ZPM.set(addItem(tLastID = 637, "Conveyor Module (ZPM)", "3 Stack every 1/20 sec (as Cover)"));
-        ItemList.Conveyor_Module_UV.set(addItem(tLastID = 638, "Conveyor Module (UV)", "4 Stack every 1/20 sec (as Cover)"));
-        ItemList.Conveyor_Module_UHV.set(addItem(tLastID = 639, "Conveyor Module (UHV)", "5 Stack every 1/20 sec (as Cover)"));
-        ItemList.Conveyor_Module_UEV.set(addItem(tLastID = 626, "Conveyor Module (UEV)", "6 Stack every 1/20 sec (as Cover)"));
+        ItemList.Conveyor_Module_LV.set(addItem(tLastID = 630, "LV Conveyor Module", "1 Stack every 20 secs (as Cover)"));
+        ItemList.Conveyor_Module_MV.set(addItem(tLastID = 631, "MV Conveyor Module", "1 Stack every 5 secs (as Cover)"));
+        ItemList.Conveyor_Module_HV.set(addItem(tLastID = 632, "HV Conveyor Module", "1 Stack every 1 sec (as Cover)"));
+        ItemList.Conveyor_Module_EV.set(addItem(tLastID = 633, "EV Conveyor Module", "1 Stack every 1/5 sec (as Cover)"));
+        ItemList.Conveyor_Module_IV.set(addItem(tLastID = 634, "IV Conveyor Module", "1 Stack every 1/20 sec (as Cover)"));
+        ItemList.Conveyor_Module_LuV.set(addItem(tLastID = 636, "LuV Conveyor Module", "2 Stack every 1/20 sec (as Cover)"));
+        ItemList.Conveyor_Module_ZPM.set(addItem(tLastID = 637, "ZPM Conveyor Module", "3 Stack every 1/20 sec (as Cover)"));
+        ItemList.Conveyor_Module_UV.set(addItem(tLastID = 638, "UV Conveyor Module", "4 Stack every 1/20 sec (as Cover)"));
+        ItemList.Conveyor_Module_UHV.set(addItem(tLastID = 639, "UHV Conveyor Module", "5 Stack every 1/20 sec (as Cover)"));
+        ItemList.Conveyor_Module_UEV.set(addItem(tLastID = 626, "UEV Conveyor Module", "6 Stack every 1/20 sec (as Cover)"));
         
         GregTech_API.registerCover(ItemList.Conveyor_Module_LV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_CONVEYOR)}), new GT_Cover_Conveyor(400));
         GregTech_API.registerCover(ItemList.Conveyor_Module_MV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[2][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_CONVEYOR)}), new GT_Cover_Conveyor(100));
@@ -543,27 +543,27 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         GregTech_API.registerCover(ItemList.Conveyor_Module_UHV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[9][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_CONVEYOR)}), new GT_Cover_Conveyor(1,(byte)5));
         GregTech_API.registerCover(ItemList.Conveyor_Module_UEV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[9][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_CONVEYOR)}), new GT_Cover_Conveyor(1,(byte)6));
         
-        ItemList.Electric_Piston_LV.set(addItem(tLastID = 640, "Electric Piston (LV)", ""));
-        ItemList.Electric_Piston_MV.set(addItem(tLastID = 641, "Electric Piston (MV)", ""));
-        ItemList.Electric_Piston_HV.set(addItem(tLastID = 642, "Electric Piston (HV)", ""));
-        ItemList.Electric_Piston_EV.set(addItem(tLastID = 643, "Electric Piston (EV)", ""));
-        ItemList.Electric_Piston_IV.set(addItem(tLastID = 644, "Electric Piston (IV)", ""));
-        ItemList.Electric_Piston_LuV.set(addItem(tLastID = 645, "Electric Piston (LuV)", ""));
-        ItemList.Electric_Piston_ZPM.set(addItem(tLastID = 646, "Electric Piston (ZPM)", ""));
-        ItemList.Electric_Piston_UV.set(addItem(tLastID = 647, "Electric Piston (UV)", ""));
-        ItemList.Electric_Piston_UHV.set(addItem(tLastID = 648, "Electric Piston (UHV)", ""));
-        ItemList.Electric_Piston_UEV.set(addItem(tLastID = 649, "Electric Piston (UEV)", ""));
+        ItemList.Electric_Piston_LV.set(addItem(tLastID = 640, "LV Electric Piston", ""));
+        ItemList.Electric_Piston_MV.set(addItem(tLastID = 641, "MV Electric Piston", ""));
+        ItemList.Electric_Piston_HV.set(addItem(tLastID = 642, "HV Electric Piston", ""));
+        ItemList.Electric_Piston_EV.set(addItem(tLastID = 643, "EV Electric Piston", ""));
+        ItemList.Electric_Piston_IV.set(addItem(tLastID = 644, "IV Electric Piston", ""));
+        ItemList.Electric_Piston_LuV.set(addItem(tLastID = 645, "LuV Electric Piston", ""));
+        ItemList.Electric_Piston_ZPM.set(addItem(tLastID = 646, "ZPM Electric Piston", ""));
+        ItemList.Electric_Piston_UV.set(addItem(tLastID = 647, "UV Electric Piston", ""));
+        ItemList.Electric_Piston_UHV.set(addItem(tLastID = 648, "UHV Electric Piston", ""));
+        ItemList.Electric_Piston_UEV.set(addItem(tLastID = 649, "UEV Electric Piston", ""));
         
-        ItemList.Robot_Arm_LV.set(addItem(tLastID = 650, "Robot Arm (LV)", "Inserts into specific Slots (as Cover)"   ));
-        ItemList.Robot_Arm_MV.set(addItem(tLastID = 651, "Robot Arm (MV)", "Inserts into specific Slots (as Cover)"   ));
-        ItemList.Robot_Arm_HV.set(addItem(tLastID = 652, "Robot Arm (HV)", "Inserts into specific Slots (as Cover)"   ));
-        ItemList.Robot_Arm_EV.set(addItem(tLastID = 653, "Robot Arm (EV)", "Inserts into specific Slots (as Cover)"   ));
-        ItemList.Robot_Arm_IV.set(addItem(tLastID = 654, "Robot Arm (IV)", "Inserts into specific Slots (as Cover)"   ));
-        ItemList.Robot_Arm_LuV.set(addItem(tLastID = 655, "Robot Arm (LuV)", "Inserts into specific Slots (as Cover)" ));
-        ItemList.Robot_Arm_ZPM.set(addItem(tLastID = 656, "Robot Arm (ZPM)", "Inserts into specific Slots (as Cover)" ));
-        ItemList.Robot_Arm_UV.set(addItem(tLastID = 657, "Robot Arm (UV)", "Inserts into specific Slots (as Cover)"   ));
-        ItemList.Robot_Arm_UHV.set(addItem(tLastID = 658, "Robot Arm (UHV)", "Inserts into specific Slots (as Cover)" ));
-        ItemList.Robot_Arm_UEV.set(addItem(tLastID = 659, "Robot Arm (UEV)", "Inserts into specific Slots (as Cover)" ));
+        ItemList.Robot_Arm_LV.set(addItem(tLastID = 650, "LV Robot Arm", "Inserts into specific Slots (as Cover)"   ));
+        ItemList.Robot_Arm_MV.set(addItem(tLastID = 651, "MV Robot Arm", "Inserts into specific Slots (as Cover)"   ));
+        ItemList.Robot_Arm_HV.set(addItem(tLastID = 652, "HV Robot Arm", "Inserts into specific Slots (as Cover)"   ));
+        ItemList.Robot_Arm_EV.set(addItem(tLastID = 653, "EV Robot Arm", "Inserts into specific Slots (as Cover)"   ));
+        ItemList.Robot_Arm_IV.set(addItem(tLastID = 654, "IV Robot Arm", "Inserts into specific Slots (as Cover)"   ));
+        ItemList.Robot_Arm_LuV.set(addItem(tLastID = 655, "LuV Robot Arm", "Inserts into specific Slots (as Cover)" ));
+        ItemList.Robot_Arm_ZPM.set(addItem(tLastID = 656, "ZPM Robot Arm", "Inserts into specific Slots (as Cover)" ));
+        ItemList.Robot_Arm_UV.set(addItem(tLastID = 657, "UV Robot Arm", "Inserts into specific Slots (as Cover)"   ));
+        ItemList.Robot_Arm_UHV.set(addItem(tLastID = 658, "UHV Robot Arm", "Inserts into specific Slots (as Cover)" ));
+        ItemList.Robot_Arm_UEV.set(addItem(tLastID = 659, "UEV Robot Arm", "Inserts into specific Slots (as Cover)" ));
         
         GregTech_API.registerCover(ItemList.Robot_Arm_LV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ARM)}), new GT_Cover_Arm(400));
         GregTech_API.registerCover(ItemList.Robot_Arm_MV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[2][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ARM)}), new GT_Cover_Arm(100));
@@ -576,38 +576,38 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         GregTech_API.registerCover(ItemList.Robot_Arm_UHV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[9][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ARM)}), new GT_Cover_Arm(1));
         GregTech_API.registerCover(ItemList.Robot_Arm_UEV.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[9][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ARM)}), new GT_Cover_Arm(1));
         
-        ItemList.Emitter_LV.set(addItem(tLastID = 680, "Emitter (LV)", ""   ));
-        ItemList.Emitter_MV.set(addItem(tLastID = 681, "Emitter (MV)", ""   ));
-        ItemList.Emitter_HV.set(addItem(tLastID = 682, "Emitter (HV)", ""   ));
-        ItemList.Emitter_EV.set(addItem(tLastID = 683, "Emitter (EV)", ""   ));
-        ItemList.Emitter_IV.set(addItem(tLastID = 684, "Emitter (IV)", ""   ));
-        ItemList.Emitter_LuV.set(addItem(tLastID = 685, "Emitter (LuV)", "" ));
-        ItemList.Emitter_ZPM.set(addItem(tLastID = 686, "Emitter (ZPM)", "" ));
-        ItemList.Emitter_UV.set(addItem(tLastID = 687, "Emitter (UV)", ""   ));
-        ItemList.Emitter_UHV.set(addItem(tLastID = 688, "Emitter (UHV)", "" ));
-        ItemList.Emitter_UEV.set(addItem(tLastID = 689, "Emitter (UEV)", "" ));
+        ItemList.Emitter_LV.set(addItem(tLastID = 680, "LV Emitter", ""   ));
+        ItemList.Emitter_MV.set(addItem(tLastID = 681, "MV Emitter", ""   ));
+        ItemList.Emitter_HV.set(addItem(tLastID = 682, "HV Emitter", ""   ));
+        ItemList.Emitter_EV.set(addItem(tLastID = 683, "EV Emitter", ""   ));
+        ItemList.Emitter_IV.set(addItem(tLastID = 684, "IV Emitter", ""   ));
+        ItemList.Emitter_LuV.set(addItem(tLastID = 685, "LuV Emitter", "" ));
+        ItemList.Emitter_ZPM.set(addItem(tLastID = 686, "ZPM Emitter", "" ));
+        ItemList.Emitter_UV.set(addItem(tLastID = 687, "UV Emitter", ""   ));
+        ItemList.Emitter_UHV.set(addItem(tLastID = 688, "UHV Emitter", "" ));
+        ItemList.Emitter_UEV.set(addItem(tLastID = 689, "UEV Emitter", "" ));
         
-        ItemList.Field_Generator_LV.set(addItem(tLastID = 670, "Field Generator (LV)", ""));
-        ItemList.Field_Generator_MV.set(addItem(tLastID = 671, "Field Generator (MV)", ""));
-        ItemList.Field_Generator_HV.set(addItem(tLastID = 672, "Field Generator (HV)", ""));
-        ItemList.Field_Generator_EV.set(addItem(tLastID = 673, "Field Generator (EV)", ""));
-        ItemList.Field_Generator_IV.set(addItem(tLastID = 674, "Field Generator (IV)", ""));
-        ItemList.Field_Generator_LuV.set(addItem(tLastID = 675, "Field Generator (LuV)", ""));
-        ItemList.Field_Generator_ZPM.set(addItem(tLastID = 676, "Field Generator (ZPM)", ""));
-        ItemList.Field_Generator_UV.set(addItem(tLastID = 677, "Field Generator (UV)", ""));
-        ItemList.Field_Generator_UHV.set(addItem(tLastID = 678, "Field Generator (UHV)", ""));
-        ItemList.Field_Generator_UEV.set(addItem(tLastID = 679, "Field Generator (UEV)", ""));
+        ItemList.Field_Generator_LV.set(addItem(tLastID = 670, "LV Field Generator", ""));
+        ItemList.Field_Generator_MV.set(addItem(tLastID = 671, "MV Field Generator", ""));
+        ItemList.Field_Generator_HV.set(addItem(tLastID = 672, "HV Field Generator", ""));
+        ItemList.Field_Generator_EV.set(addItem(tLastID = 673, "EV Field Generator", ""));
+        ItemList.Field_Generator_IV.set(addItem(tLastID = 674, "IV Field Generator", ""));
+        ItemList.Field_Generator_LuV.set(addItem(tLastID = 675, "LuV Field Generator", ""));
+        ItemList.Field_Generator_ZPM.set(addItem(tLastID = 676, "ZPM Field Generator", ""));
+        ItemList.Field_Generator_UV.set(addItem(tLastID = 677, "UV Field Generator", ""));
+        ItemList.Field_Generator_UHV.set(addItem(tLastID = 678, "UHV Field Generator", ""));
+        ItemList.Field_Generator_UEV.set(addItem(tLastID = 679, "UEV Field Generator", ""));
         
-        ItemList.Sensor_LV.set(addItem(tLastID = 690, "Sensor (LV)", ""));
-        ItemList.Sensor_MV.set(addItem(tLastID = 691, "Sensor (MV)", ""));
-        ItemList.Sensor_HV.set(addItem(tLastID = 692, "Sensor (HV)", ""));
-        ItemList.Sensor_EV.set(addItem(tLastID = 693, "Sensor (EV)", ""));
-        ItemList.Sensor_IV.set(addItem(tLastID = 694, "Sensor (IV)", ""));
-        ItemList.Sensor_LuV.set(addItem(tLastID = 695, "Sensor (LuV)", ""));
-        ItemList.Sensor_ZPM.set(addItem(tLastID = 696, "Sensor (ZPM)", ""));
-        ItemList.Sensor_UV.set(addItem(tLastID = 697, "Sensor (UV)", ""));
-        ItemList.Sensor_UHV.set(addItem(tLastID = 698, "Sensor (UHV)", ""));
-        ItemList.Sensor_UEV.set(addItem(tLastID = 699, "Sensor (UEV)", ""));
+        ItemList.Sensor_LV.set(addItem(tLastID = 690, "LV Sensor", ""));
+        ItemList.Sensor_MV.set(addItem(tLastID = 691, "MV Sensor", ""));
+        ItemList.Sensor_HV.set(addItem(tLastID = 692, "HV Sensor", ""));
+        ItemList.Sensor_EV.set(addItem(tLastID = 693, "EV Sensor", ""));
+        ItemList.Sensor_IV.set(addItem(tLastID = 694, "IV Sensor", ""));
+        ItemList.Sensor_LuV.set(addItem(tLastID = 695, "LuV Sensor", ""));
+        ItemList.Sensor_ZPM.set(addItem(tLastID = 696, "ZPM Sensor", ""));
+        ItemList.Sensor_UV.set(addItem(tLastID = 697, "UV Sensor", ""));
+        ItemList.Sensor_UHV.set(addItem(tLastID = 698, "UHV Sensor", ""));
+        ItemList.Sensor_UEV.set(addItem(tLastID = 699, "UEV Sensor", ""));
         
         ItemList.Circuit_Primitive.set(addItem(tLastID = 700, "Vacuum Tube", "A very simple Circuit (ULV)", new Object[]{OrePrefixes.circuit.get(Materials.Primitive), SubTag.NO_UNIFICATION}));
         ItemList.Circuit_Parts_Vacuum_Tube.set(ItemList.Circuit_Primitive.get(1,new Object[0]));
