@@ -1226,7 +1226,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Naquadah.mChemicalFormula = "Nq";
         NaquadahEnriched.mChemicalFormula = "Nq+";
         Naquadria.mChemicalFormula = "Nq*";
-        NaquadahAlloy.mChemicalFormula="NqIr\u2083OsC";
+        NaquadahAlloy.mChemicalFormula="NqIr\u2083OsTr";
         Adamantium.mChemicalFormula="Ad";
         MeteoricIron.mChemicalFormula="SpFe";
         MeteoricSteel.mChemicalFormula="SpFe\u2085\u2080C";
@@ -1246,6 +1246,24 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         InfinityCatalyst.mChemicalFormula="If";
         CosmicNeutronium.mChemicalFormula="SpNt";
         Grisium.mChemicalFormula="Ti\u2089C\u2089K\u2089Li\u2089S\u2089";
+
+        HSLA.mChemicalFormula="(Fe\u2082Ni)\u2082VTiMo";
+        ElectricalSteel.mChemicalFormula="(Fe\u2085\u2080C)SiC";
+        DarkSteel.mChemicalFormula="((Fe\u2085\u2080C)SiC)C(MgFeSi\u2082O\u2088)";
+        RedstoneAlloy.mChemicalFormula="(Si(FeS\u2082)\u2085CrAl\u2082O\u2083Hg\u2083)SiC";
+        ConductiveIron.mChemicalFormula="("+RedstoneAlloy.mChemicalFormula+")FeAg";
+        EnergeticAlloy.mChemicalFormula="("+ ConductiveIron.mChemicalFormula +")Au(NiAuAgCu\u2083(Fe\u2085\u2080C)\u2083)";
+        VibrantAlloy.mChemicalFormula="("+EnergeticAlloy.mChemicalFormula+")Cr("+EnderEye.mChemicalFormula+")";
+        Enderium.mChemicalFormula="("+EnderiumBase.mChemicalFormula+")\u2082("+DarkSteel.mChemicalFormula+")("+Enderpearl.mChemicalFormula+")";
+        PulsatingIron.mChemicalFormula="Fe("+EnderEye.mChemicalFormula+")("+RedstoneAlloy.mChemicalFormula+")";
+        Mytryl.mChemicalFormula="Pb\u2083Pt\u2082D";
+        Phoenixite.mChemicalFormula="Phn";
+        Mithril.mChemicalFormula=CertusQuartz.mChemicalFormula+"PtSpFe";
+        Trinium.mChemicalFormula="Tr";
+        Infuscolium.mChemicalFormula="Is";
+        Sunnarium.mChemicalFormula="Su";
+        Orichalcum.mChemicalFormula="Oh";
+
     }
 
     private static void initSubTags() {
