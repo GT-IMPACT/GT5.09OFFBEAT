@@ -1490,11 +1490,6 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
-    public boolean addTrackAssemblerRecipe(ItemStack[] aInputs, ItemStack aOutput, int aDuration, int aEUt) {
-        GT_Recipe.GT_Recipe_Map.sTrackAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, null, null, null, aDuration, aEUt, 0);
-        return true;
-    }
-
     @Override
     @Deprecated
     public boolean addPyrolyseRecipe(ItemStack aInput, FluidStack aFluidInput, int intCircuit, ItemStack aOutput, FluidStack aFluidOutput, int aDuration, int aEUt) {
