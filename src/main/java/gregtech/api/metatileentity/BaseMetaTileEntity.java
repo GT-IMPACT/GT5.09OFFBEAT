@@ -1291,7 +1291,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                     if (ItemList.Tool_NoteBook.getItem() == tCurrentItem.getItem()) {
                             GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 100, aPlayer);
                             mMetaTileEntity.onNotePadRightClick(aSide, aPlayer, aX, aY, aZ);
-                            GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(100), 1.0F, -1, xCoord, yCoord, zCoord);
+                            //GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(100), 1.0F, -1, xCoord, yCoord, zCoord);
                         return true;
                     }
 
