@@ -656,7 +656,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             public static final GT_Recipe_Map sSawMill2 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), E, E, null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
         public static final GT_Recipe_Map sPyrolyseBasicVisual = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.pyrolysebasic", "Pyrolyse Recipes", null, RES_PATH_GUI + "PyrolyseBasic", 1, 1, 1, 0, 1, E, 1, E, true, false);
             public static final GT_Recipe_Map sPyrolyseBasic = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), E, E, null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
-        public static final GT_Recipe_Map sTrackAssemblerRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.trackassembler", "Track Assembler", null, RES_PATH_GUI + "basicmachines/Default", 6, 1, 0, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sTrackAssemblerRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.trackassembler", "Track Assembler", null, RES_PATH_GUI + "basicmachines/Default", 6, 1, 0, 0, 1, E, 1, E, true, false);
 
         public static final GT_Recipe_Map_Fuel sLiquidNqGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.liquidnaquadahgenerator", "Liquid Nq Generator", null, RES_PATH_GUI + "NaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
         public static final GT_Recipe_Map_Fuel sLiquidENqGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.liquidenaquadahengenerator", "Liquid Enriched Nq Generator", null, RES_PATH_GUI + "NaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
