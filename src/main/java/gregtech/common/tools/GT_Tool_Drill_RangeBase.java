@@ -51,37 +51,37 @@ abstract class GT_Tool_Drill_RangeBase
     }
 
     public int getToolDamagePerBlockBreak() {
-        return GT_Mod.gregtechproxy.mHardRock ? setToolDamagePerBlockBreak() / 2 : setToolDamagePerBlockBreak();
+        return GT_Mod.gregtechproxy.mHardRock ? 25 : 50;
     }
 
     abstract int setToolDamagePerBlockBreak();
 
     public int getToolDamagePerDropConversion() {
-        return setToolDamagePerDropConversion();
+        return 100;
     }
 
     abstract int setToolDamagePerDropConversion();
 
     public int getToolDamagePerContainerCraft() {
-        return setToolDamagePerContainerCraft();
+        return 100;
     }
 
     abstract int setToolDamagePerContainerCraft();
 
     public int getToolDamagePerEntityAttack() {
-        return setToolDamagePerEntityAttack();
+        return 200;
     }
 
     abstract int setToolDamagePerEntityAttack();
 
     public int getBaseQuality() {
-        return setBaseQuality();
+        return 0;
     }
 
     abstract int setBaseQuality();
 
     public float getBaseDamage() {
-        return setBaseDamage();
+        return 2.0F;
     }
 
     abstract float setBaseDamage();
@@ -93,7 +93,7 @@ abstract class GT_Tool_Drill_RangeBase
     abstract float setSpeedMultiplier();
 
     public float getMaxDurabilityMultiplier() {
-        return setMaxDurabilityMultiplier();
+        return 1.0F;
     }
 
     abstract float setMaxDurabilityMultiplier();
@@ -109,19 +109,19 @@ abstract class GT_Tool_Drill_RangeBase
     abstract byte RangeHeight();
 
     public String getCraftingSound() {
-        return GregTech_API.sSoundList.get(Integer.valueOf(106));
+        return GregTech_API.sSoundList.get(106);
     }
 
     public String getEntityHitSound() {
-        return GregTech_API.sSoundList.get(Integer.valueOf(106));
+        return GregTech_API.sSoundList.get(106);
     }
 
     public String getBreakingSound() {
-        return GregTech_API.sSoundList.get(Integer.valueOf(106));
+        return GregTech_API.sSoundList.get(106);
     }
 
     public String getMiningSound() {
-        return GregTech_API.sSoundList.get(Integer.valueOf(106));
+        return GregTech_API.sSoundList.get(106);
     }
 
     public boolean canBlock() {
