@@ -1262,8 +1262,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Trinium.mChemicalFormula="Tr";
         Infuscolium.mChemicalFormula="Is";
         Sunnarium.mChemicalFormula="Su";
-        Orichalcum.mChemicalFormula="Oh";
-
+        Orichalcum.mChemicalFormula="Tr\u2083Oh";
+        DeepIron.mChemicalFormula="Fe\u2083Tr";
     }
 
     private static void initSubTags() {
