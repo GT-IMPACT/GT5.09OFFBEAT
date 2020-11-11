@@ -450,6 +450,12 @@ public enum ItemList implements IItemContainer {
     Tool_Shovel_Steel,
     Tool_Axe_Steel,
     Tool_Hoe_Steel,
+
+    BrokenDrill_LV,
+    BrokenDrill_MV,
+    BrokenDrill_HV,
+    BrokenDrill_EV,
+    BrokenDrill_IV,
     
     BioBall, BioCarbonPlate, BioChunk, BioOrganicMesh, CompressedBioBall, PlantMass, RawBioFiber,
 

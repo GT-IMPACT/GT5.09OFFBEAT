@@ -51,13 +51,13 @@ abstract class GT_Tool_Drill_RangeBase
     }
 
     public int getToolDamagePerBlockBreak() {
-        return GT_Mod.gregtechproxy.mHardRock ? 25 : 50;
+        return 20;
     }
 
     abstract int setToolDamagePerBlockBreak();
 
     public int getToolDamagePerDropConversion() {
-        return 100;
+        return 20;
     }
 
     abstract int setToolDamagePerDropConversion();
@@ -93,7 +93,7 @@ abstract class GT_Tool_Drill_RangeBase
     abstract float setSpeedMultiplier();
 
     public float getMaxDurabilityMultiplier() {
-        return 1.0F;
+        return 1.0F * (setTier() + 1);
     }
 
     abstract float setMaxDurabilityMultiplier();
@@ -142,8 +142,10 @@ abstract class GT_Tool_Drill_RangeBase
     }
 
     public ItemStack getBrokenItem(ItemStack aStack) {
-        return null;
+        return setBrokenItem();
     }
+
+    public abstract ItemStack setBrokenItem();
 
     public short[] getRGBa(boolean aIsToolHead, ItemStack aStack) {
         return aIsToolHead ? GT_MetaGenerated_Tool.getPrimaryMaterial(aStack).mRGBa : GT_MetaGenerated_Tool.getSecondaryMaterial(aStack).mRGBa;

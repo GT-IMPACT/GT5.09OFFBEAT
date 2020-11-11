@@ -17,8 +17,14 @@ public class GT_MetaGenerated_Item_04
         int tLastID = 0;
 
 
-        ItemList.Tool_NoteBook.set(addItem(tLastID = 0, "Laptop", "Personal Computer", Behaviour_NoteBook.INSTANCE));
-        setElectricStats(32000 + tLastID, 400000L, GT_Values.V[1], 2L, -1L, false);
+        ItemList.Tool_NoteBook.set(addItem(tLastID, "Laptop", "Personal Computer", Behaviour_NoteBook.INSTANCE));
+        setElectricStats(32000 + tLastID++, 400000L, GT_Values.V[1], 2L, -1L, false);
+
+        ItemList.BrokenDrill_LV.set(addItem(tLastID++, "Broken LV Drill", "Crystal Battery"));
+        ItemList.BrokenDrill_MV.set(addItem(tLastID++, "Broken MV Drill", "Crystal Battery"));
+        ItemList.BrokenDrill_HV.set(addItem(tLastID++, "Broken HV Drill", "Crystal Battery"));
+        ItemList.BrokenDrill_EV.set(addItem(tLastID++, "Broken EV Drill", "Crystal Battery"));
+        ItemList.BrokenDrill_IV.set(addItem(tLastID, "Broken IV Drill", "Crystal Battery"));
     }
 
     public boolean doesShowInCreative(OrePrefixes aPrefix, Materials aMaterial, boolean aDoShowAllItems) {

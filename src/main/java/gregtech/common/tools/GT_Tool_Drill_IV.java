@@ -1,7 +1,9 @@
 package gregtech.common.tools;
 
+import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
+import net.minecraft.item.ItemStack;
 
 public class GT_Tool_Drill_IV
         extends GT_Tool_Drill_RangeBase {
@@ -69,5 +71,9 @@ public class GT_Tool_Drill_IV
     @Override
     int setTier(){
         return 4;
+    }
+
+    public ItemStack setBrokenItem() {
+        return ItemList.BrokenDrill_IV.get(1);
     }
 }
