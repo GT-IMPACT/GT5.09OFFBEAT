@@ -2178,7 +2178,7 @@ public class GT_Utility {
 
         public static String getBookTitle(ItemStack aStack) {
             NBTTagCompound tNBT = getNBT(aStack);
-            return tNBT.getString("title");
+            return GT_LanguageManager.getTranslation(tNBT.getString("title"));
         }
 
         public static void setBookAuthor(ItemStack aStack, String aAuthor) {

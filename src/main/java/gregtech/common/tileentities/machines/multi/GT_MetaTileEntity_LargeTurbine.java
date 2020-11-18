@@ -9,6 +9,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Dynamo;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
@@ -140,7 +141,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 baseEff = GT_Utility.safeInt((long) ((5F + ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack)) * 1000F));
                 optFlow = GT_Utility.safeInt((long) Math.max(Float.MIN_NORMAL, ((GT_MetaGenerated_Tool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier() * GT_MetaGenerated_Tool.getPrimaryMaterial(aStack).mToolSpeed * 50));
                 Materials tMaterial = GT_MetaGenerated_Tool.getPrimaryMaterial(aStack);
-                this.mNameRotorMaterial = StatCollector.translateToLocal(aStack.getUnlocalizedName() + ".name") + " | Material Rotor: " + tMaterial.mLocalizedName;
+                this.mNameRotorMaterial = GT_LanguageManager.getTranslation(aStack.getUnlocalizedName()) + " | Material Rotor: " + tMaterial.mLocalizedName;
                 this.mInventory[1] = null;
                 this.checkguislot = false;
             }
