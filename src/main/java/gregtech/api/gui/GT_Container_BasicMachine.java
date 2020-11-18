@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
+import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -196,8 +197,8 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
                         ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2;
                         ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1;
                         ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange = false;
-                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1 == null ? null : EnumChatFormatting.RED +  ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1.getLocalizedName() + EnumChatFormatting.RESET +  " on Output Slot"));
-                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2 == null ? null : EnumChatFormatting.GREEN + ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2.getLocalizedName() + EnumChatFormatting.RESET + " on Input Slot"));
+                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1 == null ? null : EnumChatFormatting.RED + GT_LanguageManager.getTranslation(((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1.getUnlocalizedName()) + EnumChatFormatting.RESET +  " on Output Slot"));
+                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2 == null ? null : EnumChatFormatting.GREEN + GT_LanguageManager.getTranslation(((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2.getUnlocalizedName()) + EnumChatFormatting.RESET + " on Input Slot"));
                     }
 
                     if (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid == null && ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut == null)

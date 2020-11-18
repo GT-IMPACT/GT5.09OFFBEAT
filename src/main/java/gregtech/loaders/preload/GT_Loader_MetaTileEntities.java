@@ -1419,14 +1419,14 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         //ItemList.Nuclear_Reactor1.set(new GT_MetaTileEntity_NuclearReactor1(12106, "multimachine.nuclear1", "Nuclear Reactor Mk 1").getStackForm(1L));
 
 
-        ItemList.Machine_LV_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12120, "basicmachine.e_airgenerator.tier.01", "LV Electric Air Condenser", 1).getStackForm(1L));
-        ItemList.Machine_MV_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12121, "basicmachine.e_airgenerator.tier.02", "MV Electric Air Condenser", 2).getStackForm(1L));
-        ItemList.Machine_HV_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12122, "basicmachine.e_airgenerator.tier.03", "HV Electric Air Condenser", 3).getStackForm(1L));
-        ItemList.Machine_EV_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12123, "basicmachine.e_airgenerator.tier.04", "EV Electric Air Condenser", 4).getStackForm(1L));
-        ItemList.Machine_IV_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12124, "basicmachine.e_airgenerator.tier.05", "IV Electric Air Condenser", 5).getStackForm(1L));
-        ItemList.Machine_LuV_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12125, "basicmachine.e_airgenerator.tier.06", "LuV Electric Air Condenser", 6).getStackForm(1L));
-        ItemList.Machine_ZPM_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12126, "basicmachine.e_airgenerator.tier.07", "ZPM Electric Air Condenser", 7).getStackForm(1L));
-        ItemList.Machine_UV_AirGenerator.set(new GT_MetaTileEntity_AirGenerator(12127, "basicmachine.e_airgenerator.tier.08", "UV Electric Air Condenser", 8).getStackForm(1L));
+        ItemList.Machine_LV_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12120, "basicmachine.e_airgenerator.tier.01", "LV Electric Air Condenser", 1).getStackForm(1L));
+        ItemList.Machine_MV_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12121, "basicmachine.e_airgenerator.tier.02", "MV Electric Air Condenser", 2).getStackForm(1L));
+        ItemList.Machine_HV_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12122, "basicmachine.e_airgenerator.tier.03", "HV Electric Air Condenser", 3).getStackForm(1L));
+        ItemList.Machine_EV_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12123, "basicmachine.e_airgenerator.tier.04", "EV Electric Air Condenser", 4).getStackForm(1L));
+        ItemList.Machine_IV_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12124, "basicmachine.e_airgenerator.tier.05", "IV Electric Air Condenser", 5).getStackForm(1L));
+        ItemList.Machine_LuV_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12125, "basicmachine.e_airgenerator.tier.06", "LuV Electric Air Condenser", 6).getStackForm(1L));
+        ItemList.Machine_ZPM_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12126, "basicmachine.e_airgenerator.tier.07", "ZPM Electric Air Condenser", 7).getStackForm(1L));
+        ItemList.Machine_UV_AirGenerator.set(new GT_MetaTileEntity_AirCondenser(12127, "basicmachine.e_airgenerator.tier.08", "UV Electric Air Condenser", 8).getStackForm(1L));
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_LV_AirGenerator.get(1L), bitsd, new Object[]{"EPE", "CMC", "EPE", 'M', ItemList.Hull_LV, 'E', OrePrefixes.circuit.get(Materials.Basic), 'P', ItemList.Electric_Pump_LV, 'C', new ItemStack(Blocks.glass, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_MV_AirGenerator.get(1L), bitsd, new Object[]{"EPE", "CMC", "EPE", 'M', ItemList.Hull_MV, 'E', OrePrefixes.circuit.get(Materials.Good), 'P', ItemList.Electric_Pump_MV, 'C', new ItemStack(Blocks.glass, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_HV_AirGenerator.get(1L), bitsd, new Object[]{"EPE", "CMC", "EPE", 'M', ItemList.Hull_HV, 'E', OrePrefixes.circuit.get(Materials.Advanced), 'P', ItemList.Electric_Pump_HV, 'C', new ItemStack(Blocks.glass, 1)});
