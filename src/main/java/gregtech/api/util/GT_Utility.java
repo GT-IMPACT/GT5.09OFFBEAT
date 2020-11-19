@@ -1,6 +1,7 @@
 package gregtech.api.util;
 
 import cofh.api.transport.IItemDuct;
+import com.impact.mods.GregTech.tileentities.multi.debug.GT_MetaTileEntity_MultiParallelBlockBase;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.FMLCommonHandler;
 import gregtech.api.GregTech_API;
@@ -11,6 +12,7 @@ import gregtech.api.events.BlockScanningEvent;
 import gregtech.api.interfaces.IDebugableBlock;
 import gregtech.api.interfaces.IProjectileItem;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.*;
 import gregtech.api.items.GT_EnergyArmor_Item;
 import gregtech.api.items.GT_Generic_Item;
@@ -1835,7 +1837,6 @@ public class GT_Utility {
                     if (((IGregTechDeviceInformation) tTileEntity).getInfoData() != null) {
                         tList.addAll(Arrays.asList("========================="));
                         tList.addAll(Arrays.asList(((IGregTechDeviceInformation) tTileEntity).getInfoData()));
-                        tList.addAll(Arrays.asList("========================="));
                     }
                 }
             } catch (Throwable e) {
@@ -2178,7 +2179,7 @@ public class GT_Utility {
 
         public static String getBookTitle(ItemStack aStack) {
             NBTTagCompound tNBT = getNBT(aStack);
-            return GT_LanguageManager.getTranslation(tNBT.getString("title"));
+            return tNBT.getString("title");
         }
 
         public static void setBookAuthor(ItemStack aStack, String aAuthor) {
