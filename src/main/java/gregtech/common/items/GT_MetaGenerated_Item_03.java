@@ -285,9 +285,15 @@ public class GT_MetaGenerated_Item_03
 	    
 	    ItemList.MysteriousCrystalModule.set(addItem(tLastID = 207, "Mysterious Energy Crystal Module", "Reusable"));
 	    setElectricStats(32000 + tLastID, 500000000000L, GT_Values.V[10], 10L, -3L, true);
-	    
-	    
-	    ItemList.ULV_Coil.set(addItem(tLastID = 210, "Ultra Low Voltage Coil", "Primitive Coil", o));
+
+        ItemList.EnergyCrystal.set(addItem(tLastID = 208, "Energy Crystal", "Reusable"));
+        setElectricStats(32000 + tLastID, 5000000L, GT_Values.V[3], 3L, -3L, true);
+
+        ItemList.LapotronCrystal.set(addItem(tLastID = 209, "Lapotronic Crystal", "Reusable"));
+        setElectricStats(32000 + tLastID, 25000000L, GT_Values.V[4], 4L, -3L, true);
+
+
+        ItemList.ULV_Coil.set(addItem(tLastID = 210, "Ultra Low Voltage Coil", "Primitive Coil", o));
 	    ItemList.LV_Coil.set(addItem(tLastID = 211, "Low Voltage Coil", "Basic Coil", o));
         ItemList.MV_Coil.set(addItem(tLastID = 212, "Medium Voltage Coil", "Good Coil", o));
         ItemList.HV_Coil.set(addItem(tLastID = 213, "High Voltage Coil", "Advanced Coil", o));

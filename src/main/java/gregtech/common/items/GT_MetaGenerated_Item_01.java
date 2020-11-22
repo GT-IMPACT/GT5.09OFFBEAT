@@ -449,7 +449,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         GT_Values.RA.addCannerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Sodium, 32L), ItemList.Battery_Hull_HV.get(1L, new Object[0]), ItemList.Battery_RE_HV_Sodium.get(1L, new Object[0]), null, 1600, 2);
 
         ItemList.Energy_LapotronicOrb.set(addItem(tLastID = 597, "Lapotronic Energy Orb", "Reusable battery", new Object[]{ OrePrefixes.battery.get(Materials.Ultimate)}));
-        setElectricStats(32000 + tLastID, 100000000L, GT_Values.V[5], 5L, -3L, true);
+        setElectricStats(32000 + tLastID, 250000000L, GT_Values.V[5], 5L, -3L, true);
 
         ItemList.ZPM.set(addItem(tLastID = 598, "Zero Point Module", "Single use battery"));
         setElectricStats(32000 + tLastID, 2000000000000L, GT_Values.V[7], 7L, -2L, true);
