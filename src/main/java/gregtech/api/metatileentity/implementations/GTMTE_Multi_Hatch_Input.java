@@ -19,30 +19,34 @@ import java.util.ArrayList;
 public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     public final FluidStack[] mFluids;
-    public final int mCapacity, mPipeAmount;
+    public final int mCapacity, mPerFluidAmount;
     public static boolean mIgnoreMap = false;
     public GT_Recipe.GT_Recipe_Map mRecipeMap = null;
 
     public GTMTE_Multi_Hatch_Input(int aID, String aName, String aNameRegional, int aTier, int aTypeFluids, int aCapacity) {
-        super(aID, aName, aNameRegional, aTier, 0, new String[]{"L"});
+        super(aID, aName, aNameRegional, aTier, 0, new String[]{
+                "Fluid Input for Multiblocks",
+                "Types of fluids: " + aTypeFluids,
+                "Capacity per fluid: " + aCapacity + "L"
+        });
 
-        mPipeAmount = aTypeFluids;
+        mPerFluidAmount = aTypeFluids;
         mCapacity = aCapacity;
-        mFluids = new FluidStack[mPipeAmount];
+        mFluids = new FluidStack[mPerFluidAmount];
     }
 
     public GTMTE_Multi_Hatch_Input(String aName, int aTier, String aDescription, ITexture[][][] aTextures, int aTypeFluids, int aCapacity) {
         super(aName, aTier,0, aDescription, aTextures);
-        mPipeAmount = aTypeFluids;
+        mPerFluidAmount = aTypeFluids;
         mCapacity = aCapacity;
-        mFluids = new FluidStack[mPipeAmount];
+        mFluids = new FluidStack[mPerFluidAmount];
     }
 
     public GTMTE_Multi_Hatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, int aTypeFluids, int aCapacity) {
         super(aName, aTier, 0, aDescription, aTextures);
-        mPipeAmount = aTypeFluids;
+        mPerFluidAmount = aTypeFluids;
         mCapacity = aCapacity;
-        mFluids = new FluidStack[mPipeAmount];
+        mFluids = new FluidStack[mPerFluidAmount];
     }
 
     @Override
@@ -57,7 +61,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GTMTE_Multi_Hatch_Input(mName, mTier, mDescriptionArray, mTextures, mPipeAmount, mCapacity);
+        return new GTMTE_Multi_Hatch_Input(mName, mTier, mDescriptionArray, mTextures, mPerFluidAmount, mCapacity);
     }
 
     @Override
@@ -137,14 +141,14 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
-        for (int i = 0; i < mPipeAmount; i++)
+        for (int i = 0; i < mPerFluidAmount; i++)
             if (mFluids[i] != null)
                 aNBT.setTag("mFluid" + (i == 0 ? "" : i), mFluids[i].writeToNBT(new NBTTagCompound()));
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
-        for (int i = 0; i < mPipeAmount; i++)
+        for (int i = 0; i < mPerFluidAmount; i++)
             mFluids[i] = FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag("mFluid" + (i == 0 ? "" : i)));
     }
 
@@ -155,7 +159,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public int getCapacity() {
-        return mCapacity * mPipeAmount;
+        return mCapacity * mPerFluidAmount;
     }
 
     @Override
@@ -173,7 +177,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
         ArrayList<FluidTankInfo> tList = new ArrayList<>();
         for (FluidStack tFluid : mFluids)
             tList.add(new FluidTankInfo(tFluid, mCapacity));
-        return tList.toArray(new FluidTankInfo[mPipeAmount]);
+        return tList.toArray(new FluidTankInfo[mPerFluidAmount]);
     }
 
     @Override
@@ -210,7 +214,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
         if (aFluid == null || aFluid.getFluid().getID() <= 0) return 0;
 
         int index = -1;
-        for (int i = 0; i < mPipeAmount; i++) {
+        for (int i = 0; i < mPerFluidAmount; i++) {
             if (mFluids[i] != null && mFluids[i].isFluidEqual(aFluid)) {
                 index = i;
                 break;
@@ -223,11 +227,11 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
     }
 
     public final int fill_default_intoIndex(ForgeDirection aSide, FluidStack aFluid, boolean doFill, int index) {
-        if (index < 0 || index >= mPipeAmount) return 0;
+        if (index < 0 || index >= mPerFluidAmount) return 0;
         if (aFluid == null || aFluid.getFluid().getID() <= 0) return 0;
 
         if (mFluids[index] == null || mFluids[index].getFluid().getID() <= 0) {
-            if (aFluid.amount * mPipeAmount <= getCapacity()) {
+            if (aFluid.amount * mPerFluidAmount <= getCapacity()) {
                 if (doFill) {
                     mFluids[index] = aFluid.copy();
                 }
@@ -235,14 +239,14 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
             }
             if (doFill) {
                 mFluids[index] = aFluid.copy();
-                mFluids[index].amount = getCapacity() / mPipeAmount;
+                mFluids[index].amount = getCapacity() / mPerFluidAmount;
             }
-            return getCapacity() / mPipeAmount;
+            return getCapacity() / mPerFluidAmount;
         }
 
         if (!mFluids[index].isFluidEqual(aFluid)) return 0;
 
-        int space = getCapacity() / mPipeAmount - mFluids[index].amount;
+        int space = getCapacity() / mPerFluidAmount - mFluids[index].amount;
         if (aFluid.amount <= space) {
             if (doFill) {
                 mFluids[index].amount += aFluid.amount;
@@ -250,7 +254,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
             return aFluid.amount;
         }
         if (doFill) {
-            mFluids[index].amount = getCapacity() / mPipeAmount;
+            mFluids[index].amount = getCapacity() / mPerFluidAmount;
         }
         return space;
     }
@@ -258,7 +262,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
     @Override
     public final FluidStack drain(int maxDrain, boolean doDrain) {
         FluidStack drained = null;
-        for (int i = 0; i < mPipeAmount; i++) {
+        for (int i = 0; i < mPerFluidAmount; i++) {
             if ((drained = drainFromIndex(maxDrain, doDrain, i)) != null)
                 return drained;
         }
@@ -266,7 +270,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
     }
 
     public final FluidStack drainFromIndex(int maxDrain, boolean doDrain, int index) {
-        if (index < 0 || index >= mPipeAmount) return null;
+        if (index < 0 || index >= mPerFluidAmount) return null;
         if (mFluids[index] == null) return null;
         if (mFluids[index].amount <= 0) {
             mFluids[index] = null;
