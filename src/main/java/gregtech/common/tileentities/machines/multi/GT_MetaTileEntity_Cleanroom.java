@@ -161,7 +161,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 				}
 			}
 		}
-		if (this.mMaintenanceHatches.size() != 1 || this.mEnergyHatches.size() != 1 || mDoorCount != 2 || mHullCount > 20) {
+		if (this.mMaintenanceHatches.size() != 1 || this.mEnergyHatches.size() != 1 || mDoorCount > 4 || mHullCount > 20) {
 			return false;
 		}
 		for (int dX = -x + 1; dX <= x - 1; dX++) {
