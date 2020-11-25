@@ -18,35 +18,35 @@ import java.util.ArrayList;
 
 public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
-    public final FluidStack[] mFluids;
-    public final int mCapacity, mPerFluidAmount;
+    public FluidStack[] mFluids;
+    public int mCapacity, mPerFluidAmount;
     public static boolean mIgnoreMap = false;
     public GT_Recipe.GT_Recipe_Map mRecipeMap = null;
 
-    public GTMTE_Multi_Hatch_Input(int aID, String aName, String aNameRegional, int aTier, int aTypeFluids, int aCapacity) {
-        super(aID, aName, aNameRegional, aTier, 0, new String[]{
-                "Fluid Input for Multiblocks",
-                "Types of fluids: " + aTypeFluids,
-                "Capacity per fluid: " + aCapacity + "L"
-        });
+    public GTMTE_Multi_Hatch_Input(int aID, String aName, String aNameRegional, int aTier) {
+        super(aID, aName, aNameRegional, aTier, 2, "");
+    }
 
-        mPerFluidAmount = aTypeFluids;
-        mCapacity = aCapacity;
+    public GTMTE_Multi_Hatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
+        super(aName, aTier, 2, aDescription, aTextures);
+        mPerFluidAmount = aTier == 4? 4 : 9;
+        mCapacity = 16000;
         mFluids = new FluidStack[mPerFluidAmount];
     }
 
-    public GTMTE_Multi_Hatch_Input(String aName, int aTier, String aDescription, ITexture[][][] aTextures, int aTypeFluids, int aCapacity) {
-        super(aName, aTier,0, aDescription, aTextures);
-        mPerFluidAmount = aTypeFluids;
-        mCapacity = aCapacity;
-        mFluids = new FluidStack[mPerFluidAmount];
+    @Override
+    public void saveNBTData(NBTTagCompound aNBT) {
+        super.saveNBTData(aNBT);
+        for (int i = 0; i < mPerFluidAmount; i++)
+            if (mFluids[i] != null)
+                aNBT.setTag("mFluid" + (i == 0 ? "" : i), mFluids[i].writeToNBT(new NBTTagCompound()));
     }
 
-    public GTMTE_Multi_Hatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, int aTypeFluids, int aCapacity) {
-        super(aName, aTier, 0, aDescription, aTextures);
-        mPerFluidAmount = aTypeFluids;
-        mCapacity = aCapacity;
-        mFluids = new FluidStack[mPerFluidAmount];
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        super.loadNBTData(aNBT);
+        for (int i = 0; i < mPerFluidAmount; i++)
+            mFluids[i] = FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag("mFluid" + (i == 0 ? "" : i)));
     }
 
     @Override
@@ -61,7 +61,26 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GTMTE_Multi_Hatch_Input(mName, mTier, mDescriptionArray, mTextures, mPerFluidAmount, mCapacity);
+        return new GTMTE_Multi_Hatch_Input(mName, mTier, mDescriptionArray, mTextures);
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 1;
+    }
+
+    @Override
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+
+    }
+
+    @Override
+    public String[] getDescription() {
+        return new String[]{
+                "Fluid Input for Multiblocks",
+                "Types of fluids: " + (mTier == 4? 4 : 9),
+                "Capacity per fluid: " + 16000 + "L"
+        };
     }
 
     @Override
@@ -137,24 +156,6 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
         return aSide == aBaseMetaTileEntity.getFrontFacing();
-    }
-
-    @Override
-    public void saveNBTData(NBTTagCompound aNBT) {
-        for (int i = 0; i < mPerFluidAmount; i++)
-            if (mFluids[i] != null)
-                aNBT.setTag("mFluid" + (i == 0 ? "" : i), mFluids[i].writeToNBT(new NBTTagCompound()));
-    }
-
-    @Override
-    public void loadNBTData(NBTTagCompound aNBT) {
-        for (int i = 0; i < mPerFluidAmount; i++)
-            mFluids[i] = FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag("mFluid" + (i == 0 ? "" : i)));
-    }
-
-    @Override
-    public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-        return true;
     }
 
     @Override
