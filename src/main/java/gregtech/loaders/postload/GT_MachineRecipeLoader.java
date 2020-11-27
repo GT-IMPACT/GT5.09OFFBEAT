@@ -639,7 +639,9 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addChemicalRecipe(Materials.Naquadah.getDustTiny(4), Materials.Americium.getDustTiny(4), Materials.Radon.getGas(16000L), Materials.GrowthMediumRaw.getFluid(16000L), GT_Values.NI, 300, 30720);
         GT_Values.RA.addChemicalRecipe(Materials.Naquadria.getDustTiny(1), Materials.Neutronium.getDustTiny(1), Materials.Radon.getGas(32000L), Materials.GrowthMediumRaw.getFluid(32000L), GT_Values.NI, 600, 122880);
 
-        GT_Values.RA.addChemicalRecipe(GT_Values.NI, GT_Values.NI, Materials.GrowthMediumSterilized.getFluid(250L), GT_Values.NF, ItemList.Circuit_Chip_Stemcell.get(4L), 300, 30720);
+
+        GT_Values.RA.addChemicalRecipe(GT_ModHandler.getModItem("GalaxySpace","item.UnknowCrystal",16L), Materials.Osmiridium.getDust(2),  Materials.GrowthMediumSterilized.getFluid(1000L), Materials.BacterialSludge.getFluid(1000L), ItemList.Circuit_Chip_Stemcell.get(64L), GT_Values.NI,600, 30720);
+        GT_Values.RA.addChemicalRecipe(ItemList.Circuit_Chip_Stemcell.get(16L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.CosmicNeutronium, 2), Materials.BioMediumSterilized.getFluid(1000L), Materials.Mutagen.getFluid(1000L), ItemList.Circuit_Chip_Biocell.get(16L), GT_Values.NI,1200, 500000);
 
         GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(1), Materials.GrowthMediumRaw.getFluid(1000), Materials.GrowthMediumSterilized.getFluid(1000), 100, 7680);
         //GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(1), FluidRegistry.getFluidStack("potion.dragonblood", 1000), Materials.GrowthMediumSterilized.getFluid(1000), 60, 24);
@@ -2262,7 +2264,7 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         GT_Values.RA.addAssemblylineRecipe(ItemList.Circuit_Chip_NeuroCPU.get(1L), 144000, new ItemStack[]{
                 ItemList.Circuit_Board_Bio_Ultra.get(1L),
-                ItemList.Circuit_Chip_Biocell.get(8L),
+                ItemList.Circuit_Chip_Biocell.get(16L),
                 ItemList.Circuit_Parts_Reinforced_Glass_Tube.get(16L),
                 GT_OreDictUnificator.get(OrePrefixes.pipeTiny, Materials.Polybenzimidazole, 16),
                 GT_OreDictUnificator.get(OrePrefixes.itemCasing, Materials.Tungsten, 16),
@@ -2272,7 +2274,7 @@ public class GT_MachineRecipeLoader implements Runnable {
                 GregTech_API.mIC2Classic ? Materials.Water.getFluid(500L) : Materials.BioMediumSterilized.getFluid(500L),
                 Materials.UUMatter.getFluid(500L),
                 GregTech_API.mIC2Classic ? Materials.Lava.getFluid(2000L) : new FluidStack(FluidRegistry.getFluid("ic2coolant"), 2000)
-        }, ItemList.Circuit_Chip_BioCPU.get(1L), 2400, 160000);
+        }, ItemList.Circuit_Chip_BioCPU.get(1L), 1200, 160000);
 
         GT_Values.RA.addAssemblylineRecipe(ItemList.Energy_LapotronicOrb.get(1, o), 288000, new Object[]{
                 ItemList.Circuit_Board_Multifiberglass_Elite.get(1, o),
@@ -3626,7 +3628,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         //===
 
         GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(1), Materials.BioMediumRaw.getFluid(200), Materials.BioMediumSterilized.getFluid(200), 20, 30720);
-        GT_Values.RA.addChemicalRecipe(ItemList.Circuit_Chip_Stemcell.get(4L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.MysteriousCrystal, 1), Materials.BioMediumRaw.getFluid(1000L), Materials.Mutagen.getFluid(250L), ItemList.Circuit_Chip_Biocell.get(1L), 1200, 30720);
+        //GT_Values.RA.addChemicalRecipe(ItemList.Circuit_Chip_Stemcell.get(4L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.MysteriousCrystal, 1), Materials.BioMediumRaw.getFluid(1000L), Materials.Mutagen.getFluid(250L), ItemList.Circuit_Chip_Biocell.get(1L), 1200, 30720);
         GT_Values.RA.addMixerRecipe(Materials.AlienOrganic.getDust(1), Materials.MysteriousCrystal.getDust(1), Materials.Oriharukon.getDust(1), GT_Utility.getIntegratedCircuit(1), Materials.Mutagen.getFluid(500), Materials.BioMediumRaw.getFluid(125), Materials.Diamond.getDust(2), 200, 122880);
 
         //===
