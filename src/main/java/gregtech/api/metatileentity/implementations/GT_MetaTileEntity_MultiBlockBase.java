@@ -62,9 +62,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public Set<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesTT = new HashSet<GT_MetaTileEntity_Hatch_DynamoMulti>();
     public Set<GT_MetaTileEntity_Hatch_EnergyTunnel> mEnergyTunnelsTT = new HashSet<GT_MetaTileEntity_Hatch_EnergyTunnel>();
     public Set<GT_MetaTileEntity_Hatch_DynamoTunnel> mDynamoTunnelsTT = new HashSet<GT_MetaTileEntity_Hatch_DynamoTunnel>();
-
-    public ArrayList<GTMTE_Multi_Hatch_Input> mQuadrInputHatches = new ArrayList<>();
-
+    public ArrayList<GTMTE_Multi_Hatch_Input> mQuadrInputHatches = new ArrayList<GTMTE_Multi_Hatch_Input>();
 
     public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 2);
@@ -986,6 +984,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
         }
+        if (aMetaTileEntity instanceof GTMTE_Multi_Hatch_Input)
+            return mQuadrInputHatches.add((GTMTE_Multi_Hatch_Input) aMetaTileEntity);
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Input)
             return mInputHatches.add((GT_MetaTileEntity_Hatch_Input) aMetaTileEntity);
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_InputBus)
@@ -1006,8 +1006,6 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             return mMaintenanceHatches.add((GT_MetaTileEntity_Hatch_Maintenance) aMetaTileEntity);
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Muffler)
             return mMufflerHatches.add((GT_MetaTileEntity_Hatch_Muffler) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GTMTE_Multi_Hatch_Input)
-            return mQuadrInputHatches.add((GTMTE_Multi_Hatch_Input) aMetaTileEntity);
         return false;
     }
 
@@ -1069,6 +1067,14 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         if (aTileEntity == null) return false;
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
         if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch) {
+            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
+        }
+        if (aMetaTileEntity instanceof GTMTE_Multi_Hatch_Input) {
+            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
+            ((GTMTE_Multi_Hatch_Input) aMetaTileEntity).mRecipeMap = getRecipeMap();
+            return mQuadrInputHatches.add((GTMTE_Multi_Hatch_Input) aMetaTileEntity);
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Input) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             ((GT_MetaTileEntity_Hatch_Input) aMetaTileEntity).mRecipeMap = getRecipeMap();
@@ -1078,11 +1084,6 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             ((GT_MetaTileEntity_Hatch_InputBus) aMetaTileEntity).mRecipeMap = getRecipeMap();
             return mInputBusses.add((GT_MetaTileEntity_Hatch_InputBus) aMetaTileEntity);
-        }
-        if (aMetaTileEntity instanceof GTMTE_Multi_Hatch_Input) {
-            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
-            ((GTMTE_Multi_Hatch_Input) aMetaTileEntity).mRecipeMap = getRecipeMap();
-            return mQuadrInputHatches.add((GTMTE_Multi_Hatch_Input) aMetaTileEntity);
         }
         return false;
     }
