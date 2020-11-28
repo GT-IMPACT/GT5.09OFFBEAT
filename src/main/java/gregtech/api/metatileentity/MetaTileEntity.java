@@ -192,6 +192,8 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
         }
         return false;
     }
+
+    public void receiveClientEvent(int aB1, int aB2, int aB3, int aB4) {/*Do nothing*/}
         
     @Override
     public void onExplosion() {/*Do nothing*/}
