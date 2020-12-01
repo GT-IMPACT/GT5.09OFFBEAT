@@ -1281,7 +1281,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         //ItemList.Machine_ZPM_WaterGenerator.set(new GT_MetaTileEntity_WaterGenerator(688, "basicmachine.e_watergenerator.tier.07", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + " Advanced Electric Water Condenser VI", 7).getStackForm(1L));
         //ItemList.Machine_UV_WaterGenerator.set(new GT_MetaTileEntity_WaterGenerator(689, "basicmachine.e_watergenerator.tier.08", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + " Advanced Electric Water Condenser VII", 8).getStackForm(1L));
 
-        ItemList.Teleporter.set(new GT_MetaTileEntity_Teleporter(1145, "basicmachine.teleporter", "Teleporter", 6).getStackForm(1L));
+        ItemList.Teleporter.set(new GT_MetaTileEntity_Teleporter(1145, "basicmachine.teleporter", "Teleporter", 10).getStackForm(1L));
 
         ItemList.MobRep_LV.set(new GT_MetaTileEntity_MonsterRepellent(1146, "basicmachine.mobrep.tier.01", "LV Monster Repellator", 1).getStackForm(1L));
         ItemList.MobRep_MV.set(new GT_MetaTileEntity_MonsterRepellent(1147, "basicmachine.mobrep.tier.02", "MV Monster Repellator", 2).getStackForm(1L));
