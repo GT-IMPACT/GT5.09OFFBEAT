@@ -657,24 +657,7 @@ public class GT_CraftingRecipeLoader implements Runnable {
 			GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemNightvisionGoggles", 1, 27), new Object[] {"AXA", "RBR", "SdS", 'A', GT_ModHandler.getModItem("IC2", "reactorHeatSwitchDiamond", 1, 1),  'X', OrePrefixes.screw.get(Materials.StainlessSteel),  'B', OrePrefixes.bolt.get(Materials.StainlessSteel), 'R', OrePrefixes.ring.get(Materials.StainlessSteel), 'S', OrePrefixes.lens.get(Materials.ReinforcedGlass)});
 		}
 		
-		if (Loader.isModLoaded("EnderIO")){
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockStirlingGenerator", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockCombustionGenerator", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockZombieGenerator", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockSolarPanel", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockSolarPanel", 1, 1));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockSagMill", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockAlloySmelter", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockVat", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockReservoir", 1, 0));
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "blockPainter", 1, 0));
-			GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("EnderIO", "blockPainter", 1, 0), new Object[]{"PRP", "CMC", "LRL", 'R', OrePrefixes.rotor.get(Materials.Steel), 'P',  OrePrefixes.plate.get(Materials.Steel), 'C', OrePrefixes.circuit.get(Materials.Basic), 'L', ItemList.Electric_Motor_LV.get(1L, new Object[0]),  'M', GT_ModHandler.getModItem("EnderIO", "itemMachinePart", 1, 0)});
-			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("EnderIO", "itemMachinePart", 1, 0));
-			GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("EnderIO", "itemMachinePart", 1, 0), new Object[]{"PBP", "BCB", "PBP", 'P',  OrePrefixes.plate.get(Materials.Steel), 'C', GT_ModHandler.getModItem("EnderIO", "itemBasicCapacitor", 1, 0), 'B', new ItemStack(Blocks.iron_bars, 1, 0)});
-			
-		}
-
-        long bits = GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE;
+		long bits = GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE;
         GT_ModHandler.addCraftingRecipe(ItemList.ModularBasicHelmet.getWildcard(1), bits, new Object[]{"AAA", "B B", 'A', new ItemStack(Items.leather, 1, 32767), 'B', OrePrefixes.ring.get(Materials.Iron)});
         GT_ModHandler.addCraftingRecipe(ItemList.ModularBasicChestplate.getWildcard(1), bits, new Object[]{"A A", "BAB", "AAA", 'A', new ItemStack(Items.leather, 1, 32767), 'B', OrePrefixes.ring.get(Materials.Iron)});
         GT_ModHandler.addCraftingRecipe(ItemList.ModularBasicLeggings.getWildcard(1), bits, new Object[]{"BAB", "A A", "A A", 'A', new ItemStack(Items.leather, 1, 32767), 'B', OrePrefixes.ring.get(Materials.Iron)});
