@@ -642,7 +642,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addChemicalRecipe(Materials.Naquadria.getDustTiny(1), Materials.Neutronium.getDustTiny(1), Materials.Radon.getGas(32000L), Materials.GrowthMediumRaw.getFluid(32000L), GT_Values.NI, 600, 122880);
 
 
-        GT_Values.RA.addChemicalRecipe(GT_ModHandler.getModItem("GalaxySpace","item.UnknowCrystal",16L), Materials.Osmiridium.getDust(2),  Materials.GrowthMediumSterilized.getFluid(1000L), Materials.BacterialSludge.getFluid(1000L), ItemList.Circuit_Chip_Stemcell.get(64L), GT_Values.NI,600, 30720);
+        //GT_Values.RA.addChemicalRecipe(GT_ModHandler.getModItem("GalaxySpace","item.UnknowCrystal",16L), Materials.Osmiridium.getDust(2),  Materials.GrowthMediumSterilized.getFluid(1000L), Materials.BacterialSludge.getFluid(1000L), ItemList.Circuit_Chip_Stemcell.get(64L), GT_Values.NI,600, 30720);
         GT_Values.RA.addChemicalRecipe(ItemList.Circuit_Chip_Stemcell.get(16L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.CosmicNeutronium, 2), Materials.BioMediumSterilized.getFluid(1000L), Materials.Mutagen.getFluid(1000L), ItemList.Circuit_Chip_Biocell.get(16L), GT_Values.NI,1200, 500000);
 
         GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(1), Materials.GrowthMediumRaw.getFluid(1000), Materials.GrowthMediumSterilized.getFluid(1000), 100, 7680);
