@@ -22,14 +22,13 @@ public class GT_Block_Casings8
         }
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Chemically Inert Machine Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".1.name", "PTFE Pipe Casing");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".2.name", "Pyrolyse Oven Casing");
+        //todo empty block - GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".2.name", "");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".3.name", "HSLA Machine Casing");
         //GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".4.name", "Plastic Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".5.name", "Coke Oven Brick");
 
         ItemList.Casing_Chemically_Inert.set(new ItemStack(this, 1, 0));
         ItemList.Casing_Pipe_Polytetrafluoroethylene.set(new ItemStack(this, 1, 1));
-        ItemList.Casing_Pyrolyse.set(new ItemStack(this, 1, 2));
         ItemList.Casing_HSLA.set(new ItemStack(this, 1, 3));
         //ItemList.PlasticCasing.set(new ItemStack(this, 1, 4));
         ItemList.Casing_CokeOvenBrick.set(new ItemStack(this, 1, 5));
@@ -44,8 +43,6 @@ public class GT_Block_Casings8
             return Textures.BlockIcons.MACHINE_CASING_CHEMICALLY_INERT.getIcon();
         case 1:
             return Textures.BlockIcons.MACHINE_CASING_PIPE_POLYTETRAFLUOROETHYLENE.getIcon();
-        case 2:
-            return Textures.BlockIcons.MACHINE_8V_SIDE.getIcon();
         case 3:
             return Textures.BlockIcons.MACHINE_CASING_HSLA.getIcon();
         case 4:
