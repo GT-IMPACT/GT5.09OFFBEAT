@@ -1,7 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import java.util.ArrayList;
-
 import gregtech.GT_Mod;
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.GT_Values;
@@ -11,11 +9,7 @@ import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
@@ -29,6 +23,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
 
 public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity_MultiBlockBase {
 
@@ -137,7 +133,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     private boolean checkTier(byte tier, ArrayList<GT_MetaTileEntity_Hatch> list) {
         if (list != null) {
-            int list_sS=list.size();
+            int list_sS = list.size();
             for (int i = 0; i < list_sS; i++) {
                 if (list.get(i).mTier < tier) {
                     return false;
@@ -249,25 +245,27 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             return mStartEnergy < 160000000 ? 2 : 1;
         }
         if (this.tierOverclock() == 4) {
-			return (mStartEnergy < 160000000 ? 4 : (mStartEnergy < 320000000 ? 2 : 1));
-		}
-        if (this.tierOverclock() == 8) {
-			return (mStartEnergy < 160000000) ? 8 : ((mStartEnergy < 320000000) ? 4 : (mStartEnergy < 640000000) ? 2 : 1);
+            return (mStartEnergy < 160000000 ? 4 : (mStartEnergy < 320000000 ? 2 : 1));
         }
-		return (mStartEnergy < 160000000) ? 16 : ((mStartEnergy < 320000000) ? 8 : (mStartEnergy < 640000000) ? 4 : (mStartEnergy < 1280000000) ? 2 : 1);
+        if (this.tierOverclock() == 8) {
+            return (mStartEnergy < 160000000) ? 8 : ((mStartEnergy < 320000000) ? 4 : (mStartEnergy < 640000000) ? 2 : 1);
+        }
+        return (mStartEnergy < 160000000) ? 16 : ((mStartEnergy < 320000000) ? 8 : (mStartEnergy < 640000000) ? 4 : (mStartEnergy < 1280000000) ? 2 : 1);
     }
 
     @Override
     public boolean checkRecipe(ItemStack aStack) {
         ArrayList<FluidStack> tFluidList = getStoredFluids();
-        int tFluidList_sS=tFluidList.size();
+        int tFluidList_sS = tFluidList.size();
         for (int i = 0; i < tFluidList_sS - 1; i++) {
             for (int j = i + 1; j < tFluidList_sS; j++) {
-                if (GT_Utility.areFluidsEqual((FluidStack) tFluidList.get(i), (FluidStack) tFluidList.get(j))) {
-                    if (((FluidStack) tFluidList.get(i)).amount >= ((FluidStack) tFluidList.get(j)).amount) {
-                        tFluidList.remove(j--); tFluidList_sS=tFluidList.size();
+                if (GT_Utility.areFluidsEqual(tFluidList.get(i), tFluidList.get(j))) {
+                    if ((tFluidList.get(i)).amount >= (tFluidList.get(j)).amount) {
+                        tFluidList.remove(j--);
+                        tFluidList_sS = tFluidList.size();
                     } else {
-                        tFluidList.remove(i--); tFluidList_sS=tFluidList.size();
+                        tFluidList.remove(i--);
+                        tFluidList_sS = tFluidList.size();
                         break;
                     }
                 }
@@ -275,13 +273,14 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
         }
         if (tFluidList.size() > 1) {
             FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
-            GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFusionRecipes.findRecipe(this.getBaseMetaTileEntity(), this.mLastRecipe, false, GT_Values.V[8], tFluids, new ItemStack[]{});
+            GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFusionRecipes.findRecipe(this.getBaseMetaTileEntity(), this.mLastRecipe, false, GT_Values.V[8], tFluids);
+
             if ((tRecipe == null && !mRunningOnLoad) || (maxEUStore() < tRecipe.mSpecialValue)) {
                 turnCasingActive(false);
                 this.mLastRecipe = null;
                 return false;
             }
-            if (mRunningOnLoad || tRecipe.isRecipeInputEqual(true, tFluids, new ItemStack[]{})) {
+            if (mRunningOnLoad || tRecipe.isRecipeInputEqual(true, tFluids)) {
                 this.mLastRecipe = tRecipe;
                 this.mEUt = (this.mLastRecipe.mEUt * overclock(this.mLastRecipe.mSpecialValue));
                 this.mMaxProgresstime = this.mLastRecipe.mDuration / overclock(this.mLastRecipe.mSpecialValue);
@@ -289,6 +288,12 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                 this.mOutputFluids = this.mLastRecipe.mFluidOutputs;
                 turnCasingActive(true);
                 mRunningOnLoad = false;
+                mWrench = true;
+                mScrewdriver = true;
+                mSoftHammer = true;
+                mHardHammer = true;
+                mSolderingTool = true;
+                mCrowbar = true;
                 return true;
             }
         }
@@ -365,7 +370,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                                 mEfficiencyIncrease = 0;
                                 if (mOutputFluids != null && mOutputFluids.length > 0) {
                                     try {
-                                        GT_Mod.instance.achievements.issueAchivementHatchFluid(aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), mOutputFluids[0]);
+                                        GT_Mod.achievements.issueAchivementHatchFluid(aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), mOutputFluids[0]);
                                     } catch (Exception e) {
                                     }
                                 }
@@ -441,6 +446,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
     public int getDamageToComponent(ItemStack aStack) {
         return 0;
     }
+
     @Override
     public boolean explodesOnComponentBreak(ItemStack aStack) {
         return false;
@@ -448,21 +454,21 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     @Override
     public String[] getInfoData() {
-        String tier = tier() == 6 ? EnumChatFormatting.RED+"I"+EnumChatFormatting.RESET : tier() == 7 ? EnumChatFormatting.YELLOW+"II"+EnumChatFormatting.RESET : tier() == 8 ? EnumChatFormatting.GRAY+"III"+EnumChatFormatting.RESET : "IV";
+        String tier = tier() == 6 ? EnumChatFormatting.RED + "I" + EnumChatFormatting.RESET : tier() == 7 ? EnumChatFormatting.YELLOW + "II" + EnumChatFormatting.RESET : tier() == 8 ? EnumChatFormatting.GRAY + "III" + EnumChatFormatting.RESET : "IV";
         float plasmaOut = 0;
         int powerRequired = 0;
         if (this.mLastRecipe != null) {
             powerRequired = this.mLastRecipe.mEUt;
             if (this.mLastRecipe.getFluidOutput(0) != null) {
-                plasmaOut = (float)this.mLastRecipe.getFluidOutput(0).amount / (float)this.mLastRecipe.mDuration;
+                plasmaOut = (float) this.mLastRecipe.getFluidOutput(0).amount / (float) this.mLastRecipe.mDuration;
             }
         }
 
         return new String[]{
-                EnumChatFormatting.BLUE+"Fusion Reactor MK "+EnumChatFormatting.RESET+tier,
-                StatCollector.translateToLocal("GT5U.fusion.req")+": " +EnumChatFormatting.RED+powerRequired+EnumChatFormatting.RESET+"EU/t",
-                StatCollector.translateToLocal("GT5U.multiblock.energy")+": " +EnumChatFormatting.GREEN+mEUStore+EnumChatFormatting.RESET+" EU / "+EnumChatFormatting.YELLOW+maxEUStore()+EnumChatFormatting.RESET+" EU",
-                StatCollector.translateToLocal("GT5U.fusion.plasma")+": " +EnumChatFormatting.YELLOW+plasmaOut+EnumChatFormatting.RESET+"L/t"};
+                EnumChatFormatting.BLUE + "Fusion Reactor MK " + EnumChatFormatting.RESET + tier,
+                StatCollector.translateToLocal("GT5U.fusion.req") + ": " + EnumChatFormatting.RED + powerRequired + EnumChatFormatting.RESET + "EU/t",
+                StatCollector.translateToLocal("GT5U.multiblock.energy") + ": " + EnumChatFormatting.GREEN + mEUStore + EnumChatFormatting.RESET + " EU / " + EnumChatFormatting.YELLOW + maxEUStore() + EnumChatFormatting.RESET + " EU",
+                StatCollector.translateToLocal("GT5U.fusion.plasma") + ": " + EnumChatFormatting.YELLOW + plasmaOut + EnumChatFormatting.RESET + "L/t"};
     }
 
     @Override
