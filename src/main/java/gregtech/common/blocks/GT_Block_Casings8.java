@@ -43,6 +43,8 @@ public class GT_Block_Casings8
             return Textures.BlockIcons.MACHINE_CASING_CHEMICALLY_INERT.getIcon();
         case 1:
             return Textures.BlockIcons.MACHINE_CASING_PIPE_POLYTETRAFLUOROETHYLENE.getIcon();
+        case 2:
+            return Textures.BlockIcons.MACHINE_8V_SIDE.getIcon();
         case 3:
             return Textures.BlockIcons.MACHINE_CASING_HSLA.getIcon();
         case 4:

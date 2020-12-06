@@ -621,7 +621,7 @@ public enum ItemList implements IItemContainer {
     MNqCell_1, MNqCell_2, MNqCell_4,
     FusionComputer_LuV, FusionComputer_ZPMV, FusionComputer_UV, FusionComputer_UHV, FusionComputer_UEV,
     Casing_Fusion_Coil, Casing_Fusion, Casing_Fusion2, Casing_Fusion3, Casing_Fusion4, Casing_Fusion_Coil2,
-    Casing_RobustNeutronium, Casing_Internix_Chamber_Highspeed, Casing_Dyson_Superconductor_Ring, Casing_Fusion_Coil3, Casing_Pyrolyse, Cleanroom_Glass, Solid_Frame_Box,
+    Casing_RobustNeutronium, Casing_Internix_Chamber_Highspeed, Casing_Dyson_Superconductor_Ring, Casing_Fusion_Coil3, Cleanroom_Glass, Solid_Frame_Box,
     Generator_Plasma_IV, Generator_Plasma_LuV, Generator_Plasma_ZPMV,
     Depleted_Thorium_1, Depleted_Thorium_2, Depleted_Thorium_4,
     Processing_Array_T1, Processing_Array_T2, Processing_Array_T3, Distillation_Tower, Energy_LapotronicOrb2,
