@@ -1165,7 +1165,6 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         MeteoricIron			.addOreByProducts(Iron					);
         Steel					.addOreByProducts(Iron					);
         HSLA					.addOreByProducts(Iron					);
-        Mithril					.addOreByProducts(Platinum				);
         Graphite				.addOreByProducts(Carbon				);
         Netherrack				.addOreByProducts(Sulfur				);
         Flint					.addOreByProducts(Obsidian				);
@@ -1272,7 +1271,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         SubTag.ELECTROMAGNETIC_SEPERATION_IRON.addTo(YellowLimonite, BrownLimonite, Pyrite, BandedIron, Nickel, Vermiculite, Glauconite, GlauconiteSand, Pentlandite, Tin, Antimony, Ilmenite, Manganese, Chrome, Chromite, Andradite);
         SubTag.BLASTFURNACE_CALCITE_DOUBLE.addTo(Pyrite, BrownLimonite, YellowLimonite, BasalticMineralSand, GraniticMineralSand, Magnetite);
         SubTag.BLASTFURNACE_CALCITE_TRIPLE.addTo(Iron, DeepIron, WroughtIron, MeteoricIron);
-        SubTag.WASHING_MERCURY.addTo(Gold, Silver, Osmium, Mithril, Platinum, Cooperite);
+        SubTag.WASHING_MERCURY.addTo(Gold, Silver, Osmium, Platinum, Cooperite);
         SubTag.WASHING_SODIUMPERSULFATE.addTo(Zinc, Nickel, Copper, Cobalt, Cobaltite, Tetrahedrite);
         SubTag.METAL.addTo(AnyIron, AnyCopper, AnyBronze, Metal, Aluminium, Americium, Antimony, Beryllium, Bismuth, Caesium, Cerium, Chrome, Cobalt, Copper, Europium, Gadolinium, Gallium, Gold,
                 Indium, Iridium, Iron, Lanthanum, Lead, Lutetium, Magnesium, Manganese, Mercury, Niobium, Molybdenum, Neodymium, Neutronium, Nickel, Osmium, Palladium, Platinum, Plutonium, Plutonium241,
@@ -1284,7 +1283,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
                 Tartarite, Tritanium, Osmiridium, Sunnarium, AnnealedCopper, BatteryAlloy, Brass, Bronze, ChromiumDioxide, Cupronickel, DeepIron,
                 Electrum, Invar, Kanthal, Magnalium, Nichrome, NiobiumTitanium, SolderingAlloy, StainlessSteel, Steel, Ultimet, VanadiumGallium, WroughtIron,
                 YttriumBariumCuprate, Alumite, Manyullyn, Steeleaf, RoseGold, BlackBronze, BismuthBronze, BlackSteel, RedSteel, BlueSteel, DamascusSteel,
-                TungstenSteel, Mithril, BlueAlloy, RedAlloy, CobaltBrass, IronMagnetic, SteelMagnetic, NeodymiumMagnetic, EuropiumoxideMagnetic, HSSG, HSSE, HSSS, TungstenCarbide, Endium,
+                TungstenSteel, BlueAlloy, RedAlloy, CobaltBrass, IronMagnetic, SteelMagnetic, NeodymiumMagnetic, EuropiumoxideMagnetic, HSSG, HSSE, HSSS, TungstenCarbide, Endium,
                 VanadiumSteel, Infinity, InfinityCatalyst, BlackPlutonium, Draconium, DraconiumAwakened, Pentacadmiummagnesiumhexaoxid,Titaniumonabariumdecacoppereikosaoxid,
                 Uraniumtriplatinid, Vanadiumtriindinid, Tetraindiumditindibariumtitaniumheptacoppertetrakaidekaoxid, Tetranaquadahdiindiumhexaplatiumosminid,
 				Trinium,HastelloyC276, GumMetal, Titaniolum, Zamak, Duraluminium, Inconel690, Nitinol, Inconel792, TiBetaC, MaragingSteel250, Talonite, Grisium, Nitinol60, Kovar, Mangalloy, MaragingSteel300, Stellite, Zeron100, HastelloyN, Lafium, CinobiteA243, Potin, EglinSteel, Birmabright, BT6, Pikyonium64B, Quantum);
@@ -1296,7 +1295,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
                 Glauconite, Calcite, Soapstone, Powellite, Gold, Quantium, Osmium, Netherrack, Infinity, Orichalcum, MeteoricIron, Pyrolusite, Chalcopyrite, InfinityCatalyst, Manganese, Quartzite, Desh, Scheelite, Olivine, Oriharukon, Naquadah, NaquadahEnriched,
                 Iron, Neodymium, Chromite, Nickel, Plutonium, Sapphire, Lazurite, BlueTopaz, RedGranite, Garnierite, Monazite, Amber, Magnesite, Apatite, Thorium, Diamond, Barite, Tanzanite, Redstone, Lepidolite, Malachite, Palladium, Lead,
                 Saltpeter, Lapotron, BrownLimonite, Tin, Platinum, Cassiterite, Adamantium, Sodalite, Uranium235, Stibnite, Bauxite, Wulfenite, CosmicNeutronium, Spessartine, Molybdenite, Sulfur, Naquadria, Phosphate, Lignite, CokeCoal, Titanium, Vanadium,
-                VanadiumMagnetite, Graphite, NetherQuartz, Lithium, GreenSapphire, CassiteriteSand, Silver, RockSalt, Basalt, Ilmenite, Tetrahedrite, Bauxite, YellowLimonite, GarnetYellow, Cobaltite, Lapis, Uranium, Uran, Uraninite, Antimony, Borax, Draconium, Arsenic, Sheldonite, Mica);
+                VanadiumMagnetite, Graphite, NetherQuartz, Lithium, GreenSapphire, CassiteriteSand, Silver, RockSalt, Basalt, Ilmenite, Tetrahedrite, Bauxite, YellowLimonite, GarnetYellow, Cobaltite, Lapis, Uranium, Uran, Uraninite, Antimony, Borax, Draconium, Arsenic, Sheldonite, Mica, Mithril);
 
         SubTag.FOOD.addTo(MeatRaw, MeatCooked, Ice, Water, Salt, Chili, Cocoa, Cheese, Coffee, Chocolate, Milk, Honey, FryingOilHot, FishOil, SeedOil, SeedOilLin, SeedOilHemp, Wheat, Sugar);
 
@@ -1428,6 +1427,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         EnderEye.add(SubTag.CRYSTAL, SubTag.NO_SMASHING, SubTag.NO_SMELTING, SubTag.MAGICAL, SubTag.PEARL);
         Forcicium.add(SubTag.CRYSTAL, SubTag.NO_SMASHING, SubTag.NO_SMELTING, SubTag.CRYSTALLISABLE, SubTag.MAGICAL);
         Forcillium.add(SubTag.CRYSTAL, SubTag.NO_SMASHING, SubTag.NO_SMELTING, SubTag.CRYSTALLISABLE, SubTag.MAGICAL);
+        Mithril.add(SubTag.CRYSTAL, SubTag.NO_SMASHING, SubTag.NO_SMELTING);
 
         Primitive.add(SubTag.NO_SMASHING, SubTag.NO_SMELTING);
         Basic.add(SubTag.NO_SMASHING, SubTag.NO_SMELTING);
