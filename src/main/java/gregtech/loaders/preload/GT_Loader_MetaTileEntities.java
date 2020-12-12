@@ -1210,14 +1210,14 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Steam_Turbine_MV.get(1L), bitsd, new Object[]{"PCP", "RMR", aTextMotorWire, 'M', ItemList.Hull_MV, 'E', ItemList.Electric_Motor_MV, 'R', OrePrefixes.rotor.get(Materials.Bronze), 'C', OrePrefixes.circuit.get(Materials.Good), 'W', OrePrefixes.cableGt01.get(Materials.Copper), 'P', OrePrefixes.pipeMedium.get(Materials.Steel)});
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Steam_Turbine_HV.get(1L), bitsd, new Object[]{"PCP", "RMR", aTextMotorWire, 'M', ItemList.Hull_HV, 'E', ItemList.Electric_Motor_HV, 'R', OrePrefixes.rotor.get(Materials.Steel), 'C', OrePrefixes.circuit.get(Materials.Advanced), 'W', OrePrefixes.cableGt01.get(Materials.Gold), 'P', OrePrefixes.pipeMedium.get(Materials.StainlessSteel)});
 
-        ItemList.Generator_Naquadah_Mark_I.set(new GT_MetaTileEntity_SolidNaquadahReactor(1190, "basicgenerator.naquadah.tier.04", "Naquadah Reactor Mark I", 4).getStackForm(1L));
-        ItemList.Generator_Naquadah_Mark_II.set(new GT_MetaTileEntity_SolidNaquadahReactor2(1191, "basicgenerator.naquadah.tier.05", "Naquadah Reactor Mark II", 5).getStackForm(1L));
-        ItemList.Generator_Naquadah_Mark_III.set(new GT_MetaTileEntity_FluidNaquadahReactor(1192, "basicgenerator.naquadah.tier.06", "Naquadah Reactor Mark III", 6).getStackForm(1L));
-        ItemList.Generator_Naquadah_Mark_IV.set(new GT_MetaTileEntity_SolidNaquadahReactor3(1188, "basicgenerator.naquadah.tier.07", "Naquadah Reactor Mark IV", 7).getStackForm(1L));
-        ItemList.Generator_Naquadah_Mark_V.set(new GT_MetaTileEntity_SolidNaquadahReactor4(1189, "basicgenerator.naquadah.tier.08", "Naquadah Reactor Mark V", 8).getStackForm(1L));
-        ItemList.Generator_Naquadah_Mark_VI.set(new GT_MetaTileEntity_SolidNaquadahReactor5(12110, "basicgenerator.naquadah.tier.09", "Naquadah Reactor Mark VI", 9).getStackForm(1L));
-        ItemList.Generator_Naquadah_Mark_VII.set(new GT_MetaTileEntity_SolidNaquadahReactor6(12111, "basicgenerator.naquadah.tier.10", "Naquadah Reactor Mark VII", 10).getStackForm(1L));
-        ItemList.Generator_Naquadah_Mark_VIII.set(new GT_MetaTileEntity_SolidNaquadahReactor7(12112, "basicgenerator.naquadah.tier.11", "Naquadah Reactor Mark VIII", 11).getStackForm(1L));
+//        ItemList.Generator_Naquadah_Mark_I.set(new GT_MetaTileEntity_SolidNaquadahReactor(1190, "basicgenerator.naquadah.tier.04", "Naquadah Reactor Mark I", 4).getStackForm(1L));
+//		ItemList.Generator_Naquadah_Mark_II.set(new GT_MetaTileEntity_SolidNaquadahReactor2(1191, "basicgenerator.naquadah.tier.05", "Naquadah Reactor Mark II", 5).getStackForm(1L));
+//        ItemList.Generator_Naquadah_Mark_III.set(new GT_MetaTileEntity_FluidNaquadahReactor(1192, "basicgenerator.naquadah.tier.06", "Naquadah Reactor Mark III", 6).getStackForm(1L));
+//        ItemList.Generator_Naquadah_Mark_IV.set(new GT_MetaTileEntity_SolidNaquadahReactor3(1188, "basicgenerator.naquadah.tier.07", "Naquadah Reactor Mark IV", 7).getStackForm(1L));
+//        ItemList.Generator_Naquadah_Mark_V.set(new GT_MetaTileEntity_SolidNaquadahReactor4(1189, "basicgenerator.naquadah.tier.08", "Naquadah Reactor Mark V", 8).getStackForm(1L));
+//        ItemList.Generator_Naquadah_Mark_VI.set(new GT_MetaTileEntity_SolidNaquadahReactor5(12110, "basicgenerator.naquadah.tier.09", "Naquadah Reactor Mark VI", 9).getStackForm(1L));
+//        ItemList.Generator_Naquadah_Mark_VII.set(new GT_MetaTileEntity_SolidNaquadahReactor6(12111, "basicgenerator.naquadah.tier.10", "Naquadah Reactor Mark VII", 10).getStackForm(1L));
+//        ItemList.Generator_Naquadah_Mark_VIII.set(new GT_MetaTileEntity_SolidNaquadahReactor7(12112, "basicgenerator.naquadah.tier.11", "Naquadah Reactor Mark VIII", 11).getStackForm(1L));
 
 //        ItemList.MagicEnergyAbsorber_LV.set(new GT_MetaTileEntity_MagicalEnergyAbsorber(1127, "basicgenerator.magicenergyabsorber.tier.01", "Novice Magic Energy Absorber", 1).getStackForm(1L));
 //        ItemList.MagicEnergyAbsorber_MV.set(new GT_MetaTileEntity_MagicalEnergyAbsorber(1128, "basicgenerator.magicenergyabsorber.tier.02", "Adept Magic Energy Absorber", 2).getStackForm(1L));
@@ -1243,9 +1243,9 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Plasma_LuV.get(1L), bitsd, new Object[]{"UCU", "FMF", aTextWireCoil, 'M', ItemList.Hull_LuV, 'F', ItemList.Field_Generator_IV, 'C', OrePrefixes.circuit.get(Materials.Master), 'W', OrePrefixes.wireGt04.get(Materials.SuperconductorLuV), 'U', OrePrefixes.stick.get(Materials.Europium)});
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Plasma_ZPMV.get(1L), bitsd, new Object[]{"UCU", "FMF", aTextWireCoil, 'M', ItemList.Hull_ZPM, 'F', ItemList.Field_Generator_LuV, 'C', OrePrefixes.circuit.get(Materials.Ultimate), 'W', OrePrefixes.wireGt04.get(Materials.SuperconductorZPM), 'U', OrePrefixes.stick.get(Materials.Americium)});
 
-        ItemList.Processing_Array_T1.set(new GT_MetaTileEntity_ProcessingArray(1199, "multimachine.processingarray.tier.04", "Processing Array Mk 1").getStackForm(1L));
-        ItemList.Processing_Array_T2.set(new GT_MetaTileEntity_ProcessingArray2(12073, "multimachine.processingarray.tier.06", "Processing Array Mk 2").getStackForm(1L));
-        ItemList.Processing_Array_T3.set(new GT_MetaTileEntity_ProcessingArray3(12074, "multimachine.processingarray.tier.08", "Processing Array Mk 3").getStackForm(1L));
+//        ItemList.Processing_Array_T1.set(new GT_MetaTileEntity_ProcessingArray(1199, "multimachine.processingarray.tier.04", "Processing Array Mk 1").getStackForm(1L));
+//        ItemList.Processing_Array_T2.set(new GT_MetaTileEntity_ProcessingArray2(12073, "multimachine.processingarray.tier.06", "Processing Array Mk 2").getStackForm(1L));
+//        ItemList.Processing_Array_T3.set(new GT_MetaTileEntity_ProcessingArray3(12074, "multimachine.processingarray.tier.08", "Processing Array Mk 3").getStackForm(1L));
 
         ItemList.Distillation_Tower.set(new GT_MetaTileEntity_DistillationTower(1126, "multimachine.distillationtower", "Distillation Tower").getStackForm(1L));
 
@@ -1858,11 +1858,11 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
         //PlasmaGenerator
         ItemList.Generator_Plasma_UV.set(new GT_MetaTileEntity_PlasmaGenerator(10752, "basicgenerator.plasmagenerator.tier.08", "UV Plasma Generator", 8).getStackForm(1L));
-        ItemList.Generator_Plasma_UHV.set(new GT_MetaTileEntity_PlasmaGenerator(10753, "basicgenerator.plasmagenerator.tier.09", "UHV Plasma Generator", 9).getStackForm(1L));
-        ItemList.Generator_Plasma_UEV.set(new GT_MetaTileEntity_PlasmaGenerator(10754, "basicgenerator.plasmagenerator.tier.10", "UEV Plasma Generator", 10).getStackForm(1L));
-        ItemList.Generator_Plasma_UIV.set(new GT_MetaTileEntity_PlasmaGenerator(10755, "basicgenerator.plasmagenerator.tier.11", "UIV Plasma Generator", 11).getStackForm(1L));
-        ItemList.Generator_Plasma_UMV.set(new GT_MetaTileEntity_PlasmaGenerator(10756, "basicgenerator.plasmagenerator.tier.12", "UMV Plasma Generator", 12).getStackForm(1L));
-        ItemList.Generator_Plasma_UXV.set(new GT_MetaTileEntity_PlasmaGenerator(10757, "basicgenerator.plasmagenerator.tier.13", "UXV Plasma Generator", 13).getStackForm(1L));
+//        ItemList.Generator_Plasma_UHV.set(new GT_MetaTileEntity_PlasmaGenerator(10753, "basicgenerator.plasmagenerator.tier.09", "UHV Plasma Generator", 9).getStackForm(1L));
+//        ItemList.Generator_Plasma_UEV.set(new GT_MetaTileEntity_PlasmaGenerator(10754, "basicgenerator.plasmagenerator.tier.10", "UEV Plasma Generator", 10).getStackForm(1L));
+//        ItemList.Generator_Plasma_UIV.set(new GT_MetaTileEntity_PlasmaGenerator(10755, "basicgenerator.plasmagenerator.tier.11", "UIV Plasma Generator", 11).getStackForm(1L));
+//        ItemList.Generator_Plasma_UMV.set(new GT_MetaTileEntity_PlasmaGenerator(10756, "basicgenerator.plasmagenerator.tier.12", "UMV Plasma Generator", 12).getStackForm(1L));
+//        ItemList.Generator_Plasma_UXV.set(new GT_MetaTileEntity_PlasmaGenerator(10757, "basicgenerator.plasmagenerator.tier.13", "UXV Plasma Generator", 13).getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Plasma_UV.get(1L),
                 bitsd,
@@ -1873,32 +1873,6 @@ public class GT_Loader_MetaTileEntities implements Runnable {
                         'W', OrePrefixes.wireGt04.get(Materials.ElectrumFlux),
                         'U', OrePrefixes.stick.get(Materials.Tritanium)});
 
-        GT_ModHandler.addCraftingRecipe(ItemList.Generator_Plasma_UHV.get(1L),
-                bitsd,
-                new Object[]{"UCU", "FMF", "WCW",
-                        'M', ItemList.Hull_MAX,
-                        'F', ItemList.Field_Generator_UV,
-                        'C', OrePrefixes.circuit.get(Materials.Infinite),
-                        'W', OrePrefixes.wireGt04.get(Materials.Superconductor),
-                        'U', OrePrefixes.stickLong.get(Materials.Tritanium)});
-
-        GT_ModHandler.addCraftingRecipe(ItemList.Generator_Plasma_UEV.get(1L),
-                bitsd,
-                new Object[]{"UCU", "FMF", "WCW",
-                        'M', ItemList.Hull_UEV,
-                        'F', ItemList.Field_Generator_UHV,
-                        'C', OrePrefixes.circuit.get(Materials.Bio),
-                        'W', OrePrefixes.wireGt04.get(Materials.SuperconductorUEV),
-                        'U', OrePrefixes.stickLong.get(Materials.Neutronium)});
-
-        GT_ModHandler.addCraftingRecipe(ItemList.Generator_Plasma_UIV.get(1L),
-                bitsd,
-                new Object[]{"UCU", "FMF", "WCW",
-                        'M', ItemList.Hull_UIV,
-                        'F', ItemList.Field_Generator_UEV,
-                        'C', OrePrefixes.circuit.get(Materials.Bio),
-                        'W', OrePrefixes.wireGt04.get(Materials.Neutronium),
-                        'U', OrePrefixes.block.get(Materials.Neutronium)});
         /*
         //Alloy Smelter
         ItemList.AlloySmelterUHV.set(new GT_MetaTileEntity_BasicMachine_GT_Recipe(
@@ -2106,10 +2080,10 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
 
         //MassFabricator
-        ItemList.MassFabricatorUHV.set(new GT_MetaTileEntity_Massfabricator(10953, "basicmachine.massfab.tier.09", "UHV Existence Initiator", 9).getStackForm(1L));
-        ItemList.MassFabricatorUEV.set(new GT_MetaTileEntity_Massfabricator(10954, "basicmachine.massfab.tier.10", "UEV Existence Initiator", 10).getStackForm(1L));
-        ItemList.MassFabricatorUIV.set(new GT_MetaTileEntity_Massfabricator(10955, "basicmachine.massfab.tier.11", "UIV Existence Initiator", 11).getStackForm(1L));
-        ItemList.MassFabricatorUMV.set(new GT_MetaTileEntity_Massfabricator(10956, "basicmachine.massfab.tier.12", "UMV Existence Initiator", 12).getStackForm(1L));
+        //ItemList.MassFabricatorUHV.set(new GT_MetaTileEntity_Massfabricator(10953, "basicmachine.massfab.tier.09", "UHV Existence Initiator", 9).getStackForm(1L));
+        //ItemList.MassFabricatorUEV.set(new GT_MetaTileEntity_Massfabricator(10954, "basicmachine.massfab.tier.10", "UEV Existence Initiator", 10).getStackForm(1L));
+        //ItemList.MassFabricatorUIV.set(new GT_MetaTileEntity_Massfabricator(10955, "basicmachine.massfab.tier.11", "UIV Existence Initiator", 11).getStackForm(1L));
+        //ItemList.MassFabricatorUMV.set(new GT_MetaTileEntity_Massfabricator(10956, "basicmachine.massfab.tier.12", "UMV Existence Initiator", 12).getStackForm(1L));
 
         //Microwave
         //ItemList.MicrowaveUHV.set(new GT_MetaTileEntity_BasicMachine_GT_Recipe(10963, "basicmachine.microwave.tier.09", "Epic UFO Engine", 9, EnumChatFormatting.DARK_RED + "REMOVED", GT_Recipe.GT_Recipe_Map.sMicrowaveRecipes, 1, 1, 0, 0, 1, "E_Furnace.png", GregTech_API.sSoundList.get(207), false, false, 0, "MICROWAVE", null).getStackForm(1L));
@@ -2140,10 +2114,10 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
 
         //Replicator
-        ItemList.ReplicatorUHV.set(new GT_MetaTileEntity_Replicator(11003, "basicmachine.replicator.tier.09", "UHV Elemental Composer", 9).getStackForm(1L));
-        ItemList.ReplicatorUEV.set(new GT_MetaTileEntity_Replicator(11004, "basicmachine.replicator.tier.10", "UEV Elemental Composer", 10).getStackForm(1L));
-        ItemList.ReplicatorUIV.set(new GT_MetaTileEntity_Replicator(11005, "basicmachine.replicator.tier.11", "UIV Elemental Composer", 11).getStackForm(1L));
-        ItemList.ReplicatorUMV.set(new GT_MetaTileEntity_Replicator(11006, "basicmachine.replicator.tier.12", "UMV Elemental Composer", 12).getStackForm(1L));
+        //ItemList.ReplicatorUHV.set(new GT_MetaTileEntity_Replicator(11003, "basicmachine.replicator.tier.09", "UHV Elemental Composer", 9).getStackForm(1L));
+        //ItemList.ReplicatorUEV.set(new GT_MetaTileEntity_Replicator(11004, "basicmachine.replicator.tier.10", "UEV Elemental Composer", 10).getStackForm(1L));
+        //ItemList.ReplicatorUIV.set(new GT_MetaTileEntity_Replicator(11005, "basicmachine.replicator.tier.11", "UIV Elemental Composer", 11).getStackForm(1L));
+        //ItemList.ReplicatorUMV.set(new GT_MetaTileEntity_Replicator(11006, "basicmachine.replicator.tier.12", "UMV Elemental Composer", 12).getStackForm(1L));
 
 
         //Scanner
@@ -2239,12 +2213,12 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
 
         //Disassembler
-        ItemList.DisassemblerUHV.set(new GT_MetaTileEntity_Disassembler(11163, "basicmachine.disassembler.tier.09", "UHV Deconstructor", 9).getStackForm(1L));
-        ItemList.DisassemblerUEV.set(new GT_MetaTileEntity_Disassembler(11164, "basicmachine.disassembler.tier.10", "UEV Deconstructor", 10).getStackForm(1L));
-        ItemList.DisassemblerUIV.set(new GT_MetaTileEntity_Disassembler(11165, "basicmachine.disassembler.tier.11", "UIV Deconstructor", 11).getStackForm(1L));
-        ItemList.DisassemblerUMV.set(new GT_MetaTileEntity_Disassembler(11166, "basicmachine.disassembler.tier.12", "UMV Deconstructor", 12).getStackForm(1L));
-        ItemList.DisassemblerUXV.set(new GT_MetaTileEntity_Disassembler(11167, "basicmachine.disassembler.tier.13", "UXV Deconstructor", 13).getStackForm(1L));
-        ItemList.DisassemblerOPV.set(new GT_MetaTileEntity_Disassembler(11168, "basicmachine.disassembler.tier.14", "OPV Deconstructor", 14).getStackForm(1L));
+        //ItemList.DisassemblerUHV.set(new GT_MetaTileEntity_Disassembler(11163, "basicmachine.disassembler.tier.09", "UHV Deconstructor", 9).getStackForm(1L));
+        //ItemList.DisassemblerUEV.set(new GT_MetaTileEntity_Disassembler(11164, "basicmachine.disassembler.tier.10", "UEV Deconstructor", 10).getStackForm(1L));
+        //ItemList.DisassemblerUIV.set(new GT_MetaTileEntity_Disassembler(11165, "basicmachine.disassembler.tier.11", "UIV Deconstructor", 11).getStackForm(1L));
+        //ItemList.DisassemblerUMV.set(new GT_MetaTileEntity_Disassembler(11166, "basicmachine.disassembler.tier.12", "UMV Deconstructor", 12).getStackForm(1L));
+        //ItemList.DisassemblerUXV.set(new GT_MetaTileEntity_Disassembler(11167, "basicmachine.disassembler.tier.13", "UXV Deconstructor", 13).getStackForm(1L));
+        //ItemList.DisassemblerOPV.set(new GT_MetaTileEntity_Disassembler(11168, "basicmachine.disassembler.tier.14", "OPV Deconstructor", 14).getStackForm(1L));
 
 
         //Fermenter
