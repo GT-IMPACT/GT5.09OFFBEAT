@@ -50,19 +50,19 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public float damageFactorHigh = 0.6f;
     public GT_MetaTileEntity_MultiBlockBase mCleanroom;
 
-    public ArrayList<GT_MetaTileEntity_Hatch_Input> mInputHatches = new ArrayList<GT_MetaTileEntity_Hatch_Input>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Output> mOutputHatches = new ArrayList<GT_MetaTileEntity_Hatch_Output>();
-    public ArrayList<GT_MetaTileEntity_Hatch_InputBus> mInputBusses = new ArrayList<GT_MetaTileEntity_Hatch_InputBus>();
-    public ArrayList<GT_MetaTileEntity_Hatch_OutputBus> mOutputBusses = new ArrayList<GT_MetaTileEntity_Hatch_OutputBus>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Dynamo> mDynamoHatches = new ArrayList<GT_MetaTileEntity_Hatch_Dynamo>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Muffler> mMufflerHatches = new ArrayList<GT_MetaTileEntity_Hatch_Muffler>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Energy> mEnergyHatches = new ArrayList<GT_MetaTileEntity_Hatch_Energy>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Maintenance> mMaintenanceHatches = new ArrayList<GT_MetaTileEntity_Hatch_Maintenance>();
-    public Set<GT_MetaTileEntity_Hatch_EnergyMulti> mEnergyHatchesTT = new HashSet<GT_MetaTileEntity_Hatch_EnergyMulti>();
-    public Set<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesTT = new HashSet<GT_MetaTileEntity_Hatch_DynamoMulti>();
-    public Set<GT_MetaTileEntity_Hatch_EnergyTunnel> mEnergyTunnelsTT = new HashSet<GT_MetaTileEntity_Hatch_EnergyTunnel>();
-    public Set<GT_MetaTileEntity_Hatch_DynamoTunnel> mDynamoTunnelsTT = new HashSet<GT_MetaTileEntity_Hatch_DynamoTunnel>();
-    public ArrayList<GTMTE_Multi_Hatch_Input> mQuadrInputHatches = new ArrayList<GTMTE_Multi_Hatch_Input>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Input> mInputHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Output> mOutputHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_InputBus> mInputBusses = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_OutputBus> mOutputBusses = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Dynamo> mDynamoHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Muffler> mMufflerHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Energy> mEnergyHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Maintenance> mMaintenanceHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_EnergyMulti> mEnergyHatchesTT = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesTT = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_EnergyTunnel> mEnergyTunnelsTT = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_DynamoTunnel> mDynamoTunnelsTT = new ArrayList<>();
+    public ArrayList<GTMTE_Multi_Hatch_Input> mQuadrInputHatches = new ArrayList<>();
 
     public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 2);
@@ -692,9 +692,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches)
             if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage();
         for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesTT)
-            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage();
+            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage() * tHatch.Amperes;
         for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyTunnelsTT)
-            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage();
+            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage() * tHatch.Amperes;
         return rVoltage;
     }
 
@@ -1031,7 +1031,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             return mEnergyHatches.add((GT_MetaTileEntity_Hatch_Energy) aMetaTileEntity);
         }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_EnergyMulti) {
-            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
+            ((GT_MetaTileEntity_Hatch_EnergyMulti) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             return mEnergyHatchesTT.add((GT_MetaTileEntity_Hatch_EnergyMulti) aMetaTileEntity);
         }
         return false;

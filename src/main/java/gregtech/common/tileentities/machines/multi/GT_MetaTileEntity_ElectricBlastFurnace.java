@@ -5,6 +5,7 @@ import static gregtech.api.enums.GT_Values.VN;
 
 import java.util.ArrayList;
 
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyMulti;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
@@ -394,10 +395,20 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
 
         long storedEnergy=0;
         long maxEnergy=0;
+        long ampers=0;
         for(GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
                 maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+                ampers=tHatch.mAmpers;
+            }
+        }
+
+        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesTT) {
+            if (isValidMetaTileEntity(tHatch)) {
+                storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
+                maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
+                ampers=tHatch.Amperes;
             }
         }
 
