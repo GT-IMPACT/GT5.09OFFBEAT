@@ -1276,7 +1276,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         SubTag.METAL.addTo(AnyIron, AnyCopper, AnyBronze, Metal, Aluminium, Americium, Antimony, Beryllium, Bismuth, Caesium, Cerium, Chrome, Cobalt, Copper, Europium, Gadolinium, Gallium, Gold,
                 Indium, Iridium, Iron, Lanthanum, Lead, Lutetium, Magnesium, Manganese, Mercury, Niobium, Molybdenum, Neodymium, Neutronium, Nickel, Osmium, Palladium, Platinum, Plutonium, Plutonium241,
                 Rubidium, Samarium, Silicon, Silver, Tantalum, Tellurium, Thorium, Tin, Titanium, Tungsten, Uranium, Uranium235, Vanadium, Ytterbium, Yttrium,
-                Zinc, DarkSteel, TinAlloy, ConductiveIron, ElectricalSteel, EnergeticAlloy, VibrantAlloy,
+                Zinc, DarkSteel, TinAlloy, ConductiveIron, ElectricalSteel, EnergeticAlloy, VibrantAlloy, RedstoneAlloy,
                 PulsatingIron, Adamantium, Ardite, DarkIron,
                 Desh, Duranium, ElectrumFlux, Enderium, EnderiumBase, Eximite, HSLA, Infuscolium, MeteoricIron,
                 MeteoricSteel, Naquadah, NaquadahAlloy, NaquadahEnriched, Naquadria, Orichalcum, Phoenixite,
@@ -1285,7 +1285,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
                 YttriumBariumCuprate, Alumite, Manyullyn, Steeleaf, RoseGold, BlackBronze, BismuthBronze, BlackSteel, RedSteel, BlueSteel, DamascusSteel,
                 TungstenSteel, BlueAlloy, RedAlloy, CobaltBrass, IronMagnetic, SteelMagnetic, NeodymiumMagnetic, EuropiumoxideMagnetic, HSSG, HSSE, HSSS, TungstenCarbide, Endium,
                 VanadiumSteel, Infinity, InfinityCatalyst, BlackPlutonium, Draconium, DraconiumAwakened, Pentacadmiummagnesiumhexaoxid,Titaniumonabariumdecacoppereikosaoxid,
-                Uraniumtriplatinid, Vanadiumtriindinid, Tetraindiumditindibariumtitaniumheptacoppertetrakaidekaoxid, Tetranaquadahdiindiumhexaplatiumosminid,
+                Uraniumtriplatinid, Vanadiumtriindinid, Tetraindiumditindibariumtitaniumheptacoppertetrakaidekaoxid, Tetranaquadahdiindiumhexaplatiumosminid, Quantium,
 				Trinium,HastelloyC276, GumMetal, Titaniolum, Zamak, Duraluminium, Inconel690, Nitinol, Inconel792, TiBetaC, MaragingSteel250, Talonite, Grisium, Nitinol60, Kovar, Mangalloy, MaragingSteel300, Stellite, Zeron100, HastelloyN, Lafium, CinobiteA243, Potin, EglinSteel, Birmabright, BT6, Pikyonium64B, Quantum);
 
         SubTag.PUREIMPURE.addTo(
