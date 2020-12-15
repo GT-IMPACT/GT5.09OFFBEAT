@@ -164,7 +164,7 @@ public class GT_Achievements {
         registerAchievement("gtaluminium", 8, 0, GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Aluminium, 1L), "steel", false);
         registerAchievement("highpowersmelt", 8, 2, ItemList.Machine_Multi_Furnace.get(1), "gtaluminium", false);
         registerAchievement("oilplant", 8, 4, ItemList.Distillation_Tower.get(1), "highpowersmelt", false);
-        registerAchievement("factory", 8, 6, ItemList.Processing_Array_T1.get(1), "oilplant", false);
+        //registerAchievement("factory", 8, 6, ItemList.Processing_Array_T1.get(1), "oilplant", false);
         registerAchievement("upgradeebf", 8, -2, ItemList.Hatch_Energy_MV.get(1), "gtaluminium", false);
         registerAchievement("maintainance", 10, -2, ItemList.Hatch_Maintenance.get(1), "upgradeebf", false);
 
@@ -180,7 +180,7 @@ public class GT_Achievements {
         registerAchievement("hightech", 15, -3, ItemList.Field_Generator_LV.get(1), "osmium", false);
         registerAchievement("amplifier", 16, -5, ItemList.Machine_LV_Amplifab.get(1), "hightech", false);
         registerAchievement("scanning", 13, -3, ItemList.Machine_HV_Scanner.get(1), "hightech", false);
-        registerAchievement("alienpower", 14, -5, ItemList.Generator_Naquadah_Mark_I.get(1), "hightech", false);
+        //registerAchievement("alienpower", 14, -5, ItemList.Generator_Naquadah_Mark_I.get(1), "hightech", false);
         registerAchievement("universal", 15, -6, ItemList.Machine_LV_Massfab.get(1), "hightech", false);
         registerAchievement("replication", 17, -6, ItemList.Machine_LV_Replicator.get(1), "universal", false);
 
