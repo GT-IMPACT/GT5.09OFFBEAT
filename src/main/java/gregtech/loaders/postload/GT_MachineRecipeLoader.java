@@ -3396,13 +3396,16 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         //Potassium Nitride
         GT_Values.RA.addChemicalRecipe(Materials.Potassium.getDust(1), GT_Utility.getIntegratedCircuit(1), Materials.NitricAcid.getFluid(1000), GT_Values.NF, Materials.PotassiumNitrade.getDust(1), 100, 30);
+		GT_Values.RA.addCentrifugeRecipe(Materials.Saltpeter.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF, Materials.PotassiumNitrade.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000}, 100, 10);
 
         if (Loader.isModLoaded("computronics")) {
             GT_Values.RA.addChemicalRecipe(Materials.ChromiumDioxide.getDust(1), GT_Utility.getIntegratedCircuit(1), Materials.Oxygen.getGas(1000), GT_Values.NF, Materials.ChromiumTrioxide.getDust(1), 300, 60);
         } else {
             GT_Values.RA.addChemicalRecipe(Materials.Chrome.getDust(1), GT_Utility.getIntegratedCircuit(1), Materials.Oxygen.getGas(3000), GT_Values.NF, Materials.ChromiumTrioxide.getDust(1), 300, 60);
         }
-        //Potassium Dichromate
+		GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Chrome, 1L), GT_Values.NI, GT_Values.NI, GT_Utility.getIntegratedCircuit(3), Materials.Oxygen.getGas(3000), GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.ChromiumTrioxide, 1), 300, 60);
+
+		//Potassium Dichromate
         GT_Values.RA.addChemicalRecipe(Materials.PotassiumNitrade.getDust(2), Materials.ChromiumTrioxide.getDust(2), GT_Values.NF, GT_Values.NF, Materials.Potassiumdichromate.getDust(1), 100, 480);
 
         //Nitrochlorobenzene
