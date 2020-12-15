@@ -3474,7 +3474,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addChemicalRecipe(GT_Utility.getIntegratedCircuit(8), GT_Values.NI, Materials.Butene.getGas(2000), Materials.Butadiene.getGas(1000), GT_Values.NI, 860, 1920);
         GT_Values.RA.addChemicalRecipe(Materials.Butene.getCells(2), GT_Utility.getIntegratedCircuit(8), GT_Values.NF, Materials.Butadiene.getGas(1000), Materials.Empty.getCells(2), 860, 1920);
         GT_Values.RA.addChemicalRecipe(Materials.Empty.getCells(2), GT_Utility.getIntegratedCircuit(10), Materials.Butene.getGas(2000), GT_Values.NF, Materials.Empty.getCells(1), Materials.Butadiene.getCells(1), 860, 1920);
-        GT_Values.RA.addChemicalRecipe(Materials.Butene.getCells(2), GT_Values.NI, GT_Values.NF, GT_Values.NF, Materials.Butadiene.getCells(1), Materials.Empty.getCells(1), 480, 120);
+        //GT_Values.RA.addChemicalRecipe(Materials.Butene.getCells(2), GT_Values.NI, GT_Values.NF, GT_Values.NF, Materials.Butadiene.getCells(1), Materials.Empty.getCells(1), 480, 120);
         GT_Values.RA.addChemicalRecipe(GT_Utility.getIntegratedCircuit(8), GT_Values.NI, Materials.Butene.getGas(2000), Materials.Butadiene.getGas(1000), GT_Values.NI, 240, 7680);
         GT_Values.RA.addChemicalRecipe(Materials.Butene.getCells(1), GT_Utility.getIntegratedCircuit(8), GT_Values.NF, Materials.Butadiene.getGas(1000), Materials.Empty.getCells(1), 240, 7680);
         GT_Values.RA.addChemicalRecipe(Materials.Empty.getCells(1), GT_Utility.getIntegratedCircuit(10), Materials.Butene.getGas(2000), GT_Values.NF, Materials.Butadiene.getCells(1), 240, 7680);
