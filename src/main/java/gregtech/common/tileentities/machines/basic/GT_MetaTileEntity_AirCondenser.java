@@ -1,5 +1,6 @@
 package gregtech.common.tileentities.machines.basic;
 
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
@@ -49,10 +50,12 @@ public class GT_MetaTileEntity_AirCondenser extends GT_MetaTileEntity_BasicMachi
         FluidStack tOutput = Materials.Air.getGas((100 * (1 << this.mTier - 1) * (1 << this.mTier - 1)));
         if (tOutput != null) {
             if (canOutput(tOutput)) {
-                calculateOverclockedNess(32, 16);
-                //In case recipe is too OP for that machine
-                if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
-                    return FOUND_RECIPE_BUT_DID_NOT_MEET_REQUIREMENTS;
+                if (mTier <= 1) {
+                    mEUt = 30;
+                } else {
+                    mEUt = (int) GT_Values.V[this.mTier] - (int) GT_Values.V[this.mTier - 2];
+                }
+                mMaxProgresstime = 1;
                 this.mOutputFluid = tOutput;
                 return FOUND_AND_SUCCESSFULLY_USED_RECIPE;
             }
