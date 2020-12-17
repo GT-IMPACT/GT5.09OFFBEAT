@@ -100,8 +100,8 @@ public class GT_UO_DimensionList {
         SetConfigValues("Pluto", "Pluto", "ethylene", "ethylene", 400, 800, 70, 3);
         SetConfigValues("Pluto", "Pluto", "chlorine", "chlorine", 100, 400, 30, 4);
         SetConfigValues("Haumea", "Haumea", "nitrogen", "nitrogen", 400, 800, 100, 1);
-        SetConfigValues("MakeMake", "MakeMake", "oxygen", "oxygen", 400, 800, 90, 1);
-        SetConfigValues("MakeMake", "MakeMake", "molten_naquadahenriched", "molten.naquadahenriched", 50, 200, 10, 5);
+        SetConfigValues("Makemake", "Makemake", "oxygen", "oxygen", 400, 800, 90, 1);
+        SetConfigValues("Makemake", "Makemake", "molten_naquadahenriched", "molten.naquadahenriched", 50, 200, 10, 5);
         // T8
         SetConfigValues("BarnardC", "BarnardC", "liquid_extra_heavy_oil", "liquid_extra_heavy_oil", 400, 800, 70, 1);
         SetConfigValues("BarnardC", "BarnardC", "fluorine", "fluorine", 50, 100, 30, 3);
