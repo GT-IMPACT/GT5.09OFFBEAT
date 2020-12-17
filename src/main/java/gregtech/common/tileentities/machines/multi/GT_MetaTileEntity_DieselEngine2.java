@@ -99,8 +99,9 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
                                         explodeMultiblock();}
                                 }
                                 if(this.mDynamoHatchesTT.size()>0){
-                                    if(this.mDynamoHatchesTT.get(0).getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
-                                        explodeMultiblock();}
+                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT)
+                                        if(hatch.getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
+                                            explodeMultiblock();}
                                 }
                                 return true;
                             }

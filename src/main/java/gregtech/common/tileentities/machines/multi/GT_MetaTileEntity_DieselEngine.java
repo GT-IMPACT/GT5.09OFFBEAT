@@ -106,7 +106,8 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
 									explodeMultiblock();}
 								}
                                 if(this.mDynamoHatchesTT.size()>0){
-                                    if(this.mDynamoHatchesTT.get(0).getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
+                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT)
+                                        if(hatch.getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
                                         explodeMultiblock();}
                                 }
                                 return true;

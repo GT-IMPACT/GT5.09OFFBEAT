@@ -58,10 +58,10 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public ArrayList<GT_MetaTileEntity_Hatch_Muffler> mMufflerHatches = new ArrayList<>();
     public ArrayList<GT_MetaTileEntity_Hatch_Energy> mEnergyHatches = new ArrayList<>();
     public ArrayList<GT_MetaTileEntity_Hatch_Maintenance> mMaintenanceHatches = new ArrayList<>();
-    public ArrayList<GT_MetaTileEntity_Hatch_EnergyMulti> mEnergyHatchesTT = new ArrayList<>();
-    public ArrayList<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesTT = new ArrayList<>();
-    public ArrayList<GT_MetaTileEntity_Hatch_EnergyTunnel> mEnergyTunnelsTT = new ArrayList<>();
-    public ArrayList<GT_MetaTileEntity_Hatch_DynamoTunnel> mDynamoTunnelsTT = new ArrayList<>();
+    public Set<GT_MetaTileEntity_Hatch_EnergyMulti> mEnergyHatchesTT = new HashSet<>();
+    public Set<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesTT = new HashSet<>();
+    public Set<GT_MetaTileEntity_Hatch_EnergyTunnel> mEnergyTunnelsTT = new HashSet<>();
+    public Set<GT_MetaTileEntity_Hatch_DynamoTunnel> mDynamoTunnelsTT = new HashSet<>();
     public ArrayList<GTMTE_Multi_Hatch_Input> mQuadrInputHatches = new ArrayList<>();
 
     public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional) {
