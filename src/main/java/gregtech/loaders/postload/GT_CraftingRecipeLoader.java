@@ -612,13 +612,14 @@ public class GT_CraftingRecipeLoader implements Runnable {
         if (GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.disabledrecipes, "QBoots", false)) {
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("quantumBoots", 1L));
         }
-        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorBatpack", 1L, GT_Values.W));
+        //GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorBatpack", 1L, GT_Values.W));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorAdvBatpack", 1L, GT_Values.W));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorEnergypack", 1L, GT_Values.W));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemAdvBat", 1L, GT_Values.W));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemNightvisionGoggles", 1L, GT_Values.W));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorJetpackElectric", 1, GT_Values.W));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorJetpack", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, GT_Values.W));
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, 27), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"RCR", "RAR", "RTR", 'R', GT_ModHandler.getModItem("IC2", "itemBatREDischarged", 1, 0), 'C', OrePrefixes.circuit.get(Materials.Basic), 'A',  OrePrefixes.itemCasing.get(Materials.Aluminium),  'T', OrePrefixes.wireGt02.get(Materials.Tin)});
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorAdvBatpack", 1, 27), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"RCR", "RAR", "RTR", 'R', GT_ModHandler.getModItem("IC2", "itemAdvBat", 1, GT_Values.W), 'C', OrePrefixes.circuit.get(Materials.Good), 'A',  GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, GT_Values.W),  'T', OrePrefixes.wireGt04.get(Materials.AnnealedCopper)});
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorEnergypack", 1, 27), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"CSC", "EXE", "STS", 'E', ItemList.EnergyCrystal, 'C', OrePrefixes.circuit.get(Materials.Advanced), 'X',  GT_ModHandler.getModItem("IC2", "itemArmorAdvBatpack", 1, GT_Values.W),  'T', OrePrefixes.wireGt08.get(Materials.Gold), 'S', OrePrefixes.itemCasing.get(Materials.StainlessSteel)});
