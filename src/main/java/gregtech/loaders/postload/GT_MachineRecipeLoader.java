@@ -806,12 +806,13 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addUniversalDistillationRecipe(Materials.OilMedium.getFluid(100), new FluidStack[]{Materials.SulfuricHeavyFuel.getFluid(15), Materials.SulfuricLightFuel.getFluid(50), Materials.SulfuricNaphtha.getFluid(20), Materials.SulfuricGas.getGas(60)}, null, 20, 96);
         GT_Values.RA.addUniversalDistillationRecipe(Materials.Oil.getFluid(50L), new FluidStack[]{Materials.SulfuricHeavyFuel.getFluid(15), Materials.SulfuricLightFuel.getFluid(50), Materials.SulfuricNaphtha.getFluid(20), Materials.SulfuricGas.getGas(60)}, null, 20, 96);
         GT_Values.RA.addUniversalDistillationRecipe(Materials.OilHeavy.getFluid(100), new FluidStack[]{Materials.SulfuricHeavyFuel.getFluid(250), Materials.SulfuricLightFuel.getFluid(45), Materials.SulfuricNaphtha.getFluid(15), Materials.SulfuricGas.getGas(60)}, null, 20, 288);
+        GT_Values.RA.addUniversalDistillationRecipe(new FluidStack(ItemList.sOilExtraHeavy, 100), new FluidStack[]{Materials.SulfuricHeavyFuel.getFluid(750), Materials.SulfuricLightFuel.getFluid(70), Materials.SulfuricNaphtha.getFluid(40), Materials.SulfuricGas.getGas(300)}, null, 30, 834);
 
         if (GregTech_API.sSpecialFile.get("general", "EnableLagencyOilGalactiCraft", false) && FluidRegistry.getFluid("oilgc") != null) {
             GT_Values.RA.addUniversalDistillationRecipe(new FluidStack(FluidRegistry.getFluid("oilgc"), 50), new FluidStack[]{Materials.SulfuricHeavyFuel.getFluid(15), Materials.SulfuricLightFuel.getFluid(50), Materials.SulfuricNaphtha.getFluid(20), Materials.SulfuricGas.getGas(60)}, null, 20, 96);
         }
 
-        GT_Values.RA.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L, new Object[0]), new FluidStack(ItemList.sOilExtraHeavy, 10), Materials.OilHeavy.getFluid(15), 16, 24, false);
+        //GT_Values.RA.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L, new Object[0]), new FluidStack(ItemList.sOilExtraHeavy, 10), Materials.OilHeavy.getFluid(15), 16, 24, false);
         GT_Values.RA.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L, new Object[0]), Materials.HeavyFuel.getFluid(10L), new FluidStack(ItemList.sToluene, 4), 16, 24, false);
         GT_Values.RA.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L, new Object[0]), new FluidStack(ItemList.sToluene, 30), Materials.LightFuel.getFluid(30L), 16, 24, false);
         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Ball.get(0L, new Object[0]), new FluidStack(ItemList.sToluene, 100), ItemList.GelledToluene.get(1, new Object[0]), 100, 16);
