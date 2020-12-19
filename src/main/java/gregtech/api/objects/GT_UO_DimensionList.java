@@ -67,12 +67,14 @@ public class GT_UO_DimensionList {
         SetConfigValues("Deimos", "Deimos", "nitrogen", "nitrogen", 70, 200, 30, 3);
         SetConfigValues("Phobos", "Phobos", "saltwater", "saltwater", 160, 400, 70, 3);
         // T3
-        SetConfigValues("Europa", "Europa", "saltwater", "saltwater", 100, 600, 40, 5);
-        SetConfigValues("Europa", "Europa", "liquid_extra_heavy_oil", "liquid_extra_heavy_oil", 80, 200, 20, 5);
-        SetConfigValues("Europa", "Europa", "liquid_heavy_oil", "liquid_heavy_oil", 200, 600, 40, 1);
-        SetConfigValues("Callisto", "Callisto", "oxygen", "oxygen", 80, 200, 50, 5);
+        SetConfigValues("Europa", "Europa", "saltwater", "saltwater", 100, 600, 30, 5);
+        SetConfigValues("Europa", "Europa", "liquid_extra_heavy_oil", "liquid_extra_heavy_oil", 80, 200, 20, 3);
+        SetConfigValues("Europa", "Europa", "liquid_heavy_oil", "liquid_heavy_oil", 200, 600, 30, 1);
+        SetConfigValues("Europa", "Europa", "distilled_water", "ic2distilledwater", 400, 3500, 20, 5);
+		SetConfigValues("Callisto", "Callisto", "oxygen", "oxygen", 80, 200, 40, 5);
         SetConfigValues("Callisto", "Callisto", "oil", "oil", 180, 700, 50, 1);
-        SetConfigValues("Ganymede", "Ganymede", "gas_natural_gas", "gas_natural_gas", 100, 600, 70, 1);
+        SetConfigValues("Callisto", "Callisto", "liquid_air", "liquidair", 10, 100, 10, 1);
+		SetConfigValues("Ganymede", "Ganymede", "gas_natural_gas", "gas_natural_gas", 100, 600, 70, 1);
         SetConfigValues("Ganymede", "Ganymede", "helium", "helium", 0, 100, 30, 2);
         SetConfigValues("Ceres", "Ceres", "nitrogen", "nitrogen", 180, 300, 70, 3);
         SetConfigValues("Ceres", "Ceres", "fluorine", "fluorine", 0, 50, 30, 1);
@@ -81,11 +83,14 @@ public class GT_UO_DimensionList {
         SetConfigValues("Venus", "Venus", "argon", "argon", 0, 50, 20, 1);
         SetConfigValues("Venus", "Venus", "molten_lead", "molten.lead", 100, 600, 60, 5);
         SetConfigValues("Venus", "Venus", "sulfuricacid", "sulfuricacid", 0, 300, 20, 4);
-        SetConfigValues("Io", "Io", "lava", "lava", 600, 2000, 100, 2);
-        // T5
+        SetConfigValues("Venus", "Venus", "carbon_dioxide", "carbondioxide", 0, 1500, 10, 3);
+		SetConfigValues("Io", "Io", "lava", "lava", 600, 2000, 80, 2);
+        SetConfigValues("Io", "Io", "carbon_dioxide", "carbondioxide", 200, 750, 20, 3);
+		// T5
         SetConfigValues("Titan", "Titan", "methane", "methane", 200, 800, 60, 5);
         SetConfigValues("Titan", "Titan", "ethane", "ethane", 50, 200, 40, 5);
-        SetConfigValues("Miranda", "Miranda", "liquid_sufluriclight_fuel", "liquid_sufluriclight_fuel", 100, 500, 100, 3);
+        SetConfigValues("Miranda", "Miranda", "liquid_sufluriclight_fuel", "liquid_sufluriclight_fuel", 100, 500, 80, 3);
+		SetConfigValues("Miranda", "Miranda", "hydrogen_sulfide", "liquid_hydricsulfur", 200, 900, 20, 2);
         SetConfigValues("Oberon", "Oberon", "liquid_sulfuricheavy_fuel", "liquid_sulfuricheavy_fuel", 100, 500, 50, 3);
         SetConfigValues("Oberon", "Oberon", "liquid_sulfuricnaphtha", "liquid_sulfuricnaphtha", 100, 500, 50, 3);
         SetConfigValues("Enceladus", "Enceladus", "radon", "radon", 0, 100, 10, 5);
