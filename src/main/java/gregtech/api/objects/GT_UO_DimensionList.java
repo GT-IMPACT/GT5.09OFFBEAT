@@ -49,11 +49,11 @@ public class GT_UO_DimensionList {
     }
 
     public void SetDafultValues() {
-        SetConfigValues("Overworld", "0", "gas_natural_gas", "gas_natural_gas", 0, 700, 20, 7);
-        SetConfigValues("Overworld", "0", "liquid_light_oil", "liquid_light_oil", 0, 650, 20, 6);
-        SetConfigValues("Overworld", "0", "liquid_medium_oil", "liquid_medium_oil", 0, 600, 20, 5);
-        SetConfigValues("Overworld", "0", "liquid_heavy_oil", "liquid_heavy_oil", 0, 550, 20, 4);
-        SetConfigValues("Overworld", "0", "oil", "oil", 0, 600, 20, 5);
+        SetConfigValues("Overworld", "0", "gas_natural_gas", "gas_natural_gas", 100, 700, 20, 7);
+        SetConfigValues("Overworld", "0", "liquid_light_oil", "liquid_light_oil", 90, 650, 20, 6);
+        SetConfigValues("Overworld", "0", "liquid_medium_oil", "liquid_medium_oil", 80, 600, 20, 5);
+        SetConfigValues("Overworld", "0", "liquid_heavy_oil", "liquid_heavy_oil", 70, 550, 20, 4);
+        SetConfigValues("Overworld", "0", "oil", "oil", 80, 600, 20, 5);
         SetConfigValues("aroma1997", "45", "gas_natural_gas", "gas_natural_gas", 100, 800, 33, 6);
         SetConfigValues("aroma1997", "45", "liquid_medium_oil", "liquid_medium_oil", 90, 700, 33, 4);
         SetConfigValues("aroma1997", "45", "oil", "oil", 80, 600, 34, 5);
