@@ -53,7 +53,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
             Graphene, Greenschist, Greywacke, HSLA, Infuscolium,
             Jasper, Komatiite, Lava, Limestone, Magma, MeteoricIron,
             MeteoricSteel, Meteorite, Moonstone, Naquadah, NaquadahAlloy, NaquadahEnriched, Naquadria, Nether, NetherBrick, NetherQuartz, NetherStar,
-            Oilsands, Orichalcum, Phoenixite, Quartzite, Rhyolite, Sand, Siltstone, Tar, Tartarite, Tritanium, UUAmplifier, UUMatter, Void, Flux,
+            Oilsands, Orichalcum, Phoenixite, Quartzite, Rhyolite, Sand, Siltstone, Tar, SulfuricTar, Tartarite, Tritanium, UUAmplifier, UUMatter, Void, Flux,
             Endium, Fluix, PlatinumGroupSludge, Draconium, DraconiumAwakened, RedstoneAlloy,
             Soularium, DarkSteel, ConductiveIron, ElectricalSteel, EnergeticAlloy, VibrantAlloy, PulsatingIron, Primitive, Basic, Good, Advanced, Data, Elite, Master, Ultimate, Superconductor, Infinite, Bio, Energy,
             Nano, Piko, Quantum, Antimatter, BioFuel, Biomass, CharcoalByproducts, Cheese, Chili, Chocolate, Cluster, CoalFuel, Cocoa, Coffee, Ethanol, FermentedBiomass, FishOil, Fuel, Glue, Gunpowder, FryingOilHot,
@@ -97,7 +97,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
 
             //Depricated
             IridiumAndSodiumOxide, Palygorskite, Adamantine, Ashes, DarkAshes, Abyssal, Adamant, Americum, Beryl, BlackGranite, CalciumCarbonate,
-            CrackedLightFuel, CrackedHeavyFuel, CreosoteOil, Chromium, Diesel, Enderpearl, Endereye, EyeOfEnder, Eyeofender, Flour, Meat, Garnet, Granite, Goethite, Kalium, Lapislazuli, LapisLazuli, Monazit, Natrium,
+            CrackedLightFuel, CrackedHeavyFuel, CrackedTar, CreosoteOil, Chromium, Diesel, Enderpearl, Endereye, EyeOfEnder, Eyeofender, Flour, Meat, Garnet, Granite, Goethite, Kalium, Lapislazuli, LapisLazuli, Monazit, Natrium,
             Mythril, NitroDiesel, Naquadriah, Obby, Peridot, Phosphorite, Quarried, Quicksilver, QuickSilver, RedRock, RefinedIron, RedGranite, Sheldonite, Soulsand, Titan, Uran, Wolframite, Wolframium, Wolfram, Nikolite,
 
             //NaquadahChemistry
@@ -282,7 +282,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Rhyolite = new Materials(-1/*875*/, TextureSet.SET_DULL, 1.0F, 0, 1, 1, 255, 255, 255, 0, "Rhyolite", "Rhyolite", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes._NULL);
         Sand = new Materials(-1, TextureSet.SET_NONE, 1.0F, 0, 1, 0, 255, 255, 255, 0, "Sand", "Sand", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow);
         Siltstone = new Materials(876, TextureSet.SET_DULL, 1.0F, 0, 1, 1, 255, 255, 255, 0, "Siltstone", "Siltstone", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes._NULL);
-        Tar = new Materials(-1, TextureSet.SET_NONE, 1.0F, 0, 1, 0, 10, 10, 10, 0, "Tar", "Tar", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeBlack);
+        Tar = new Materials(950, TextureSet.SET_FLUID, 1.0F, 0, 1, 0, 22, 255, 255, 0, "Tar", "Tar", 3, 124, -1, 0, false, false, 1, 1, 1, Dyes.dyeBlack).setCanBeCracked(true);
+        SulfuricTar = new Materials(951, TextureSet.SET_FLUID, 1.0F, 0, 0, 22, 255, 255, 0, 0, "SulfuricTar", "Sulfuric Tar", 3, 8, -1, 0, false, false, 1, 1, 1, Dyes.dyeBlack);
         Tartarite = new MaterialBuilder(956, TextureSet.SET_FLUID, "Tartarite").addCell().addFluid().setRGB(255, 118, 60).setColor(Dyes.dyeOrange).constructMaterial();
         Tritanium = new Materials(329, TextureSet.SET_METALLIC, 20.0F, 10240, 6, 1 | 2 | 64, 255, 255, 255, 0, "Tritanium", "Tritanium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeWhite);
         UUAmplifier = new Materials(721, TextureSet.SET_FLUID, 1.0F, 0, 1, 16, 96, 0, 128, 0, "UUAmplifier", "UU-Amplifier", 0, 0, -1, 0, false, false, 10, 1, 1, Dyes.dyePink);
@@ -867,6 +868,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         CalciumCarbonate = new Materials(Calcite, false);
         CrackedLightFuel = new Materials(LightFuel, false);
         CrackedHeavyFuel = new Materials(HeavyFuel, false);
+        CrackedTar = new Materials(Tar, false);
         CreosoteOil = new Materials(Creosote, false);
         Chromium = new Materials(Chrome, false);
         Diesel = new Materials(Fuel, false);
