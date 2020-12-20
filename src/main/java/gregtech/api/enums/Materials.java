@@ -106,6 +106,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
 			NaquadahESollution, NaquadahELiquidClear, ComplicatedNaquadahELight, ComplicatedNaquadahEModer, ComplicatedNaquadahESever, NaquadahELight, NaquadahEMedium, NaquadahEHeavy, NaquadahELightRadon, NaquadahEMediumRadon, 
 			NaquadahEHeavyRadon, NaquadahELightFuel, NaquadahEMediumFuel, NaquadahEHeavyFuel, NaquadriaLiquid, HyperFuelI, HyperFuelII, HyperFuelIII,
 
+            Kerosene, KeroseneMixture,
+
     EndStatic;
 
     public static void genMaterials() {
@@ -282,8 +284,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Rhyolite = new Materials(-1/*875*/, TextureSet.SET_DULL, 1.0F, 0, 1, 1, 255, 255, 255, 0, "Rhyolite", "Rhyolite", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes._NULL);
         Sand = new Materials(-1, TextureSet.SET_NONE, 1.0F, 0, 1, 0, 255, 255, 255, 0, "Sand", "Sand", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow);
         Siltstone = new Materials(876, TextureSet.SET_DULL, 1.0F, 0, 1, 1, 255, 255, 255, 0, "Siltstone", "Siltstone", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes._NULL);
-        Tar = new Materials(950, TextureSet.SET_FLUID, 1.0F, 0, 1, 0, 22, 255, 255, 0, "Tar", "Tar", 3, 124, -1, 0, false, false, 1, 1, 1, Dyes.dyeBlack).setCanBeCracked(true);
-        SulfuricTar = new Materials(951, TextureSet.SET_FLUID, 1.0F, 0, 0, 22, 255, 255, 0, 0, "SulfuricTar", "Sulfuric Tar", 3, 8, -1, 0, false, false, 1, 1, 1, Dyes.dyeBlack);
+        Tar = new MaterialBuilder(950, TextureSet.SET_FLUID, "Tar").addCell().addFluid().setRGB(220, 180, 5).setColor(Dyes.dyeOrange).setFuelPower(124).setCanBeCracked(true).constructMaterial();
+        SulfuricTar = new MaterialBuilder(951, TextureSet.SET_FLUID, "Sulfuric Tar").addCell().addFluid().setRGB(230, 190, 2).setColor(Dyes.dyeOrange).setFuelPower(8).constructMaterial();
         Tartarite = new MaterialBuilder(956, TextureSet.SET_FLUID, "Tartarite").addCell().addFluid().setRGB(255, 118, 60).setColor(Dyes.dyeOrange).constructMaterial();
         Tritanium = new Materials(329, TextureSet.SET_METALLIC, 20.0F, 10240, 6, 1 | 2 | 64, 255, 255, 255, 0, "Tritanium", "Tritanium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeWhite);
         UUAmplifier = new Materials(721, TextureSet.SET_FLUID, 1.0F, 0, 1, 16, 96, 0, 128, 0, "UUAmplifier", "UU-Amplifier", 0, 0, -1, 0, false, false, 10, 1, 1, Dyes.dyePink);
@@ -852,9 +854,12 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         HyperFuelI = new MaterialBuilder(232, TextureSet.SET_FLUID, "Hyper Fuel (I)").addCell().addFluid().setRGB(140, 20, 140).setColor(Dyes.dyeBlack).constructMaterial();
         HyperFuelII = new MaterialBuilder(233, TextureSet.SET_FLUID, "Hyper Fuel (II)").addCell().addFluid().setRGB(220, 10, 10).setColor(Dyes.dyeBlack).constructMaterial();
         HyperFuelIII = new MaterialBuilder(234, TextureSet.SET_FLUID, "Hyper Fuel (III)").addCell().addFluid().setRGB(30, 80, 100).setColor(Dyes.dyeBlack).constructMaterial();
-        
-		
-		
+
+        Kerosene = new MaterialBuilder(750, TextureSet.SET_FLUID, "Kerosene").addCell().addFluid().setRGB(240, 240, 240).setColor(Dyes.dyeWhite).setFuelType(MaterialBuilder.DIESEL).setFuelPower(296).constructMaterial();
+        KeroseneMixture = new MaterialBuilder(751, TextureSet.SET_FLUID, "Kerosene Mixture").addCell().addFluid().setRGB(250, 245, 240).setColor(Dyes.dyeWhite).setFuelType(MaterialBuilder.DIESEL).setFuelPower(328).constructMaterial();
+
+
+
         //Materials which are renamed automatically
         Palygorskite = new Materials(FullersEarth, false);
         Adamantine = new Materials(Adamantium, true);
