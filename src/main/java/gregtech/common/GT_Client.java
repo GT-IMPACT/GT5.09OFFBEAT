@@ -289,6 +289,7 @@ public class GT_Client extends GT_Proxy
         new GT_MetaGenerated_Item_Renderer();
         new GT_MetaGenerated_Tool_Renderer();
         new GT_FlaskRenderer();
+        new GT_FluidDisplayStackRenderer();
     }
 
     public void onPostLoad() {
