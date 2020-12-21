@@ -421,7 +421,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Steel_Boiler.get(1L), bits, new Object[]{"WPW", "WwW", "BFB", 'F', ItemList.Machine_Bronze_Boiler, 'W', OrePrefixes.plate.get(Materials.WroughtIron), 'P', OrePrefixes.plate.get(Materials.Steel), 'B', new ItemStack(Blocks.brick_block, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Steel_Boiler_Lava.get(1L), bits, new Object[]{aTextPlate, "GGG", aTextPlateMotor, 'M', ItemList.Hull_Steel_Bricks, 'P', OrePrefixes.plate.get(Materials.Steel), 'G', new ItemStack(Blocks.glass, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Bronze_Boiler_Solar.get(1L), bits, new Object[]{"GGG", "SSS", aTextPlateMotor, 'M', ItemList.Hull_Bronze_Bricks, 'P', OrePrefixes.pipeSmall.get(Materials.Bronze), 'S', OrePrefixes.plateDouble.get(Materials.Silver), 'G', new ItemStack(Blocks.glass, 1)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_HP_Solar.get(1L), bits, new Object[]{"GGG", "SSS", aTextPlateMotor, 'M', ItemList.Hull_Steel_Bricks, 'P', OrePrefixes.pipeSmall.get(Materials.Steel), 'S', OrePrefixes.plateTriple.get(Materials.Silver), 'G', GT_ModHandler.getModItem("IC2", "blockAlloyGlass", 1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_HP_Solar.get(1L), bits, new Object[]{"GGG", "SSS", aTextPlateMotor, 'M', ItemList.Machine_Bronze_Boiler_Solar, 'P', OrePrefixes.pipeSmall.get(Materials.Steel), 'S', OrePrefixes.plateTriple.get(Materials.Silver), 'G', GT_ModHandler.getModItem("IC2", "blockAlloyGlass", 1L)});
 
 
         ItemList.Machine_Bricked_BlastFurnace.set(new GT_MetaTileEntity_BrickedBlastFurnace(130, "multimachine.brickedblastfurnace", "Bricked Blast Furnace").getStackForm(1L));
