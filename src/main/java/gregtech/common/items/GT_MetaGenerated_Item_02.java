@@ -141,9 +141,9 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Food_Baked_Pizza_Meat.set(addItem(tLastID = 262, "Mince Meat Pizza", "Emo Pizza, it cuts itself!", new Object[]{new GT_FoodStat(5, 0.5F, EnumAction.eat, null, false, true, false, new int[0])}));
 
 
-        ItemList.Dye_Indigo.set(addItem(tLastID = 410, "Indigo Dye", "Blue Dye", new Object[]{ Dyes.dyeBlue}));
-        for (byte i = 0; i < 16; i = (byte) (i + 1)) {
-            ItemList.DYE_ONLY_ITEMS[i].set(addItem(tLastID = 414 + i, Dyes.get(i).mName + " Dye", ""));
+        ItemList.Dye_Indigo.set(addItem(tLastID = 410, "Indigo Dye", "Blue Dye", Dyes.dyeBlue));
+        for (int i = 0; i < 16; i++) {
+            ItemList.DYE_ONLY_ITEMS[i].set(addItem(tLastID = 414 + i, Dyes.get(i).mName + " Dye", "", OrePrefixes.dye.get(Dyes.get(i).mName)));
         }
         ItemList.Plank_Oak.set(addItem(tLastID = 470, "Oak Plank", aTextCover));
         setBurnValue(32000 + tLastID, 75);
