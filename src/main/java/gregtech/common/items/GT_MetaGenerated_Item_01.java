@@ -495,11 +495,11 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         GregTech_API.registerCover(ItemList.Electric_Pump_ZPM.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[7][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_Pump(524288));
         GregTech_API.registerCover(ItemList.Electric_Pump_UV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[8][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_Pump(2097152));
 
-        ItemList.FluidRegulator_LV.set(addItem(tLastID = 615, "LV Fluid Regulator", "Configuable up to 640 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_MV.set(addItem(tLastID = 616, "MV Fluid Regulator", "Configuable up to 2560 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_HV.set(addItem(tLastID = 617, "HV Fluid Regulator", "Configuable up to 10240 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_EV.set(addItem(tLastID = 618, "EV Fluid Regulator", "Configuable up to 40960 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_IV.set(addItem(tLastID = 619, "IV Fluid Regulator", "Configuable up to 163840 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
+        ItemList.FluidRegulator_LV.set(addItem(tLastID = 615, "LV Fluid Regulator", "Configuable up to 640 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
+        ItemList.FluidRegulator_MV.set(addItem(tLastID = 616, "MV Fluid Regulator", "Configuable up to 2560 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
+        ItemList.FluidRegulator_HV.set(addItem(tLastID = 617, "HV Fluid Regulator", "Configuable up to 10240 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
+        ItemList.FluidRegulator_EV.set(addItem(tLastID = 618, "EV Fluid Regulator", "Configuable up to 40960 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
+        ItemList.FluidRegulator_IV.set(addItem(tLastID = 619, "IV Fluid Regulator", "Configuable up to 163840 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
 
         GregTech_API.registerCover(ItemList.FluidRegulator_LV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(32));
         GregTech_API.registerCover(ItemList.FluidRegulator_MV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[2][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(128));
@@ -507,7 +507,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         GregTech_API.registerCover(ItemList.FluidRegulator_EV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[4][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(2048));
         GregTech_API.registerCover(ItemList.FluidRegulator_IV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[5][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(8192));
 
-        ItemList.FluidFilter.set(addItem(tLastID = 635, "Fluid Filter", "Set with Fluid Container to only accept one Fluid Type", new Object[]{}));
+        ItemList.FluidFilter.set(addItem(tLastID = 635, "Fluid Filter", "Set with Fluid Container to only accept one Fluid Type"));
         GregTech_API.registerCover(ItemList.FluidFilter.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SHUTTER)}), new GT_Cover_Fluidfilter());
 
         /**ItemList.Rotor_LV.set(addItem(tLastID = 620, "Tin Rotor", "", new Object[] { OrePrefixes.rotor.get(Materials.Tin), new TC_Aspects.TC_AspectStack(TC_Aspects.METALLUM, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.MOTUS, 1L) }));
@@ -829,7 +829,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
                 	 Block tBlock = aItemEntity.worldObj.getBlock(tX, tY, tZ);
                      byte tMetaData = (byte) aItemEntity.worldObj.getBlockMetadata(tX, tY, tZ);
                      if ((tBlock == Blocks.cauldron) && (tMetaData > 0)) {
-                         aItemEntity.setEntityItemStack(ItemList.Food_Dough.get(aItemEntity.getEntityItem().stackSize, new Object[]{}));
+                         aItemEntity.setEntityItemStack(ItemList.Food_Dough.get(aItemEntity.getEntityItem().stackSize));
                          aItemEntity.worldObj.setBlockMetadataWithNotify(tX, tY, tZ, tMetaData - 1, 3);
                          return true;
                      }

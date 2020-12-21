@@ -42,7 +42,7 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.ThermosCan_Sweet_Tea.set(addItem(tLastID = 8, "Sweet Tea", "How about a Tea Party? In Boston?", new Object[]{SubTag.INVISIBLE, new GT_FoodStat(2, 0.2F, EnumAction.drink, ItemList.ThermosCan_Empty.get(1L), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[0])}));
         ItemList.ThermosCan_Ice_Tea.set(addItem(tLastID = 9, "Ice Tea", "Better than this purple Junk Drink from failed Potions", new Object[]{new GT_FoodStat(2, 0.2F, EnumAction.drink, ItemList.ThermosCan_Empty.get(1L), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.moveSlowdown.id, 300, 0, 50})}));
 
-        ItemList.GelledToluene.set(addItem(tLastID = 10, "Gelled Toluene", "Raw Explosive", new Object[]{}));
+        ItemList.GelledToluene.set(addItem(tLastID = 10, "Gelled Toluene", "Raw Explosive"));
         
         ItemList.Bottle_Purple_Drink.set(addItem(tLastID = 100, "Purple Drink", "How about Lemonade. Or some Ice Tea? I got Purple Drink!", new Object[]{new GT_FoodStat(8, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.moveSlowdown.id, 400, 1, 90})}));
         ItemList.Bottle_Grape_Juice.set(addItem(tLastID = 101, "Grape Juice", "This has a cleaning effect on your internals.", new Object[]{new GT_FoodStat(4, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.hunger.id, 400, 1, 60})}));
@@ -231,8 +231,8 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Citrus.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 7)});
         
 
-        ItemList.SFMixture.set(addItem(tLastID = 270, "Super Fuel Binder", "Raw Material", new Object[]{}));
-        ItemList.MSFMixture.set(addItem(tLastID = 271, "Magic Super Fuel Binder", "Raw Material", new Object[]{}));
+        ItemList.SFMixture.set(addItem(tLastID = 270, "Super Fuel Binder", "Raw Material"));
+        ItemList.MSFMixture.set(addItem(tLastID = 271, "Magic Super Fuel Binder", "Raw Material"));
         
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Oak.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 0)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Spruce.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 1)});
@@ -291,19 +291,19 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Crop_Drop_Tine.set(addItem(tLastID = 540, "Tine Twig", "Source of Tin"));
         setBurnValue(32000 + tLastID, 100);
 
-        ItemList.Crop_Drop_Bauxite.set(addItem(tLastID = 521, "Bauxia Leaf", "Source of Aluminium", new Object[]{}));
-        ItemList.Crop_Drop_Ilmenite.set(addItem(tLastID = 522, "Titania Leaf", "Source of Titanium", new Object[]{}));
-        ItemList.Crop_Drop_Pitchblende.set(addItem(tLastID = 523, "Reactoria Leaf", "Source of Uranium", new Object[]{}));
-        ItemList.Crop_Drop_Uraninite.set(addItem(tLastID = 524, "Uranium Leaf", "Source of Uranite", new Object[]{}));
-        ItemList.Crop_Drop_Thorium.set(addItem(tLastID = 526, "Thunder Leaf", "Source of Thorium", new Object[]{}));
-        ItemList.Crop_Drop_Nickel.set(addItem(tLastID = 527, "Nickelback Leaf", "Source of Nickel", new Object[]{}));
-        ItemList.Crop_Drop_Zinc.set(addItem(tLastID = 528, "Galvania Leaf", "Source of Zinc", new Object[]{}));
-        ItemList.Crop_Drop_Manganese.set(addItem(tLastID = 529, "Pyrolusium Leaf", "Source of Manganese", new Object[]{}));
-        ItemList.Crop_Drop_Scheelite.set(addItem(tLastID = 531, "Scheelinium Leaf", "Source of Tungsten", new Object[]{}));
-        ItemList.Crop_Drop_Platinum.set(addItem(tLastID = 532, "Platina Leaf", "Source of Platinum", new Object[]{}));
-        ItemList.Crop_Drop_Iridium.set(addItem(tLastID = 533, "Quantaria Leaf", "Source of Iridium", new Object[]{}));
-        ItemList.Crop_Drop_Osmium.set(addItem(tLastID = 534, "Quantaria Leaf", "Source of Osmium", new Object[]{}));
-        ItemList.Crop_Drop_Naquadah.set(addItem(tLastID = 535, "Stargatium Leaf", "Source of Naquadah", new Object[]{}));
+        ItemList.Crop_Drop_Bauxite.set(addItem(tLastID = 521, "Bauxia Leaf", "Source of Aluminium"));
+        ItemList.Crop_Drop_Ilmenite.set(addItem(tLastID = 522, "Titania Leaf", "Source of Titanium"));
+        ItemList.Crop_Drop_Pitchblende.set(addItem(tLastID = 523, "Reactoria Leaf", "Source of Uranium"));
+        ItemList.Crop_Drop_Uraninite.set(addItem(tLastID = 524, "Uranium Leaf", "Source of Uranite"));
+        ItemList.Crop_Drop_Thorium.set(addItem(tLastID = 526, "Thunder Leaf", "Source of Thorium"));
+        ItemList.Crop_Drop_Nickel.set(addItem(tLastID = 527, "Nickelback Leaf", "Source of Nickel"));
+        ItemList.Crop_Drop_Zinc.set(addItem(tLastID = 528, "Galvania Leaf", "Source of Zinc"));
+        ItemList.Crop_Drop_Manganese.set(addItem(tLastID = 529, "Pyrolusium Leaf", "Source of Manganese"));
+        ItemList.Crop_Drop_Scheelite.set(addItem(tLastID = 531, "Scheelinium Leaf", "Source of Tungsten"));
+        ItemList.Crop_Drop_Platinum.set(addItem(tLastID = 532, "Platina Leaf", "Source of Platinum"));
+        ItemList.Crop_Drop_Iridium.set(addItem(tLastID = 533, "Quantaria Leaf", "Source of Iridium"));
+        ItemList.Crop_Drop_Osmium.set(addItem(tLastID = 534, "Quantaria Leaf", "Source of Osmium"));
+        ItemList.Crop_Drop_Naquadah.set(addItem(tLastID = 535, "Stargatium Leaf", "Source of Naquadah"));
         
         ItemList.Crop_Drop_Chilly.set(addItem(tLastID = 550, "Chilly Pepper", "It is red and hot", new Object[]{"cropChilipepper", new GT_FoodStat(1, 0.3F, EnumAction.eat, null, false, true, false, new int[]{Potion.confusion.id, 200, 1, 40})}));
         ItemList.Crop_Drop_Lemon.set(addItem(tLastID = 551, "Lemon", "Don't make Lemonade", new Object[]{"cropLemon", new GT_FoodStat(1, 0.3F, EnumAction.eat, null, false, true, false, new int[0])}));

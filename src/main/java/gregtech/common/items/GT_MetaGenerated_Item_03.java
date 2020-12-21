@@ -306,9 +306,9 @@ public class GT_MetaGenerated_Item_03
         ItemList.UEV_Coil.set(addItem(tLastID = 220, "Extremely Ultimate Voltage Coil", "Ultra Coil", o));
         ItemList.UIV_Coil.set(addItem(tLastID = 221, "Insanely Ultimate Voltage Coil", "Insane Coil", o));
         
-        ItemList.FluidRegulator_LuV.set(addItem(tLastID = 180, "Fluid Regulator (LuV)", "Configuable up to 655360 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_ZPM.set(addItem(tLastID = 181, "Fluid Regulator (ZPM)", "Configuable up to 2621440 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
-        ItemList.FluidRegulator_UV.set(addItem(tLastID = 182, "Fluid Regulator (UV)", "Configuable up to 10485760 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click", new Object[]{}));
+        ItemList.FluidRegulator_LuV.set(addItem(tLastID = 180, "Fluid Regulator (LuV)", "Configuable up to 655360 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
+        ItemList.FluidRegulator_ZPM.set(addItem(tLastID = 181, "Fluid Regulator (ZPM)", "Configuable up to 2621440 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
+        ItemList.FluidRegulator_UV.set(addItem(tLastID = 182, "Fluid Regulator (UV)", "Configuable up to 10485760 L/sec (as Cover)/n Rightclick/Screwdriver-rightclick/Shift-screwdriver-rightclick/n to adjust the pump speed by 1/16/256 L/sec per click"));
         
         GregTech_API.registerCover(ItemList.FluidRegulator_LuV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[6][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(32768));
         GregTech_API.registerCover(ItemList.FluidRegulator_ZPM.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[7][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(131072));
