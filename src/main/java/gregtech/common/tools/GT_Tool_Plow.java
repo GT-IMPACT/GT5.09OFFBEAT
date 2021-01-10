@@ -25,9 +25,38 @@ public class GT_Tool_Plow
         return (aEntity instanceof EntitySnowman) ? aOriginalDamage * 4.0F : aOriginalDamage;
     }
 
+    public int getToolDamagePerBlockBreak() {
+        return 20;
+    }
+
+    public int getToolDamagePerDropConversion() {
+        return 20;
+    }
+
+    public int getToolDamagePerContainerCraft() {
+        return 100;
+    }
+
+    public int getToolDamagePerEntityAttack() {
+        return 200;
+    }
+
+    public int getBaseQuality() {
+        return 0;
+    }
+
     public float getBaseDamage() {
+        return 2.0F;
+    }
+
+    public float getSpeedMultiplier() {
+        return 3.0F;
+    }
+
+    public float getMaxDurabilityMultiplier() {
         return 1.0F;
     }
+
 
     public boolean isMinableBlock(Block aBlock, byte aMetaData) {
         String tTool = aBlock.getHarvestTool(aMetaData);
