@@ -5,6 +5,7 @@ import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.IToolStats;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.interfaces.IOverlayItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -58,6 +59,21 @@ public class GT_MetaGenerated_Tool_Renderer
 
         IToolStats tToolStats = aItem.getToolStats(aStack);
         if (tToolStats != null) {
+            if (tToolStats instanceof IOverlayItem) {
+                IIconContainer aOverlay = ((IOverlayItem) tToolStats).getOverlay(true, aStack);
+                if (aOverlay != null) {
+                    IIcon mOverlay = aOverlay.getOverlayIcon();
+                    if (mOverlay != null) {
+                        Minecraft.getMinecraft().renderEngine.bindTexture(aOverlay.getTextureFile());
+                        GL11.glBlendFunc(770, 771);
+                        if (aType.equals(IItemRenderer.ItemRenderType.INVENTORY)) {
+                            GT_RenderUtil.renderItemIcon(mOverlay, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
+                        } else {
+                            ItemRenderer.renderItemIn2D(Tessellator.instance, mOverlay.getMaxU(), mOverlay.getMinV(), mOverlay.getMinU(), mOverlay.getMaxV(), mOverlay.getIconWidth(), mOverlay.getIconHeight(), 0.0625F);
+                        }
+                    }
+                }
+            }
             IIconContainer aIcon = tToolStats.getIcon(false, aStack);
             if (aIcon != null) {
                 IIcon tIcon = aIcon.getIcon();

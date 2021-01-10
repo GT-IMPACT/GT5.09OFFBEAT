@@ -92,9 +92,9 @@ public class Behaviour_Drill
 
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         int mode = getDrillRangeMode(aStack);
-        aList.add(EnumChatFormatting.WHITE + GT_LanguageManager.addStringLocalization("gt.behaviour.drillmode", "Mode") + ": " +EnumChatFormatting.GREEN+ (mode == 1? "3x3x3": mode == 2? "5x5x5": mode == 3? "7x7x7": mode == 4? "9x9x9": GT_LanguageManager.addStringLocalization("gt.behaviour.drillnormal", "Normal")));
+        aList.add(EnumChatFormatting.WHITE +  "Mode: " + EnumChatFormatting.GREEN + (mode == 1? "3x3x3": mode == 2? "5x5x5": mode == 3? "7x7x7": mode == 4? "9x9x9": "Normal"));
         aList.add(this.mTooltip + ": " + this.mRange);
-        aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.drill1", "Shift + Right click on the block to change the mode"));
+        aList.add("Shift + Right click on the block to change the mode");
         return aList;
     }
 }

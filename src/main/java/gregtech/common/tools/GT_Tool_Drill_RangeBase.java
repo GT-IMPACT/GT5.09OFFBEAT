@@ -3,7 +3,9 @@ package gregtech.common.tools;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
+import gregtech.api.interfaces.IOverlayItem;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.common.items.behaviors.Behaviour_Drill;
 import net.minecraft.block.Block;
@@ -25,7 +27,7 @@ import java.util.List;
 import static gregtech.api.util.GT_Utility.ItemNBT.getDrillRangeMode;
 
 abstract class GT_Tool_Drill_RangeBase
-        extends GT_Tool_Drill_LV {
+        extends GT_Tool_Drill_LV implements IOverlayItem {
 
     private ThreadLocal<Object> sIsHarvesting = new ThreadLocal();
 
@@ -48,6 +50,11 @@ abstract class GT_Tool_Drill_RangeBase
         double d3 = range;
         Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
         return world.rayTraceBlocks(vec3, vec31, wut);
+    }
+
+    public IIconContainer getOverlay(boolean isOverlay, ItemStack aStack) {
+        int mode = getDrillRangeMode(aStack);
+        return isOverlay ? gregtech.api.enums.Textures.ItemIcons.DRILLOVERLAY[mode] : Textures.ItemIcons.VOID;
     }
 
     public int getToolDamagePerBlockBreak() {
@@ -182,9 +189,6 @@ abstract class GT_Tool_Drill_RangeBase
         int WD = mode == 1 ? 1 : mode == 2 ? 2 : mode == 3 ? 3 : mode == 4 ? 4 : 0;
         int H = mode == 1 ? 1 : mode == 2 ? 3 : mode == 3 ? 5 : mode == 4 ? 7 : 0;
 
-        //int debugWD = RangeWidthandDepth();
-        //int debugH = RangeHeight();
-
         MovingObjectPosition raycast = raytraceFromEntity(aPlayer.worldObj, aPlayer, true, 10);
         if (raycast != null) {
             if ((this.sIsHarvesting.get() == null) && ((aPlayer instanceof EntityPlayerMP))) {
@@ -210,5 +214,4 @@ abstract class GT_Tool_Drill_RangeBase
         }
         return rConversions;
     }
-
 }
