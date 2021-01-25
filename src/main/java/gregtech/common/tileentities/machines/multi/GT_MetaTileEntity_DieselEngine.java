@@ -1,8 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
@@ -26,6 +23,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlockBase {
     protected int fuelConsumption = 0;
     protected int fuelValue = 0;
@@ -35,7 +35,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
     public GT_MetaTileEntity_DieselEngine(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
-    
+
     public GT_MetaTileEntity_DieselEngine(String aName) {
         super(aName);
     }
@@ -80,19 +80,20 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
         ArrayList<FluidStack> tFluids = getStoredFluids();
         Collection<GT_Recipe> tRecipeList = GT_Recipe.GT_Recipe_Map.sDieselFuels.mRecipeList;
 
-        if(tFluids.size() > 0 && tRecipeList != null) { //Does input hatch have a diesel fuel?
+        if (tFluids.size() > 0 && tRecipeList != null) { //Does input hatch have a diesel fuel?
             for (FluidStack hatchFluid1 : tFluids) { //Loops through hatches
-                for(GT_Recipe aFuel : tRecipeList) { //Loops through diesel fuel recipes
+                for (GT_Recipe aFuel : tRecipeList) { //Loops through diesel fuel recipes
                     FluidStack tLiquid;
                     if ((tLiquid = GT_Utility.getFluidForFilledItem(aFuel.getRepresentativeInput(0), true)) != null) { //Create fluidstack from current recipe
                         if (hatchFluid1.isFluidEqual(tLiquid)) { //Has a diesel fluid
                             fuelConsumption = tLiquid.amount = boostEu ? (4096 / aFuel.mSpecialValue) : (2048 / aFuel.mSpecialValue); //Calc fuel consumption
-                            if(depleteInput(tLiquid)) { //Deplete that amount
+                            if (depleteInput(tLiquid)) { //Deplete that amount
                                 boostEu = depleteInput(Materials.Oxygen.getGas(2L));
 
-                                if(tFluids.contains(Materials.Lubricant.getFluid(1L))) { //Has lubricant?
+                                if (tFluids.contains(Materials.Lubricant.getFluid(1L))) { //Has lubricant?
                                     //Deplete Lubricant. 1000L should = 1 hour of runtime (if baseEU = 2048)
-                                    if(mRuntime % 72 == 0 || mRuntime == 0) depleteInput(Materials.Lubricant.getFluid(boostEu ? 2 : 1));
+                                    if (mRuntime % 72 == 0 || mRuntime == 0)
+                                        depleteInput(Materials.Lubricant.getFluid(boostEu ? 2 : 1));
                                 } else return false;
 
                                 fuelValue = aFuel.mSpecialValue;
@@ -101,14 +102,19 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                                 this.mProgresstime = 1;
                                 this.mMaxProgresstime = 1;
                                 this.mEfficiencyIncrease = 15;
-								if(this.mDynamoHatches.size()>0){
-									if(this.mDynamoHatches.get(0).getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
-									explodeMultiblock();}
-								}
-                                if(this.mDynamoHatchesTT.size()>0){
-                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT)
-                                        if(hatch.getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
-                                        explodeMultiblock();}
+                                if (this.mDynamoHatches.size() > 0) {
+                                    for (GT_MetaTileEntity_Hatch_Dynamo hatch : mDynamoHatches) {
+                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.mAmpers) < (mEUt * mEfficiency / 10000L)) {
+                                            explodeMultiblock();
+                                        }
+                                    }
+                                }
+                                if (this.mDynamoHatchesTT.size() > 0) {
+                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT) {
+                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.Amperes) < (mEUt * mEfficiency / 10000L)) {
+                                            explodeMultiblock();
+                                        }
+                                    }
                                 }
                                 return true;
                             }
@@ -129,10 +135,10 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
         int tY = getBaseMetaTileEntity().getYCoord();
         int tZ = getBaseMetaTileEntity().getZCoord();
 
-        if(getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, 1) != getGearboxBlock() && getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, 2) != getGearboxBlock()) {
+        if (getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, 1) != getGearboxBlock() && getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, 2) != getGearboxBlock()) {
             return false;
         }
-        if(getBaseMetaTileEntity().getMetaIDAtSideAndDistance(tSide, 1) != getGearboxMeta() && getBaseMetaTileEntity().getMetaIDAtSideAndDistance(tSide, 2) != getGearboxMeta()) {
+        if (getBaseMetaTileEntity().getMetaIDAtSideAndDistance(tSide, 1) != getGearboxMeta() && getBaseMetaTileEntity().getMetaIDAtSideAndDistance(tSide, 2) != getGearboxMeta()) {
             return false;
         }
         for (byte i = -1; i < 2; i = (byte) (i + 1)) {
@@ -141,14 +147,14 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                     for (byte k = 0; k < 4; k = (byte) (k + 1)) {
 
                         final int fX = tX - (tSide == 5 ? 1 : tSide == 4 ? -1 : i),
-                                  fZ = tZ - (tSide == 2 ? -1 : tSide == 3 ? 1 : i),
-                                  aY = tY + j,
-                                  aX = tX + (tSide == 5 ? k : tSide == 4 ? -k : i),
-                                  aZ = tZ + (tSide == 2 ? -k : tSide == 3 ? k : i);
+                                fZ = tZ - (tSide == 2 ? -1 : tSide == 3 ? 1 : i),
+                                aY = tY + j,
+                                aX = tX + (tSide == 5 ? k : tSide == 4 ? -k : i),
+                                aZ = tZ + (tSide == 2 ? -k : tSide == 3 ? k : i);
 
                         final Block frontAir = getBaseMetaTileEntity().getBlock(fX, aY, fZ);
                         final String frontAirName = frontAir.getUnlocalizedName();
-                        if(!(getBaseMetaTileEntity().getAir(fX, aY, fZ) || frontAirName.equalsIgnoreCase("tile.air"))) {
+                        if (!(getBaseMetaTileEntity().getAir(fX, aY, fZ) || frontAirName.equalsIgnoreCase("tile.air"))) {
                             return false; //Fail if vent blocks are obstructed
                         }
 
@@ -161,9 +167,9 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                                 return false;
                             }
                         } else if (k == 0) {
-                          if(!(getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getIntakeBlock() && getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getIntakeMeta())) {
-                              return false;
-                          }
+                            if (!(getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getIntakeBlock() && getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getIntakeMeta())) {
+                                return false;
+                            }
                         } else if (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getCasingMeta()) {
                             // Do nothing
                         } else {
@@ -180,12 +186,10 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
             if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Dynamo)) {
                 this.mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) tTileEntity.getMetaTileEntity());
                 ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
-            } else
-            if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_DynamoMulti)) {
+            } else if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_DynamoMulti)) {
                 this.mDynamoHatchesTT.add((GT_MetaTileEntity_Hatch_DynamoMulti) tTileEntity.getMetaTileEntity());
                 ((GT_MetaTileEntity_Hatch_DynamoMulti) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -252,7 +256,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
     public int getPollutionPerTick(ItemStack aStack) {
         return 24;
     }
-    
+
     @Override
     public boolean explodesOnComponentBreak(ItemStack aStack) {
         return true;
@@ -260,39 +264,39 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
 
     @Override
     public String[] getInfoData() {
-        int mPollutionReduction=0;
+        int mPollutionReduction = 0;
         for (GT_MetaTileEntity_Hatch_Muffler tHatch : mMufflerHatches) {
             if (isValidMetaTileEntity(tHatch)) {
-                mPollutionReduction=Math.max(tHatch.calculatePollutionReduction(100),mPollutionReduction);
+                mPollutionReduction = Math.max(tHatch.calculatePollutionReduction(100), mPollutionReduction);
             }
         }
 
-        long storedEnergy=0;
-        long maxEnergy=0;
-        for(GT_MetaTileEntity_Hatch_Dynamo tHatch : mDynamoHatches) {
+        long storedEnergy = 0;
+        long maxEnergy = 0;
+        for (GT_MetaTileEntity_Hatch_Dynamo tHatch : mDynamoHatches) {
             if (isValidMetaTileEntity(tHatch)) {
-                storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
-                maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+                storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
+                maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
             }
         }
 
-        for(GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
+        for (GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
             if (isValidMetaTileEntity(tHatch)) {
-                storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
-                maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+                storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
+                maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
             }
         }
         return new String[]{
-                EnumChatFormatting.BLUE+"Diesel Engine"+EnumChatFormatting.RESET,
-                StatCollector.translateToLocal("GT5U.multiblock.energy")+": " +
-                EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET +" EU / "+
-                EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET +" EU",
-                StatCollector.translateToLocal("GT5U.engine.output")+": " +EnumChatFormatting.GREEN+(mEUt*mEfficiency/10000)+EnumChatFormatting.RESET+" EU/t",
-                StatCollector.translateToLocal("GT5U.engine.consumption")+": " +EnumChatFormatting.YELLOW+fuelConsumption+EnumChatFormatting.RESET+" L/t",
-                StatCollector.translateToLocal("GT5U.engine.value")+": " +EnumChatFormatting.YELLOW+fuelValue+EnumChatFormatting.RESET+" EU/L",
-                StatCollector.translateToLocal("GT5U.turbine.fuel")+": " +EnumChatFormatting.GOLD+fuelRemaining+EnumChatFormatting.RESET+" L",
-                StatCollector.translateToLocal("GT5U.engine.efficiency")+": " +EnumChatFormatting.YELLOW+(mEfficiency/100F)+EnumChatFormatting.YELLOW+" %",
-                StatCollector.translateToLocal("GT5U.multiblock.pollution")+": " + EnumChatFormatting.GREEN + mPollutionReduction+ EnumChatFormatting.RESET+" %"
+                EnumChatFormatting.BLUE + "Diesel Engine" + EnumChatFormatting.RESET,
+                StatCollector.translateToLocal("GT5U.multiblock.energy") + ": " +
+                        EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET + " EU / " +
+                        EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET + " EU",
+                StatCollector.translateToLocal("GT5U.engine.output") + ": " + EnumChatFormatting.GREEN + (mEUt * mEfficiency / 10000) + EnumChatFormatting.RESET + " EU/t",
+                StatCollector.translateToLocal("GT5U.engine.consumption") + ": " + EnumChatFormatting.YELLOW + fuelConsumption + EnumChatFormatting.RESET + " L/t",
+                StatCollector.translateToLocal("GT5U.engine.value") + ": " + EnumChatFormatting.YELLOW + fuelValue + EnumChatFormatting.RESET + " EU/L",
+                StatCollector.translateToLocal("GT5U.turbine.fuel") + ": " + EnumChatFormatting.GOLD + fuelRemaining + EnumChatFormatting.RESET + " L",
+                StatCollector.translateToLocal("GT5U.engine.efficiency") + ": " + EnumChatFormatting.YELLOW + (mEfficiency / 100F) + EnumChatFormatting.YELLOW + " %",
+                StatCollector.translateToLocal("GT5U.multiblock.pollution") + ": " + EnumChatFormatting.GREEN + mPollutionReduction + EnumChatFormatting.RESET + " %"
 
         };
     }

@@ -4,20 +4,16 @@ import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_H
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Dynamo;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
@@ -70,38 +66,44 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
         ArrayList<FluidStack> tFluids = getStoredFluids();
         Collection<GT_Recipe> tRecipeList = GT_Recipe.GT_Recipe_Map.sDieselFuels.mRecipeList;
 
-        if(tFluids.size() > 0 && tRecipeList != null) { //Does input hatch have a diesel fuel?
+        if (tFluids.size() > 0 && tRecipeList != null) { //Does input hatch have a diesel fuel?
             for (FluidStack hatchFluid1 : tFluids) { //Loops through hatches
-                for(GT_Recipe aFuel : tRecipeList) { //Loops through diesel fuel recipes
+                for (GT_Recipe aFuel : tRecipeList) { //Loops through diesel fuel recipes
                     FluidStack tLiquid;
                     if ((tLiquid = GT_Utility.getFluidForFilledItem(aFuel.getRepresentativeInput(0), true)) != null) { //Create fluidstack from current recipe
-                    	if (hatchFluid1.isFluidEqual(tLiquid)) { //Has a diesel fluid
+                        if (hatchFluid1.isFluidEqual(tLiquid)) { //Has a diesel fluid
                             fuelConsumption = tLiquid.amount = boostEu ? (10240 / aFuel.mSpecialValue) : (8192 / aFuel.mSpecialValue); //Calc fuel consumption
-                            if(depleteInput(tLiquid)) { //Deplete that amount
+                            if (depleteInput(tLiquid)) { //Deplete that amount
                                 boostEu = depleteInput(Materials.Oxygen.getGas(3L));
 
-                                if(tFluids.contains(Materials.Lubricant.getFluid(2L))) { //Has lubricant?
+                                if (tFluids.contains(Materials.Lubricant.getFluid(2L))) { //Has lubricant?
                                     //Deplete Lubricant. 1000L should = 1 hour of runtime (if baseEU = 2048)
-                                    if(mRuntime % 80 == 0 || mRuntime == 0) depleteInput(Materials.Lubricant.getFluid(boostEu ? 3 : 2));
+                                    if (mRuntime % 80 == 0 || mRuntime == 0)
+                                        depleteInput(Materials.Lubricant.getFluid(boostEu ? 3 : 2));
                                 } else return false;
 
                                 fuelValue = aFuel.mSpecialValue;
                                 fuelRemaining = hatchFluid1.amount; //Record available fuel
                                 if (mEfficiency < 2000)
-                                	this.mEUt =  0; 
-                                	else
-                                	this.mEUt = 8192;
+                                    this.mEUt = 0;
+                                else
+                                    this.mEUt = 8192;
                                 this.mProgresstime = 1;
                                 this.mMaxProgresstime = 1;
                                 this.mEfficiencyIncrease = 40;
-                                if(this.mDynamoHatches.size()>0){
-                                    if(this.mDynamoHatches.get(0).getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
-                                        explodeMultiblock();}
+                                if (this.mDynamoHatches.size() > 0) {
+                                    for (GT_MetaTileEntity_Hatch_Dynamo hatch : mDynamoHatches) {
+                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.mAmpers) < (mEUt * mEfficiency / 10000L)) {
+                                            explodeMultiblock();
+                                        }
+                                    }
                                 }
-                                if(this.mDynamoHatchesTT.size()>0){
-                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT)
-                                        if(hatch.getBaseMetaTileEntity().getOutputVoltage() < (int)((long)mEUt * (long)mEfficiency / 10000L)){
-                                            explodeMultiblock();}
+                                if (this.mDynamoHatchesTT.size() > 0) {
+                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT) {
+                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.Amperes) < (mEUt * mEfficiency / 10000L)) {
+                                            explodeMultiblock();
+                                        }
+                                    }
                                 }
                                 return true;
                             }
@@ -159,42 +161,42 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
 
     @Override
     public String[] getInfoData() {
-        int mPollutionReduction=0;
+        int mPollutionReduction = 0;
         for (GT_MetaTileEntity_Hatch_Muffler tHatch : mMufflerHatches) {
             if (isValidMetaTileEntity(tHatch)) {
-                mPollutionReduction=Math.max(tHatch.calculatePollutionReduction(100),mPollutionReduction);
+                mPollutionReduction = Math.max(tHatch.calculatePollutionReduction(100), mPollutionReduction);
             }
         }
 
-        long storedEnergy=0;
-        long maxEnergy=0;
+        long storedEnergy = 0;
+        long maxEnergy = 0;
 
-        for(GT_MetaTileEntity_Hatch_Dynamo tHatch : mDynamoHatches) {
+        for (GT_MetaTileEntity_Hatch_Dynamo tHatch : mDynamoHatches) {
             if (isValidMetaTileEntity(tHatch)) {
-                storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
-                maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+                storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
+                maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
             }
         }
 
-        for(GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
+        for (GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
             if (isValidMetaTileEntity(tHatch)) {
-                storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
-                maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+                storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
+                maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
             }
         }
 
-        
+
         return new String[]{
-                EnumChatFormatting.BLUE+"Diesel Engine"+EnumChatFormatting.RESET,
-                StatCollector.translateToLocal("GT5U.multiblock.energy")+": " +
-                EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET +" EU / "+
-                EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET +" EU",
-                StatCollector.translateToLocal("GT5U.engine.output")+": " +EnumChatFormatting.GREEN+(mEUt*mEfficiency/10000)+EnumChatFormatting.RESET+" EU/t",
-                StatCollector.translateToLocal("GT5U.engine.consumption")+": " +EnumChatFormatting.YELLOW+fuelConsumption+EnumChatFormatting.RESET+" L/t",
-                StatCollector.translateToLocal("GT5U.engine.value")+": " +EnumChatFormatting.YELLOW+fuelValue+EnumChatFormatting.RESET+" EU/L",
-                StatCollector.translateToLocal("GT5U.turbine.fuel")+": " +EnumChatFormatting.GOLD+fuelRemaining+EnumChatFormatting.RESET+" L",
-                StatCollector.translateToLocal("GT5U.engine.efficiency")+": " +EnumChatFormatting.YELLOW+(mEfficiency/100F)+EnumChatFormatting.YELLOW+" %",
-                StatCollector.translateToLocal("GT5U.multiblock.pollution")+": " + EnumChatFormatting.GREEN + mPollutionReduction+ EnumChatFormatting.RESET+" %"
+                EnumChatFormatting.BLUE + "Diesel Engine" + EnumChatFormatting.RESET,
+                StatCollector.translateToLocal("GT5U.multiblock.energy") + ": " +
+                        EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET + " EU / " +
+                        EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET + " EU",
+                StatCollector.translateToLocal("GT5U.engine.output") + ": " + EnumChatFormatting.GREEN + (mEUt * mEfficiency / 10000) + EnumChatFormatting.RESET + " EU/t",
+                StatCollector.translateToLocal("GT5U.engine.consumption") + ": " + EnumChatFormatting.YELLOW + fuelConsumption + EnumChatFormatting.RESET + " L/t",
+                StatCollector.translateToLocal("GT5U.engine.value") + ": " + EnumChatFormatting.YELLOW + fuelValue + EnumChatFormatting.RESET + " EU/L",
+                StatCollector.translateToLocal("GT5U.turbine.fuel") + ": " + EnumChatFormatting.GOLD + fuelRemaining + EnumChatFormatting.RESET + " L",
+                StatCollector.translateToLocal("GT5U.engine.efficiency") + ": " + EnumChatFormatting.YELLOW + (mEfficiency / 100F) + EnumChatFormatting.YELLOW + " %",
+                StatCollector.translateToLocal("GT5U.multiblock.pollution") + ": " + EnumChatFormatting.GREEN + mPollutionReduction + EnumChatFormatting.RESET + " %"
 
         };
     }
