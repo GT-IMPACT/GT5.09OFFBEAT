@@ -67,8 +67,8 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
 
         GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sCrakingRecipes.findRecipe(
-                getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluidInputs ,new ItemStack[]{mInventory[1]});
-        if (tRecipe != null && tRecipe.isRecipeInputEqual(true, tFluidInputs, new ItemStack[]{mInventory[1]})) {
+                getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluidInputs , mInventory[1]);
+        if (tRecipe != null && tRecipe.isRecipeInputEqual(true, tFluidInputs, mInventory[1])) {
             this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
             this.mEfficiencyIncrease = 10000;
             this.mEUt = tRecipe.mEUt;
@@ -278,7 +278,8 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch) && tHatch.getFillableStack() != null) {
                 FluidStack tStack = tHatch.getFillableStack();
-                if (tStack.isFluidEqual(GT_ModHandler.getSteam(1000)) || tStack.isFluidEqual(Materials.Hydrogen.getGas(1000))) {
+                if (tStack.isFluidEqual(GT_ModHandler.getSteam(1000)) || tStack.isFluidEqual(Materials.Hydrogen.getGas(1000))
+                    || tStack.isFluidEqual(Materials.Radon.getGas(1000)) || tStack.isFluidEqual(Materials.Fluorine.getGas(1000))) {
                     if (isHatchInMiddleRing(tHatch)) {
                         rList.add(tStack);
                     }
