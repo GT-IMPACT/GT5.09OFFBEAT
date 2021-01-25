@@ -13,6 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Behaviour_NoteBook extends Behaviour_None {
@@ -33,25 +34,22 @@ public class Behaviour_NoteBook extends Behaviour_None {
                     GT_Utility.sendChatToPlayer(aPlayer, tList.get(i));
                 }
             }
-            GT_Utility.doSoundAtClient(GregTech_API.sSoundList.get(Integer.valueOf(108)), 1, 1.0F, aX, aY, aZ);
+            GT_Utility.doSoundAtClient(GregTech_API.sSoundList.get(108), 1, 1.0F, aX, aY, aZ);
             //aPlayer.openGui("gregtech", 1021, aWorld, aX, aY, aZ);
             return true;
         }
 
-        return false;
+        return super.onItemUseFirst(aItem, aStack, aPlayer, aWorld, aX, aY, aZ, aSide, hitX, hitY, hitZ);
     }
 
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         String[] mTooltip = new String[] {
                 "Your manual assistant",
-                EnumChatFormatting.YELLOW + "RightClick Function:",
-                "[Applied Energistics 2] Blocks and Parts renamed",
                 EnumChatFormatting.YELLOW + "Shift + RightClick Function:",
                 "[Gregtech] Controllers and Basic Machines information sensor",
         };
 
-        for (int i = 0; i < mTooltip.length; i++)
-            aList.add(mTooltip[i]);
+        aList.addAll(Arrays.asList(mTooltip));
 
         try {
             NBTTagCompound tNBT = aStack.getTagCompound();
