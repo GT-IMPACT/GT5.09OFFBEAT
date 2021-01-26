@@ -54,7 +54,8 @@ abstract class GT_Tool_Drill_RangeBase
 
     public IIconContainer getOverlay(boolean isOverlay, ItemStack aStack) {
         int mode = getDrillRangeMode(aStack);
-        return isOverlay ? gregtech.api.enums.Textures.ItemIcons.DRILLOVERLAY[mode] : Textures.ItemIcons.VOID;
+        IIconContainer container = isOverlay ? Textures.ItemIcons.DRILLOVERLAY[mode] : Textures.ItemIcons.VOID;
+        return container != null ? container : Textures.ItemIcons.VOID;
     }
 
     public int getToolDamagePerBlockBreak() {

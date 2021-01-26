@@ -813,7 +813,7 @@ public class Textures {
         POWER_UNIT_EV, POWER_UNIT_IV, DURABILITY_BAR_0, DURABILITY_BAR_1, DURABILITY_BAR_2, DURABILITY_BAR_3,
         DURABILITY_BAR_4, DURABILITY_BAR_5, DURABILITY_BAR_6, DURABILITY_BAR_7, DURABILITY_BAR_8, ENERGY_BAR_0,
         ENERGY_BAR_1, ENERGY_BAR_2, ENERGY_BAR_3, ENERGY_BAR_4, ENERGY_BAR_5, ENERGY_BAR_6, ENERGY_BAR_7, ENERGY_BAR_8,
-        TURBINE, TURBINE_SMALL, TURBINE_LARGE, TURBINE_HUGE, DRILL_OVERLAY_1, DRILL_OVERLAY_2, DRILL_OVERLAY_3, DRILL_OVERLAY_4, DRILL_OVERLAY_5,
+        TURBINE, TURBINE_SMALL, TURBINE_LARGE, TURBINE_HUGE, DRILL_OVERLAY_0, DRILL_OVERLAY_1, DRILL_OVERLAY_2, DRILL_OVERLAY_3, DRILL_OVERLAY_4,
 
         ENDED;
 
@@ -841,15 +841,11 @@ public class Textures {
                         ENERGY_BAR_8,
                 },
                 DRILLOVERLAY = new IIconContainer[]{
+                        DRILL_OVERLAY_0,
                         DRILL_OVERLAY_1,
                         DRILL_OVERLAY_2,
                         DRILL_OVERLAY_3,
                         DRILL_OVERLAY_4,
-                        DRILL_OVERLAY_5,
-                        VOID,
-                        VOID,
-                        VOID,
-                        VOID,
                 };
 
         public static final ITexture[] ERROR_RENDERING = new ITexture[]{new GT_RenderedTexture(RENDERING_ERROR)};
