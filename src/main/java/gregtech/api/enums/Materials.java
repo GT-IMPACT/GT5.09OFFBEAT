@@ -1261,7 +1261,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         ConductiveIron.mChemicalFormula="("+RedstoneAlloy.mChemicalFormula+")FeAg";
         EnergeticAlloy.mChemicalFormula="("+ ConductiveIron.mChemicalFormula +")Au(NiAuAgCu\u2083(Fe\u2085\u2080C)\u2083)";
         VibrantAlloy.mChemicalFormula="("+EnergeticAlloy.mChemicalFormula+")Cr("+EnderEye.mChemicalFormula+")";
-        Enderium.mChemicalFormula="("+EnderiumBase.mChemicalFormula+")\u2082("+DarkSteel.mChemicalFormula+")("+Enderpearl.mChemicalFormula+")";
+        Enderium.mChemicalFormula="("+EnderiumBase.mChemicalFormula+")\u2082("+BlackSteel.mChemicalFormula+")("+Enderpearl.mChemicalFormula+")";
         PulsatingIron.mChemicalFormula="Fe("+EnderEye.mChemicalFormula+")("+RedstoneAlloy.mChemicalFormula+")";
         Mytryl.mChemicalFormula="Pb\u2083Pt\u2082Dr";
         Phoenixite.mChemicalFormula="Phn";
