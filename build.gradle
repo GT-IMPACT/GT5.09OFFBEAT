@@ -129,9 +129,7 @@ dependencies {
     provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
 
     provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
-    provided ("com.enderio:EnderIO:${config.enderio.version}:dev") {
-        transitive = false
-    }
+
     provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
 }
 
