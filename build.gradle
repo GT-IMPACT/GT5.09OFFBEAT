@@ -108,8 +108,8 @@ dependencies {
     provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
 
     provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
-
-    provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
+	compileOnly files("libs/buildcraft-impact-7.1.8-impact-dev.jar")
+    
 }
 
 processResources
