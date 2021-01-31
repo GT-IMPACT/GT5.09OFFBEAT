@@ -99,6 +99,11 @@ repositories {
 dependencies {
 //    compile fileTree(dir: 'libs', include: '*.jar')
 
+    api "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
+    api ("com.enderio:EnderIO:${config.enderio.version}:dev"){
+        transitive = false
+    }
+    
     compile "tconstruct:TConstruct:${config.minecraft.version}-${config.tconstruct.version}:deobf"
 
     provided "codechicken:CodeChickenLib:${config.minecraft.version}-${config.codechickenlib.version}:dev"
@@ -108,9 +113,6 @@ dependencies {
     provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
 
 	compile files("libs/buildcraft-impact-7.1.8-impact-dev.jar")
-	compile files("libs/EnderIO-2.3.1.14-impact.jar")
-
-    
 }
 
 processResources
