@@ -106,9 +106,10 @@ dependencies {
     provided "codechicken:Translocator:${config.minecraft.version}-${config.translocators.version}:dev"
     provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
     provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
-
-    provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
+    
 	compileOnly files("libs/buildcraft-impact-7.1.8-impact-dev.jar")
+	compileOnly files("libs/EnderIO-2.3.1.14-impact.jar")
+
     
 }
 
