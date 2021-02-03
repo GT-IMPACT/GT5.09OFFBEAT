@@ -192,12 +192,10 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
         if (machine == null) return null;
         switch (aSlotIndex) {
             case 0:
-                machine.mFluidTransfer = !machine.mFluidTransfer;
                 if (aShifthold == 0) {
                     if (mTileEntity.getMetaTileEntity() == null) return null;
                     ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer;
                 }
-
                 if (aShifthold == 1) {
                     ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange;
                     ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1 = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid;
@@ -216,7 +214,6 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
                 return null;
             case 1:
                 if (mTileEntity.getMetaTileEntity() == null) return null;
-                machine.mItemTransfer = !machine.mItemTransfer;
                 ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer;
                 return null;
             case 2:
