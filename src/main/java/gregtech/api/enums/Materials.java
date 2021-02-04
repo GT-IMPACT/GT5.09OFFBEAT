@@ -103,8 +103,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
             //NaquadahChemistry
             AmmoniaNitrate, NaquadahSollution, NaquadahLiquidClear, ComplicatedNaquadhaGas, ComplicatedNaquadahLight, ComplicatedNaquadahModer, ComplicatedNaquadahSever, NaquadhaGas, NaquadahLight, NaquadahMedium, NaquadahHeavy,
             NaquadahLightFluorine, NaquadahMediumFluorine, NaquadahHeavyFluorine, NaquadahLightFuel, NaquadahMediumFuel, NaquadahHeavyFuel, 
-			NaquadahESollution, NaquadahELiquidClear, ComplicatedNaquadahELight, ComplicatedNaquadahEModer, ComplicatedNaquadahESever, NaquadahELight, NaquadahEMedium, NaquadahEHeavy, NaquadahELightRadon, NaquadahEMediumRadon, 
-			NaquadahEHeavyRadon, NaquadahELightFuel, NaquadahEMediumFuel, NaquadahEHeavyFuel, NaquadriaLiquid, HyperFuelI, HyperFuelII, HyperFuelIII,
+			      NaquadahESollution, NaquadahELiquidClear, ComplicatedNaquadahELight, ComplicatedNaquadahEModer, ComplicatedNaquadahESever, NaquadahELight, NaquadahEMedium, NaquadahEHeavy, NaquadahELightRadon, NaquadahEMediumRadon,
+			      NaquadahEHeavyRadon, NaquadahELightFuel, NaquadahEMediumFuel, NaquadahEHeavyFuel, NaquadriaLiquid, HyperFuelI, HyperFuelII, HyperFuelIII,
 
             Kerosene, KeroseneMixture,
 
@@ -327,7 +327,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Ethanol = new Materials(706, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 128, 0, 0, "Ethanol", "Ethanol", 0, 148, -1, 0, false, false, 1, 1, 1, Dyes.dyeOrange, 1, Arrays.asList(new MaterialStack(Carbon, 2), new MaterialStack(Hydrogen, 6), new MaterialStack(Oxygen, 1)));
         FermentedBiomass = new MaterialBuilder(691, TextureSet.SET_FLUID, "Fermented Biomass").addCell().addFluid().setRGB(68, 85, 0).setColor(Dyes.dyeBrown).constructMaterial();
         FishOil = new Materials(711, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 196, 0, 0, "FishOil", "Fish Oil", 3, 2, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow);
-        Fuel = new Materials(708, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "Fuel", "Diesel", 0, 256, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow);
+        Fuel = new Materials(708, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "Fuel", "Diesel", 0, 340, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow);
         Glue = new Materials(726, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 200, 196, 0, 0, "Glue", "Glue", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeOrange);
         Gunpowder = new Materials(800, TextureSet.SET_DULL, 1.0F, 0, 0, 1, 128, 128, 128, 0, "Gunpowder", "Gunpowder", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeGray);
         FryingOilHot = new Materials(727, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 200, 196, 0, 0, "FryingOilHot", "Hot Frying Oil", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeOrange);
@@ -463,7 +463,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         SulfuricLightFuel = new Materials(737, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "SulfuricLightFuel", "Sulfuric Light Fuel", 0, 32, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow);
         SulfuricHeavyFuel = new Materials(738, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "SulfuricHeavyFuel", "Sulfuric Heavy Fuel", 3, 32, -1, 0, false, false, 1, 1, 1, Dyes.dyeBlack);
         Naphtha = new Materials(739, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "Naphtha", "Naphtha", 1, 256, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow).setCanBeCracked(true);
-        LightFuel = new Materials(740, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "LightFuel", "Light Fuel", 0, 256, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow).setCanBeCracked(true);
+        LightFuel = new Materials(740, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "LightFuel", "Light Fuel", 0, 204, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow).setCanBeCracked(true);
         HeavyFuel = new Materials(741, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "HeavyFuel", "Heavy Fuel", 3, 192, -1, 0, false, false, 1, 1, 1, Dyes.dyeBlack).setCanBeCracked(true);
         LPG = new Materials(742, TextureSet.SET_FLUID, 1.0F, 0, 0, 16, 255, 255, 0, 0, "LPG", "LPG", 1, 256, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow);
         Chlorobenzene = new MaterialBuilder(605, TextureSet.SET_FLUID, "Chlorobenzene").addCell().addFluid().setRGB(0, 50, 65).setColor(Dyes.dyeGray).setMaterialList(new MaterialStack(Carbon, 6), new MaterialStack(Hydrogen, 5), new MaterialStack(Chlorine, 1)).addElectrolyzerRecipe().constructMaterial();
@@ -601,7 +601,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         BlueSteel = new Materials(349, TextureSet.SET_METALLIC, 7.5F, 1024, 2, 1 | 2 | 64, 100, 100, 140, 0, "BlueSteel", "Blue Steel", 0, 0, -1, 1400, true, false, 4, 1, 1, Dyes.dyeBlue, 2, Arrays.asList(new MaterialStack(RoseGold, 1), new MaterialStack(Brass, 1), new MaterialStack(Steel, 2), new MaterialStack(BlackSteel, 4)));
         DamascusSteel = new Materials(335, TextureSet.SET_METALLIC, 8.0F, 1280, 2, 1 | 2 | 64, 110, 110, 110, 0, "DamascusSteel", "Damascus Steel", 0, 0, 2000, 1500, true, false, 4, 1, 1, Dyes.dyeGray, 2, Arrays.asList(new MaterialStack(Steel, 1)));
         TungstenSteel = new Materials(316, TextureSet.SET_METALLIC, 8.0F, 2560, 4, 1 | 2 | 64 | 128, 100, 100, 160, 0, "TungstenSteel", "Tungstensteel", 0, 0, -1, 3000, true, false, 4, 1, 1, Dyes.dyeBlue, 2, Arrays.asList(new MaterialStack(Steel, 1), new MaterialStack(Tungsten, 1))).disableAutoGeneratedBlastFurnaceRecipes();
-        NitroFuel = new Materials(709, TextureSet.SET_FLUID, 1.0F, 0, 2, 16, 200, 255, 0, 0, "NitroFuel", "Cetane-Boosted Diesel", 0, 512, -1, 0, false, false, 1, 1, 1, Dyes.dyeLime);
+        NitroFuel = new Materials(709, TextureSet.SET_FLUID, 1.0F, 0, 2, 16, 200, 255, 0, 0, "NitroFuel", "Cetane-Boosted Diesel", 0, 680, -1, 0, false, false, 1, 1, 1, Dyes.dyeLime);
         Mithril = new Materials(331, TextureSet.SET_EMERALD, 14.0F, 64, 3, 1 | 4 | 8, 230, 90, 12, 0, "Mithril", "Mithril", 0, 0, -1, 0, false, false, 4, 3, 2, Dyes.dyeOrange);
         RedAlloy = new Materials(308, TextureSet.SET_DULL, 1.0F, 0, 0, 1 | 2, 200, 0, 0, 0, "RedAlloy", "Red Alloy", 0, 0, 500, 0, false, false, 3, 5, 1, Dyes.dyeRed, 2, Arrays.asList(new MaterialStack(Copper, 1), new MaterialStack(Redstone, 4)));
         CobaltBrass = new Materials(343, TextureSet.SET_METALLIC, 8.0F, 256, 2, 1 | 2 | 128, 180, 180, 160, 0, "CobaltBrass", "Cobalt Brass", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes.dyeOrange, 2, Arrays.asList(new MaterialStack(Brass, 7), new MaterialStack(Aluminium, 1), new MaterialStack(Cobalt, 1)));
@@ -675,8 +675,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         AntiKnock = new MaterialBuilder(994, TextureSet.SET_FLUID, "Ethyl Tert-Butyl Ether").addCell().addFluid().setRGB(255, 255, 255).setColor(Dyes.dyeWhite).constructMaterial();
         Octane = new MaterialBuilder(995, TextureSet.SET_FLUID, "Octane").addCell().addFluid().setRGB(255, 255, 255).setColor(Dyes.dyeWhite).setFuelType(MaterialBuilder.DIESEL).setFuelPower(80).setMaterialList(new MaterialStack(Carbon, 8), new MaterialStack(Hydrogen, 18)).constructMaterial();
         GasolineRaw = new MaterialBuilder(996, TextureSet.SET_FLUID, "Raw Gasoline").addCell().addFluid().setRGB(255, 100, 0).setColor(Dyes.dyeOrange).constructMaterial();
-        GasolineRegular = new MaterialBuilder(997, TextureSet.SET_FLUID, "Gasoline").addCell().addFluid().setRGB(255, 165, 0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(576).constructMaterial();
-        GasolinePremium = new MaterialBuilder(998, TextureSet.SET_FLUID, "High Octane Gasoline").addCell().addFluid().setRGB(255, 165, 0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(1728).constructMaterial();
+        GasolineRegular = new MaterialBuilder(997, TextureSet.SET_FLUID, "Gasoline").addCell().addFluid().setRGB(255, 165, 0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(768).constructMaterial();
+        GasolinePremium = new MaterialBuilder(998, TextureSet.SET_FLUID, "High Octane Gasoline").addCell().addFluid().setRGB(255, 165, 0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(2176).constructMaterial();
 
         Oriharukon = new Materials(389, TextureSet.SET_SHINY, 32.0F, 10240, 5, 1 | 2 | 8 | 64 | 128, 103, 125, 104, 0, "Oriharukon", "Oriharukon", 0, 0, 5400, 5400, true, false, 4, 1, 1, Dyes.dyeLime, Element.Oh).disableAutoGeneratedBlastFurnaceRecipes();
         MysteriousCrystal = new Materials(394, TextureSet.SET_DIAMOND, 8.0F, 256, 6, 1 | 4 | 8, 22, 133, 108, 0, "MysteriousCrystal", "Mysterious Crystal", 0, 0, 7200, 7200, true, true, 4, 1, 1, Dyes.dyeCyan).disableAutoGeneratedBlastFurnaceRecipes();
