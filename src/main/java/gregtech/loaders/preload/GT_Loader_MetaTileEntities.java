@@ -2365,20 +2365,20 @@ public class GT_Loader_MetaTileEntities implements Runnable {
                         ItemList.Casing_Coil_Naquadah});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UHV_UV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_MAX_UV, 'C',
-                        OrePrefixes.wireGt02.get(Materials.Superconductor), 'B',
+                        OrePrefixes.wireGt02.get(Materials.Europium), 'B',
                         OrePrefixes.wireGt04.get(Materials.NaquadahAlloy), 'K',
                         ItemList.Casing_Coil_NaquadahAlloy, 'E',
                         ItemList.Circuit_HighEnergyFlow});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UEV_UHV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_UEV_UHV, 'C',
-                        OrePrefixes.wireGt04.get(Materials.SuperconductorUEV), 'B',
-                        OrePrefixes.wireGt02.get(Materials.Superconductor), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Draconium), 'B',
+                        OrePrefixes.wireGt02.get(Materials.Europium), 'K',
                         ItemList.Casing_Coil_Superconductor, 'E',
                         ItemList.Circuit_HighEnergyFlow});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UIV_UEV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_UIV_UEV, 'C',
                         OrePrefixes.wireGt08.get(Materials.Neutronium), 'B',
-                        OrePrefixes.wireGt04.get(Materials.SuperconductorUEV), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Draconium), 'K',
                         ItemList.Casing_Fusion_Coil, 'E',
                         ItemList.Circuit_HighEnergyFlow});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UMV_UIV.get(1L), bitsd,
