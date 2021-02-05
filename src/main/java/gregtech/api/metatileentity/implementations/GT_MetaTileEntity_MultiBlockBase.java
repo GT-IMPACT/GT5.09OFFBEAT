@@ -1176,7 +1176,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         return false;
     }
 
-    public boolean separatedBusesCheckRecipe() {
+    public boolean separatedBusesCheckRecipe(GT_Recipe.GT_Recipe_Map map) {
         ArrayList<ItemStack> tInputList;
         ArrayList<FluidStack> tFluidList;
         ItemStack[] tInputs;
@@ -1200,7 +1200,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 long tVoltage = getMaxInputVoltage();
                 byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
                 GT_Recipe tRecipe;
-                tRecipe = getRecipeMap()
+                tRecipe = map
                         .findRecipe(this.getBaseMetaTileEntity(), false, V[tTier], tFluids, tInputs);
 
                 if (tRecipe != null) {

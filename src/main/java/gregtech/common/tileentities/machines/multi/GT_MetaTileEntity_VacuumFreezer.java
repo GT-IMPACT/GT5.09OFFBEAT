@@ -66,7 +66,7 @@ public class GT_MetaTileEntity_VacuumFreezer
     }
 
     public boolean checkRecipe(ItemStack aStack) {
-       return separatedBusesCheckRecipe();
+       return separatedBusesCheckRecipe(getRecipeMap());
     }
 
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
