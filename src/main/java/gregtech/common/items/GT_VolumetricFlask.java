@@ -38,7 +38,7 @@ public class GT_VolumetricFlask extends GT_Generic_Item implements IFluidContain
     public GT_VolumetricFlask(String unlocalized, String english, int maxCapacity) {
         super(unlocalized, english, null);
         this.maxCapacity = maxCapacity;
-        setMaxStackSize(16);
+        setMaxStackSize(64);
         setNoRepair();
         if (Loader.isModLoaded("NotEnoughItems")) {
             for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
