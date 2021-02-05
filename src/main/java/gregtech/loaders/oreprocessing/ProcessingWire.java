@@ -37,7 +37,7 @@ public class ProcessingWire implements gregtech.api.interfaces.IOreRecipeRegistr
                 correspondingCable = OrePrefixes.cableGt01;
                 if (!aMaterial.contains(gregtech.api.enums.SubTag.NO_SMASHING)) {
                     GT_Values.RA.addBenderRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.springSmall, aMaterial, 2L), 100, 8);
-                    GT_Values.RA.addWiremillRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.wireFine, aMaterial, 8L), 200, 8);
+                    GT_Values.RA.addWiremillRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.wireFine, aMaterial, 4L), 200, 8);
                     //GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, aMaterial, 1L), GT_Utility.copy(new Object[]{GT_Utility.copyAmount(2L, aStack), GT_OreDictUnificator.get(OrePrefixes.wireFine, aMaterial, 8L)}), 100, 4);
                     //GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.stick, aMaterial, 1L), GT_Utility.copy(new Object[]{aStack, GT_OreDictUnificator.get(OrePrefixes.wireFine, aMaterial, 4L)}), 50, 4);
                 }
