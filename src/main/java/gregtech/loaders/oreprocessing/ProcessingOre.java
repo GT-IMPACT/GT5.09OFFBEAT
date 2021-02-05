@@ -1,7 +1,10 @@
 package gregtech.loaders.oreprocessing;
 
 import gregtech.GT_Mod;
-import gregtech.api.enums.*;
+import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.Materials;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.enums.SubTag;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
@@ -10,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 
 public class ProcessingOre implements gregtech.api.interfaces.IOreRecipeRegistrator {
-    private ArrayList<Materials> mAlreadyListedOres = new ArrayList(1000);
+    private final ArrayList<Materials> mAlreadyListedOres = new ArrayList(1000);
 
     public ProcessingOre() {
         for (OrePrefixes tPrefix : OrePrefixes.values())
@@ -22,9 +25,9 @@ public class ProcessingOre implements gregtech.api.interfaces.IOreRecipeRegistra
         boolean tIsRich = (aPrefix == OrePrefixes.oreNetherrack) || (aPrefix == OrePrefixes.oreNether) || (aPrefix == OrePrefixes.oreEndstone) || (aPrefix == OrePrefixes.oreEnd) || (aPrefix == OrePrefixes.oreRich) || (aPrefix == OrePrefixes.oreDense);
 
         if (aMaterial == Materials.Oilsands) {
-            GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), null, null, Materials.Oil.getFluid(tIsRich ? 1000L : 500L), new ItemStack(net.minecraft.init.Blocks.sand, 1, 0), null, null, null, null, null, new int[]{tIsRich ? '?' : '?'}, tIsRich ? 2000 : 1000, 5);
+            GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, aStack), null, null, Materials.Oil.getFluid(tIsRich ? 1000L : 500L), new ItemStack(net.minecraft.init.Blocks.sand, 1, 0), null, null, null, null, null, new int[]{tIsRich ? '?' : '?'}, tIsRich ? 2000 : 1000, 5);
         } else {
-            registerStandardOreRecipes(aPrefix, aMaterial, GT_Utility.copyAmount(1L, new Object[]{aStack}), Math.max(1, gregtech.api.GregTech_API.sOPStuff.get(gregtech.api.enums.ConfigCategories.Materials.oreprocessingoutputmultiplier, aMaterial.toString(), 1)) * (tIsRich ? 2 : 1));
+            registerStandardOreRecipes(aPrefix, aMaterial, GT_Utility.copyAmount(1L, aStack), Math.max(1, gregtech.api.GregTech_API.sOPStuff.get(gregtech.api.enums.ConfigCategories.Materials.oreprocessingoutputmultiplier, aMaterial.toString(), 1)) * (tIsRich ? 2 : 1));
         }
     }
 
@@ -34,7 +37,7 @@ public class ProcessingOre implements gregtech.api.interfaces.IOreRecipeRegistra
         Materials tMaterial = aMaterial.mOreReplacement;
         Materials tPrimaryByMaterial = null;
         aMultiplier = Math.max(1, aMultiplier);
-        aOreStack = GT_Utility.copyAmount(1L, new Object[]{aOreStack});
+        aOreStack = GT_Utility.copyAmount(1L, aOreStack);
         aOreStack.stackSize = 1;
 
 
@@ -49,7 +52,7 @@ public class ProcessingOre implements gregtech.api.interfaces.IOreRecipeRegistra
         ItemStack tPrimaryByProduct = null;
 
         if (tCrushed == null) {
-            tCrushed = GT_OreDictUnificator.get(OrePrefixes.dustImpure, tMaterial, GT_Utility.copyAmount(aMaterial.mOreMultiplier * aMultiplier, new Object[]{tCleaned, tDust, tGem}), aMaterial.mOreMultiplier * aMultiplier);
+            tCrushed = GT_OreDictUnificator.get(OrePrefixes.dustImpure, tMaterial, GT_Utility.copyAmount(aMaterial.mOreMultiplier * aMultiplier, tCleaned, tDust, tGem), aMaterial.mOreMultiplier * aMultiplier);
         }
 
         ArrayList<ItemStack> tByProductStacks = new ArrayList();
@@ -69,7 +72,7 @@ public class ProcessingOre implements gregtech.api.interfaces.IOreRecipeRegistra
         }
         if ((!tByProductStacks.isEmpty()) && (!this.mAlreadyListedOres.contains(aMaterial))) {
             this.mAlreadyListedOres.add(aMaterial);
-            gregtech.api.util.GT_Recipe.GT_Recipe_Map.sByProductList.addFakeRecipe(false, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ore, aMaterial, aOreStack, 1L)}, (ItemStack[]) tByProductStacks.toArray(new ItemStack[tByProductStacks.size()]), null, null, null, null, 0, 0, 0);
+            gregtech.api.util.GT_Recipe.GT_Recipe_Map.sByProductList.addFakeRecipe(false, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ore, aMaterial, aOreStack, 1L)}, tByProductStacks.toArray(new ItemStack[tByProductStacks.size()]), null, null, null, null, 0, 0, 0);
         }
 
         if (tPrimaryByMaterial == null) tPrimaryByMaterial = tMaterial;
@@ -80,19 +83,19 @@ public class ProcessingOre implements gregtech.api.interfaces.IOreRecipeRegistra
             if ((aMaterial.mBlastFurnaceRequired) || (aMaterial.mDirectSmelting.mBlastFurnaceRequired)) {
                 GT_ModHandler.removeFurnaceSmelting(aOreStack);
             } else {
-                tHasSmelting = GT_ModHandler.addSmeltingRecipe(aOreStack, GT_Utility.copyAmount(aMultiplier * aMaterial.mSmeltingMultiplier, new Object[]{tSmeltInto}));
+                tHasSmelting = GT_ModHandler.addSmeltingRecipe(aOreStack, GT_Utility.copyAmount(aMultiplier * aMaterial.mSmeltingMultiplier, tSmeltInto));
             }
 
             if (aMaterial.contains(SubTag.BLASTFURNACE_CALCITE_TRIPLE)) {
-                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Calcite,   aMultiplier), null, null, GT_Utility.mul(aMultiplier * 3 * aMaterial.mSmeltingMultiplier, new Object[]{tSmeltInto}), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
-                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, aMultiplier), null, null, GT_Utility.mul(aMultiplier * 3 * aMaterial.mSmeltingMultiplier, new Object[]{tSmeltInto}), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
+                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Calcite, aMultiplier), null, null, GT_Utility.mul(aMultiplier * 3 * aMaterial.mSmeltingMultiplier, tSmeltInto), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
+                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, aMultiplier), null, null, GT_Utility.mul(aMultiplier * 3 * aMaterial.mSmeltingMultiplier, tSmeltInto), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
             } else if (aMaterial.contains(SubTag.BLASTFURNACE_CALCITE_DOUBLE)) {
-                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Calcite, aMultiplier), null, null, GT_Utility.mul(aMultiplier * (GT_Mod.gregtechproxy.mMixedOreOnlyYieldsTwoThirdsOfPureOre ? 2 : 3) * aMaterial.mSmeltingMultiplier, new Object[]{tSmeltInto}),GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
-                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Quicklime, aMultiplier * 3), null, null, GT_Utility.mul(aMultiplier * 2 * aMaterial.mSmeltingMultiplier, new Object[]{tSmeltInto}), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
+                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Calcite, aMultiplier), null, null, GT_Utility.mul(aMultiplier * (GT_Mod.gregtechproxy.mMixedOreOnlyYieldsTwoThirdsOfPureOre ? 2 : 3) * aMaterial.mSmeltingMultiplier, tSmeltInto), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
+                GT_Values.RA.addBlastRecipe(aOreStack, GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Quicklime, aMultiplier * 3), null, null, GT_Utility.mul(aMultiplier * 2 * aMaterial.mSmeltingMultiplier, tSmeltInto), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.DarkAsh, 1L), tSmeltInto.stackSize * 500, 120, 1500);
             }
         }
 
-      //IndustrialPulverizer
+        //IndustrialPulverizer
         /*GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, new Object[]{aOreStack}), Materials.Water.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 2 * aMultiplier), GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(0, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, GT_Utility.selectItemInList(0, aMaterial, aMaterial.mOreByProducts), 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial), new int[]{10000, 1000, 10000, 5000}, 200, 64);
         if (aMaterial.contains(SubTag.WASHING_MERCURY))
         	GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, new Object[]{aOreStack}), Materials.Mercury.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 2 * aMultiplier), GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(0, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial), new int[]{10000, 1000, 7000, 5000}, 200, 64);
@@ -109,23 +112,23 @@ public class ProcessingOre implements gregtech.api.interfaces.IOreRecipeRegistra
         }
 
         if (tCrushed != null) {
-            GT_Values.RA.addForgeHammerRecipe(aOreStack, GT_Utility.copy(new Object[]{GT_Utility.copyAmount(tCrushed.stackSize, new Object[]{tGem}), tCrushed}), 16, 10);
-            GT_ModHandler.addPulverisationRecipe(aOreStack, GT_Utility.mul(2L, new Object[]{tCrushed}), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), tPrimaryByProduct == null ? 0 : tPrimaryByProduct.stackSize * 10 * aMultiplier * aMaterial.mByProductMultiplier, GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial), 50, true);
+            GT_Values.RA.addForgeHammerRecipe(aOreStack, GT_Utility.copy(GT_Utility.copyAmount(tCrushed.stackSize, tGem), tCrushed), 16, 10);
+            GT_ModHandler.addPulverisationRecipe(aOreStack, GT_Utility.mul(2L, tCrushed), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), tPrimaryByProduct == null ? 0 : tPrimaryByProduct.stackSize * 10 * aMultiplier * aMaterial.mByProductMultiplier, GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial), 50, true);
         }
-        
+
         if (tGCleaned != null) {
-        GT_Values.RA.addIndustrialPulverizerRecipe(aOreStack, Materials.Water.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, new Object[]{tGCleaned}), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), /*tPrimaryByProduct == null ? 0 : tPrimaryByProduct.stackSize * 10 * aMultiplier * aMaterial.mByProductMultiplier,*/ GT_OreDictUnificator.get(OrePrefixes.dustTiny, GT_Utility.selectItemInList(0, aMaterial, aMaterial.mOreByProducts), 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 10000, 5000}, 200, 64);
-        if (aMaterial.contains(SubTag.WASHING_MERCURY))
-        	GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, new Object[]{aOreStack}), Materials.Mercury.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, new Object[]{tGCleaned}), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
+            GT_Values.RA.addIndustrialPulverizerRecipe(aOreStack, Materials.Water.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, tGCleaned), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), /*tPrimaryByProduct == null ? 0 : tPrimaryByProduct.stackSize * 10 * aMultiplier * aMaterial.mByProductMultiplier,*/ GT_OreDictUnificator.get(OrePrefixes.dustTiny, GT_Utility.selectItemInList(0, aMaterial, aMaterial.mOreByProducts), 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 10000, 5000}, 200, 64);
+            if (aMaterial.contains(SubTag.WASHING_MERCURY))
+                GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, aOreStack), Materials.Mercury.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, tGCleaned), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
             if (aMaterial.contains(SubTag.WASHING_SODIUMPERSULFATE))
-            	GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, new Object[]{aOreStack}), Materials.SodiumPersulfate.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, new Object[]{tGCleaned}), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
+                GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, aOreStack), Materials.SodiumPersulfate.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, tGCleaned), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
             for (Materials tMaterials : aMaterial.mOreByProducts) {
-            if (tMaterials.contains(SubTag.WASHING_MERCURY))
-            	GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, new Object[]{aOreStack}), Materials.Mercury.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, new Object[]{tGCleaned}), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
-            if (tMaterials.contains(SubTag.WASHING_SODIUMPERSULFATE))
-            	GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, new Object[]{aOreStack}), Materials.SodiumPersulfate.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, new Object[]{tGCleaned}), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, new Object[]{tPrimaryByProduct}), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
+                if (tMaterials.contains(SubTag.WASHING_MERCURY))
+                    GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, aOreStack), Materials.Mercury.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, tGCleaned), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
+                if (tMaterials.contains(SubTag.WASHING_SODIUMPERSULFATE))
+                    GT_Values.RA.addIndustrialPulverizerRecipe(GT_Utility.copyAmount(1L, aOreStack), Materials.SodiumPersulfate.getFluid(1800L), Materials.SluiceJuice.getFluid(1400L), new ItemStack[]{GT_Utility.mul(2L, tGCleaned), tMaterial.contains(SubTag.PULVERIZING_CINNABAR) ? GT_OreDictUnificator.get(OrePrefixes.crystal, Materials.Cinnabar, GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), 1L) : GT_OreDictUnificator.get(OrePrefixes.gem, tPrimaryByMaterial, GT_Utility.copyAmount(1L, tPrimaryByProduct), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 2L), GT_OreDictUnificator.getDust(aPrefix.mSecondaryMaterial)}, new int[]{10000, 1000, 7000, 5000}, 200, 64);
             }
-        }    
+        }
         return true;
     }
 }
