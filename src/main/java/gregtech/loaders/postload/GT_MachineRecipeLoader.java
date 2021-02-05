@@ -2613,7 +2613,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Cylinder.get(0), Materials.Polystyrene.getMolten(36), ItemList.Circuit_Parts_PetriDish.get(1), 160, 16);
 
         GT_Values.RA.addExtruderRecipe(Materials.BorosilicateGlass.getIngots(1), ItemList.Shape_Extruder_Wire.get(0), ItemList.Circuit_Parts_GlassFiber.get(8), 160, 96);
-        GT_Values.RA.addWiremillRecipe(Materials.BorosilicateGlass.getIngots(1), ItemList.Circuit_Parts_GlassFiber.get(4), 200, 120);
+        GT_Values.RA.addWiremillRecipe(Materials.BorosilicateGlass.getIngots(1), ItemList.Circuit_Parts_GlassFiber.get(8), 200, 120);
 
 
         // GT_Values.RA.addChemicalRecipe(GT_OreDictUnificator.get(Materials.Nitrogen.getCells(3)), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Magnetite, 0), Materials.Hydrogen.getGas(1000), Materials.Ammonia.getGas(1000), ItemList.Cell_Empty.get(3L), 320, 384);
@@ -3778,18 +3778,7 @@ public class GT_MachineRecipeLoader implements Runnable {
             GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.NetherStar, 1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Draconium, 4L), ItemList.Circuit_Biowarecomputer.get(1L), GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Naquadah, 8L)}, GT_Values.NF, GT_ModHandler.getModItem("DraconicEvolution", "draconicCore", 1, 0), 400, 122880);
 
         }
-        //Fix autogen recipes
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Osmiridium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Osmiridium, 4L), 100, 8);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Osmiridium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Osmiridium, 8L), 200, 16);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Neutronium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Neutronium, 4L), 100, 8);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Neutronium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Neutronium, 8L), 200, 16);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Americium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Americium, 4L), 100, 8);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Americium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Americium, 8L), 200, 16);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Iridium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Iridium, 4L), 100, 8);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Iridium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Iridium, 8L), 200, 16);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Infuscolium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Infuscolium, 4L), 100, 8);
-        GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Infuscolium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Infuscolium, 8L), 200, 16);
-
+        
         //New coils
         GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.stick, Materials.IronMagnetic, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Lead, 16L), GT_Utility.getIntegratedCircuit(1)}, GT_Values.NF, ItemList.ULV_Coil.get(1L), 200, 8, false);
         GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.stick, Materials.IronMagnetic, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Steel, 16L), GT_Utility.getIntegratedCircuit(1)}, GT_Values.NF, ItemList.LV_Coil.get(1L), 200, 30, false);
