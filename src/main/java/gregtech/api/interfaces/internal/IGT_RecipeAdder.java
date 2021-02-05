@@ -535,6 +535,8 @@ public interface IGT_RecipeAdder {
 
     public boolean addVacuumFreezerRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt);
 
+    public boolean addVacuumFreezerRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt);
+
     /**
      * Adds a Fuel for My Generators
      *

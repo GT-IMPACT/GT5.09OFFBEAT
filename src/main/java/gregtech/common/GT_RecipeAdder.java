@@ -809,6 +809,11 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
+    public boolean addVacuumFreezerRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sVacuumRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+        return true;
+    }
+
     @Deprecated
     public boolean addGrinderRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, ItemStack aOutput4) {
         return false;
