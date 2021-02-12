@@ -89,7 +89,7 @@ public class GT_MetaTileEntity_TypeFilter
 
     public void onPreTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPreTick(aBaseMetaTileEntity, aTick);
-        if ((getBaseMetaTileEntity().isServerSide()) && ((aTick % 8L == 0L) || mRotationIndex == -1)) {
+        if ((getBaseMetaTileEntity().isServerSide()) && ((aTick % 20 == 0L) || mRotationIndex == -1)) {
             if (this.mPrefix.mPrefixedItems.isEmpty()) {
                 this.mInventory[9] = null;
             } else {
