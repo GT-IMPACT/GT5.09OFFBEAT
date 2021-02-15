@@ -657,7 +657,9 @@ public enum ItemList implements IItemContainer {
     Circuit_Quantummainframe, Circuit_Crystalprocessor, Circuit_Crystalcomputer, Circuit_Ultimatecrystalcomputer, Circuit_Crystalmainframe, Circuit_Neuroprocessor, Circuit_Wetwarecomputer, Circuit_Wetwaresupercomputer, Circuit_Wetwaremainframe, Circuit_Parts_RawCrystalChip, Circuit_Parts_RawMCrystalChip,
     Machine_LV_CircuitAssembler, Machine_MV_CircuitAssembler, Machine_HV_CircuitAssembler, Machine_EV_CircuitAssembler, Machine_IV_CircuitAssembler, Machine_LuV_CircuitAssembler, Machine_ZPM_CircuitAssembler, Machine_UV_CircuitAssembler, Machine_UHV_CircuitAssembler, Machine_UEV_CircuitAssembler, Machine_UIV_CircuitAssembler, Machine_UMV_CircuitAssembler, Machine_UXV_CircuitAssembler, Machine_OPV_CircuitAssembler, Circuit_Integrated_Good, 
     Machine_IV_LightningRod, Machine_HV_LightningRod, Machine_EV_LightningRod, Machine_LuV_LightningRod, Machine_ZPM_LightningRod, Machine_UV_LightningRod,
-    
+
+    Steam_Valve_LV, Steam_Valve_MV, Steam_Valve_HV, Steam_Valve_EV, Steam_Valve_IV,
+
     Hatch_Dynamo_UEV, Hatch_Dynamo_UIV, Hatch_Dynamo_UMV, Hatch_Dynamo_UXV, Hatch_Dynamo_OPV,
 	Hatch_Energy_UEV, Hatch_Energy_UIV, Hatch_Energy_UMV, Hatch_Energy_UXV, Hatch_Energy_OPV,
 	//Hatch_Input_UEV,
