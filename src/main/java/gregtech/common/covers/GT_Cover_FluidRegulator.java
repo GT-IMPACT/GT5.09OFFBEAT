@@ -8,6 +8,7 @@ import gregtech.api.gui.widgets.GT_GuiIntegerTextBox;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.net.GT_Packet_TileEntityCover;
 import gregtech.api.util.GT_CoverBehavior;
+import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,11 +20,17 @@ import net.minecraftforge.fluids.IFluidHandler;
 public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 
 	public final int mTransferRate;
+	public final boolean isSteam;
 
 	public GT_Cover_FluidRegulator(int aTransferRate) {
+		this.isSteam = false;
 		this.mTransferRate = aTransferRate;
 	}
 
+	public GT_Cover_FluidRegulator(int aTransferRate, boolean isSteam) {
+		this.isSteam = isSteam;
+		this.mTransferRate = aTransferRate;
+	}
 	public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
 							 long aTimer) {
 		if (aCoverVariable == 0) {
@@ -67,7 +74,13 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 	}
 
 	protected boolean canTransferFluid(FluidStack fluid) {
-		return true;
+		if (!isSteam) {
+			return true;
+		} else {
+			String fluidName = fluid.getFluid().getUnlocalizedName(fluid);
+			return GT_ModHandler.isSteam(fluid) || fluidName.equals("fluid.steam") || fluidName.equals("ic2.fluidSteam")
+					|| fluidName.equals("fluid.mfr.steam.still.name") || fluidName.equals("ic2.fluidSuperheatedSteam");
+		}
 	}
 
 	public int onCoverScrewdriverclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
