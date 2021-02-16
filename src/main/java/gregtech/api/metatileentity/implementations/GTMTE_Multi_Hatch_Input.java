@@ -30,7 +30,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
     public GTMTE_Multi_Hatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, 2, aDescription, aTextures);
         mPerFluidAmount = aTier == 4? 4 : 9;
-        mCapacity = 16000;
+        mCapacity = 24000;
         mFluids = new FluidStack[mPerFluidAmount];
     }
 
@@ -79,7 +79,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
         return new String[]{
                 "Fluid Input for Multiblocks",
                 "Types of fluids: " + (mTier == 4? 4 : 9),
-                "Capacity per fluid: " + 16000 + "L"
+                "Capacity per fluid: " + 24000 + "L"
         };
     }
 
