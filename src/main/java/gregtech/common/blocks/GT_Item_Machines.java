@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 
 import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 import static net.minecraft.util.EnumChatFormatting.*;
 
