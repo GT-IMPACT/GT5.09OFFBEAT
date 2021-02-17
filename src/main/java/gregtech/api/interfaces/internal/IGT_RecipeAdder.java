@@ -535,16 +535,18 @@ public interface IGT_RecipeAdder {
 
     public boolean addVacuumFreezerRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt);
 
-    public boolean addVacuumFreezerRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt);
+    public boolean addVacuumFreezerRecipe(ItemStack aInput1, FluidStack aFluidInput, ItemStack aOutput1, FluidStack aFluidOutput, int aDuration, int aEUt);
 
-    /**
-     * Adds a Fuel for My Generators
-     *
-     * @param aInput1  must be != null
-     * @param aOutput1 can be null
-     * @param aEU      EU per MilliBucket. If no Liquid Form of this Container is available, then it will give you EU*1000 per Item.
-     * @param aType    0 = Diesel; 1 = Gas Turbine; 2 = Thermal; 3 = Dense Fluid; 4 = Plasma; 5 = Magic; And if something is unclear or missing, then look at the GT_Recipe-Class
-     */
+    public boolean addVacuumFreezerRecipe(FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt);
+
+        /**
+         * Adds a Fuel for My Generators
+         *
+         * @param aInput1  must be != null
+         * @param aOutput1 can be null
+         * @param aEU      EU per MilliBucket. If no Liquid Form of this Container is available, then it will give you EU*1000 per Item.
+         * @param aType    0 = Diesel; 1 = Gas Turbine; 2 = Thermal; 3 = Dense Fluid; 4 = Plasma; 5 = Magic; And if something is unclear or missing, then look at the GT_Recipe-Class
+         */
     public boolean addFuel(ItemStack aInput1, ItemStack aOutput1, int aEU, int aType);
 
     /**

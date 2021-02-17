@@ -788,9 +788,6 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
     }
     
     public boolean addVacuumFreezerRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt) {
-        if ((aInput1 == null) || (aOutput1 == null)) {
-            return false;
-        }
         if ((aDuration = GregTech_API.sRecipeFile.get("vacuumfreezer", aInput1, aDuration)) <= 0) {
             return false;
         }
@@ -799,9 +796,6 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
     }
 
     public boolean addVacuumFreezerRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration) {
-        if ((aInput1 == null) || (aOutput1 == null)) {
-            return false;
-        }
         if ((aDuration = GregTech_API.sRecipeFile.get("vacuumfreezer", aInput1, aDuration)) <= 0) {
             return false;
         }
@@ -809,8 +803,13 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
-    public boolean addVacuumFreezerRecipe(ItemStack aInput, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt) {
-        GT_Recipe.GT_Recipe_Map.sVacuumRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+    public boolean addVacuumFreezerRecipe(ItemStack aInput1, FluidStack aFluidInput, ItemStack aOutput1, FluidStack aFluidOutput, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sVacuumRecipes.addRecipe(false, new ItemStack[]{aInput1}, new ItemStack[]{aOutput1}, null, null, new FluidStack[]{aFluidInput}, new FluidStack[]{aFluidOutput}, Math.max(aDuration, 1), aEUt, 0);
+        return true;
+    }
+
+    public boolean addVacuumFreezerRecipe(FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sVacuumRecipes.addRecipe(false, null, null, null, null, new FluidStack[]{aFluidInput}, new FluidStack[]{aFluidOutput}, Math.max(aDuration, 1), aEUt, 0);
         return true;
     }
 

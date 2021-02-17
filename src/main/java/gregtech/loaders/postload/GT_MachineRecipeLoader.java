@@ -3651,6 +3651,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(2)}, new FluidStack[]{Materials.PerroxGasCoolant.getFluid(2160), Materials.Nitrogen.getPlasma(7500L), Materials.Tin.getPlasma(100L)}, new FluidStack[]{Materials.PerroxHot.getFluid(4320)}, null, 200, 500000);
         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Ingot.get(0), Materials.PerroxHot.getFluid(144), GT_OreDictUnificator.get(OrePrefixes.ingotHot, Materials.PerroxPolymer, 1L), 100, 500000);
         GT_Values.RA.addVacuumFreezerRecipe(GT_OreDictUnificator.get(OrePrefixes.ingotHot, Materials.PerroxPolymer, 1L), GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.PerroxPolymer, 1L), 200, 122880);
+        GT_Values.RA.addVacuumFreezerRecipe(Materials.Oxygen.getGas(1000), FluidRegistry.getFluidStack("liquidoxygen", 1000), 20*10, 480); //todo Maybe del or no ?
 
         if (Loader.isModLoaded("GalacticraftCore")) {
             //LightRadox + Nq -> Enriched Naquadah condensation int aChance, int aDuration, int aEUt, boolean aCleanroom
