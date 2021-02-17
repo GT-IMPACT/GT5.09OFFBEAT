@@ -197,7 +197,8 @@ public class GregTech_API {
     public static boolean mTranslocator = false;
     public static boolean mTConstruct = false;
     public static boolean mGalacticraft = false;
-    
+    public static boolean mAE2 = false;
+
     /**
      * Option to not use MACHINE_METAL mixing into colors
      */

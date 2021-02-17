@@ -1,5 +1,8 @@
 package gregtech.api.metatileentity;
 
+import appeng.api.util.AECableType;
+import appeng.me.helpers.AENetworkProxy;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
@@ -942,4 +945,17 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public String getAlternativeModeText(){
     	return "";
     }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    public AECableType getCableConnectionType(ForgeDirection forgeDirection) {
+        return AECableType.NONE;
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    public AENetworkProxy getProxy() {
+        return null;
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    public void gridChanged() {}
 }

@@ -376,7 +376,9 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Hatch_Output_Bus_LuV.set(new GT_MetaTileEntity_Hatch_OutputBus(86, "hatch.output_bus.tier.06", "LuV Output Bus", 6).getStackForm(1L));
         ItemList.Hatch_Output_Bus_ZPM.set(new GT_MetaTileEntity_Hatch_OutputBus(87, "hatch.output_bus.tier.07", "ZPM Output Bus", 7).getStackForm(1L));
         ItemList.Hatch_Output_Bus_UV.set(new GT_MetaTileEntity_Hatch_OutputBus(88, "hatch.output_bus.tier.08", "UV Output Bus", 8).getStackForm(1L));
-        ItemList.Hatch_Output_Bus_MAX.set(new GT_MetaTileEntity_Hatch_OutputBus(89, "hatch.output_bus.tier.09", "UHV Output Bus", 9).getStackForm(1L));
+//        ItemList.Hatch_Output_Bus_MAX.set(new GT_MetaTileEntity_Hatch_OutputBus(89, "hatch.output_bus.tier.09", "UHV Output Bus", 9).getStackForm(1L));
+        ItemList.Hatch_Output_Bus_ME.set(new GT_MetaTileEntity_Hatch_OutputBus_ME(89, "hatch.output_bus.me", "ME Output Bus").getStackForm(1L));
+
         //ItemList.Hatch_Output_Bus_UEV.set(new GT_MetaTileEntity_Hatch_OutputBus(11515, "hatch.output_bus.tier.10", "Output Bus (UEV)", 10).getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Output_Bus_ULV.get(1L), bitsd, new Object[]{" XC", "IM ", 'M', ItemList.Hull_ULV, 'C', OrePrefixes.plate.get(Materials.Lead), 'I', OrePrefixes.pipeMedium.get(Materials.Tin), 'X', new ItemStack(Blocks.chest, 1, 0)});

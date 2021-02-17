@@ -26,6 +26,10 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
         super(aName, aTier, aTier < 1 ? 1 : aTier <= 6  ? (aTier + 1) * (aTier + 1) : 64, aDescription, aTextures);
     }
 
+    public GT_MetaTileEntity_Hatch_OutputBus(int aID, String aName, String aNameRegional, int aTier, String[] aDescription) {
+        super(aID, aName, aNameRegional, aTier, getSlots(aTier), aDescription);
+    }
+
     @Override
     public ITexture[] getTexturesActive(ITexture aBaseTexture) {
         return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
