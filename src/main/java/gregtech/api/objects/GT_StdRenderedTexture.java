@@ -5,7 +5,6 @@ import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.util.LightingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**

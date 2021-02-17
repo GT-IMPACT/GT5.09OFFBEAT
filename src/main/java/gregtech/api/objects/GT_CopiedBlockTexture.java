@@ -65,10 +65,10 @@ public class GT_CopiedBlockTexture implements ITexture {
 
     @Override
     public void renderYPos(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ) {
-        IIcon aIcon = getIcon(ForgeDirection.WEST.ordinal());
+        IIcon aIcon = getIcon(ForgeDirection.UP.ordinal());
         new LightingHelper(aRenderer)
-                .setupLightingXNeg(aBlock, aX, aY, aZ)
-                .setupColor(ForgeDirection.WEST.ordinal(), 0xffffff);
+                .setupLightingYPos(aBlock, aX, aY, aZ)
+                .setupColor(ForgeDirection.UP.ordinal(), 0xffffff);
         aRenderer.renderFaceYPos(aBlock, aX, aY, aZ, aIcon);
     }
 
@@ -104,5 +104,13 @@ public class GT_CopiedBlockTexture implements ITexture {
     @Override
     public boolean isValidTexture() {
         return mBlock != null;
+    }
+
+    public Block getBlock() {
+        return mBlock;
+    }
+
+    public byte getMeta() {
+        return mMeta;
     }
 }

@@ -104,6 +104,7 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
         LightingHelper lighting = new LightingHelper(aRenderer);
         lighting.setupLightingYNeg(aBlock, aX, aY, aZ)
                 .setupColor(ForgeDirection.DOWN.ordinal(), mRGBa);
+
         if (aRenderer.enableAO) {
             tessellator.setColorOpaque_F(aRenderer.colorRedTopLeft, aRenderer.colorGreenTopLeft, aRenderer.colorBlueTopLeft);
             tessellator.setBrightness(aRenderer.brightnessTopLeft);
@@ -146,6 +147,7 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
             maxZ = aZ + (float)aRenderer.renderMaxZ;
 
             lighting.setupColor(ForgeDirection.DOWN.ordinal(), 0xffffff);
+
             if (aRenderer.enableAO) {
                 tessellator.setColorOpaque_F(aRenderer.colorRedTopLeft, aRenderer.colorGreenTopLeft, aRenderer.colorBlueTopLeft);
                 tessellator.setBrightness(aRenderer.brightnessTopLeft);
