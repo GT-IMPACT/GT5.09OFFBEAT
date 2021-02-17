@@ -94,10 +94,10 @@ public class GT_Item_Machines
                 }
                 NBTTagCompound tFluidAmount = aNBT.getCompoundTag("mFluid");
                 if (tFluidAmount != null) {
-                    String fluidName = tFluidAmount.getString("FluidName");
+                    String fluidName = GT_LanguageManager.getTranslation(tFluidAmount.getString("FluidName"));
                     int amountFluid;
                     if ((amountFluid = tFluidAmount.getInteger("Amount")) > 0) {
-                        aList.add("Stored " + BLUE + NumberFormat.getNumberInstance().format((int) amountFluid) + "L" + GRAY + " of " + fluidName);
+                        aList.add("Stored " + BLUE + NumberFormat.getNumberInstance().format((int) amountFluid) + "L" + GRAY + " of " + BLUE + fluidName + GRAY);
                     }
                 }
                 int tAmount;
