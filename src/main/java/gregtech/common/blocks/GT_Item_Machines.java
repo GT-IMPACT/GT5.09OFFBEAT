@@ -18,7 +18,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import static net.minecraft.util.EnumChatFormatting.*;
 
@@ -90,6 +92,14 @@ public class GT_Item_Machines
                 }
                 if (aNBT.getBoolean("mSteamConverter")) {
                     aList.add(GT_LanguageManager.addStringLocalization("GT_TileEntity_STEAMCONVERTER", "has Steam Upgrade", !GregTech_API.sPostloadFinished));
+                }
+                NBTTagCompound tFluidAmount = aNBT.getCompoundTag("mFluid");
+                if (tFluidAmount != null) {
+                    String fluidName = tFluidAmount.getString("FluidName");
+                    int amountFluid;
+                    if ((amountFluid = tFluidAmount.getInteger("Amount")) > 0) {
+                        aList.add("Stored " + BLUE + NumberFormat.getNumberInstance().format((int) amountFluid) + "L" + GRAY + " of " + fluidName);
+                    }
                 }
                 int tAmount;
                 if ((tAmount = aNBT.getByte("mSteamTanks")) > 0) {
