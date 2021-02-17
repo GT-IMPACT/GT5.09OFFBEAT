@@ -1351,8 +1351,7 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         GT_Values.RA.addVacuumFreezerRecipe(ItemList.neutroniumHeatCapacitor.getWildcard(1L), ItemList.neutroniumHeatCapacitor.get(1L), 10000000);
         GT_Values.RA.addVacuumFreezerRecipe(GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Water, 1L), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Ice, 1L), 50);
-        GT_Values.RA.addVacuumFreezerRecipe(GT_ModHandler.getIC2Item("airCell", 1L), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.LiquidAir, 1L), 240, 480);
-
+        
         GT_Values.RA.addAlloySmelterRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.RawRubber, 3L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Sulfur, 1L), GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Rubber, 3L), 200, 8);
 
         for (int i = 0; i < 16; i++) {
@@ -3651,7 +3650,15 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(2)}, new FluidStack[]{Materials.PerroxGasCoolant.getFluid(2160), Materials.Nitrogen.getPlasma(7500L), Materials.Tin.getPlasma(100L)}, new FluidStack[]{Materials.PerroxHot.getFluid(4320)}, null, 200, 500000);
         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Ingot.get(0), Materials.PerroxHot.getFluid(144), GT_OreDictUnificator.get(OrePrefixes.ingotHot, Materials.PerroxPolymer, 1L), 100, 500000);
         GT_Values.RA.addVacuumFreezerRecipe(GT_OreDictUnificator.get(OrePrefixes.ingotHot, Materials.PerroxPolymer, 1L), GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.PerroxPolymer, 1L), 200, 122880);
-        GT_Values.RA.addVacuumFreezerRecipe(Materials.Oxygen.getGas(1000), FluidRegistry.getFluidStack("liquidoxygen", 1000), 20*10, 480); //todo Maybe del or no ?
+
+        // --- Liquid Freezer
+        GT_Values.RA.addVacuumFreezerRecipe(Materials.Oxygen.getGas(10000), FluidRegistry.getFluidStack("liquidoxygen", 1000), 240, 480);
+        GT_Values.RA.addVacuumFreezerRecipe(Materials.Nitrogen.getGas(10000), FluidRegistry.getFluidStack("liquidnitrogen", 1000), 240, 480);
+        GT_Values.RA.addVacuumFreezerRecipe(Materials.Air.getGas(10000), Materials.LiquidAir.getFluid(1000), 240, 480);
+        GT_Values.RA.addDistillationTowerRecipe(Materials.LiquidAir.getFluid(200000), new FluidStack[]{
+                Materials.Nitrogen.getGas(156160), Materials.Oxygen.getGas(41890), Materials.Argon.getGas(1864),
+                Materials.CarbonDioxide.getGas(80), Materials.Helium.getGas(9), Materials.Methane.getGas(3),
+                Materials.Hydrogen.getGas(1), Materials.NitrogenDioxide.getGas(1)}, null, 4000, 480);
 
         if (Loader.isModLoaded("GalacticraftCore")) {
             //LightRadox + Nq -> Enriched Naquadah condensation int aChance, int aDuration, int aEUt, boolean aCleanroom
