@@ -145,6 +145,12 @@ public class GT_MachineRecipeLoader implements Runnable {
             GT_Utility.removeSimpleIC2MachineRecipe(new ItemStack(Items.gunpowder), ic2.api.recipe.Recipes.extractor.getRecipes(), GT_Values.NI);
             GT_Utility.removeSimpleIC2MachineRecipe(new ItemStack(Blocks.wool, 1, 32767), ic2.api.recipe.Recipes.extractor.getRecipes(), GT_Values.NI);
             GT_Utility.removeSimpleIC2MachineRecipe(new ItemStack(Blocks.gravel), ic2.api.recipe.Recipes.oreWashing.getRecipes(), GT_Values.NI);
+            GT_Utility.removeSimpleIC2MachineRecipe(GT_ModHandler.getModItem("IC2", "reactorMOXSimpledepleted", 1L), ic2.api.recipe.Recipes.centrifuge.getRecipes(), GT_Values.NI);
+            GT_Utility.removeSimpleIC2MachineRecipe(GT_ModHandler.getModItem("IC2", "reactorMOXDualdepleted", 1L), ic2.api.recipe.Recipes.centrifuge.getRecipes(), GT_Values.NI);
+            GT_Utility.removeSimpleIC2MachineRecipe(GT_ModHandler.getModItem("IC2", "reactorMOXQuaddepleted", 1L), ic2.api.recipe.Recipes.centrifuge.getRecipes(), GT_Values.NI);
+            GT_Utility.removeSimpleIC2MachineRecipe(GT_ModHandler.getModItem("IC2", "reactorUraniumSimpledepleted", 1L), ic2.api.recipe.Recipes.centrifuge.getRecipes(), GT_Values.NI);
+            GT_Utility.removeSimpleIC2MachineRecipe(GT_ModHandler.getModItem("IC2", "reactorUraniumDualdepleted", 1L), ic2.api.recipe.Recipes.centrifuge.getRecipes(), GT_Values.NI);
+            GT_Utility.removeSimpleIC2MachineRecipe(GT_ModHandler.getModItem("IC2", "reactorUraniumQuaddepleted", 1L), ic2.api.recipe.Recipes.centrifuge.getRecipes(), GT_Values.NI);
         } catch (Throwable e) {
         }
         GT_Utility.removeIC2BottleRecipe(GT_ModHandler.getIC2Item("fuelRod", 1), GT_ModHandler.getIC2Item("UranFuel", 1), ic2.api.recipe.Recipes.cannerBottle.getRecipes(), GT_ModHandler.getIC2Item("reactorUraniumSimple", 1, 1));
@@ -1330,7 +1336,6 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Polytetrafluoroethylene, 12L), ItemList.Cell_Empty.get(6L), 1200, 8);
         GT_Values.RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Iron, 12L), new ItemStack(Items.bucket, 4, 0), 800, 4);
         GT_Values.RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.WroughtIron, 12L), new ItemStack(Items.bucket, 4, 0), 800, 4);
-        GT_Values.RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.itemCasing, Materials.Iron, 2L), GT_ModHandler.getIC2Item("fuelRod", 1L), 100, 8);
         GT_Values.RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.itemCasing, Materials.StainlessSteel, 1L), ItemList.IC2_Food_Can_Empty.get(1L), 20, 480);
         GT_Values.RA.addPulveriserRecipe(GT_OreDictUnificator.get(OrePrefixes.block, Materials.Marble, 1L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Marble, 1L)}, null, 160, 4);
 

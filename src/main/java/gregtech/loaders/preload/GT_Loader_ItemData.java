@@ -64,7 +64,7 @@ public class GT_Loader_ItemData
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.iron_bars, 8, 32767), new ItemData(Materials.Iron, 10886400L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(GT_ModHandler.getIC2Item("ironFurnace", 1L), new ItemData(Materials.Iron, 18144000L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(ItemList.IC2_Food_Can_Empty.get(1L, new Object[0]), new ItemData(Materials.Tin, 1814400L, new MaterialStack[0]));
-        GT_OreDictUnificator.addItemData(ItemList.IC2_Fuel_Rod_Empty.get(1L, new Object[0]), new ItemData(Materials.Iron, 3628800L, new MaterialStack[0]));
+        GT_OreDictUnificator.addItemData(ItemList.IC2_Fuel_Rod_Empty.get(1L, new Object[0]), new ItemData(Materials.Zirconium, 3628800L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(ItemList.IC2_Fuel_Can_Empty.get(1L, new Object[0]), new ItemData(Materials.Tin, 25401600L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.light_weighted_pressure_plate, 1, 32767), new ItemData(Materials.Gold, 7257600L, new MaterialStack[0]));
         GT_OreDictUnificator.addItemData(new ItemStack(Blocks.heavy_weighted_pressure_plate, 1, 32767), new ItemData(Materials.Iron, 7257600L, new MaterialStack[0]));

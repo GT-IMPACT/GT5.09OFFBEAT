@@ -93,7 +93,6 @@ public class ProcessingShaping implements gregtech.api.interfaces.IOreRecipeRegi
                         break;
                     case "Iron":
                     case "WroughtIron":
-                        GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Shape_Extruder_Cell.get(0L, new Object[0]), GT_ModHandler.getIC2Item("fuelRod", tAmount), tAmount * 128, 30);
                         if (tAmount * 2 <= 64)
                             GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Shape_Extruder_Casing.get(0L, new Object[0]), GT_ModHandler.getIC2Item("casingiron", tAmount * 2), tAmount * 32, 3 * tVoltageMultiplier);
                         if (tAmount * 2 <= 64)
