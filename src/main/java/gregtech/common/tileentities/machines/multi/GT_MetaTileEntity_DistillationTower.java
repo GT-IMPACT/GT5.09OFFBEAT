@@ -76,27 +76,14 @@ public class GT_MetaTileEntity_DistillationTower
     }
 
     public boolean checkRecipe(ItemStack aStack) {
-
         ArrayList<FluidStack> tFluidList = getStoredFluids();
-        for (int i = 0; i < tFluidList.size() - 1; i++) {
-            for (int j = i + 1; j < tFluidList.size(); j++) {
-                if (GT_Utility.areFluidsEqual((FluidStack) tFluidList.get(i), (FluidStack) tFluidList.get(j))) {
-                    if (((FluidStack) tFluidList.get(i)).amount >= ((FluidStack) tFluidList.get(j)).amount) {
-                        tFluidList.remove(j--);
-                    } else {
-                        tFluidList.remove(i--);
-                        break;
-                    }
-                }
-            }
-        }
 
         long tVoltage = getMaxInputVoltage();
         byte tTier = (byte) Math.max(0, GT_Utility.getTier(tVoltage));
         FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
         if (tFluids.length > 0) {
             for (int i = 0; i < tFluids.length; i++) {
-                GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sDistillationRecipes.findRecipe(getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], new FluidStack[]{tFluids[i]}, new ItemStack[]{});
+                GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sDistillationRecipes.findRecipe(getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluids, new ItemStack[]{});
                 if (tRecipe != null) {
                     if (tRecipe.isRecipeInputEqual(true, tFluids, new ItemStack[]{})) {
                         this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
@@ -196,21 +183,48 @@ public class GT_MetaTileEntity_DistillationTower
         return false;
     }
 
-    @Override
-    public boolean addOutput(FluidStack aLiquid) {
-        if (aLiquid == null) return false;
-        FluidStack tLiquid = aLiquid.copy();
-        for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
-            if (isValidMetaTileEntity(tHatch) && GT_ModHandler.isSteam(aLiquid) ? tHatch.outputsSteam() : tHatch.outputsLiquids()) {
-                if (tHatch.getBaseMetaTileEntity().getYCoord() == this.controllerY + 1) {
-                    int tAmount = tHatch.fill(tLiquid, false);
-                    if (tAmount >= tLiquid.amount) {
-                        return tHatch.fill(tLiquid, true) >= tLiquid.amount;
-                    } else if (tAmount > 0) {
-                        tLiquid.amount = tLiquid.amount - tHatch.fill(tLiquid, true);
-                    }
+    private boolean dumpFluid(ArrayList<GT_MetaTileEntity_Hatch_Output> outputHatches, FluidStack copiedFluidStack, boolean restrictiveHatchesOnly) {
+        for (GT_MetaTileEntity_Hatch_Output tHatch : outputHatches) {
+            if (!isValidMetaTileEntity(tHatch) || (restrictiveHatchesOnly && tHatch.mMode == 0)) {
+                continue;
+            }
+            if (GT_ModHandler.isSteam(copiedFluidStack)) {
+                if (!tHatch.outputsSteam()) {
+                    continue;
+                }
+            } else {
+                if (!tHatch.outputsLiquids()) {
+                    continue;
+                }
+                if (tHatch.isFluidLocked() && tHatch.getLockedFluidName() != null && !tHatch.getLockedFluidName().equals(copiedFluidStack.getUnlocalizedName())) {
+                    continue;
                 }
             }
+            int tAmount = tHatch.fill(copiedFluidStack, false);
+            if (tAmount >= copiedFluidStack.amount) {
+                boolean filled = tHatch.fill(copiedFluidStack, true) >= copiedFluidStack.amount;
+                tHatch.onEmptyingContainerWhenEmpty();
+                return filled;
+            } else if (tAmount > 0) {
+                copiedFluidStack.amount = copiedFluidStack.amount - tHatch.fill(copiedFluidStack, true);
+                tHatch.onEmptyingContainerWhenEmpty();
+            }
+        }
+        return false;
+    }
+
+    public boolean addOutput(FluidStack aLiquid, int i) {
+        if (aLiquid == null) return false;
+        FluidStack copiedFluidStack = aLiquid.copy();
+
+        ArrayList<GT_MetaTileEntity_Hatch_Output> tOutputHatches = new ArrayList<GT_MetaTileEntity_Hatch_Output>();
+        for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
+            if (tHatch.getBaseMetaTileEntity().getYCoord() == this.controllerY + 1 + i) {
+                tOutputHatches.add(tHatch);
+            }
+        }
+        if (!dumpFluid(tOutputHatches, copiedFluidStack, true)) {
+            dumpFluid(tOutputHatches, copiedFluidStack, false);
         }
         return false;
     }
@@ -218,12 +232,7 @@ public class GT_MetaTileEntity_DistillationTower
     @Override
     protected void addFluidOutputs(FluidStack[] mOutputFluids2) {
         for (int i = 0; i < mOutputFluids2.length; i++) {
-            if (mOutputHatches.size() > i && mOutputHatches.get(i) != null && mOutputFluids2[i] != null && isValidMetaTileEntity(mOutputHatches.get(i))) {
-                if (mOutputHatches.get(i).getBaseMetaTileEntity().getYCoord() == this.controllerY + 1 + i) {
-                    mOutputHatches.get(i).fill(mOutputFluids2[i], true);
-                }
-            }
+            addOutput(mOutputFluids2[i], i);
         }
-
     }
 }
