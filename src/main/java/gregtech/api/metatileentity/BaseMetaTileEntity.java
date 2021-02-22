@@ -45,10 +45,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static gregtech.api.enums.GT_Values.NW;
 import static gregtech.api.enums.GT_Values.V;
@@ -77,6 +74,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     private short mID = 0;
     private long mTickTimer = 0, oOutput = 0, mAcceptedAmperes = Long.MAX_VALUE;
     private String mOwnerName = "";
+    private UUID mOwnerUuid = GT_Utility.defaultUuid;
     private NBTTagCompound mRecipeStuff = new NBTTagCompound();
     
     private static final Field ENTITY_ITEM_HEALTH_FIELD;
@@ -124,6 +122,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             aNBT.setByte("mStrongRedstone", mStrongRedstone);
             aNBT.setShort("mFacing", mFacing);
             aNBT.setString("mOwnerName", mOwnerName);
+            aNBT.setString("mOwnerUuid", mOwnerUuid == null ? "" : mOwnerUuid.toString());
             aNBT.setBoolean("mLockUpgrade", mLockUpgrade);
             aNBT.setBoolean("mMuffler", mMuffler);
             aNBT.setBoolean("mSteamConverter", mSteamConverter);
@@ -189,6 +188,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             mStrongRedstone = aNBT.getByte("mStrongRedstone");
             mFacing = oFacing = (byte) aNBT.getShort("mFacing");
             mOwnerName = aNBT.getString("mOwnerName");
+            try {
+                mOwnerUuid = UUID.fromString(aNBT.getString("mOwnerUuid"));
+            } catch (IllegalArgumentException e){
+                mOwnerUuid = null;
+            }
             mLockUpgrade = aNBT.getBoolean("mLockUpgrade");
             mMuffler = aNBT.getBoolean("mMuffler");
             mSteamConverter = aNBT.getBoolean("mSteamConverter");
@@ -1185,9 +1189,14 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public boolean playerOwnsThis(EntityPlayer aPlayer, boolean aCheckPrecicely) {
         if (!canAccessData()) return false;
         if (aCheckPrecicely || privateAccess() || (mOwnerName.length() == 0))
-            if ((mOwnerName.length() == 0) && isServerSide()) setOwnerName(aPlayer.getDisplayName());
-            else if (privateAccess() && !aPlayer.getDisplayName().equals("Player") && !mOwnerName.equals("Player") && !mOwnerName.equals(aPlayer.getDisplayName()))
+            if ((mOwnerName.length() == 0) && isServerSide()) {
+                setOwnerName(aPlayer.getDisplayName());
+                setOwnerUuid(aPlayer.getUniqueID());
+            } else if (privateAccess() && !aPlayer.getDisplayName().equals("Player")
+                    && !mOwnerName.equals("Player")
+                    && !mOwnerName.equals(aPlayer.getDisplayName())) {
                 return false;
+            }
         return true;
     }
 
@@ -1426,6 +1435,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                         if (isUpgradable() && !mLockUpgrade) {
                             mLockUpgrade = true;
                             setOwnerName(aPlayer.getDisplayName());
+                            setOwnerUuid(aPlayer.getUniqueID());
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(3), 1.0F, -1, xCoord, yCoord, zCoord);
                             if (!aPlayer.capabilities.isCreativeMode) aPlayer.inventory.getCurrentItem().stackSize--;
                         }
@@ -1735,6 +1745,16 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public String setOwnerName(String aName) {
         if (GT_Utility.isStringInvalid(aName)) return mOwnerName = "Player";
         return mOwnerName = aName;
+    }
+
+    @Override
+    public UUID getOwnerUuid() {
+        return mOwnerUuid;
+    }
+
+    @Override
+    public void setOwnerUuid(UUID uuid) {
+        mOwnerUuid = uuid;
     }
 
     @Override

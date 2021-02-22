@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static gregtech.api.enums.GT_Values.NW;
 
@@ -1170,6 +1171,16 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     public String setOwnerName(String aName) {
         if (GT_Utility.isStringInvalid(aName)) return mOwnerName = "Player";
         return mOwnerName = aName;
+    }
+
+    @Override
+    public UUID getOwnerUuid() {
+        return GT_Utility.defaultUuid;
+    }
+
+    @Override
+    public void setOwnerUuid(UUID uuid) {
+
     }
 
     @Override
