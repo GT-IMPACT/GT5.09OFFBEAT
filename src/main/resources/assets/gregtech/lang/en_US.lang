@@ -685,6 +685,18 @@ achievement.gt.blockCase1.2.desc=Pickup this item to see the recipe in NEI
 achievement.gt.blockCase1.3=Upgrade Block T4
 achievement.gt.blockCase1.3.desc=Pickup this item to see the recipe in NEI
 
+achievement.gt.blockmachines.impact.multimachine.liquidnaqgen=Liquid Naquadah Generator
+achievement.gt.blockmachines.impact.multimachine.liquidnaqgen.desc=Pickup this item to see the recipe in NEI
+achievement.gt.blockmachines.impact.multimachine.heavymetalcyclone=Heavy Metal Cyclon
+achievement.gt.blockmachines.impact.multimachine.heavymetalcyclone.desc=Pickup this item to see the recipe in NEI
+achievement.gt.blockmachines.impact.multimachine.liquidenrichednqgenerator=Liquid Enriched Naquadah Generator
+achievement.gt.blockmachines.impact.multimachine.liquidenrichednqgenerator.desc=Pickup this item to see the recipe in NEI
+achievement.gt.blockmachines.impact.multimachine.naqgen=Hyper Generator
+achievement.gt.blockmachines.impact.multimachine.naqgen.desc=Pickup this item to see the recipe in NEI
+
+achievement.gt.blockmachines.impact.multimachine.parallelcomputer=Parallel Supercomputer
+achievement.gt.blockmachines.impact.multimachine.parallelcomputer.desc=Pickup this item to see the recipe in NEI
+
 
 for.bees.species.clay=Clay
 for.bees.species.slimeball=Slimeball
