@@ -84,7 +84,7 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_StorageTan
 
 	@Override
 	public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-		return true;
+		return aIndex == 1;
 	}
 
 	@Override
