@@ -120,10 +120,10 @@ dependencies {
 
 task getImpactCore(type: Download) {
     onlyIf {
-        !file("libs/Impact-core-0.0.8-dev.jar").exists()
+        !file("libs/gregtech-5.09.34.66-impact-dev.jar").exists()
     }
-    src "http://148.251.26.245:8080/job/IMPACTCORE/lastSuccessfulBuild/artifact/build/libs/Impact-core-0.0.8-dev.jar"
-    dest file("libs/Impact-core-0.0.8-dev.jar")
+    src "http://gtimpact.space:8080/job/GREGTECH/lastSuccessfulBuild/artifact/build/libs/gregtech-5.09.34.66-impact-dev.jar"
+    dest file("libs/gregtech-5.09.34.66-impact-dev.jar")
     mustRunAfter "deobfBinJar"
     mustRunAfter "repackMinecraft"
 }
