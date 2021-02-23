@@ -61,7 +61,7 @@ public class GT_MetaTileEntity_Boiler_Solar_Steel extends GT_MetaTileEntity_Boil
                 "Steam Power by the Sun",
                 "Produces 360L of Steam per second",
                 "Calcifies over time, reducing Steam output to 120L/s",
-                "Break and replace to decalcify"};
+                "Right click with hammer to decalcify"};
     }
 
     public int getCapacity() {
