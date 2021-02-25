@@ -29,7 +29,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-
+@Deprecated
 public class GT_MetaTileEntity_ProcessingArray2 extends GT_MetaTileEntity_MultiBlockBase {
 
     private GT_Recipe mLastRecipe;

@@ -28,7 +28,7 @@ import java.util.List;
 
 import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
-
+@Deprecated
 public class GT_MetaTileEntity_ProcessingArray3 extends GT_MetaTileEntity_MultiBlockBase {
 
     private GT_Recipe mLastRecipe;
