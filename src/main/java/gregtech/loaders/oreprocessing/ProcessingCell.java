@@ -27,7 +27,7 @@ public class ProcessingCell
                 if (aMaterial == Materials.Empty) {
                     GT_ModHandler.removeRecipeByOutput(aStack);
                     if (aModName.equalsIgnoreCase("AtomicScience")) {
-                        GT_ModHandler.addExtractionRecipe(ItemList.Cell_Empty.get(1L, new Object[0]), aStack);
+                        GT_ModHandler.addExtractionRecipe(ItemList.Cell_Empty.get(1L), aStack);
                     }
                 } else {
                     if (aMaterial.mFuelPower > 0) {
@@ -47,7 +47,7 @@ public class ProcessingCell
                             if (tMat.mAmount > 0L) {
                                 ItemStack tStack;
                                 if (tMat.mMaterial == Materials.Air) {
-                                    tStack = ItemList.Cell_Air.get(tMat.mAmount * tDensityMultiplier / 2L, new Object[0]);
+                                    tStack = ItemList.Cell_Air.get(tMat.mAmount * tDensityMultiplier / 2L);
                                 } else {
                                     tStack = GT_OreDictUnificator.get(OrePrefixes.dust, tMat.mMaterial, tMat.mAmount);
                                     if (tStack == null) {
@@ -77,12 +77,12 @@ public class ProcessingCell
                         tItemAmount = (tItemAmount * tDensityMultiplier % aMaterial.getDensity() > 0L ? 1 : 0) + tItemAmount * tDensityMultiplier / aMaterial.getDensity();
                         if (tList.size() > 0) {
                             if ((aMaterial.mExtraData & 0x1) != 0) {
-                                //GT_Values.RA.addElectrolyzerRecipe(GT_Utility.copyAmount(tItemAmount, new Object[] { aStack }), tCapsuleCount >  0L ? (int)tCapsuleCount : 0, (ItemStack)tList.get(0), tList.size() <  2 ? null : (ItemStack)tList.get(1), tList.size() <  3 ? null : (ItemStack)tList.get(2), tList.size() <  4 ? null : (ItemStack)tList.get(3), tList.size() <  5 ? null : (ItemStack)tList.get(4), tList.size()    < 6 ? null : tCapsuleCount < 0L ? ItemList.Cell_Empty.get(-tCapsuleCount, new Object[0]) : (ItemStack)tList.get(5), (int)Math.max(1L, Math.abs(aMaterial.getProtons() * 8L * tItemAmount)), Math.min(4, tList.size()) * 30);
-                                GT_Values.RA.addElectrolyzerRecipe(GT_Utility.copyAmount(tItemAmount, new Object[]{aStack}), tCapsuleCount <= 0L ? 0 : (int) tCapsuleCount, (ItemStack) tList.get(0), tList.size() >= 2 ? (ItemStack) tList.get(1) : null, tList.size() >= 3 ? (ItemStack) tList.get(2) : null, tList.size() >= 4 ? (ItemStack) tList.get(3) : null, tList.size() >= 5 ? (ItemStack) tList.get(4) : null, tCapsuleCount >= 0L ? tList.size() >= 6 ? (ItemStack) tList.get(5) : null : ItemList.Cell_Empty.get(-tCapsuleCount, new Object[0]), (int) Math.max(1L, Math.abs(aMaterial.getProtons() * 8L * tItemAmount)), Math.min(4, tList.size()) * 30);
+                                //GT_Values.RA.addElectrolyzerRecipe(GT_Utility.copyAmount(tItemAmount, new Object[] { aStack }), tCapsuleCount >  0L ? (int)tCapsuleCount : 0, (ItemStack)tList.get(0), tList.size() <  2 ? null : (ItemStack)tList.get(1), tList.size() <  3 ? null : (ItemStack)tList.get(2), tList.size() <  4 ? null : (ItemStack)tList.get(3), tList.size() <  5 ? null : (ItemStack)tList.get(4), tList.size()    < 6 ? null : tCapsuleCount < 0L ? ItemList.Cell_Empty.get(-tCapsuleCount) : (ItemStack)tList.get(5), (int)Math.max(1L, Math.abs(aMaterial.getProtons() * 8L * tItemAmount)), Math.min(4, tList.size()) * 30);
+                                GT_Values.RA.addElectrolyzerRecipe(GT_Utility.copyAmount(tItemAmount, new Object[]{aStack}), tCapsuleCount <= 0L ? 0 : (int) tCapsuleCount, (ItemStack) tList.get(0), tList.size() >= 2 ? (ItemStack) tList.get(1) : null, tList.size() >= 3 ? (ItemStack) tList.get(2) : null, tList.size() >= 4 ? (ItemStack) tList.get(3) : null, tList.size() >= 5 ? (ItemStack) tList.get(4) : null, tCapsuleCount >= 0L ? tList.size() >= 6 ? (ItemStack) tList.get(5) : null : ItemList.Cell_Empty.get(-tCapsuleCount), (int) Math.max(1L, Math.abs(aMaterial.getProtons() * 8L * tItemAmount)), Math.min(4, tList.size()) * 30);
                             }
                             if ((aMaterial.mExtraData & 0x2) != 0) {
-                                //GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(tItemAmount, new Object[] { aStack }), tCapsuleCount > 0L ? (int)tCapsuleCount : 0, (ItemStack)tList.get(0), tList.size() < 2 ? null : (ItemStack)tList.get(1), tList.size() < 3 ? null : (ItemStack)tList.get(2), tList.size() < 4 ? null : (ItemStack)tList.get(3), tList.size() < 5 ? null : (ItemStack)tList.get(4), tList.size() < 6 ? null : tCapsuleCount < 0L ? ItemList.Cell_Empty.get(-tCapsuleCount, new Object[0]) : (ItemStack)tList.get(5), (int)Math.max(1L, Math.abs(aMaterial.getMass() * 2L * tItemAmount)));
-                                GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(tItemAmount, new Object[]{aStack}), tCapsuleCount <= 0L ? 0 : (int) tCapsuleCount, (ItemStack) tList.get(0), tList.size() >= 2 ? (ItemStack) tList.get(1) : null, tList.size() >= 3 ? (ItemStack) tList.get(2) : null, tList.size() >= 4 ? (ItemStack) tList.get(3) : null, tList.size() >= 5 ? (ItemStack) tList.get(4) : null, tCapsuleCount >= 0L ? tList.size() >= 6 ? (ItemStack) tList.get(5) : null : ItemList.Cell_Empty.get(-tCapsuleCount, new Object[0]), (int) Math.max(1L, Math.abs(aMaterial.getMass() * 2L * tItemAmount)));
+                                //GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(tItemAmount, new Object[] { aStack }), tCapsuleCount > 0L ? (int)tCapsuleCount : 0, (ItemStack)tList.get(0), tList.size() < 2 ? null : (ItemStack)tList.get(1), tList.size() < 3 ? null : (ItemStack)tList.get(2), tList.size() < 4 ? null : (ItemStack)tList.get(3), tList.size() < 5 ? null : (ItemStack)tList.get(4), tList.size() < 6 ? null : tCapsuleCount < 0L ? ItemList.Cell_Empty.get(-tCapsuleCount) : (ItemStack)tList.get(5), (int)Math.max(1L, Math.abs(aMaterial.getMass() * 2L * tItemAmount)));
+                                GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(tItemAmount, new Object[]{aStack}), tCapsuleCount <= 0L ? 0 : (int) tCapsuleCount, (ItemStack) tList.get(0), tList.size() >= 2 ? (ItemStack) tList.get(1) : null, tList.size() >= 3 ? (ItemStack) tList.get(2) : null, tList.size() >= 4 ? (ItemStack) tList.get(3) : null, tList.size() >= 5 ? (ItemStack) tList.get(4) : null, tCapsuleCount >= 0L ? tList.size() >= 6 ? (ItemStack) tList.get(5) : null : ItemList.Cell_Empty.get(-tCapsuleCount), (int) Math.max(1L, Math.abs(aMaterial.getMass() * 2L * tItemAmount)));
                             }
                         }
                     }
