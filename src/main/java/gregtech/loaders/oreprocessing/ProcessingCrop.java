@@ -14,7 +14,7 @@ public class ProcessingCrop implements gregtech.api.interfaces.IOreRecipeRegistr
     }
 
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, net.minecraft.item.ItemStack aStack) {
-        GT_ModHandler.addCompressionRecipe(gregtech.api.util.GT_Utility.copyAmount(8L), ItemList.IC2_PlantballCompressed.get(1L, new Object[0]));
+        GT_ModHandler.addCompressionRecipe(gregtech.api.util.GT_Utility.copyAmount(8L, new Object[]{aStack}), ItemList.IC2_PlantballCompressed.get(1L, new Object[0]));
         if (aOreDictName.equals("cropTea")) {
             GT_Values.RA.addBrewingRecipe(aStack, FluidRegistry.WATER, FluidRegistry.getFluid("potion.tea"), false);
             GT_Values.RA.addBrewingRecipe(aStack, GT_ModHandler.getDistilledWater(1L).getFluid(), FluidRegistry.getFluid("potion.tea"), false);
