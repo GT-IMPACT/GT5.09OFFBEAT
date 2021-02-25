@@ -13,13 +13,13 @@ public class ProcessingBlock implements gregtech.api.interfaces.IOreRecipeRegist
     }
 
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
-        GT_Values.RA.addCutterRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 9L), null, (int) Math.max(aMaterial.getMass() * 10L, 1L), 30);
+        GT_Values.RA.addCutterRecipe(GT_Utility.copyAmount(1L), GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 9L), null, (int) Math.max(aMaterial.getMass() * 10L, 1L), 30);
 
         ItemStack tStack1 = GT_OreDictUnificator.get(OrePrefixes.ingot, aMaterial, 1L);
         ItemStack tStack2 = GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 1L);
         ItemStack tStack3 = GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L);
 
-        GT_ModHandler.removeRecipe(new ItemStack[]{GT_Utility.copyAmount(1L, new Object[]{aStack})});
+        GT_ModHandler.removeRecipe(new ItemStack[]{GT_Utility.copyAmount(1L)});
 
         if (tStack1 != null)
             GT_ModHandler.removeRecipe(new ItemStack[]{tStack1, tStack1, tStack1, tStack1, tStack1, tStack1, tStack1, tStack1, tStack1});
@@ -66,10 +66,10 @@ public class ProcessingBlock implements gregtech.api.interfaces.IOreRecipeRegist
                 break;
             case "Iron":
             case "WroughtIron":
-                GT_Values.RA.addAssemblerRecipe(ItemList.IC2_Compressed_Coal_Ball.get(8L, new Object[0]), GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.IC2_Compressed_Coal_Chunk.get(1L, new Object[0]), 400, 4);
+                GT_Values.RA.addAssemblerRecipe(ItemList.IC2_Compressed_Coal_Ball.get(8L, new Object[0]), GT_Utility.copyAmount(1L), ItemList.IC2_Compressed_Coal_Chunk.get(1L, new Object[0]), 400, 4);
                 break;
             case "Steel":
-                GT_Values.RA.addAssemblerRecipe(ItemList.IC2_Compressed_Coal_Ball.get(8L, new Object[0]), GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.IC2_Compressed_Coal_Chunk.get(1L, new Object[0]), 400, 4);
+                GT_Values.RA.addAssemblerRecipe(ItemList.IC2_Compressed_Coal_Ball.get(8L, new Object[0]), GT_Utility.copyAmount(1L), ItemList.IC2_Compressed_Coal_Chunk.get(1L, new Object[0]), 400, 4);
         }
     }
 }

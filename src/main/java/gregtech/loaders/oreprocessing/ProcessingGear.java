@@ -38,7 +38,7 @@ public class ProcessingGear implements gregtech.api.interfaces.IOreRecipeRegistr
             case gearGtSmall:
                 if (aMaterial.mStandardMoltenFluid != null)
                     if (!(aMaterial == Materials.AnnealedCopper || aMaterial == Materials.WroughtIron)) {
-                        GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Gear_Small.get(0L, new Object[0]), aMaterial.getMolten(144L), GT_Utility.copyAmount(1L, new Object[]{aStack}), 16, 8);
+                        GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Gear_Small.get(0L, new Object[0]), aMaterial.getMolten(144L), GT_Utility.copyAmount(1L), 16, 8);
                     }
                     if (aMaterial.mUnificatable && (aMaterial.mMaterialInto == aMaterial) && !aMaterial.contains(SubTag.NO_WORKING)) {
                     switch (aMaterial.mName) {
