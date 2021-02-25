@@ -3663,7 +3663,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addDistillationTowerRecipe(Materials.LiquidAir.getFluid(200000), new FluidStack[]{
                 Materials.Nitrogen.getGas(156160), Materials.Oxygen.getGas(41890), Materials.Argon.getGas(1864),
                 Materials.CarbonDioxide.getGas(80), Materials.Helium.getGas(9), Materials.Methane.getGas(3),
-                Materials.Hydrogen.getGas(1), Materials.NitrogenDioxide.getGas(1)}, null, 4000, 480);
+                Materials.Hydrogen.getGas(1), Materials.NitrousOxide.getGas(1)}, null, 4000, 480);
 
         if (Loader.isModLoaded("GalacticraftCore")) {
             //LightRadox + Nq -> Enriched Naquadah condensation int aChance, int aDuration, int aEUt, boolean aCleanroom
