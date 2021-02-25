@@ -38,15 +38,17 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
         for (int i = 0; i < mPerFluidAmount; i++)
-            if (mFluids[i] != null)
+            if (mFluids[i] != null) {
                 aNBT.setTag("mFluid" + (i == 0 ? "" : i), mFluids[i].writeToNBT(new NBTTagCompound()));
+            }
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
-        for (int i = 0; i < mPerFluidAmount; i++)
+        for (int i = 0; i < mPerFluidAmount; i++) {
             mFluids[i] = FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag("mFluid" + (i == 0 ? "" : i)));
+        }
     }
 
     @Override
@@ -71,7 +73,13 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-
+        if (aTick % 20 == 12) {
+           for (int i = 0; i <= mFluids.length; i++) {
+               if (mFluids[i].amount <= 0) {
+                   mFluids[i] = null;
+               }
+            }
+        }
     }
 
     @Override
