@@ -43,11 +43,11 @@ public class ProcessingWire implements gregtech.api.interfaces.IOreRecipeRegistr
                 }
                 if (aMaterial.mUnificatable && (aMaterial.mMaterialInto == aMaterial) && !aMaterial.contains(SubTag.NO_WORKING))
                 GT_ModHandler.addCraftingRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt01, aMaterial, 1L), GT_Proxy.tBits, new Object[]{"Xx", Character.valueOf('X'), OrePrefixes.plate.get(aMaterial)});
-                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(2L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 2L, new Object[0])}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt02, aMaterial, 1L), 150, 8, false);
-                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(4L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 4L, new Object[0])}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt04, aMaterial, 1L), 200, 8, false);
-                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(8L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 8L, new Object[0])}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt08, aMaterial, 1L), 300, 8, false);
-                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(12L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 12L, new Object[0])}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt12, aMaterial, 1L), 400, 8, false);
-                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(16L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 16L, new Object[0])}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt16, aMaterial, 1L), 500, 8, false);
+                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(2L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 2L)}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt02, aMaterial, 1L), 150, 8, false);
+                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(4L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 4L)}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt04, aMaterial, 1L), 200, 8, false);
+                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(8L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 8L)}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt08, aMaterial, 1L), 300, 8, false);
+                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(12L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 12L)}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt12, aMaterial, 1L), 400, 8, false);
+                GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(16L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 16L)}, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.wireGt16, aMaterial, 1L), 500, 8, false);
                 break;
             case wireGt02:
                 cableWidth = 2;
