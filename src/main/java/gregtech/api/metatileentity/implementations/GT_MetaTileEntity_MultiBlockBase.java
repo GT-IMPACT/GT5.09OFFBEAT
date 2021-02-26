@@ -64,7 +64,11 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
 
     public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional) {
-        super(aID, aName, aNameRegional, 2);
+        this(aID, aName, aNameRegional, 2);
+    }
+
+    public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional, int inventorySlot) {
+        super(aID, aName, aNameRegional, inventorySlot);
         GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
         this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
@@ -72,7 +76,11 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public GT_MetaTileEntity_MultiBlockBase(String aName) {
-        super(aName, 2);
+        this(aName, 2);
+    }
+
+    public GT_MetaTileEntity_MultiBlockBase(String aName, int inventorySlot) {
+        super(aName, inventorySlot);
         GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
         this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
