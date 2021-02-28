@@ -1294,7 +1294,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
                 TungstenSteel, BlueAlloy, RedAlloy, CobaltBrass, IronMagnetic, SteelMagnetic, NeodymiumMagnetic, EuropiumoxideMagnetic, HSSG, HSSE, HSSS, TungstenCarbide, Endium,
                 VanadiumSteel, Infinity, InfinityCatalyst, BlackPlutonium, Draconium, DraconiumAwakened, Pentacadmiummagnesiumhexaoxid,Titaniumonabariumdecacoppereikosaoxid,
                 Uraniumtriplatinid, Vanadiumtriindinid, Tetraindiumditindibariumtitaniumheptacoppertetrakaidekaoxid, Tetranaquadahdiindiumhexaplatiumosminid, Longasssuperconductornameforuvwire, Longasssuperconductornameforuhvwire, Longasssuperconductornameforuevwire,
-                Quantium, Trinium,HastelloyC276, GumMetal, Titaniolum, Zamak, Duraluminium, Inconel690, Nitinol, Inconel792, TiBetaC, MaragingSteel250, Talonite, Grisium, Nitinol60, Kovar, Mangalloy, MaragingSteel300, Stellite, Zeron100, HastelloyN, Lafium, CinobiteA243, Potin, EglinSteel, Birmabright, BT6, Pikyonium64B, Quantum);
+                Quantium, Trinium,HastelloyC276, GumMetal, Titaniolum, Zamak, Duraluminium, Inconel690, Nitinol, Inconel792, TiBetaC, MaragingSteel250, Talonite, Grisium, Nitinol60, Kovar, Mangalloy, MaragingSteel300, Stellite, Zeron100, HastelloyN, Lafium, CinobiteA243, Potin, EglinSteel, Birmabright, BT6, Pikyonium64B, Quantum,
+				Diamericiumtitanium);
 
         SubTag.PUREIMPURE.addTo(
                 Sphalerite, DeepIron, Ledox, Bentonite, Copper, Galena, Aluminium, Thorium, DraconiumAwakened, BandedIron, Endstone, Beryllium, Magnesite, Europium, GreenSapphire, Uraninite, Uranium235, BrownLimonite, Iridium, Coal, Stone, Chrome,
