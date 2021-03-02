@@ -5,6 +5,7 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
+import gregtech.api.commands.RecipesReload;
 import gregtech.api.enchants.Enchantment_EnderDamage;
 import gregtech.api.enchants.Enchantment_Radioactivity;
 import gregtech.api.enums.*;
@@ -923,6 +924,7 @@ public class GT_Mod implements IGT_Mod {
             }
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
         gregtechproxy.onServerStarting();
+        aEvent.registerServerCommand(new RecipesReload());
         //Check for more IC2 recipes on ServerStart to also catch MineTweaker additions
         GT_ModHandler.addIC2RecipesToGT(GT_ModHandler.getMaceratorRecipeList(), GT_Recipe.GT_Recipe_Map.sMaceratorRecipes, true, true, true);
         GT_ModHandler.addIC2RecipesToGT(GT_ModHandler.getCompressorRecipeList(), GT_Recipe.GT_Recipe_Map.sCompressorRecipes, true, true, true);

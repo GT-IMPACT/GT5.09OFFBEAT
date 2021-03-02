@@ -696,6 +696,18 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         @Deprecated  //TODO future del
         public final boolean mShowVoltageAmperageInNEI;
 
+
+        /**
+         * Reload Clear all Recipes map (only for Debug!)
+         */
+        public void clear() {
+            mRecipeList.clear();
+            mRecipeItemMap.clear();
+            mRecipeFluidMap.clear();
+            mRecipeFluidNameMap.clear();
+        }
+
+
         /**
          * Initialises a new type of Recipe Handler.
          *
