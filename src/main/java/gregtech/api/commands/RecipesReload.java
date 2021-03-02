@@ -1,10 +1,9 @@
 package gregtech.api.commands;
 
-import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
 import gregtech.loaders.postload.GT_CraftingRecipeLoader;
 import gregtech.loaders.postload.GT_MachineRecipeLoader;
+import gregtech.loaders.preload.GT_Loader_OreProcessing;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.item.crafting.CraftingManager;
@@ -27,6 +26,7 @@ public class RecipesReload extends CommandBase {
     static {
         classMap.put("GT_CraftingRecipeLoader", GT_CraftingRecipeLoader.class);
         classMap.put("GT_MachineRecipeLoader", GT_MachineRecipeLoader.class);
+        classMap.put("GT_Loader_OreProcessing", GT_Loader_OreProcessing.class);
     }
 
     @Override
@@ -57,10 +57,20 @@ public class RecipesReload extends CommandBase {
             if (args[0].equalsIgnoreCase("refresh")) {
                 try {
                     reloadRecipe();
-                    ics.addChatMessage(new ChatComponentText("Successful"));
+                    ics.addChatMessage(new ChatComponentText("Successful [refresh]"));
                 } catch (IllegalAccessException | InstantiationException ignored) {
                     ics.addChatMessage(new ChatComponentText("Error"));
                 }
+            }
+            if (args[0].equalsIgnoreCase("all")) {
+               for (Class cl : classMap.values()) {
+                   if (cl != null) {
+                       if (Runnable.class.isAssignableFrom(cl)) {
+                           currRunLoaders.add(cl);
+                       }
+                   }
+               }
+                ics.addChatMessage(new ChatComponentText("Successful [all]"));
             }
         }
         if (args.length == 2) {
@@ -107,6 +117,7 @@ public class RecipesReload extends CommandBase {
             tMap.clear();
         }
         ArrayList<IRecipe> tList = (ArrayList<IRecipe>) CraftingManager.getInstance().getRecipeList();
+
         tList.clear();
     }
 }
