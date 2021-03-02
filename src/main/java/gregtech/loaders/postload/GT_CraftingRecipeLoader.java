@@ -89,6 +89,19 @@ public class GT_CraftingRecipeLoader implements Runnable {
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "engine", 1L, 2), true, false, true);
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "engine", 1L, 4), true, false, true);
 
+
+        GT_ModHandler.addCraftingRecipe(ItemList.FluidRegulator_LV.get(1L), new ItemStack[]{ItemList.Steam_Valve_LV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.FluidRegulator_MV.get(1L), new ItemStack[]{ItemList.Steam_Valve_MV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.FluidRegulator_HV.get(1L), new ItemStack[]{ItemList.Steam_Valve_HV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.FluidRegulator_EV.get(1L), new ItemStack[]{ItemList.Steam_Valve_EV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.FluidRegulator_IV.get(1L), new ItemStack[]{ItemList.Steam_Valve_IV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Steam_Valve_LV.get(1L), new ItemStack[]{ItemList.FluidRegulator_LV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Steam_Valve_MV.get(1L), new ItemStack[]{ItemList.FluidRegulator_MV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Steam_Valve_HV.get(1L), new ItemStack[]{ItemList.FluidRegulator_HV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Steam_Valve_EV.get(1L), new ItemStack[]{ItemList.FluidRegulator_EV.get(1L)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Steam_Valve_IV.get(1L), new ItemStack[]{ItemList.FluidRegulator_IV.get(1L)});
+
+
         ItemStack tStack = GT_ModHandler.removeRecipe(new ItemStack(Blocks.planks, 1, 0), null, null, new ItemStack(Blocks.planks, 1, 0));
         if (tStack != null) {
             GT_ModHandler.addCraftingRecipe(GT_Utility.copyAmount(GT_Mod.gregtechproxy.mNerfedWoodPlank ? tStack.stackSize : tStack.stackSize * 5 / 4, tStack), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.BUFFERED, new Object[]{"s", "P", "P", 'P', OrePrefixes.plank.get(Materials.Wood)});
