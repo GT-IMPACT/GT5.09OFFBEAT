@@ -93,6 +93,16 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_StorageTan
 	}
 
 	@Override
+	public boolean isLiquidOutput(byte aSide) {
+		return true;
+	}
+
+	@Override
+	public boolean isLiquidInput(byte aSide) {
+		return true;
+	}
+
+	@Override
 	public boolean isSimpleMachine() {
 		return true;
 	}

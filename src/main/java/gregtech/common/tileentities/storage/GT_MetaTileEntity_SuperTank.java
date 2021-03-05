@@ -107,6 +107,11 @@ public class GT_MetaTileEntity_SuperTank extends GT_MetaTileEntity_StorageTank {
     }
 
     @Override
+    public boolean isLiquidInput(byte aSide) {
+        return true;
+    }
+
+    @Override
     public boolean isSimpleMachine() {
         return true;
     }

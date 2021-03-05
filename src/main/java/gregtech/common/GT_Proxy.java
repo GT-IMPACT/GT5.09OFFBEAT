@@ -214,7 +214,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     /**
      *  This enables ambient-occlusion smooth lighting on tiles
      */
-    public boolean mRenderTileAmbientOcclusion = true;
+    public boolean mRenderTileAmbientOcclusion = false;
     public static final int GUI_ID_COVER_SIDE_BASE = 10; // Takes GUI ID 10 - 15
     public boolean mMoreComplicatedChemicalRecipes = false;
     public boolean mHardRadonRecipe = true;
