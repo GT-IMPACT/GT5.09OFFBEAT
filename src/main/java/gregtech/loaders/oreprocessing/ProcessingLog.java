@@ -86,6 +86,6 @@ public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistra
         }
     }
     public static void addPyrolyeOvenRecipes(ItemStack logStack){
-        GT_Values.RA.addCokeOvenRecipes(GT_Utility.copyAmount(6L, logStack), Materials.Charcoal.getGems(1), Materials.Creosote.getFluid(100), 90*20);
+        GT_Values.RA.addCokeOvenRecipes(GT_Utility.copyAmount(3L, logStack), Materials.Charcoal.getGems(1), Materials.Creosote.getFluid(100), 90*20);
     }
 }
