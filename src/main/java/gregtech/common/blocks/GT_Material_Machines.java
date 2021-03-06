@@ -13,6 +13,6 @@ public class GT_Material_Machines
     }
 
     public boolean isOpaque() {
-        return true;
+        return false;
     }
 }
