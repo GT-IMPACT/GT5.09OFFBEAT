@@ -9,7 +9,6 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.ITexturedTileEntity;
 import gregtech.api.objects.GT_CopiedBlockTexture;
 import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.objects.GT_StdRenderedTexture;
 import gregtech.api.objects.XSTR;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -142,34 +141,34 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
     }
 
     public void overrideOreBlockMaterial(Block aOverridingStoneBlock, byte aOverridingStoneMeta) {
-            if(this.worldObj == null || blockType==null)return;
-            this.mMetaData = ((short) (int) (this.mMetaData % 1000L + this.mMetaData / 16000L * 16000L));
-            if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Blocks.netherrack)) {
-                this.mMetaData = ((short) (this.mMetaData + 1000));
-            } else if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Blocks.end_stone)) {
-                this.mMetaData = ((short) (this.mMetaData + 2000));
-            } else if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, GregTech_API.sBlockGranites)) {
-                if (aOverridingStoneBlock == GregTech_API.sBlockGranites) {
-                    if (aOverridingStoneMeta < 8) {
-                        this.mMetaData = ((short) (this.mMetaData + 3000));
-                    } else {
-                        this.mMetaData = ((short) (this.mMetaData + 4000));
-                    }
-                } else {
+        if(this.worldObj == null || blockType==null)return;
+        this.mMetaData = ((short) (int) (this.mMetaData % 1000L + this.mMetaData / 16000L * 16000L));
+        if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Blocks.netherrack)) {
+            this.mMetaData = ((short) (this.mMetaData + 1000));
+        } else if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Blocks.end_stone)) {
+            this.mMetaData = ((short) (this.mMetaData + 2000));
+        } else if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, GregTech_API.sBlockGranites)) {
+            if (aOverridingStoneBlock == GregTech_API.sBlockGranites) {
+                if (aOverridingStoneMeta < 8) {
                     this.mMetaData = ((short) (this.mMetaData + 3000));
-                }
-            } else if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, GregTech_API.sBlockStones)) {
-                if (aOverridingStoneBlock == GregTech_API.sBlockStones) {
-                    if (aOverridingStoneMeta < 8) {
-                        this.mMetaData = ((short) (this.mMetaData + 5000));
-                    } else {
-                        this.mMetaData = ((short) (this.mMetaData + 6000));
-                    }
                 } else {
-                    this.mMetaData = ((short) (this.mMetaData + 5000));
+                    this.mMetaData = ((short) (this.mMetaData + 4000));
                 }
+            } else {
+                this.mMetaData = ((short) (this.mMetaData + 3000));
             }
-            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, getHarvestData(this.mMetaData, ((GT_Block_Ores_Abstract) blockType).getBaseBlockHarvestLevel(mMetaData % 16000 / 1000)), 0);
+        } else if (aOverridingStoneBlock.isReplaceableOreGen(this.worldObj, this.xCoord, this.yCoord, this.zCoord, GregTech_API.sBlockStones)) {
+            if (aOverridingStoneBlock == GregTech_API.sBlockStones) {
+                if (aOverridingStoneMeta < 8) {
+                    this.mMetaData = ((short) (this.mMetaData + 5000));
+                } else {
+                    this.mMetaData = ((short) (this.mMetaData + 6000));
+                }
+            } else {
+                this.mMetaData = ((short) (this.mMetaData + 5000));
+            }
+        }
+        this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, getHarvestData(this.mMetaData, ((GT_Block_Ores_Abstract) blockType).getBaseBlockHarvestLevel(mMetaData % 16000 / 1000)), 0);
     }
 
     public void convertOreBlock(World aWorld, int aX, int aY, int aZ) {
@@ -271,11 +270,11 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
     public ITexture[] getTexture(Block aBlock, byte aSide) {
         Materials aMaterial = GregTech_API.sGeneratedMaterials[(this.mMetaData % 1000)];
         if ((aMaterial != null) && (this.mMetaData < 32000)) {
+            GT_RenderedTexture aIconSet = new GT_RenderedTexture(aMaterial.mIconSet.mTextures[this.mMetaData / 16000 == 0 ? OrePrefixes.ore.mTextureIndex : OrePrefixes.oreSmall.mTextureIndex], aMaterial.mRGBa);
             if (aBlock instanceof GT_Block_Ores_Abstract) {
-                GT_StdRenderedTexture aIconSet = new GT_StdRenderedTexture(aMaterial.mIconSet.mTextures[this.mMetaData / 16000 == 0 ? OrePrefixes.ore.mTextureIndex : OrePrefixes.oreSmall.mTextureIndex], aMaterial.mRGBa);
                 return new ITexture[]{((GT_Block_Ores_Abstract) aBlock).getTextureSet()[((this.mMetaData / 1000) % 16)], aIconSet};
             }
         }
-        return new ITexture[]{new GT_CopiedBlockTexture(Blocks.stone, 0, 0), new GT_StdRenderedTexture(gregtech.api.enums.TextureSet.SET_NONE.mTextures[OrePrefixes.ore.mTextureIndex])};
+        return new ITexture[]{new GT_CopiedBlockTexture(Blocks.stone, 0, 0), new GT_RenderedTexture(gregtech.api.enums.TextureSet.SET_NONE.mTextures[OrePrefixes.ore.mTextureIndex])};
     }
 }
