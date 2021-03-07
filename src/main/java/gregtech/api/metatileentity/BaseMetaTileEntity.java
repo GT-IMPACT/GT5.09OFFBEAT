@@ -874,13 +874,13 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public void invalidate() {
         tileEntityInvalid = false;
         if (canAccessData()) {
+            if (GregTech_API.mAE2) {
+                invalidateAE();
+            }
             mMetaTileEntity.onRemoval();
             mMetaTileEntity.setBaseMetaTileEntity(null);
         }
         super.invalidate();
-        if (GregTech_API.mAE2) {
-            invalidateAE();
-        }
     }
 
     @Override

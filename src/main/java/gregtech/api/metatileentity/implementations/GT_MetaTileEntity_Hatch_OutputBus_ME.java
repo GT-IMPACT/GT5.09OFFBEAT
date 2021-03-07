@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import appeng.api.storage.IMEMonitorHandlerReceiver;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -25,9 +26,12 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_RenderedTexture;
 
+import java.util.Arrays;
+
 public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatch_OutputBus {
     private BaseActionSource requestSource = null;
     private AENetworkProxy gridProxy = null;
+    private int update = 0;
 
     public GT_MetaTileEntity_Hatch_OutputBus_ME(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 1, 0, new String[]{
@@ -51,6 +55,16 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
     @Override
     public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
         return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ME_HATCH)};
+    }
+
+    @Override
+    public void onFirstTick(IGregTechTileEntity aBaseMetaTileEntity) {
+        super.onFirstTick(aBaseMetaTileEntity);
+        getProxy();
+    }
+
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        super.onPostTick(aBaseMetaTileEntity, aTick);
     }
 
     @Optional.Method(modid = "appliedenergistics2")
@@ -104,6 +118,15 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
             }
         }
         return this.gridProxy;
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    public boolean isValid(Object verificationToken) {
+        try {
+            return (getProxy().getGrid() == verificationToken);
+        } catch (GridAccessException e) {
+            return false;
+        }
     }
 
     @Override
