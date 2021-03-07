@@ -5,12 +5,9 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -84,30 +81,27 @@ public class GT_Tool_Axe
 
     public boolean isMinableBlock(Block aBlock, byte aMetaData) {
         String tTool = aBlock.getHarvestTool(aMetaData);
-        return aBlock.getHarvestLevel(aMetaData) != -1 &&  (tTool == null || tTool.isEmpty() || (tTool.equals("axe"))) || (aBlock.getMaterial() == Material.wood || (aBlock.getMaterial() == Material.plants) || (aBlock.getMaterial() == Material.leaves));
+        return aBlock.getHarvestLevel(aMetaData) != -1 && (tTool == null || tTool.isEmpty() || (tTool.equals("axe"))) || (aBlock.getMaterial() == Material.wood || (aBlock.getMaterial() == Material.plants) || (aBlock.getMaterial() == Material.leaves));
     }
 
     public int convertBlockDrops(List<ItemStack> aDrops, ItemStack aStack, EntityPlayer aPlayer, Block aBlock, int aX, int aY, int aZ, byte aMetaData, int aFortune, boolean aSilkTouch, BlockEvent.HarvestDropsEvent aEvent) {
         int rAmount = 0;
-        if (aBlock instanceof BlockBed) {
-        } else {
-            if ((GregTech_API.sTimber) && (!aPlayer.isSneaking()) && (OrePrefixes.log.contains(new ItemStack(aBlock, 1, aMetaData)))) {
-                int tY = aY + 1;
-                for (int tH = aPlayer.worldObj.getHeight(); tY < tH; tY++) {
 
-                    if ((aPlayer.worldObj.getBlock(aX, tY, aZ) != aBlock) || (!aPlayer.worldObj.func_147480_a(aX, tY, aZ, true))) {
-                        break;
-                    }
-                    rAmount++;
+        if ((GregTech_API.sTimber) && (!aPlayer.isSneaking()) && aBlock.isWood(aPlayer.worldObj, aX, aY, aZ)) {
+            int tY = aY + 1;
+            for (int tH = aPlayer.worldObj.getHeight(); tY < tH; tY++) {
+                if ((aPlayer.worldObj.getBlock(aX, tY, aZ) != aBlock) || (!aPlayer.worldObj.func_147480_a(aX, tY, aZ, true))) {
+                    break;
                 }
+                rAmount++;
             }
         }
+
         return rAmount;
     }
-    
-    public float getMiningSpeed(Block aBlock, byte aMetaData, float aDefault, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ)
-    {
-      if (aBlock.isWood(aPlayer.worldObj, aX, aY, aZ) && OrePrefixes.log.contains(new ItemStack(aBlock, 1, aMetaData))){
+
+    public float getMiningSpeed(Block aBlock, byte aMetaData, float aDefault, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ) {
+      if (aBlock.isWood(aPlayer.worldObj, aX, aY, aZ) && aBlock.isWood(aPlayer.worldObj, aX, aY, aZ)){
         float rAmount = 1.0F;float tIncrement = 1.0F;
         if ((GregTech_API.sTimber) && !aPlayer.isSneaking()){
           int tY = aY + 1;
@@ -117,7 +111,7 @@ public class GT_Tool_Axe
         }
         return 2.0F * aDefault / rAmount;
       }
-      return (aBlock.getMaterial() == Material.leaves) || (aBlock.getMaterial() == Material.vine) || (aBlock.getMaterial() == Material.plants) || (aBlock.getMaterial() == Material.gourd) ? aDefault / 4.0F : aDefault;
+        return (aBlock.getMaterial() == Material.leaves) || (aBlock.getMaterial() == Material.vine) || (aBlock.getMaterial() == Material.plants) || (aBlock.getMaterial() == Material.gourd) ? aDefault / 4.0F : aDefault;
     }
 
     public ItemStack getBrokenItem(ItemStack aStack) {

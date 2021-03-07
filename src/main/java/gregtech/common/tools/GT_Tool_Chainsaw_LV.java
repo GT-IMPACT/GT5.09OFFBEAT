@@ -6,6 +6,7 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.items.GT_MetaGenerated_Tool;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -123,7 +124,7 @@ public class GT_Tool_Chainsaw_LV
             aEvent.dropChance = 1.0F;
             return 1;
         }
-        if ((GregTech_API.sTimber) && (!aPlayer.isSneaking()) && (OrePrefixes.log.contains(new ItemStack(aBlock, 1, aMetaData)))) {
+        if ((GregTech_API.sTimber) && (!aPlayer.isSneaking()) && aBlock.isWood(aPlayer.worldObj, aX, aY, aZ)) {
             int tY = aY + 1;
             for (int tH = aPlayer.worldObj.getHeight(); tY < tH; tY++) {
                 if ((aPlayer.worldObj.getBlock(aX, tY, aZ) != aBlock) || (!aPlayer.worldObj.func_147480_a(aX, tY, aZ, true))) {
@@ -132,12 +133,14 @@ public class GT_Tool_Chainsaw_LV
                 rAmount++;
             }
         }
+
+
         return rAmount;
     }
     
     public float getMiningSpeed(Block aBlock, byte aMetaData, float aDefault, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ)
     {
-      if (aBlock.isWood(aPlayer.worldObj, aX, aY, aZ) && OrePrefixes.log.contains(new ItemStack(aBlock, 1, aMetaData))){
+      if (aBlock.isWood(aPlayer.worldObj, aX, aY, aZ) && aBlock.isWood(aPlayer.worldObj, aX, aY, aZ)){
         float rAmount = 1.0F;float tIncrement = 1.0F;
         if ((GregTech_API.sTimber) && !aPlayer.isSneaking()){
           int tY = aY + 1;
