@@ -1244,8 +1244,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Quantium.mChemicalFormula="Qt";
         Desh.mChemicalFormula="De";
         Oriharukon.mChemicalFormula="Oh";
-        Draconium.mChemicalFormula="D";
-        DraconiumAwakened.mChemicalFormula="D*";
+        Draconium.mChemicalFormula="Mt";
+        DraconiumAwakened.mChemicalFormula="Mt*";
         BlueAlloy.mChemicalFormula="AgRp\u2084";
         RedAlloy.mChemicalFormula="Cu("+Redstone.mChemicalFormula+")\u2084";
         ElectrumFlux.mChemicalFormula="The formula is too long...";
@@ -1263,14 +1263,14 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         VibrantAlloy.mChemicalFormula="("+EnergeticAlloy.mChemicalFormula+")Cr("+EnderEye.mChemicalFormula+")";
         Enderium.mChemicalFormula="("+EnderiumBase.mChemicalFormula+")\u2082("+BlackSteel.mChemicalFormula+")("+Enderpearl.mChemicalFormula+")";
         PulsatingIron.mChemicalFormula="Fe("+EnderEye.mChemicalFormula+")("+RedstoneAlloy.mChemicalFormula+")";
-        Mytryl.mChemicalFormula="Pb\u2083Pt\u2082Dr";
+        Mytryl.mChemicalFormula="Pb\u2083Pt\u2082";
         Phoenixite.mChemicalFormula="Phn";
-        Mithril.mChemicalFormula=CertusQuartz.mChemicalFormula+"PtSpFe";
+        Mithril.mChemicalFormula="SiO\u2082PtSpFe";
         Trinium.mChemicalFormula="Tr";
         Infuscolium.mChemicalFormula="Is";
         Sunnarium.mChemicalFormula="Su";
         Orichalcum.mChemicalFormula="Tr\u2083Oh";
-        DeepIron.mChemicalFormula="Fe\u2083Tr";
+        DeepIron.mChemicalFormula="Fe\u2083TrIn";
     }
 
     private static void initSubTags() {
