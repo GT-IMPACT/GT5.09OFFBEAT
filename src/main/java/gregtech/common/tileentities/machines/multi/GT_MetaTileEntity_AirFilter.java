@@ -11,6 +11,7 @@ import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Pollution;
@@ -25,7 +26,6 @@ import java.util.Arrays;
 
 import static gregtech.api.enums.GT_Values.V;
 import static gregtech.api.enums.GT_Values.VN;
-
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -160,13 +160,13 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
             }
         }
 
-        mPollutionReduction=GT_Utility.safeInt((long)mPollutionReduction*baseEff)/10000;
-        mPollutionReduction=GT_Utility.safeInt((long)mPollutionReduction*mEfficiency/10000);
+        mPollutionReduction = GT_Utility.safeInt((long) mPollutionReduction * baseEff) / 10000;
+        mPollutionReduction = GT_Utility.safeInt((long) mPollutionReduction * mEfficiency / 10000);
 
         GT_Pollution.addPollution(getBaseMetaTileEntity(), -mPollutionReduction);
-        if(mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01 &&
-                ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getToolStats(mInventory[1]).getSpeedMultiplier()>0 &&
-                ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getPrimaryMaterial(mInventory[1]).mToolSpeed>0 ) {
+        if (mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01 &&
+                ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getToolStats(mInventory[1]).getSpeedMultiplier() > 0 &&
+                ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getPrimaryMaterial(mInventory[1]).mToolSpeed > 0) {
             ((GT_MetaGenerated_Tool) mInventory[1].getItem()).doDamage(mInventory[1], 50L);
         }
         return true;
@@ -422,19 +422,30 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
-            if(mMachine && aTick % 200L == 0L){
+            if (mMachine && aTick % 200L == 0L) {
                 //check for pollution
-                int pollution=GT_Pollution.getPollution(getBaseMetaTileEntity());
-                hasPollution = pollution>=10000||(hasPollution&&pollution>=1000);//HYSTERESIS :O !!! (trust me i am engineer)
+                int pollution = GT_Pollution.getPollution(getBaseMetaTileEntity());
+                hasPollution = pollution >= 10000 || (hasPollution && pollution >= 1000);//HYSTERESIS :O !!! (trust me i am engineer)
             }
-        }else if (aTick % 200L == 0L){
+        } else if (aTick % 200L == 0L) {
             //refresh casing on state change
-            int Xpos = aBaseMetaTileEntity.getXCoord() + ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-            int Ypos = aBaseMetaTileEntity.getYCoord()+3;
-            int Zpos = aBaseMetaTileEntity.getZCoord() + ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
+            int Xstart = aBaseMetaTileEntity.getXCoord();
+            int Ystart = aBaseMetaTileEntity.getYCoord();
+            int Zstart = aBaseMetaTileEntity.getZCoord();
+            final int RANGE = 32;
             try {
-                aBaseMetaTileEntity.getWorld().markBlockRangeForRenderUpdate(Xpos - 1, Ypos, Zpos - 1, Xpos + 1, Ypos, Zpos + 1);
-            } catch (Exception ignored) {}
+                //todo добавить радиус в 3х3 чанка, сейчас чистится 1 (1x1x3 радиус) чанк
+                //todo проверить эту залупу
+                aBaseMetaTileEntity.getWorld().markBlockRangeForRenderUpdate(
+                        Xstart - RANGE,
+                        Ystart,
+                        Zstart - RANGE,
+                        Xstart + RANGE,
+                        Ystart,
+                        Zstart + RANGE);
+            } catch (Exception e) {
+                GT_Log.out.print(e);
+            }
         }
         super.onPostTick(aBaseMetaTileEntity, aTick);
     }
