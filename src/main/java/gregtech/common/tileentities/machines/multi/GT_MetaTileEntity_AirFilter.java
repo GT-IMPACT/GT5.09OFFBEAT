@@ -19,13 +19,13 @@ import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static gregtech.api.enums.GT_Values.V;
-import static gregtech.api.enums.GT_Values.VN;
+import static gregtech.api.enums.GT_Values.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -163,7 +163,15 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
         mPollutionReduction = GT_Utility.safeInt((long) mPollutionReduction * baseEff) / 10000;
         mPollutionReduction = GT_Utility.safeInt((long) mPollutionReduction * mEfficiency / 10000);
 
-        GT_Pollution.addPollution(getBaseMetaTileEntity(), -mPollutionReduction);
+        Chunk tChunk = getBaseMetaTileEntity().getWorld().getChunkFromBlockCoords(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
+        int xChunk = tChunk.xPosition;
+        int zChunk = tChunk.zPosition;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                tChunk = getBaseMetaTileEntity().getWorld().getChunkFromChunkCoords(xChunk + i, zChunk + j);
+                GT_Pollution.addPollution(tChunk, -mPollutionReduction);
+            }
+        }
         if (mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01 &&
                 ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getToolStats(mInventory[1]).getSpeedMultiplier() > 0 &&
                 ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getPrimaryMaterial(mInventory[1]).mToolSpeed > 0) {
@@ -171,7 +179,7 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
         }
         return true;
     }
-
+    
     @Override
     protected void calculateOverclockedNessMulti(int aEUt, int aDuration, int mAmperage, long maxInputVoltage) {
         byte mTier=(byte) max(0,GT_Utility.getTier(maxInputVoltage));
@@ -434,8 +442,6 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
             int Zstart = aBaseMetaTileEntity.getZCoord();
             final int RANGE = 32;
             try {
-                //todo добавить радиус в 3х3 чанка, сейчас чистится 1 (1x1x3 радиус) чанк
-                //todo проверить эту залупу
                 aBaseMetaTileEntity.getWorld().markBlockRangeForRenderUpdate(
                         Xstart - RANGE,
                         Ystart,
