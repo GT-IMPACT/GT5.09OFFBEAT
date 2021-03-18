@@ -1,6 +1,6 @@
 package gregtech.common.covers;
 
-import com.impact.mods.GregTech.tileentities.storage.GTMTE_LapPowerStation;
+import com.impact.mods.gregtech.tileentities.multi.storage.GTMTE_LapPowerStation;
 import cpw.mods.fml.common.Loader;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.gui.GT_GUICover;

@@ -38,8 +38,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.impact.mods.GregTech.GT_ItemList.DustWasherLV;
-import static com.impact.mods.GregTech.GT_ItemList.Machine_LV_ComponentAssembler;
+import static com.impact.mods.gregtech.GT_ItemList.DustWasherLV;
+import static com.impact.mods.gregtech.GT_ItemList.Machine_LV_ComponentAssembler;
 
 public class GT_NEI_DefaultHandler
         extends TemplateRecipeHandler {

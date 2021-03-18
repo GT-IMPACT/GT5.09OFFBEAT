@@ -1,7 +1,6 @@
 package gregtech.api.util;
 
 import cofh.api.transport.IItemDuct;
-import com.impact.mods.GregTech.tileentities.multi.debug.GT_MetaTileEntity_MultiParallelBlockBase;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.FMLCommonHandler;
 import gregtech.api.GregTech_API;
