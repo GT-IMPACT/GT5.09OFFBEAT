@@ -5,6 +5,7 @@ import gregtech.api.gui.GT_GUIContainer_StorageTank;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -73,12 +74,22 @@ public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_Ba
     }
 
     @Override
+    public boolean isLiquidOutput(byte aSide) {
+        return true;
+    }
+
+    @Override
     public boolean isLiquidInput(byte aSide) {
         return aSide != getBaseMetaTileEntity().getFrontFacing();
     }
 
     @Override
-    public boolean isLiquidOutput(byte aSide) {
-        return aSide == getBaseMetaTileEntity().getFrontFacing();
+    public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
+        return aIndex == 1;
+    }
+
+    @Override
+    public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
+        return true;
     }
 }
