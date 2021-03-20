@@ -2154,8 +2154,6 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     @Optional.Method(modid = "appliedenergistics2")
     public IGridNode getGridNode(ForgeDirection forgeDirection) {
-        if (mFacing != forgeDirection.ordinal())
-            return null;
         AENetworkProxy gp = getProxy();
         return gp != null ? gp.getNode() : null;
     }
@@ -2227,4 +2225,3 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             gp.invalidate();
     }
 }
-

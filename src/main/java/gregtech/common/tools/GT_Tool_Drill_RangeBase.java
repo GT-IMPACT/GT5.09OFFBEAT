@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.List;
+import tconstruct.library.tools.AbilityHelper;
 
 import static gregtech.api.util.GT_Utility.ItemNBT.getDrillRangeMode;
 
@@ -35,11 +36,11 @@ abstract class GT_Tool_Drill_RangeBase
         float f = 1.0F;
         float f1 = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * f;
         float f2 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * f;
-        double d0 = player.prevPosX + (player.posX - player.prevPosX) * f;
-        double d1 = player.prevPosY + (player.posY - player.prevPosY) * f;
+        double d0 = player.prevPosX + (player.posX - player.prevPosX) * (double) f;
+        double d1 = player.prevPosY + (player.posY - player.prevPosY) * (double) f;
         if (!world.isRemote && player instanceof EntityPlayer)
             d1 += 1.62D;
-        double d2 = player.prevPosZ + (player.posZ - player.prevPosZ) * f;
+        double d2 = player.prevPosZ + (player.posZ - player.prevPosZ) * (double) f;
         Vec3 vec3 = Vec3.createVectorHelper(d0, d1, d2);
         float f3 = MathHelper.cos(-f2 * 0.017453292F - (float) Math.PI);
         float f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
@@ -48,8 +49,12 @@ abstract class GT_Tool_Drill_RangeBase
         float f7 = f4 * f5;
         float f8 = f3 * f5;
         double d3 = range;
-        Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
-        return world.rayTraceBlocks(vec3, vec31, wut);
+        if (player instanceof EntityPlayerMP)
+        {
+            d3 = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
+        }
+        Vec3 vec31 = vec3.addVector((double) f7 * d3, (double) f6 * d3, (double) f8 * d3);
+        return world.func_147447_a(vec3, vec31, wut, !wut, wut);
     }
 
     public IIconContainer getOverlay(boolean isOverlay, ItemStack aStack) {
@@ -174,7 +179,7 @@ abstract class GT_Tool_Drill_RangeBase
         try {
             GT_Mod.achievements.issueAchievement(aPlayer, "driltime");
             GT_Mod.achievements.issueAchievement(aPlayer, "buildDrill");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -190,20 +195,46 @@ abstract class GT_Tool_Drill_RangeBase
         int WD = mode == 1 ? 1 : mode == 2 ? 2 : mode == 3 ? 3 : mode == 4 ? 4 : 0;
         int H = mode == 1 ? 1 : mode == 2 ? 3 : mode == 3 ? 5 : mode == 4 ? 7 : 0;
 
-        MovingObjectPosition raycast = raytraceFromEntity(aPlayer.worldObj, aPlayer, true, 10);
-        if (raycast != null) {
+        MovingObjectPosition mop = raytraceFromEntity(aPlayer.worldObj, aPlayer, false, 10);
+
+        if (mop != null) {
+            int sideHit = mop.sideHit;
+            int xRange = WD;
+            int yRange = WD;
+            int zRange = 0;
+
+            switch (sideHit) {
+                case 0:
+                case 1:
+                    yRange = 0;
+                    zRange = WD;
+                    break;
+                case 2:
+                case 3:
+                    xRange = WD;
+                    zRange = 0;
+                    break;
+                case 4:
+                case 5:
+                    xRange = 0;
+                    zRange = WD;
+                    break;
+            }
+
             if ((this.sIsHarvesting.get() == null) && ((aPlayer instanceof EntityPlayerMP))) {
                 this.sIsHarvesting.set(this);
-                for (int i = -WD; i <= WD; i++) {
-                    for (int j = mode == 0 ? 0 : -1; j <= H; j++) {
-                        for (int k = -WD; k <= WD; k++) {
-
-                            if (aEvent.world.getBlock(aX + i, aY + j, aZ + k) == Blocks.bedrock) {
+                for (int xPos = -xRange; xPos <= xRange; xPos++) {
+                    for (int yPos = mode == 0 ? 0 : -1; yPos <= (yRange == 0 ? 0 : yRange*2-1); yPos++) {
+                        for (int zPos = -zRange; zPos <= zRange; zPos++) {
+                            if (xPos == aX && yPos == aY && zPos == aZ) {
+                                continue;
+                            }
+                            if (aEvent.world.getBlock(aX + xPos, aY + yPos, aZ + zPos) == Blocks.bedrock) {
                             } else {
-                                if (((i != 0) || (j != 0) || (k != 0)) && (aStack.getItem().getDigSpeed(aStack,
-                                        aPlayer.worldObj.getBlock(aX + i, aY + j, aZ + k),
-                                        aPlayer.worldObj.getBlockMetadata(aX + i, aY + j, aZ + k)) > 0.0F) &&
-                                        (((EntityPlayerMP) aPlayer).theItemInWorldManager.tryHarvestBlock(aX + i, aY + j, aZ + k))) {
+                                if (((xPos != 0) || (yPos != 0) || (zPos != 0)) && (aStack.getItem().getDigSpeed(aStack,
+                                        aPlayer.worldObj.getBlock(aX + xPos, aY + yPos, aZ + zPos),
+                                        aPlayer.worldObj.getBlockMetadata(aX + xPos, aY + yPos, aZ + zPos)) > 0.0F) &&
+                                        (((EntityPlayerMP) aPlayer).theItemInWorldManager.tryHarvestBlock(aX + xPos, aY + yPos, aZ + zPos))) {
                                     rConversions++;
                                 }
                             }
