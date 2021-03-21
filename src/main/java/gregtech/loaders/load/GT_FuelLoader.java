@@ -40,9 +40,7 @@ public class GT_FuelLoader
         //GT_Recipe.GT_Recipe_Map.sFluidDarkMatterReactorFuels.addRecipe(true, null, null, null, new FluidStack[]{Materials.FluidDarkMatterFuel.getFluid(10)}, new FluidStack[]{Materials.UUMatter.getFluid(5)}, 0, 0, 8000000);
         
         GT_Recipe.GT_Recipe_Map.sAntimatterReactorFuels.addRecipe(true, new ItemStack[]{ItemList.Magnetic_Confinement_Pod_AntiHydrogen.get(1L, new Object[0]), ItemList.Magnetic_Confinement_Pod_Hydrogen.get(1L, new Object[0])},  new ItemStack[]{ItemList.Magnetic_Confinement_Pod.get(2L, new Object[0])}, null, new FluidStack[]{Materials.Nitrogen.getGas(4)}, new FluidStack[]{Materials.Nitrogen.getPlasma(4)}, 0, 0, 1800);
-        
-        GT_Recipe.GT_Recipe_Map.sNuclearReactor1Fuels.addRecipe(true, new ItemStack[]{ItemList.Uraniumcell_1.get(1L, new Object[0])},  new ItemStack[]{GT_ModHandler.getIC2Item("reactorDepletedUraniumSimple", 1)}, null, new FluidStack[]{Materials.Water.getFluid(20)}, new FluidStack[]{GT_ModHandler.getSteam(20)}, 0, 0, 1000);
-        
+
         GT_Recipe.GT_Recipe_Map.sMagicFuels.addRecipe(true, new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","reinforcedSlate",1L)},  new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","blankSlate",1L)}, null, null, null, 0, 0, 100);
         GT_Recipe.GT_Recipe_Map.sMagicFuels.addRecipe(true, new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","imbuedSlate",1L)},  new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","reinforcedSlate",1L)}, null, null, null, 0, 0, 400);
         GT_Recipe.GT_Recipe_Map.sMagicFuels.addRecipe(true, new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","demonicSlate",1L)},  new ItemStack[]{GT_ModHandler.getModItem("AWWayofTime","imbuedSlate",1L)}, null, null, null, 0, 0, 1000);
