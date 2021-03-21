@@ -3419,9 +3419,11 @@ public class GT_MachineRecipeLoader implements Runnable {
 		GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Chrome, 1L), GT_Values.NI, GT_Values.NI, GT_Utility.getIntegratedCircuit(3), Materials.Oxygen.getGas(3000), GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.ChromiumTrioxide, 1), 300, 60);
 
 		//Potassium Dichromate
-        GT_Values.RA.addChemicalRecipe(Materials.PotassiumNitrade.getDust(2), Materials.ChromiumTrioxide.getDust(2), GT_Values.NF, GT_Values.NF, Materials.Potassiumdichromate.getDust(1), 100, 480);
-        GT_Values.RA.addChemicalRecipe(Materials.Saltpeter.getDust(2), Materials.ChromiumTrioxide.getDust(2), GT_Values.NF, GT_Values.NF, Materials.Potassiumdichromate.getDust(1), 100, 480);
-
+        GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.Saltpeter.getDust(2), Materials.ChromiumTrioxide.getDust(2)}, null, new FluidStack[]{Materials.Nitrogen.getGas(2000), Materials.Oxygen.getGas(5000)}, new ItemStack[]{Materials.Potassiumdichromate.getDust(1)}, 100, 480);
+        GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.PotassiumNitrade.getDust(2), Materials.ChromiumTrioxide.getDust(2)}, null, new FluidStack[]{Materials.Nitrogen.getGas(2000), Materials.Oxygen.getGas(5000)}, new ItemStack[]{Materials.Potassiumdichromate.getDust(1)}, 100, 480);
+        GT_Values.RA.addChemicalRecipe(Materials.Saltpeter.getDust(2), Materials.Chrome.getDust(2)), Materials.Oxygen.getGas(1000), Materials.Nitrogen.getGas(1000), Materials.Potassiumdichromate.getDust(1), 100, 480);
+        GT_Values.RA.addChemicalRecipe(Materials.PotassiumNitrade.getDust(2), Materials.Chrome.getDust(2)), Materials.Oxygen.getGas(1000), Materials.Nitrogen.getGas(1000), Materials.Potassiumdichromate.getDust(1), 100, 480);
+        
         //Nitrochlorobenzene
         GT_Values.RA.addChemicalRecipe(Materials.Chlorobenzene.getCells(1), GT_Utility.getIntegratedCircuit(1), Materials.NitrationMixture.getFluid(1000), Materials.DilutedSulfuricAcid.getFluid(1000), Materials.Nitrochlorobenzene.getCells(1), 100, 480);
         GT_Values.RA.addChemicalRecipe(Materials.Chlorobenzene.getCells(1), GT_Utility.getIntegratedCircuit(11), Materials.NitrationMixture.getFluid(1000), Materials.Nitrochlorobenzene.getFluid(1000), Materials.DilutedSulfuricAcid.getCells(1), 100, 480);
