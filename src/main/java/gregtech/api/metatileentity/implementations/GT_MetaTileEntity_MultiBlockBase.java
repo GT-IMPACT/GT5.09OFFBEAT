@@ -1137,10 +1137,14 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
         long storedEnergy = 0;
         long maxEnergy = 0;
+        int ampers = 0;
+        long baseInput = 0;
         for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
                 maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
+                ampers += tHatch.mAmpers;
+                baseInput += tHatch.maxEUInput();
             }
         }
 
@@ -1148,31 +1152,41 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
                 maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
+                ampers += tHatch.Amperes;
+                baseInput += tHatch.maxEUInput();
             }
         }
+        if (mEnergyHatches.size() > 1) {
+            baseInput /= mEnergyHatches.size();
+        }
+
+        if (mEnergyHatchesTT.size() > 1) {
+            baseInput /= mEnergyHatchesTT.size();
+        }
+
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.Progress") + ": " + EnumChatFormatting.GREEN +
-                Integer.toString(mProgresstime / 20) + EnumChatFormatting.RESET + " s / " + EnumChatFormatting.YELLOW +
-                Integer.toString(mMaxProgresstime / 20) + EnumChatFormatting.RESET + " s");
+            Integer.toString(mProgresstime / 20) + EnumChatFormatting.RESET + " s / " + EnumChatFormatting.YELLOW +
+            Integer.toString(mMaxProgresstime / 20) + EnumChatFormatting.RESET + " s");
 
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.energy") + ": " + EnumChatFormatting.GREEN +
-                Long.toString(storedEnergy) + EnumChatFormatting.RESET + " EU / " + EnumChatFormatting.YELLOW +
-                Long.toString(maxEnergy) + EnumChatFormatting.RESET + " EU");
+            Long.toString(storedEnergy) + EnumChatFormatting.RESET + " EU / " + EnumChatFormatting.YELLOW +
+            Long.toString(maxEnergy) + EnumChatFormatting.RESET + " EU");
 
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.usage") + ": " + EnumChatFormatting.RED +
-                Integer.toString(-mEUt) + EnumChatFormatting.RESET + " EU/t");
+            Integer.toString(-mEUt) + EnumChatFormatting.RESET + " EU/t");
 
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.mei") + ": " + EnumChatFormatting.YELLOW +
-                Long.toString(getMaxInputVoltage()) + EnumChatFormatting.RESET + " EU/t(*2A) " +
-                StatCollector.translateToLocal("GT5U.machines.tier") + ": " + EnumChatFormatting.YELLOW +
-                VN[GT_Utility.getTier(getMaxInputVoltage())] + EnumChatFormatting.RESET);
+            Long.toString(baseInput) + EnumChatFormatting.RESET + " EU/t(*" + EnumChatFormatting.YELLOW + ampers + "A"
+            + EnumChatFormatting.RESET +  ") " + StatCollector.translateToLocal("GT5U.machines.tier") + ": " +
+            EnumChatFormatting.YELLOW + VN[GT_Utility.getTier(baseInput)] + EnumChatFormatting.RESET);
 
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.problems") + ": " + EnumChatFormatting.RED +
-                (getIdealStatus() - getRepairStatus()) + EnumChatFormatting.RESET + " " +
-                StatCollector.translateToLocal("GT5U.multiblock.efficiency") + ": " + EnumChatFormatting.YELLOW +
-                Float.toString(mEfficiency / 100.0F) + EnumChatFormatting.RESET + " %");
+            (getIdealStatus() - getRepairStatus()) + EnumChatFormatting.RESET + " " +
+            StatCollector.translateToLocal("GT5U.multiblock.efficiency") + ": " + EnumChatFormatting.YELLOW +
+            Float.toString(mEfficiency / 100.0F) + EnumChatFormatting.RESET + " %");
 
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.pollution") + ": " + EnumChatFormatting.GREEN +
-                mPollutionReduction + EnumChatFormatting.RESET + " %");
+            mPollutionReduction + EnumChatFormatting.RESET + " %");
 
         for (int i = 0; i < addInfoData().length; i++)
             ll.add(addInfoData()[i]);
