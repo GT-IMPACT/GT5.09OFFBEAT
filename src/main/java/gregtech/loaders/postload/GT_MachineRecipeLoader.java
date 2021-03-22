@@ -3421,8 +3421,8 @@ public class GT_MachineRecipeLoader implements Runnable {
 		//Potassium Dichromate
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.Saltpeter.getDust(2), Materials.ChromiumTrioxide.getDust(2)}, null, new FluidStack[]{Materials.Nitrogen.getGas(2000), Materials.Oxygen.getGas(5000)}, new ItemStack[]{Materials.Potassiumdichromate.getDust(1)}, 100, 480);
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.PotassiumNitrade.getDust(2), Materials.ChromiumTrioxide.getDust(2)}, null, new FluidStack[]{Materials.Nitrogen.getGas(2000), Materials.Oxygen.getGas(5000)}, new ItemStack[]{Materials.Potassiumdichromate.getDust(1)}, 100, 480);
-        GT_Values.RA.addChemicalRecipe(Materials.Saltpeter.getDust(2), Materials.Chrome.getDust(2)), Materials.Oxygen.getGas(1000), Materials.Nitrogen.getGas(1000), Materials.Potassiumdichromate.getDust(1), 100, 480);
-        GT_Values.RA.addChemicalRecipe(Materials.PotassiumNitrade.getDust(2), Materials.Chrome.getDust(2)), Materials.Oxygen.getGas(1000), Materials.Nitrogen.getGas(1000), Materials.Potassiumdichromate.getDust(1), 100, 480);
+        GT_Values.RA.addChemicalRecipe(Materials.Saltpeter.getDust(2), Materials.Chrome.getDust(2), Materials.Oxygen.getGas(1000), Materials.Nitrogen.getGas(1000), Materials.Potassiumdichromate.getDust(1), 100, 480);
+        GT_Values.RA.addChemicalRecipe(Materials.PotassiumNitrade.getDust(2), Materials.Chrome.getDust(2), Materials.Oxygen.getGas(1000), Materials.Nitrogen.getGas(1000), Materials.Potassiumdichromate.getDust(1), 100, 480);
         
         //Nitrochlorobenzene
         GT_Values.RA.addChemicalRecipe(Materials.Chlorobenzene.getCells(1), GT_Utility.getIntegratedCircuit(1), Materials.NitrationMixture.getFluid(1000), Materials.DilutedSulfuricAcid.getFluid(1000), Materials.Nitrochlorobenzene.getCells(1), 100, 480);
