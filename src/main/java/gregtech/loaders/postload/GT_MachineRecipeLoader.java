@@ -3636,7 +3636,7 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(1), Materials.BioMediumRaw.getFluid(200), Materials.BioMediumSterilized.getFluid(200), 20, 30720);
         //GT_Values.RA.addChemicalRecipe(ItemList.Circuit_Chip_Stemcell.get(4L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.MysteriousCrystal, 1), Materials.BioMediumRaw.getFluid(1000L), Materials.Mutagen.getFluid(250L), ItemList.Circuit_Chip_Biocell.get(1L), 1200, 30720);
-        GT_Values.RA.addMixerRecipe(Materials.AlienOrganic.getDust(1), Materials.MysteriousCrystal.getDust(1), Materials.Oriharukon.getDust(1), GT_Utility.getIntegratedCircuit(1), Materials.Mutagen.getFluid(500), Materials.BioMediumRaw.getFluid(125), Materials.Diamond.getDust(2), 200, 122880);
+        GT_Values.RA.addMixerRecipe(Materials.AlienOrganic.getDust(1), Materials.MysteriousCrystal.getDust(1), Materials.Oriharukon.getDust(1), GT_Utility.getIntegratedCircuit(1), Materials.Mutagen.getFluid(500), Materials.BioMediumRaw.getFluid(1000), Materials.Diamond.getDust(2), 200, 122880);
 
         //===
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.EnrichedMysteriousCrystal.getDustTiny(1), GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.AlienBiomass.getFluid(900), Materials.Hydrogen.getGas(100)}, new FluidStack[]{Materials.FermentedAlienBiomass.getFluid(1000)}, new ItemStack[]{Materials.MysteriousCrystal.getDustTiny(1)}, 750, 90000);
