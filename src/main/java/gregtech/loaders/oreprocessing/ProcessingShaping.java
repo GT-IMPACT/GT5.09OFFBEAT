@@ -135,6 +135,9 @@ public class ProcessingShaping implements gregtech.api.interfaces.IOreRecipeRegi
                     case "Polytetrafluoroethylene":
                         GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Shape_Extruder_Cell.get(0L), ItemList.Cell_Empty.get(tAmount * 4), tAmount * 128, 30);
                     	break;
+					case "Polybenzimidazole":
+                        GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Shape_Extruder_Cell.get(0L), ItemList.Cell_Empty.get(tAmount * 16), tAmount * 128, 30);
+                    	break;
                 }
             }
         }
