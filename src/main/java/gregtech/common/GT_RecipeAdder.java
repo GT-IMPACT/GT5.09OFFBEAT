@@ -1892,6 +1892,17 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         GT_Recipe.GT_Recipe_Map.sComponentAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0);
         return true;
     }
+
+    public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutput, int aDuration, int aEUt) {
+        if ((aInput == null) || (aOutput == null)) {
+            return false;
+        }
+        if ((aDuration = GregTech_API.sRecipeFile.get("disassembler", aInput, aDuration)) <= 0) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.addRecipe(true, new ItemStack[]{aInput}, aOutput, null, null, null, aDuration, aEUt, 0);
+        return true;
+    }
     
 
     private boolean areItemsAndFluidsBothNull(ItemStack[] items, FluidStack[] fluids){

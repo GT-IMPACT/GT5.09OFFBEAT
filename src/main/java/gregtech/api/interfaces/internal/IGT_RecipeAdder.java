@@ -738,6 +738,11 @@ public interface IGT_RecipeAdder {
     public boolean addCyclonRecipe(ItemStack[] aInputs, FluidStack[] aFluidInputs, FluidStack[] aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt);
 
     /**
+     * Adds an Disassembling Recipe
+     */
+    public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutput, int aDuration, int aEUt);
+
+    /**
      * Adds a Distillation Tower Recipe
      * Every Fluid also gets separate distillation recipes
      *

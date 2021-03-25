@@ -616,6 +616,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sMultiblockElectrolyzerRecipes = new GT_Recipe_Map_MultiblockElectrolyzerRecipe();
         public static final GT_Recipe_Map sMultuMixerRecipes = new GT_Recipe_Map_MultuMixerRecipe();
         public static final GT_Recipe_Map sNuclearReactorRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.nuclearreactor", "Nuclear Reactor", null, RES_PATH_GUI + "basicmachines/Default", 2, 3, 0, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sDisassemblerRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(500), "gt.recipe.disassembler", "Disassembler", null, RES_PATH_GUI + "basicmachines/Disassembler", 1, 9, 1, 0, 1, E, 1, E, true, true);
 
         public static final GT_Recipe_Map_Fuel sSemifluidFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.semifluidgeneratorfuel", "Semifluid Generator Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
         public static final GT_Recipe_Map_Fuel sNukeFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.nukesteam", "Nuclear Turbine Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
