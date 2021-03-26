@@ -6,6 +6,7 @@ import gregtech.api.gui.GT_ContainerMetaTile_Machine;
 import gregtech.api.gui.GT_Slot_Output;
 import gregtech.api.gui.GT_Slot_Render;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.common.tileentities.storage.GT_MetaTileEntity_DigitalChestBase;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_QuantumChest;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_SuperChest;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -34,17 +35,12 @@ public class GT_Container_QuantumChest extends GT_ContainerMetaTile_Machine {
         super.detectAndSendChanges();
 
         if (mTileEntity.isClientSide() || mTileEntity.getMetaTileEntity() == null) return;
-        if (mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_QuantumChest) {
-            mContent = ((GT_MetaTileEntity_QuantumChest) mTileEntity.getMetaTileEntity()).mItemCount;
-        } else if (mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_SuperChest) {
-            mContent = ((GT_MetaTileEntity_SuperChest) mTileEntity.getMetaTileEntity()).mItemCount;
-        } else {
-            mContent = 0;
+        if (mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_DigitalChestBase) {
+            mContent = ((GT_MetaTileEntity_DigitalChestBase) mTileEntity.getMetaTileEntity()).getItemCount();
         }
 
-        Iterator var2 = this.crafters.iterator();
-        while (var2.hasNext()) {
-            ICrafting var1 = (ICrafting) var2.next();
+        for (Object crafter : this.crafters) {
+            ICrafting var1 = (ICrafting) crafter;
             var1.sendProgressBarUpdate(this, 100, mContent & 65535);
             var1.sendProgressBarUpdate(this, 101, mContent >>> 16);
         }

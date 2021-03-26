@@ -27,7 +27,7 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_DigitalChe
     @Override
     protected String chestName(){ return  "Quantum Chest"; }
     @Override
-    protected int getItemCount() { return mItemCount; }
+    public int getItemCount() { return mItemCount; }
     @Override
     public void setItemCount(int aCount) {
         mItemCount = aCount;

@@ -108,7 +108,7 @@ public abstract class GT_MetaTileEntity_DigitalChestBase extends GT_MetaTileEnti
         }
     }
 
-    abstract protected int getItemCount();
+    abstract public int getItemCount();
     abstract public void setItemCount(int aCount);
     abstract protected ItemStack getItemStack();
     abstract protected void setItemStack(ItemStack s);

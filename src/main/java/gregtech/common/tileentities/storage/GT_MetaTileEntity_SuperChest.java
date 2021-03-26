@@ -35,7 +35,7 @@ public class GT_MetaTileEntity_SuperChest extends GT_MetaTileEntity_DigitalChest
     protected String chestName(){ return  "Super Chest"; }
 
     @Override
-    protected int getItemCount() { return mItemCount; }
+    public int getItemCount() { return mItemCount; }
 
     @Override
      public void setItemCount(int aCount) {
