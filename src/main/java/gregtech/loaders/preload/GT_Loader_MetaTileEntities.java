@@ -1407,10 +1407,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_UV_LightningRod.get(1L), bitsd, new Object[]{"LTL", "TMT", "LTL", 'M', ItemList.Hull_UIV, 'L', ItemList.ZPM3, 'T', ItemList.Transformer_UMV_UIV});
 
         ItemList.Machine_Multi_AirFilter.set(new GT_MetaTileEntity_AirFilter(12105, "multimachine.airfilter", "Electric Air Filter").getStackForm(1L));
-        GT_ModHandler.addCraftingRecipe(ItemList.Casing_AirFilter_Vent.get(2L), bits, new Object[]{"ThT", "TFT", "TwT", 'T', OrePrefixes.stickLong.get(Materials.Titanium), 'F', OrePrefixes.frameGt.get(Materials.Steel)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Casing_AirFilter.get(1L), bits, new Object[]{"SSS", "RVR", "MSM", 'V', ItemList.Casing_AirFilter_Vent, 'S', OrePrefixes.stickLong.get(Materials.Titanium), 'R', OrePrefixes.rotor.get(Materials.Titanium), 'M', ItemList.Electric_Motor_EV});
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_Multi_AirFilter.get(1L), bits, new Object[]{"RPR", "MBM", "CGC", 'B', ItemList.Hull_EV, 'R', OrePrefixes.rotor.get(Materials.Titanium), 'P', ItemList.Electric_Pump_EV, 'M', ItemList.Electric_Motor_EV, 'C', OrePrefixes.cableGt01.get(Materials.Titanium), 'G', ItemList.Casing_Turbine2});
-
+        
         //Antimatter
         ItemList.Antimatter_Reactor.set(new GT_MetaTileEntity_AntimatterReactor(12071, "basicgenerator.antimatter.tier.09", "Antimatter Reactor", 9).getStackForm(1L));
 

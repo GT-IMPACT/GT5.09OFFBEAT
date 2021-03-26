@@ -2667,17 +2667,6 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_ElectrumFlux.get(1), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.ElectrumFlux, 8), GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Naquadria, 2), GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.NaquadahAlloy, 1)}, null, 3200, 24576);
         GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_Diamericiumtitanium.get(1), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Diamericiumtitanium, 8), GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Infuscolium, 2), GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Neutronium, 1)}, null, 3200, 24576);
 
-        GT_Values.RA.addDistillationTowerRecipe(Materials.Pollution.getFluid(1600), new FluidStack[]{Materials.SulfuricAcid.getFluid(50L), Materials.NitrogenDioxide.getGas(50L), Materials.Methane.getGas(50L), Materials.Mercury.getFluid(1L)}, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Ash, 1L), 600, 1920);
-
-
-        //Air Filter
-        GT_Values.RA.addCentrifugeRecipe(ItemList.AdsorptionFilterDirty.get(1L), GT_Values.NI, GT_Values.NF, Materials.Pollution.getFluid(100), ItemList.AdsorptionFilterCasing.get(1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Coal, 8L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 8L), GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{9000, 10000, 10000}, 1200, 1920);
-        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.StainlessSteel, 32L), GT_OreDictUnificator.get(OrePrefixes.stick, Materials.TungstenSteel, 8L), ItemList.AdsorptionFilterCasing.get(1L), 600, 1920);
-        GT_Values.RA.addCannerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Coal, 32L),
-                ItemList.AdsorptionFilterCasing.get(1L),
-                ItemList.AdsorptionFilter.get(1L),
-                null, 100, 120);
-
         //New Fuels
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Naquadria.getMolten(4608L), Materials.ElectrumFlux.getMolten(4608L), Materials.Radon.getGas(16000L)}, new FluidStack[]{Materials.EnrichedNaquadria.getFluid(9216L)}, null, 600, 500000);
         GT_Values.RA.addCentrifugeRecipe(GT_Values.NI, GT_Values.NI, Materials.EnrichedNaquadria.getFluid(9216L), Materials.FluidNaquadahFuel.getFluid(4806L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Naquadah, 8L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.ElectrumFlux, 8L), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000, 10000}, 600, 2000000);
