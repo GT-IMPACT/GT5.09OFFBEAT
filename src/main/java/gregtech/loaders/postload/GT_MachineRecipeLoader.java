@@ -2493,12 +2493,12 @@ public class GT_MachineRecipeLoader implements Runnable {
                 ItemList.Magnetic_Confinement_Pod_Hydrogen.get(1L),
                 ItemList.Cell_Empty.get(1L), 200, 480);
 
-        GT_Values.RA.addAssemblylineRecipe(ItemList.Generator_Plasma_UV.get(1), 576000, new ItemStack[]{
+        GT_Values.RA.addAssemblylineRecipe(ItemList.Generator_Plasma_UV.get(1), 576000, new Object[]{
                 ItemList.Casing_Dyson_Ring.get(1),
-                GT_OreDictUnificator.get(OrePrefixes.circuit.get(Materials.Superconductor), 1L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit.get(Materials.Superconductor), 1L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit.get(Materials.Superconductor), 1L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit.get(Materials.Superconductor), 1L),
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
                 GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Tritanium, 4L),
                 ItemList.Field_Generator_ZPM.get(2),
                 ItemList.Circuit_Wafer_HPIC.get(64),
@@ -4101,6 +4101,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addForgeHammerRecipe(ItemList.Circuit_Parts_RawMCrystalChip.get(1), ItemList.Circuit_Parts_RawMCrystalParts.get(9), 200, 30720);
         GT_Values.RA.addBlastRecipe(ItemList.Circuit_Parts_RawMCrystalChip.get(1), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.MysteriousCrystal, 1), Materials.Radon.getGas(1000), null, ItemList.Circuit_Parts_MCrystal_Chip_Elite.get(1), null, 900, 122880, 11000);
 
+        GT_Values.RA.addDisassemblerRecipe(ItemList.Casing_Fusion_Coil.get(1L), new ItemStack[]{ItemList.Casing_Coil_Superconductor.get(1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Europium, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Master, 4), ItemList.Field_Generator_IV.get(2L), ItemList.Electric_Pump_IV.get(1L), GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Superconductor, 4), ItemList.Neutron_Reflector.get(2L)}, 600, 1024);
 
         //Fusion Coil
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Casing_Coil_Superconductor.get(1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Europium, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Master, 4), ItemList.Field_Generator_IV.get(2L), ItemList.Electric_Pump_IV.get(1L), GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Superconductor, 4), ItemList.Neutron_Reflector.get(2L), GT_Utility.getIntegratedCircuit(1)}, Materials.YttriumBariumCuprate.getMolten(864), ItemList.Casing_Fusion_Coil.get(1L), 200, 30720, true);
