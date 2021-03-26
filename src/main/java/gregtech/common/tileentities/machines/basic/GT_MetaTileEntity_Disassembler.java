@@ -91,17 +91,8 @@ public class GT_MetaTileEntity_Disassembler
                 return FOUND_AND_SUCCESSFULLY_USED_RECIPE;
             }
         } else {
-            int tCheck = super.checkRecipe();
-            if (tCheck != DID_NOT_FIND_RECIPE) {
-                return tCheck;
-            }
-            calculateOverclockedNessDisassembler(16);
-            //In case recipe is too OP for that machine
-            if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1) {
-                return FOUND_RECIPE_BUT_DID_NOT_MEET_REQUIREMENTS;
-            }
+            return super.checkRecipe();
         }
-
         return DID_NOT_FIND_RECIPE;
     }
 
