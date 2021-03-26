@@ -47,7 +47,7 @@ public class GT_MetaTileEntity_TurboCharger extends GT_MetaTileEntity_Charger {
     }
 
     @Override
-    public long maxEUStore() { return V[mTier] * 6144L * mInventory.length;}
+    public long maxEUStore() { return V[mTier] * 6144L * 5L * mInventory.length;}
 
     @Override
     public long maxAmperesIn() {

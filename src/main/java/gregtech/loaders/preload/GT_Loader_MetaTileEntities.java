@@ -603,22 +603,22 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Battery_Buffer_4by4_UMV.get(1L), bitsd, new Object[]{aTextWireChest, aTextWireHull, 'M', ItemList.Hull_UMV, 'W', OrePrefixes.wireGt16.get(Materials.Quantium), 'T', OreDictNames.craftingChest});
         GT_ModHandler.addCraftingRecipe(ItemList.Battery_Buffer_4by4_UXV.get(1L), bitsd, new Object[]{aTextWireChest, aTextWireHull, 'M', ItemList.Hull_UXV, 'W', OrePrefixes.wireGt16.get(Materials.BlackPlutonium), 'T', OreDictNames.craftingChest});
 
-        ItemList.Battery_Charger_4by4_ULV.set(new GT_MetaTileEntity_Charger(690, "batterycharger.16.tier.00", "ULV Battery Charger", 0, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_LV.set(new GT_MetaTileEntity_Charger(691, "batterycharger.16.tier.01", "LV Battery Charger", 1, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_MV.set(new GT_MetaTileEntity_Charger(692, "batterycharger.16.tier.02", "MV Battery Charger", 2, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_HV.set(new GT_MetaTileEntity_Charger(693, "batterycharger.16.tier.03", "HV Battery Charger", 3, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_EV.set(new GT_MetaTileEntity_Charger(694, "batterycharger.16.tier.04", "EV Battery Charger", 4, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_IV.set(new GT_MetaTileEntity_Charger(695, "batterycharger.16.tier.05", "IV Battery Charger", 5, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_LuV.set(new GT_MetaTileEntity_Charger(696, "batterycharger.16.tier.06", "LuV Battery Charger", 6, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_ZPM.set(new GT_MetaTileEntity_Charger(697, "batterycharger.16.tier.07", "ZPM Battery Charger", 7, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_UV.set(new GT_MetaTileEntity_Charger(698, "batterycharger.16.tier.08", "UV Battery Charger", 8, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_MAX.set(new GT_MetaTileEntity_Charger(699, "batterycharger.16.tier.09", "UHV Battery Charger", 9, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_UEV.set(new GT_MetaTileEntity_Charger(11280, "batterycharger.16.tier.10", "UEV Battery Charger", 10, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_UIV.set(new GT_MetaTileEntity_Charger(11281, "batterycharger.16.tier.11", "UIV Battery Charger", 11, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_UMV.set(new GT_MetaTileEntity_Charger(11282, "batterycharger.16.tier.12", "UMV Battery Charger", 12, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_UXV.set(new GT_MetaTileEntity_Charger(11283, "batterycharger.16.tier.13", "UXV Battery Charger", 13, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_OPV.set(new GT_MetaTileEntity_Charger(11284, "batterycharger.16.tier.14", "OpV Battery Charger", 14, "", 4).getStackForm(1L));
-        ItemList.Battery_Charger_4by4_MAXV.set(new GT_MetaTileEntity_Charger(11285, "batterycharger.16.tier.15", "MAX Battery Charger", 15, "", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_ULV.set(new GT_MetaTileEntity_Charger(690, "batterycharger.16.tier.00", "ULV Battery Charger", 0, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_LV.set(new GT_MetaTileEntity_Charger(691, "batterycharger.16.tier.01", "LV Battery Charger", 1, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_MV.set(new GT_MetaTileEntity_Charger(692, "batterycharger.16.tier.02", "MV Battery Charger", 2, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_HV.set(new GT_MetaTileEntity_Charger(693, "batterycharger.16.tier.03", "HV Battery Charger", 3, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_EV.set(new GT_MetaTileEntity_Charger(694, "batterycharger.16.tier.04", "EV Battery Charger", 4, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_IV.set(new GT_MetaTileEntity_Charger(695, "batterycharger.16.tier.05", "IV Battery Charger", 5, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_LuV.set(new GT_MetaTileEntity_Charger(696, "batterycharger.16.tier.06", "LuV Battery Charger", 6, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_ZPM.set(new GT_MetaTileEntity_Charger(697, "batterycharger.16.tier.07", "ZPM Battery Charger", 7, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_UV.set(new GT_MetaTileEntity_Charger(698, "batterycharger.16.tier.08", "UV Battery Charger", 8, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_MAX.set(new GT_MetaTileEntity_Charger(699, "batterycharger.16.tier.09", "UHV Battery Charger", 9, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_UEV.set(new GT_MetaTileEntity_Charger(11280, "batterycharger.16.tier.10", "UEV Battery Charger", 10, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_UIV.set(new GT_MetaTileEntity_Charger(11281, "batterycharger.16.tier.11", "UIV Battery Charger", 11, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_UMV.set(new GT_MetaTileEntity_Charger(11282, "batterycharger.16.tier.12", "UMV Battery Charger", 12, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_UXV.set(new GT_MetaTileEntity_Charger(11283, "batterycharger.16.tier.13", "UXV Battery Charger", 13, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_OPV.set(new GT_MetaTileEntity_Charger(11284, "batterycharger.16.tier.14", "OpV Battery Charger", 14, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
+        ItemList.Battery_Charger_4by4_MAXV.set(new GT_MetaTileEntity_Charger(11285, "batterycharger.16.tier.15", "MAX Battery Charger", 15, "32A in / 16A out, 8A/item", 4).getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Battery_Charger_4by4_ULV.get(1L), bitsd, new Object[]{aTextWireChest, aTextWireHull, "BCB", 'M', ItemList.Hull_ULV, 'W', OrePrefixes.wireGt16.get(Materials.Lead), 'T', OreDictNames.craftingChest, 'B', ItemList.Battery_RE_ULV_Tantalum, 'C', OrePrefixes.circuit.get(Materials.Primitive)});
         GT_ModHandler.addCraftingRecipe(ItemList.Battery_Charger_4by4_LV.get(1L), bitsd, new Object[]{aTextWireChest, aTextWireHull, "BCB", 'M', ItemList.Hull_LV, 'W', OrePrefixes.wireGt16.get(Materials.Tin), 'T', OreDictNames.craftingChest, 'B', ItemList.Battery_RE_LV_Lithium, 'C', OrePrefixes.circuit.get(Materials.Basic)});
