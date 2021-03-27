@@ -78,7 +78,6 @@ public class GT_BaseCrop extends CropCard implements ICropCardInfo {
         if (aDiscoveredBy != null && !aDiscoveredBy.equals(E)) mDiscoveredBy = aDiscoveredBy;
         if (aDrop != null && aID > 0 && aID < 256) {
             mDrop = GT_Utility.copy(aDrop);
-            mGrowthSpeed = aGrowthSpeed;
             mSpecialDrops = aSpecialDrops;
             mTier = Math.max(1, aTier);
             mMaxSize = Math.max(3, aMaxSize);
