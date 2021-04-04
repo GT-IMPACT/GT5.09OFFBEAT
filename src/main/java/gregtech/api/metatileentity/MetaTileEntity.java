@@ -14,6 +14,7 @@ import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.GT_Client;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -208,7 +209,11 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public void onPreTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {/*Do nothing*/}
 
     @Override
-    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {/*Do nothing*/}
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        if (GT_Client.changeDetected == 4 && aBaseMetaTileEntity.isClientSide()) {
+            aBaseMetaTileEntity.issueTextureUpdate();
+        }
+    }
 
     @Override
     public void inValidate() {/*Do nothing*/}
