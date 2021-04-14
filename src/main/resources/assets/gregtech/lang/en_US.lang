@@ -561,6 +561,8 @@ achievement.gt.blockmachines.multimachine.tinywormhole=Tiny Wormhole
 achievement.gt.blockmachines.multimachine.tinywormhole.desc=Pickup this item to see the recipe in NEI
 achievement.gt.blockmachines.multimachine.tesseract=Tesseract
 achievement.gt.blockmachines.multimachine.tesseract.desc=Pickup this item to see the recipe in NEI
+achievement.gt.blockmachines.basicgenerator.antimatter.tier.09=Antimatter Reactor
+achievement.gt.blockmachines.basicgenerator.antimatter.tier.09.desc=Pickup this item to see the recipe in NEI
 
 achievement.gt.blockmachines.hatch.energy.tier.06=LuV Energy Hatch
 achievement.gt.blockmachines.hatch.energy.tier.06.desc=Pickup this item to see the recipe in NEI
@@ -595,8 +597,8 @@ achievement.gt.metaitem.03.32072=Neuro Processing Unit
 achievement.gt.metaitem.03.32072.desc=Pickup this item to see the recipe in NEI
 achievement.gt.metaitem.03.32095=Wetware Mainframe
 achievement.gt.metaitem.03.32095.desc=Pickup this item to see the recipe in NEI
-achievement.gt.metaitem.03.32098=Bio Processing Unit
-achievement.gt.metaitem.03.32098.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32077=Bio Processing Unit
+achievement.gt.metaitem.03.32077.desc=Pickup this item to see the recipe in NEI
 achievement.gt.metaitem.03.32099=Bioware Supercomputer
 achievement.gt.metaitem.03.32099.desc=Pickup this item to see the recipe in NEI
 achievement.gt.metaitem.03.32120=Bio Mainframe
@@ -659,6 +661,10 @@ achievement.gt.metaitem.01.32737=Energy Cluster
 achievement.gt.metaitem.01.32737.desc=Pickup this item to see the recipe in NEI
 achievement.gt.metaitem.01.32599=Lapotronic Energy Orb Cluster
 achievement.gt.metaitem.01.32599.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32206=Mysterious Energy Crystal Orb
+achievement.gt.metaitem.03.32206.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32207=Mysterious Energy Crystal Module
+achievement.gt.metaitem.03.32207.desc=Pickup this item to see the recipe in NEI
 
 achievement.item.impact_item2.147=Stargate-Radiation-Containment-Plate
 achievement.item.impact_item2.147.desc=Pickup this item to see the recipe in NEI
@@ -694,9 +700,11 @@ achievement.gt.blockmachines.impact.multimachine.liquidenrichednqgenerator.desc=
 achievement.gt.blockmachines.impact.multimachine.naqgen=Hyper Generator
 achievement.gt.blockmachines.impact.multimachine.naqgen.desc=Pickup this item to see the recipe in NEI
 
-achievement.gt.blockmachines.impact.multimachine.parallelcomputer=Parallel Supercomputer
-achievement.gt.blockmachines.impact.multimachine.parallelcomputer.desc=Pickup this item to see the recipe in NEI
+achievement.gt.blockmachines.impact.multis.parallelcomputer=Parallel Supercomputer
+achievement.gt.blockmachines.impact.multis.parallelcomputer.desc=Pickup this item to see the recipe in NEI
 
+achievement.item.relocator=Relocator
+achievement.item.relocator.desc=You have discovered The Universe
 
 for.bees.species.clay=Clay
 for.bees.species.slimeball=Slimeball
