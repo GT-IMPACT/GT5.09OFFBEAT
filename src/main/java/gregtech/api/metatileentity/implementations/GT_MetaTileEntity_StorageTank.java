@@ -85,11 +85,11 @@ public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_Ba
 
     @Override
     public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return aIndex == 1;
+        return aIndex == 1 ;
     }
 
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return true;
+        return aIndex == 0;
     }
 }
