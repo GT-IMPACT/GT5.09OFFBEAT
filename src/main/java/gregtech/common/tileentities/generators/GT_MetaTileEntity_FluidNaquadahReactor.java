@@ -11,6 +11,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicGenera
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
 
+@Deprecated
 public class GT_MetaTileEntity_FluidNaquadahReactor
         extends GT_MetaTileEntity_BasicGenerator {
     public int mEfficiency;
@@ -39,7 +40,7 @@ public class GT_MetaTileEntity_FluidNaquadahReactor
     }
 
     public GT_Recipe.GT_Recipe_Map getRecipes() {
-        return GT_Recipe.GT_Recipe_Map.sFluidNaquadahReactorFuels;
+        return null;
     }
 
     public int getCapacity() {

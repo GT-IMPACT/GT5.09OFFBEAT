@@ -9,6 +9,8 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicGenerator;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
+
+@Deprecated
  public class GT_MetaTileEntity_SolidNaquadahReactor5
         extends GT_MetaTileEntity_BasicGenerator {
     public int mEfficiency;
@@ -26,9 +28,12 @@ import gregtech.api.util.GT_Recipe;
      public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_SolidNaquadahReactor5(this.mName, this.mTier, this.mDescription, this.mTextures);
     }
-     public GT_Recipe.GT_Recipe_Map getRecipes() {
-        return GT_Recipe.GT_Recipe_Map.sUltraHugeNaquadahReactorFuels;
+
+    @Override
+    public GT_Recipe.GT_Recipe_Map getRecipes() {
+        return null;
     }
+
      public int getCapacity() {
         return 0;
     }
