@@ -7,11 +7,13 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 
 public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_BasicTank {
 
-    public boolean OutputFluid = false;
+    public boolean OutputFluid = false, mVoidFluidPart = false, mVoidFluidFull = false;
     public String lockedFluidName = null;
     public boolean mMode = false;
 
@@ -40,6 +42,8 @@ public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_Ba
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
         aNBT.setBoolean("OutputFluid", this.OutputFluid);
+        aNBT.setBoolean("mVoidFluidPart", this.mVoidFluidPart);
+        aNBT.setBoolean("mVoidFluidFull", this.mVoidFluidFull);
         aNBT.setBoolean("mMode", mMode);
         if(lockedFluidName!=null && lockedFluidName.length()!=0) aNBT.setString("lockedFluidName", lockedFluidName);
         else aNBT.removeTag("lockedFluidName");
@@ -49,6 +53,8 @@ public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_Ba
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         this.OutputFluid = aNBT.getBoolean("OutputFluid");
+        this.mVoidFluidPart = aNBT.getBoolean("mVoidFluidPart");
+        this.mVoidFluidFull = aNBT.getBoolean("mVoidFluidFull");
         mMode = aNBT.getBoolean("mMode");
         lockedFluidName = aNBT.getString("lockedFluidName");
         lockedFluidName = lockedFluidName.length() == 0 ? null : lockedFluidName;
@@ -70,6 +76,40 @@ public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_Ba
     public void onEmptyingContainerWhenEmpty() {
         if (this.lockedFluidName == null && this.mFluid != null) {
             this.setLockedFluidName(this.mFluid.getUnlocalizedName());
+        }
+    }
+
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        super.onPostTick(aBaseMetaTileEntity, aTick);
+        if (this.getBaseMetaTileEntity().isServerSide() && (aTick&0x7)==0) {
+
+            if (mVoidFluidPart && mFluid != null && mFluid.amount >= getCapacity()) {
+                mVoidFluidFull = false;
+                mFluid.amount = getCapacity() - (getCapacity() * 25 / 100);
+            }
+
+            if (mVoidFluidFull && mFluid != null) {
+                mVoidFluidPart = false;
+                mFluid = null;
+            }
+
+            IFluidHandler tTileEntity = aBaseMetaTileEntity.getITankContainerAtSide(aBaseMetaTileEntity.getFrontFacing());
+            if (tTileEntity != null) {
+
+                if (this.OutputFluid) {
+                    for (boolean temp = true; temp && mFluid != null; ) {
+                        temp = false;
+                        FluidStack tDrained = aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), Math.max(1, mFluid.amount), false);
+                        if (tDrained != null) {
+                            int tFilledAmount = tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), tDrained, false);
+                            if (tFilledAmount > 0) {
+                                temp = true;
+                                tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), tFilledAmount, true), true);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

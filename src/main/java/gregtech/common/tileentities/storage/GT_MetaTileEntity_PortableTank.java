@@ -59,29 +59,6 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_StorageTan
 		return new String[] { this.mDescription};
 	}
 
-	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-		super.onPostTick(aBaseMetaTileEntity, aTick);
-		if (this.getBaseMetaTileEntity().isServerSide() && (aTick&0x7)==0) {
-			IFluidHandler tTileEntity = aBaseMetaTileEntity.getITankContainerAtSide(aBaseMetaTileEntity.getFrontFacing());
-			if (tTileEntity != null) {
-
-				if (this.OutputFluid) {
-					for (boolean temp = true; temp && mFluid != null; ) {
-						temp = false;
-						FluidStack tDrained = aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), Math.max(1, mFluid.amount), false);
-						if (tDrained != null) {
-							int tFilledAmount = tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), tDrained, false);
-							if (tFilledAmount > 0) {
-								temp = true;
-								tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), tFilledAmount, true), true);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
 	@Override
 	public boolean isSimpleMachine() {
 		return true;

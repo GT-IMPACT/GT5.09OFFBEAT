@@ -40,6 +40,14 @@ public class GT_GUIContainer_StorageTank extends GT_GUIContainerMetaTile_Machine
                 list.add(EnumChatFormatting.GRAY + "First you need to a fill this tank fluid, then press the button");
                 list.add(EnumChatFormatting.GRAY + "No liquids will be poured in here except this one");
             }
+            if (x >= 44 && x <= 60) {
+                list.add("Void Part Mode");
+                list.add(EnumChatFormatting.GRAY + "Fluid is part (25%) removing if tank full");
+            }
+            if (x >= 62 && x <= 78) {
+                list.add("Void Full Mode");
+                list.add(EnumChatFormatting.GRAY + "Fluid is completely removing");
+            }
         }
 
         if (!list.isEmpty())
@@ -62,10 +70,18 @@ public class GT_GUIContainer_StorageTank extends GT_GUIContainerMetaTile_Machine
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
         if (mContainer != null) {
-            if (((GT_Container_StorageTank) mContainer).OutputFluid)
-                drawTexturedModalRect(x + 7, y + 63, 176, 18, 18, 18);
-            if (((GT_Container_StorageTank) mContainer).mMode)
+            if (((GT_Container_StorageTank) mContainer).mMode) {
                 drawTexturedModalRect(x + 25, y + 63, 176, 0, 18, 18);
+            }
+            if (((GT_Container_StorageTank) mContainer).OutputFluid) {
+                drawTexturedModalRect(x + 7, y + 63, 176, 18, 18, 18);
+            }
+            if (((GT_Container_StorageTank) mContainer).mVoidFluidPart) {
+                drawTexturedModalRect(x + 43, y + 63, 176, 36, 18, 18);
+            }
+            if (((GT_Container_StorageTank) mContainer).mVoidFluidFull) {
+                drawTexturedModalRect(x + 61, y + 63, 176, 54, 18, 18);
+            }
         }
     }
 }

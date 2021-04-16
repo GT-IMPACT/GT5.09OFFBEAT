@@ -62,28 +62,6 @@ public class GT_MetaTileEntity_SuperTank extends GT_MetaTileEntity_StorageTank {
         return new String[] {this.mDescription};
     }
 
-    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        super.onPostTick(aBaseMetaTileEntity, aTick);
-        if (this.getBaseMetaTileEntity().isServerSide() && (aTick&0x7)==0) {
-            IFluidHandler tTileEntity = aBaseMetaTileEntity.getITankContainerAtSide(aBaseMetaTileEntity.getFrontFacing());
-            if (tTileEntity != null) {
-                if (this.OutputFluid) {
-                    for (boolean temp = true; temp && mFluid != null; ) {
-                        temp = false;
-                        FluidStack tDrained = aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), Math.max(1, mFluid.amount), false);
-                        if (tDrained != null) {
-                            int tFilledAmount = tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), tDrained, false);
-                            if (tFilledAmount > 0) {
-                                temp = true;
-                                tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), tFilledAmount, true), true);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
         if (aBaseMetaTileEntity.isClientSide()) return true;
@@ -150,7 +128,7 @@ public class GT_MetaTileEntity_SuperTank extends GT_MetaTileEntity_StorageTank {
                     "Stored Fluid:",
                     EnumChatFormatting.GOLD + "No Fluid"+ EnumChatFormatting.RESET,
                     EnumChatFormatting.GREEN + Integer.toString(0) + " L"+ EnumChatFormatting.RESET+" "+
-                    EnumChatFormatting.YELLOW + NumberFormat.getNumberInstance().format(getCapacity()) + " L"+ EnumChatFormatting.RESET
+                            EnumChatFormatting.YELLOW + NumberFormat.getNumberInstance().format(getCapacity()) + " L"+ EnumChatFormatting.RESET
             };
         }
         return new String[]{
@@ -158,7 +136,7 @@ public class GT_MetaTileEntity_SuperTank extends GT_MetaTileEntity_StorageTank {
                 "Stored Fluid:",
                 EnumChatFormatting.GOLD + mFluid.getLocalizedName()+ EnumChatFormatting.RESET,
                 EnumChatFormatting.GREEN + NumberFormat.getNumberInstance().format(mFluid.amount) + " L"+ EnumChatFormatting.RESET+" "+
-                EnumChatFormatting.YELLOW+ NumberFormat.getNumberInstance().format(getCapacity()) + " L"+ EnumChatFormatting.RESET
+                        EnumChatFormatting.YELLOW+ NumberFormat.getNumberInstance().format(getCapacity()) + " L"+ EnumChatFormatting.RESET
         };
     }
 
