@@ -279,7 +279,9 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
             if (isValidMetaTileEntity(tHatch) && tHatch.getFillableStack() != null) {
                 FluidStack tStack = tHatch.getFillableStack();
                 if (tStack.isFluidEqual(GT_ModHandler.getSteam(1000)) || tStack.isFluidEqual(Materials.Hydrogen.getGas(1000))
-                    || tStack.isFluidEqual(Materials.Radon.getGas(1000)) || tStack.isFluidEqual(Materials.Fluorine.getGas(1000))) {
+                        || tStack.isFluidEqual(Materials.Radon.getGas(1000)) || tStack.isFluidEqual(Materials.Fluorine.getGas(1000))
+                        || tStack.isFluidEqual(Materials.Zinc.getPlasma(1)) || tStack.isFluidEqual(Materials.Nickel.getPlasma(1))
+                        || tStack.isFluidEqual(Materials.Niobium.getPlasma(1)) || tStack.isFluidEqual(Materials.Silver.getPlasma(1))) {
                     if (isHatchInMiddleRing(tHatch)) {
                         rList.add(tStack);
                     }
