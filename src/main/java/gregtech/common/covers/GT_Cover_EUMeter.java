@@ -38,8 +38,8 @@ public class GT_Cover_EUMeter
                 if (Loader.isModLoaded("impact")) {
                     if (mTileEntity instanceof GTMTE_LapPowerStation) {
                         GTMTE_LapPowerStation buffer = (GTMTE_LapPowerStation) mTileEntity;
-                        long tStored = buffer.stored.longValue();
-                        tScale = buffer.capacity.longValue() / 15L;
+                        long tStored = (long) buffer.stored;
+                        tScale = (long) (buffer.capacity / 15D);
                         if (tScale > 0L) {
                             aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (int) (tStored / tScale) : (byte) (int) (15L - tStored / tScale));
                         } else {
