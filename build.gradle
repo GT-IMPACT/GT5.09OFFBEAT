@@ -61,77 +61,11 @@ configurations {
     compile.extendsFrom provided, embedded
 }
 
-repositories {
-    maven {
-        name = 'Forge'
-        url = 'http://files.minecraftforge.net/maven'
-    }
-    maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven/"
-    }
-    maven {
-        name = "ic2, forestry"
-        url = "http://maven.ic2.player.to/"
-    }
-    maven { // EnderIO & EnderCore
-        name = 'tterrag Repo'
-        url = "http://maven.tterrag.com"
-    }
-    maven { // TConstruct
-        name = 'DVS1 Maven FS'
-        url = 'http://dvs1.progwml6.com/files/maven'
-    }
-    
-    maven { // AppleCore
-        url = "http://www.ryanliptak.com/maven/"
-    }
-    maven { // GalacticGreg, YAMCore,..
-        name = 'UsrvDE'
-        url = "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases/"
-    }
-	ivy {
-        name = 'gtnh_download_source_stupid_underscore_typo'
-        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]")
-    }
-
-	ivy {
-        name = 'gtnh_download_source'
-        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
-    }
-}
+repositories {}
 
 dependencies {
-//    compile fileTree(dir: 'libs', include: '*.jar')
-
-    compile "tconstruct:TConstruct:${config.minecraft.version}-${config.tconstruct.version}:deobf"
-
-    provided "codechicken:CodeChickenLib:${config.minecraft.version}-${config.codechickenlib.version}:dev"
-	provided "codechicken:CodeChickenCore:${config.minecraft.version}-${config.codechickencore.version}:dev"
-    provided "codechicken:Translocator:${config.minecraft.version}-${config.translocators.version}:dev"
-    provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-    provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
-
-    provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
-
-	compileOnly files("libs/buildcraft-impact-7.1.8-impact-dev.jar")
     compile fileTree(dir: 'libs', include: '*.jar')
 }
-
-task getImpactCore(type: Download) {
-    onlyIf {
-        !file("libs/gregtech-5.09.34.66-impact-dev.jar").exists()
-    }
-    src "http://gtimpact.space:8080/job/GREGTECH/lastSuccessfulBuild/artifact/build/libs/gregtech-5.09.34.66-impact-dev.jar"
-    dest file("libs/gregtech-5.09.34.66-impact-dev.jar")
-    mustRunAfter "deobfBinJar"
-    mustRunAfter "repackMinecraft"
-}
-
-tasks.setupCIWorkspace.dependsOn getImpactCore
-tasks.setupDevWorkspace.dependsOn getImpactCore
-tasks.setupDecompWorkspace.dependsOn getImpactCore
-tasks.compileJava.dependsOn getImpactCore
 
 processResources
 {
@@ -143,7 +77,7 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
-        // replace version and mcversion
+        // replace version and mcversion    
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
