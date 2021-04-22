@@ -72,8 +72,8 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                                 if (tDustStack != null) {
                                     ItemStack tmp793_791 = tDustStack;
                                     tmp793_791.stackSize = ((int) (tmp793_791.stackSize * tDensityMultiplier));
-                                    while ((tDustStack.stackSize > 64) && (tList.size() < 6) && (tCapsuleCount + GT_ModHandler.getCapsuleCellContainerCount(tDustStack) * 64 <= 64L)) {
-                                        tCapsuleCount += GT_ModHandler.getCapsuleCellContainerCount(tDustStack) * 64;
+                                    while ((tDustStack.stackSize > 64) && (tList.size() < 6) && (tCapsuleCount + GT_ModHandler.getCapsuleCellContainerCount(tDustStack) * 64L <= 64L)) {
+                                        tCapsuleCount += GT_ModHandler.getCapsuleCellContainerCount(tDustStack) * 64L;
                                         tList.add(GT_Utility.copyAmount(64L, tDustStack));
                                         tDustStack.stackSize -= 64;
                                     }
@@ -178,7 +178,7 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                     GT_Values.RA.addAutoclaveRecipe(GT_Utility.copyAmount(1L, aStack), gregtech.api.util.GT_ModHandler.getDistilledWater(200L), GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 1L), 9500, 1500, 24);
                 }
 
-                ItemStack tImpureStack = GT_OreDictUnificator.get(OrePrefixes.dustTiny, tByProduct, GT_OreDictUnificator.get(OrePrefixes.nugget, tByProduct, 1L), 1L);
+                ItemStack tImpureStack = GT_OreDictUnificator.get(OrePrefixes.dust, tByProduct, GT_OreDictUnificator.get(OrePrefixes.dust, tByProduct, 1L), 1L);
                 if (tImpureStack == null) {
                     tImpureStack = GT_OreDictUnificator.get(OrePrefixes.dustSmall, tByProduct, 1L);
                     if (tImpureStack == null) {
@@ -203,7 +203,8 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                         GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(2L, aStack), 0, GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 2L), tImpureStack, null, null, null, null, (int) Math.max(1L, aMaterial.getMass() * 16L));
                     }
                 } else {
-                    GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, aStack), 0, GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), tImpureStack, null, null, null, null, (int) Math.max(1L, aMaterial.getMass() * 8L));
+//                    GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, aStack), 0, GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), tImpureStack, null, null, null, null, (int) Math.max(1L, aMaterial.getMass() * 8L));
+                    GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, aStack), null, null, null, GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), tImpureStack, null, null, null, null, new int[] {10000, 1000}, (int) Math.max(1L, aMaterial.getMass() * 8L), 5);
                 }
                 break;
             case dustSmall:
