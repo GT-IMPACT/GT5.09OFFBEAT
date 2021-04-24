@@ -1158,10 +1158,11 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Grossular				.addOreByProducts(GarnetYellow			, Calcium				);
         Uvarovite				.addOreByProducts(GarnetYellow			, Chrome				);
         Calcite					.addOreByProducts(Andradite				, Malachite				);
-        NaquadahEnriched		.addOreByProducts(Naquadah				, Naquadria				);
+        NaquadahEnriched		.addOreByProducts(Naquadah				, Platinum				);
         Salt					.addOreByProducts(RockSalt				, Borax					);
         RockSalt				.addOreByProducts(Salt					, Borax					);
-        Naquadah				.addOreByProducts(NaquadahEnriched		);
+        Uranium					.addOreByProducts(Lead					, Uranium235			, Thorium				);
+        Naquadah				.addOreByProducts(Platinum              , Plutonium             , Uranium		);
         Molybdenite				.addOreByProducts(Molybdenum			);
         Stibnite				.addOreByProducts(Antimony				);
         Garnierite				.addOreByProducts(Nickel				);
