@@ -885,7 +885,7 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
     }
 
     public boolean addThermalCentrifugeRecipe(ItemStack aInput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt) {
-        GT_Recipe.GT_Recipe_Map.sThermalCentrifugeRecipes.addRecipe(false, new ItemStack[] {aInput}, aOutputs, aChances, null, null, aDuration, aEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sThermalCentrifugeRecipes.addRecipe(true, new ItemStack[] {aInput}, aOutputs, null, aChances, null, null, aDuration, aEUt, 0);
         return true;
     }
 
