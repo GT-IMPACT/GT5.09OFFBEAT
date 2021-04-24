@@ -884,6 +884,11 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
+    public boolean addThermalCentrifugeRecipe(ItemStack aInput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sThermalCentrifugeRecipes.addRecipe(false, new ItemStack[] {aInput}, aOutputs, aChances, null, null, aDuration, aEUt, 0);
+        return true;
+    }
+
     public boolean addAmplifier(ItemStack aAmplifierItem, int aDuration, int aAmplifierAmountOutputted) {
         if ((aAmplifierItem == null) || (aAmplifierAmountOutputted <= 0)) {
             return false;

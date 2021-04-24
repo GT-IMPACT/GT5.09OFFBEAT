@@ -541,7 +541,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final Collection<GT_Recipe_Map> sMappings = new ArrayList<GT_Recipe_Map>();
 
         public static final GT_Recipe_Map sOreWasherRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(500), "gt.recipe.orewasher", "Ore Washing Plant", null, RES_PATH_GUI + "basicmachines/OreWasher", 1, 3, 1, 1, 1, E, 1, E, true, true);
-        public static final GT_Recipe_Map sThermalCentrifugeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.thermalcentrifuge", "Thermal Centrifuge", null, RES_PATH_GUI + "basicmachines/ThermalCentrifuge", 1, 3, 1, 0, 2, E, 1, E, true, true);
+        public static final GT_Recipe_Map sThermalCentrifugeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.thermalcentrifuge", "Thermal Centrifuge", null, RES_PATH_GUI + "basicmachines/ThermalCentrifuge", 1, 6, 1, 0, 2, E, 1, E, true, true);
         public static final GT_Recipe_Map sCompressorRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(750), "gt.recipe.compressor", "Compressor", null, RES_PATH_GUI + "basicmachines/Compressor", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sExtractorRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(250), "gt.recipe.extractor", "Extractor", null, RES_PATH_GUI + "basicmachines/Extractor", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sRecyclerRecipes = new GT_Recipe_Map_Recycler(new HashSet<GT_Recipe>(0), "ic.recipe.recycler", "Recycler", "ic2.recycler", RES_PATH_GUI + "basicmachines/Recycler", 1, 1, 1, 0, 1, E, 1, E, true, false);

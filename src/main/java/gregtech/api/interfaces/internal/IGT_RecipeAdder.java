@@ -519,6 +519,8 @@ public interface IGT_RecipeAdder {
      */
     public boolean addThermalCentrifugeRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, int aDuration, int aEUt);
 
+    public boolean addThermalCentrifugeRecipe(ItemStack aInput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt);
+
     /**
      * Adds an Unboxing Recipe
      */
