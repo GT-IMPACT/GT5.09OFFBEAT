@@ -2269,55 +2269,6 @@ public class GT_MachineRecipeLoader implements Runnable {
                 GregTech_API.mIC2Classic ? Materials.Lava.getFluid(2000L) : new FluidStack(FluidRegistry.getFluid("ic2coolant"), 2000)
         }, ItemList.Circuit_Chip_BioCPU.get(1L), 600, 600000);
 
-        GT_Values.RA.addAssemblylineRecipe(ItemList.Energy_LapotronicOrb.get(1), 288000, new Object[]{
-                ItemList.Circuit_Board_Multifiberglass_Elite.get(1),
-                GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Europium, 32L),
-                new Object[]{OrePrefixes.circuit.get(Materials.Master), 4},
-                ItemList.Circuit_Parts_Crystal_Chip_Master.get(36L),
-                ItemList.Circuit_Parts_Crystal_Chip_Master.get(36L),
-                ItemList.Circuit_Chip_HPIC.get(64),
-                ItemList.Circuit_Parts_DiodeSMD.get(32),
-                ItemList.Circuit_Parts_CapacitorSMD.get(32),
-                ItemList.Circuit_Parts_ResistorSMD.get(32),
-                ItemList.Circuit_Parts_TransistorSMD.get(32),
-                GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Platinum, 64),
-        }, new FluidStack[]{
-                Materials.SolderingAlloy.getMolten(720)
-        }, ItemList.Energy_LapotronicOrb2.get(1), 1000, 80000);
-
-        GT_Values.RA.addAssemblylineRecipe(ItemList.Energy_LapotronicOrb2.get(1), 288000, new Object[]{
-                        GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Europium, 16L),
-                        new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1},
-                        new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1},
-                        new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1},
-                        new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1},
-                        ItemList.Energy_LapotronicOrb2.get(8L),
-                        ItemList.Field_Generator_LuV.get(2),
-                        ItemList.Circuit_Wafer_SoC2.get(64),
-                        ItemList.Circuit_Wafer_SoC2.get(64),
-                        ItemList.Circuit_Parts_DiodeASMD.get(8),
-                        GT_OreDictUnificator.get(OrePrefixes.wireGt01, Materials.SuperconductorZPM, 16),},
-                new FluidStack[]{
-                        Materials.SolderingAlloy.getMolten(2880), GregTech_API.mIC2Classic ? Materials.Water.getFluid(8000) : new FluidStack(FluidRegistry.getFluid("ic2coolant"), 16000)},
-                ItemList.Energy_Module.get(1), 2000, 100000);
-
-        GT_Values.RA.addAssemblylineRecipe(ItemList.Energy_Module.get(1), 288000, new Object[]{
-                        GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Americium, 32L),
-                        new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
-                        new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
-                        new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
-                        new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
-                        ItemList.Energy_Module.get(8L),
-                        ItemList.Field_Generator_ZPM.get(2),
-                        ItemList.Circuit_Wafer_HPIC.get(64),
-                        ItemList.Circuit_Wafer_HPIC.get(64),
-                        ItemList.Circuit_Parts_DiodeASMD.get(16),
-                        GT_OreDictUnificator.get(OrePrefixes.wireGt01, Materials.SuperconductorUV, 24),},
-                new FluidStack[]{
-                        Materials.SolderingAlloy.getMolten(2880),
-                        GregTech_API.mIC2Classic ? Materials.Water.getFluid(16000) : new FluidStack(FluidRegistry.getFluid("ic2coolant"), 16000)},
-                ItemList.Energy_Cluster.get(1), 2000, 200000);
-
         GT_Values.RA.addAssemblylineRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt01, Materials.SuperconductorLuV, 1), 144000, new Object[]{
                 ItemList.Casing_Coil_Superconductor.get(1),
                 new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1},
