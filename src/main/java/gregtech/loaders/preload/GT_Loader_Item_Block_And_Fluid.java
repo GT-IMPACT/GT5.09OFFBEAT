@@ -154,9 +154,16 @@ public class GT_Loader_Item_Block_And_Fluid
         ItemList.Moxcell_2.set(new GT_RadioactiveCellIC_Item("reactorMOXDual"  , "Dual Fuel Rod (Mox)", 2, 10000, 2F, 1, 1F, GT_ModHandler.getIC2Item("reactorDepletedMOXDual", 1),true));
         ItemList.Moxcell_4.set(new GT_RadioactiveCellIC_Item("reactorMOXQuad", "Quad Fuel Rod (Mox)"  , 4, 10000, 2F, 1, 1F, GT_ModHandler.getIC2Item("reactorDepletedMOXQuad"  , 1),true));
 
-        GT_ModHandler.addThermalCentrifugeRecipe(ItemList.Depleted_Thorium_1.get(1), 5000, GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Lutetium, 2L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Thorium, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Zirconium, 1L));
-        GT_ModHandler.addThermalCentrifugeRecipe(ItemList.Depleted_Thorium_2.get(1), 5000, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Lutetium, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Thorium, 2L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Zirconium, 3L));
-        GT_ModHandler.addThermalCentrifugeRecipe(ItemList.Depleted_Thorium_4.get(1), 5000, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Lutetium, 2L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Thorium, 4L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Zirconium, 6L));
+        ItemList.MThCell_1.set(new GT_RadioactiveCellIC_Item("MThcell", "Fuel Rod (MOX Thorium)", 1, 20000, 1F, 1, 0.5F, ItemList.Depleted_MThCell_1.get(1),false));
+        ItemList.MThCell_2.set(new GT_RadioactiveCellIC_Item("Double_MThcell", "Dual Fuel Rod (MOX Thorium)", 2, 20000, 1F, 1, 0.5F, ItemList.Depleted_MThCell_2.get(1),false));
+        ItemList.MThCell_4.set(new GT_RadioactiveCellIC_Item("Quad_MThcell", "Quad Fuel Rod (MOX Thorium)", 4, 20000, 1F, 1, 0.5F, ItemList.Depleted_MThCell_4.get(1),false));
+
+        GT_ModHandler.addCraftingRecipe(ItemList.MThCell_2.get(1L), GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{"RPR", "   ", "   ", 'R', ItemList.MThCell_1, 'P', OrePrefixes.plate.get(Materials.Zirconium)});
+        GT_ModHandler.addCraftingRecipe(ItemList.MThCell_4.get(1L), GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{"RPR", "CPC", "RPR", 'R', ItemList.MThCell_1, 'P', OrePrefixes.plate.get(Materials.Zirconium), 'C', OrePrefixes.plate.get(Materials.Copper)});
+
+        ItemList.Depleted_MThCell_1.set(new GT_DepletetCell_Item("MThCellDep", "Fuel Rod (Depleted MOX Thorium)", 1));
+        ItemList.Depleted_MThCell_2.set(new GT_DepletetCell_Item("Double_MThCellDep", "Dual Fuel Rod (Depleted MOX Thorium)", 1));
+        ItemList.Depleted_MThCell_4.set(new GT_DepletetCell_Item("Quad_MThCellDep", "Quad Fuel Rod (Depleted MOX Thorium)", 1));
         }
         GT_Log.out.println("GT_Mod: Adding Blocks.");
         GregTech_API.sBlockMachines = new GT_Block_Machines();
