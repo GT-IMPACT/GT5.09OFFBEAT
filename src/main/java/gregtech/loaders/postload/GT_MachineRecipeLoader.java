@@ -1252,7 +1252,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addFusionReactorRecipe(Materials.Helium.getPlasma(144), Materials.Lithium.getMolten(144), Materials.Boron.getPlasma(144), 240, 10240, 50000000);
 
         //MK4
-        GT_Values.RA.addFusionReactorRecipe(Materials.Radon.getPlasma(16), Materials.Neutronium.getMolten(16), Materials.Phoenixite.getMolten(8), 120, 196608, 1000000000);//FT4
+        GT_Values.RA.addFusionReactorRecipe(Materials.Radon.getPlasma(64), Materials.Neutronium.getMolten(64), Materials.Phoenixite.getMolten(32), 80, 196608, 1000000000);//FT4
 
 
         GT_ModHandler.removeRecipeByOutput(ItemList.IC2_Fertilizer.get(1L));
