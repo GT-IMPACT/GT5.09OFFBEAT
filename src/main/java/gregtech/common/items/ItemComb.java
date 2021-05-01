@@ -321,7 +321,7 @@ public class ItemComb extends Item {
         	addProcessHV(tComb, Materials.Manganese, 75);
 		addProcessHV(tComb, Materials.Nickel, 75);
 		tComb = getStackForType(CombType.ENDERIUM);
-		GT_Values.RA.addCentrifugeRecipe(tComb, GT_Values.NI, GT_Values.NF, Materials.EnderiumBase.getMolten(50), ItemList.FR_RefractoryWax.get(1, new Object[0]), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Platinum, 1), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Enderium, 1), GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[] {5000, 3000, 5000}, 384, 480);
+		GT_Values.RA.addCentrifugeRecipe(tComb, GT_Values.NI, GT_Values.NF, Materials.EnderiumBase.getMolten(50), ItemList.FR_RefractoryWax.get(1, new Object[0]), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Platinum, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Enderium, 1), GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[] {5000, 800, 500}, 384, 480);
 		
 		//gem2
 		tComb = getStackForType(CombType.FLUIX);

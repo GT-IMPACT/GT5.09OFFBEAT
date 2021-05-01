@@ -263,7 +263,7 @@ public class GT_CropLoader
                     "Nether",
                     "Undead",
                     "Netherstar"
-            }, Materials.NetherStar, GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Coal, 1L), new ItemStack[] {
+            }, Materials.NetherStar, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Coal, 1L), new ItemStack[] {
                     GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 1L), new ItemStack(Items.skull, 1), new ItemStack(Items.skull, 1, 1), new ItemStack(Items.skull, 1, 1), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.NetherStar, 1L)
             });
             new GT_BaseCrop(160, "Zomplant", "unknown", null, 3, 4, 0, 1, 4, 1, 3, 4, 2, 6, new String[] {

@@ -134,7 +134,7 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                         GT_ModHandler.addSmeltingRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Coal, 1L));
                         break;
                     case "Diamond":
-                        GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, aStack), 32, ItemList.IC2_Industrial_Diamond.get(3L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 16L));
+                        GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, aStack), 32, ItemList.IC2_Industrial_Diamond.get(3L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 2L));
                         break;
                     case "Opal":
                     case "Olivine":
@@ -145,7 +145,7 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                     case "Topaz":
                     case "BlueTopaz":
                     case "Tanzanite":
-                        GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, aStack), 24, GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 12L));
+                        GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, aStack), 24, GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 2L));
                         break;
                     case "FoolsRuby":
                     case "GarnetRed":
@@ -156,7 +156,7 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                     case "Forcicium":
                     case "Forcillium":
                     case "Force":
-                        GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, aStack), 16, GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 8L));
+                        GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, aStack), 16, GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 1L));
                 }
                 break;
             case dustPure:
@@ -166,11 +166,11 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
 
                 if (aPrefix == OrePrefixes.dustPure) {
                     if (aMaterial.contains(SubTag.ELECTROMAGNETIC_SEPERATION_GOLD))
-                        GT_Values.RA.addElectromagneticSeparatorRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Gold, 1L), GT_OreDictUnificator.get(OrePrefixes.nugget, Materials.Gold, 1L), new int[]{10000, 4000, 2000}, 400, 24);
+                        GT_Values.RA.addElectromagneticSeparatorRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Gold, 1L), GT_OreDictUnificator.get(OrePrefixes.nugget, Materials.Gold, 1L), new int[]{10000, 1000, 2000}, 400, 24);
                     if (aMaterial.contains(SubTag.ELECTROMAGNETIC_SEPERATION_IRON))
-                        GT_Values.RA.addElectromagneticSeparatorRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Iron, 1L), GT_OreDictUnificator.get(OrePrefixes.nugget, Materials.Iron, 1L), new int[]{10000, 4000, 2000}, 400, 24);
+                        GT_Values.RA.addElectromagneticSeparatorRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Iron, 1L), GT_OreDictUnificator.get(OrePrefixes.nugget, Materials.Iron, 1L), new int[]{10000, 1000, 2000}, 400, 24);
                     if (aMaterial.contains(SubTag.ELECTROMAGNETIC_SEPERATION_NEODYMIUM)) {
-                        GT_Values.RA.addElectromagneticSeparatorRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Neodymium, 1L), GT_OreDictUnificator.get(OrePrefixes.nugget, Materials.Neodymium, 1L), new int[]{10000, 4000, 2000}, 400, 24);
+                        GT_Values.RA.addElectromagneticSeparatorRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Neodymium, 1L), GT_OreDictUnificator.get(OrePrefixes.nugget, Materials.Neodymium, 1L), new int[]{10000, 1000, 2000}, 400, 24);
                     }
                 }
                 if (aMaterial.contains(SubTag.CRYSTALLISABLE)) {

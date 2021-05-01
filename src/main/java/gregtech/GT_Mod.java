@@ -519,24 +519,15 @@ public class GT_Mod implements IGT_Mod {
         new GT_CoverBehaviorLoader().run();
         new GT_SonictronLoader().run();
         new GT_SpawnEventHandler();
-        
-        GT_Values.RA.addCentrifugeRecipe(Materials.Stone.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF,
-					Materials.Quartzite.getDustSmall(1),Materials.PotassiumFeldspar.getDustSmall(1),Materials.Marble.getDustTiny(2),
-					Materials.Biotite.getDustTiny(1), 	Materials.MetalMixture.getDustTiny(1), 		Materials.Sodalite.getDustTiny(1), 
-					new int[]{10000, 10000, 10000, 10000, 10000, 7500}, 480, 120);
-		GT_Values.RA.addCentrifugeRecipe(Materials.MetalMixture.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF, 
-					Materials.BandedIron.getDustSmall(1), 	Materials.Bauxite.getDustSmall(1), Materials.Pyrolusite.getDustTiny(2),
-					Materials.Barite.getDustTiny(1), 		Materials.Chromite.getDustTiny(1), Materials.Ilmenite.getDustTiny(1), 
-					new int[]{10000, 10000, 10000, 10000, 10000, 7500}, 1000, 480);
 			
         double ashOutputMultiplier = Math.min(GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "AshOutputMultiplier", 1.0), 1.0);
         if (GregTech_API.sOPStuff.get(ConfigCategories.Recipes.gregtechrecipes, "AshYieldsAlkaliMetalOxides", true)) {
-        	int[] outputChances = new int[]{(int) (9900 * ashOutputMultiplier), (int) (6400 * ashOutputMultiplier), 
-        			(int) (6000 * ashOutputMultiplier), (int) (500 * ashOutputMultiplier), 
-        			(int) (5000 * ashOutputMultiplier), (int) (2500 * ashOutputMultiplier)};
+        	int[] outputChances = new int[]{(int) (2400 * ashOutputMultiplier), (int) (2100 * ashOutputMultiplier),
+        			(int) (1200 * ashOutputMultiplier), (int) (500 * ashOutputMultiplier),
+        			(int) (500 * ashOutputMultiplier), (int) (250 * ashOutputMultiplier)};
             GT_Values.RA.addCentrifugeRecipe(Materials.Ash.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF, 
-            		Materials.Quicklime.getDustSmall(2),           Materials.Potash.getDustSmall(1), Materials.Magnesia.getDustSmall(1), 
-            		Materials.PhosphorousPentoxide.getDustTiny(1), Materials.SodaAsh.getDustTiny(1), Materials.BandedIron.getDustTiny(1), 
+            		Materials.Quicklime.getDust(2),           Materials.Potash.getDust(1), Materials.Magnesia.getDust(1),
+            		Materials.PhosphorousPentoxide.getDust(1), Materials.SodaAsh.getDust(1), Materials.BandedIron.getDust(1),
             		outputChances, 240, 30);
         } else {
         	GT_Values.RA.addCentrifugeRecipe(Materials.Ash.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF, 
