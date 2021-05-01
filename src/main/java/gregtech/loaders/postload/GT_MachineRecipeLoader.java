@@ -3512,28 +3512,13 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Casing_Fusion_Coil.get(4L), GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Neutronium, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Infinite, 4), ItemList.Field_Generator_UV.get(2L), ItemList.Electric_Pump_UV.get(1L), GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Superconductor, 12), ItemList.Neutron_Reflector.get(8L), GT_Utility.getIntegratedCircuit(1)}, Materials.ElectrumFlux.getMolten(1728), ItemList.Casing_Fusion_Coil2.get(4L), 400, 2000000, true);
 
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Casing_Fusion_Coil.get(16L), GT_OreDictUnificator.get(OrePrefixes.plateTriple, Materials.Phoenixite, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Bio, 4), ItemList.Field_Generator_UHV.get(2L), ItemList.Electric_Pump_UHV.get(1L), GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Superconductor, 36), ItemList.Neutron_Reflector.get(12L), GT_Utility.getIntegratedCircuit(1)}, Materials.ElectrumFlux.getMolten(3456), ItemList.Casing_Fusion_Coil2.get(16L), 800, 8000000, true);
+
         //V
-        GT_Values.RA.addAssemblylineRecipe(ItemList.Casing_Fusion_Coil2.get(1, new Object() {
-                }), 288000, new Object[]{
-                        ItemList.Casing_Fusion_Coil2.get(1L, new Object() {
-                        }),
-                        GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Phoenixite, 4L),
-                        GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Diamericiumtitanium, 32L),
-                        GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.Superconductor, 8L),
-                        new Object[]{OrePrefixes.circuit.get(Materials.Infinite), 4},
-                        ItemList.Field_Generator_UHV.get(2L, new Object() {
-                        }),
-                        ItemList.Electric_Pump_UHV.get(2L, new Object() {
-                        }),
-                        ItemList.neutroniumHeatCapacitor.get(1L, new Object() {
-                        }),
-                        ItemList.neutroniumHeatCapacitor.get(1L, new Object() {
-                        })
-                }, new FluidStack[]{
-                        new FluidStack(FluidRegistry.getFluid("ic2coolant"), 8000),
-                        Materials.SolderingAlloy.getMolten(1440),
-                        Materials.Neutronium.getMolten(576)},
-                ItemList.Casing_Fusion_Coil3.get(1), 800, 500000);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Casing_Fusion_Coil2.get(1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Neutronium, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Infinite, 4), ItemList.Field_Generator_UV.get(2L), ItemList.Electric_Pump_UV.get(1L), GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Superconductor, 12), ItemList.Neutron_Reflector.get(8L), GT_Utility.getIntegratedCircuit(1)}, Materials.DraconiumAwakened.getMolten(864), ItemList.Casing_Fusion_Coil3.get(1L), 400, 2000000, true);
+
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Casing_Fusion_Coil2.get(4L), GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Phoenixite, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Bio, 4), ItemList.Field_Generator_UHV.get(2L), ItemList.Electric_Pump_UHV.get(1L), GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Superconductor, 24), ItemList.Neutron_Reflector.get(12L), GT_Utility.getIntegratedCircuit(1)}, Materials.DraconiumAwakened.getMolten(1728), ItemList.Casing_Fusion_Coil3.get(4L), 800, 8000000, true);
+
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Casing_Fusion_Coil2.get(16L), GT_OreDictUnificator.get(OrePrefixes.plateTriple, Materials.InfinityCatalyst, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Nano, 4), ItemList.Field_Generator_UEV.get(2L), ItemList.Electric_Pump_UEV.get(1L), GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Superconductor, 48), ItemList.Neutron_Reflector.get(16L), GT_Utility.getIntegratedCircuit(1)}, Materials.DraconiumAwakened.getMolten(3456), ItemList.Casing_Fusion_Coil3.get(16L), 1200, 32000000, true);
 
 
         //Sluice Juice and Sand
