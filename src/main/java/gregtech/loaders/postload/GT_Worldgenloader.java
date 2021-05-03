@@ -120,6 +120,7 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.graphite",true,20,120,8,false, false, false, Materials.Graphite);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.forcicium",true,20,120,8,false, false, false, Materials.Forcicium);
 		new GT_Worldgen_GT_Ore_SmallPieces("ore.small.naquadahenriched",true,5,25,6,false, false, false, Materials.NaquadahEnriched);
+        new GT_Worldgen_GT_Ore_SmallPieces("ore.small.naquadria",true,10,30,4,false, false, false, Materials.Naquadria);
         
         new GT_Worldgen_GT_Ore_Layer("ore.mix.naquadah", true, 10, 90, 30, 3, 32, false, false, false, Materials.Naquadah, Materials.Naquadah, Materials.Naquadah, Materials.Plutonium);
         new GT_Worldgen_GT_Ore_Layer("ore.mix.lignite", true, 80, 210, 160, 5, 32, true, false, false, Materials.Lignite, Materials.Lignite, Materials.Lignite, Materials.Coal);
