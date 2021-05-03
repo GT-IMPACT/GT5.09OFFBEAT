@@ -29,7 +29,7 @@ public class ProcessingStone
                 GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), new ItemStack(Blocks.sand, 1, 0), null, 10, false);
                 break;
             case "Endstone":
-                GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dustImpure, Materials.Endstone, 1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Tungstate, 1L), 5, false);
+                GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dustImpure, Materials.Endstone, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Tungstate, 1L), 1, false);
                 break;
             case "Netherrack":
                 GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dustImpure, Materials.Netherrack, 1L), GT_OreDictUnificator.get(OrePrefixes.nugget, Materials.Gold, 1L), 5, false);
@@ -52,7 +52,7 @@ public class ProcessingStone
             	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.PotassiumFeldspar, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quartz, 1L), 20, false);
                 break;
             case "Komatiite":
-            	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Biotite, 1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Uranium, 1L), 5, false);
+            	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Biotite, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Uranium, 1L), 1, false);
                 break;
             case "Dacite":
             case "Andesite":
@@ -62,10 +62,10 @@ public class ProcessingStone
             	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.PotassiumFeldspar, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Pyrite, 1L), 20, false);
                 break;
             case "Eclogite":
-            	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.SiliconDioxide, 1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Rutile, 1L), 10, false);
+            	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.SiliconDioxide, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Rutile, 1L), 1, false);
                 break;
             case "Soapstone":
-            	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dustImpure, Materials.Talc, 1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Chromite, 1L), 10, false);
+            	GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dustImpure, Materials.Talc, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Chromite, 1L), 1, false);
                 break;
             case "Greenschist":
             case "Blueschist":

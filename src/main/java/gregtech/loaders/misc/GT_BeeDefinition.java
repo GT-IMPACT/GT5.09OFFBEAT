@@ -779,10 +779,10 @@ public enum GT_BeeDefinition implements IBeeDefinition {
         	}else {
             beeSpecies.addProduct(GT_ModHandler.getModItem(GT_Values.MOD_ID_FR, "beeCombs", 1, 0), 0.15f);
             }
-            beeSpecies.addSpecialty(GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Ash, 1), 0.2f);
-            beeSpecies.addSpecialty(GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 1), 0.2f);
-            beeSpecies.addSpecialty(ItemList.FR_Fertilizer.get(1, new Object[0]), 0.3f);
-            beeSpecies.addSpecialty(ItemList.IC2_Fertilizer.get(1, new Object[0]), 0.3f);
+            beeSpecies.addSpecialty(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Ash, 1), 0.02f);
+            beeSpecies.addSpecialty(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 1), 0.02f);
+            beeSpecies.addSpecialty(ItemList.FR_Fertilizer.get(1), 0.3f);
+            beeSpecies.addSpecialty(ItemList.IC2_Fertilizer.get(1), 0.3f);
             beeSpecies.setHumidity(EnumHumidity.DAMP);
             beeSpecies.setTemperature(EnumTemperature.WARM);
         }
