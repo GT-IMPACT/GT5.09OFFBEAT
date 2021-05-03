@@ -404,6 +404,11 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
+    public boolean addLatheRecipe(ItemStack aInput1, ItemStack aOutput1, ItemStack aOutput2, int[] aChances, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sLatheRecipes.addRecipe(true, new ItemStack[]{aInput1}, new ItemStack[]{aOutput1, aOutput2}, null, aChances, null, null, aDuration, aEUt, 0);
+        return true;
+    }
+
     @Override
     public boolean addCutterRecipe(ItemStack aInput, FluidStack aLubricant, ItemStack aOutput1, ItemStack aOutput2, int aDuration, int aEUt) {
         if ((aInput == null) || (aLubricant == null) || (aOutput1 == null)) {

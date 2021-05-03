@@ -50,7 +50,7 @@ public class ProcessingGem implements gregtech.api.interfaces.IOreRecipeRegistra
                 }
 
                 if (aNoWorking) {
-                    GT_Values.RA.addLatheRecipe(GT_Utility.copyAmount(2L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.stick, aMaterial, 2L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), (int) Math.max(aMaterialMass, 1L), 16);
+                    GT_Values.RA.addLatheRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.stick, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), new int[]{10000, 5000}, (int) Math.max(aMaterialMass, 1L), 16);
                 } else {
                     if (aMaterial.mUnificatable && (aMaterial.mMaterialInto == aMaterial)) {
                         GT_ModHandler.addCraftingRecipe(GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 2L), GT_Proxy.tBits, new Object[]{"h", "X", Character.valueOf('X'), OrePrefixes.gemFlawless.get(aMaterial)});
@@ -81,7 +81,7 @@ public class ProcessingGem implements gregtech.api.interfaces.IOreRecipeRegistra
                 if (aFuelPower)
                     GT_Values.RA.addFuel(GT_Utility.copyAmount(1L, new Object[]{aStack}), null, aMaterial.mFuelPower / 2, aMaterial.mFuelType);
                 if (!aNoWorking) {
-                    GT_Values.RA.addLatheRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.bolt, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, aMaterial, 1L), (int) Math.max(aMaterialMass, 1L), 8);
+                    GT_Values.RA.addLatheRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.bolt, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), new int[]{10000, 1000}, (int) Math.max(aMaterialMass, 1L), 8);
                     if (aMaterial.mUnificatable && (aMaterial.mMaterialInto == aMaterial)) {
                     	GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(3L, new Object[]{aStack}), 8, GT_OreDictUnificator.get(OrePrefixes.gemFlawed, aMaterial, 1), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 2));
                         GT_ModHandler.addCraftingRecipe(GT_OreDictUnificator.get(OrePrefixes.gemChipped, aMaterial, 2L), GT_Proxy.tBits, new Object[]{"h", "X", Character.valueOf('X'), OrePrefixes.gemFlawed.get(aMaterial)});
@@ -108,7 +108,7 @@ public class ProcessingGem implements gregtech.api.interfaces.IOreRecipeRegistra
                 if (aFuelPower)
                     GT_Values.RA.addFuel(GT_Utility.copyAmount(1L, new Object[]{aStack}), null, aMaterial.mFuelPower, aMaterial.mFuelType);
                 if (!aNoWorking) {
-                    GT_Values.RA.addLatheRecipe(GT_Utility.copyAmount(4L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.bolt, aMaterial, 8L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), (int) Math.max(aMaterialMass, 1L), 12);
+                    GT_Values.RA.addLatheRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.bolt, aMaterial, 2L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), new int[]{10000, 2500}, (int) Math.max(aMaterialMass, 1L), 12);
                     if (aMaterial.mUnificatable && (aMaterial.mMaterialInto == aMaterial)) {
                     	GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(3L, new Object[]{aStack}), 8, GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 1), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 2));
                         GT_ModHandler.addCraftingRecipe(GT_OreDictUnificator.get(OrePrefixes.gemFlawed, aMaterial, 2L), GT_Proxy.tBits, new Object[]{"h", "X", Character.valueOf('X'), OrePrefixes.gem.get(aMaterial)});

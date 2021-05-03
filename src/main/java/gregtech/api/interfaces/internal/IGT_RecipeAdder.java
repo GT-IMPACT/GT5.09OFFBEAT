@@ -485,6 +485,8 @@ public interface IGT_RecipeAdder {
      */
     public boolean addLatheRecipe(ItemStack aInput1, ItemStack aOutput1, ItemStack aOutput2, int aDuration, int aEUt);
 
+    public boolean addLatheRecipe(ItemStack aInput1, ItemStack aOutput1, ItemStack aOutput2, int [] aChances, int aDuration, int aEUt);
+
     /**
      * Adds a Cutter Recipe
      */
