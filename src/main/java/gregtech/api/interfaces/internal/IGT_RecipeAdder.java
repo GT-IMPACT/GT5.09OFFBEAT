@@ -444,7 +444,7 @@ public interface IGT_RecipeAdder {
      * @param aOutput1 must be != null
      * @param aOutput2 can be null
      */
-    public boolean addImplosionRecipe(ItemStack aInput1, int aInput2, ItemStack aOutput1, ItemStack aOutput2);
+    public boolean addImplosionRecipe(ItemStack aInput1, int aInput2, ItemStack aOutput1, ItemStack aOutput2, int[] aChances);
 
     /**
      * Adds a Grinder Recipe
