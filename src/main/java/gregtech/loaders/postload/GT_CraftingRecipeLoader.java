@@ -88,6 +88,15 @@ public class GT_CraftingRecipeLoader implements Runnable {
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "engine", 1L, 1), true, false, true);
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "engine", 1L, 2), true, false, true);
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "engine", 1L, 4), true, false, true);
+        for (int i = 0; i < 29; i++) {
+            GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "fences", 1L, i), true, false, true);
+            GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "fencesFireproof", 1L, i), true, false, true);
+        }
+		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "naturalistHelmet", 1L), true, false, true);
+		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "bronzePickaxe", 1L), true, false, true);
+		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "bronzeShovel", 1L), true, false, true);
+		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "wrench", 1L), true, false, true);
+		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "waxCast", 1L), true, false, true);
 
 
         GT_ModHandler.addCraftingRecipe(ItemList.FluidRegulator_LV.get(1L), new Object[]{"P", 'P', ItemList.Steam_Valve_LV.get(1L)});
