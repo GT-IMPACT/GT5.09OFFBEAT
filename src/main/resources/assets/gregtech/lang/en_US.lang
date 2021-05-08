@@ -650,6 +650,8 @@ achievement.gt.blockmachines.multimachine.em.infuser=Energy Infuser
 achievement.gt.blockmachines.multimachine.em.infuser.desc=Pickup this item to see the recipe in NEI
 achievement.gt.blockmachines.hatch.holder.tier.09=Object Holder
 achievement.gt.blockmachines.hatch.holder.tier.09.desc=Pickup this item to see the recipe in NEI
+achievement.gt.blockmachines.multimachine.em.databank=Data Bank
+achievement.gt.blockmachines.multimachine.em.databank.desc=Pickup this item to see the recipe in NEI
 
 achievement.gt.metaitem.01.32605=Ultimate Battery
 achievement.gt.metaitem.01.32605.desc=Pickup this item to see the recipe in NEI
@@ -665,6 +667,9 @@ achievement.gt.metaitem.03.32206=Mysterious Energy Crystal Orb
 achievement.gt.metaitem.03.32206.desc=Pickup this item to see the recipe in NEI
 achievement.gt.metaitem.03.32207=Mysterious Energy Crystal Module
 achievement.gt.metaitem.03.32207.desc=Pickup this item to see the recipe in NEI
+
+achievement.gt.blockmachines.blockmachine.teleporter=Teleporter
+achievement.gt.blockmachines.blockmachine.teleporter.desc=Pickup this item to see the recipe in NEI
 
 achievement.item.impact_item2.147=Stargate-Radiation-Containment-Plate
 achievement.item.impact_item2.147.desc=Pickup this item to see the recipe in NEI
@@ -705,6 +710,9 @@ achievement.gt.blockmachines.impact.multis.parallelcomputer.desc=Pickup this ite
 
 achievement.item.relocator=Relocator
 achievement.item.relocator.desc=You have discovered The Universe
+
+achievement.tile.extrautils:dark_portal=Dark Portal
+achievement.tile.extrautils:dark_portal.desc=Is it Black Hole?
 
 for.bees.species.clay=Clay
 for.bees.species.slimeball=Slimeball
