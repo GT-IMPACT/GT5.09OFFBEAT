@@ -327,7 +327,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             if (mEfficiency < 0)
                 mEfficiency = 0;
             if (mRunningOnLoad && checkMachine(aBaseMetaTileEntity, mInventory[1])) {
-                this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
+                this.mEUStore = aBaseMetaTileEntity.getStoredEU();
                 checkRecipe(mInventory[1]);
             }
             if (--mUpdate == 0 || --mStartUpCheck == 0) {
@@ -374,7 +374,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                                     } catch (Exception e) {
                                     }
                                 }
-                                this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
+                                this.mEUStore = aBaseMetaTileEntity.getStoredEU();
                                 if (aBaseMetaTileEntity.isAllowedToWork())
                                     checkRecipe(mInventory[1]);
                             }
