@@ -135,7 +135,7 @@ public class GT_MetaTileEntity_Boiler_Lava
     }
 
     public final int fill(FluidStack aFluid, boolean doFill) {
-        if ((GT_ModHandler.isLava(aFluid)) || (GT_ModHandler.isCreosote(aFluid)) && (this.mProcessingEnergy < 50)) {
+         if (((GT_ModHandler.isLava(aFluid)) || (GT_ModHandler.isCreosote(aFluid))) && (this.mProcessingEnergy < 50)) {
             int tFilledAmount = Math.min(50, aFluid.amount);
             if (doFill) {
                 this.mProcessingEnergy += tFilledAmount;
