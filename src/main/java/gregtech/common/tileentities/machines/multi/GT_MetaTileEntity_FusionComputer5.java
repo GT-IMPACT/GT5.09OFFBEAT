@@ -24,7 +24,7 @@ public class GT_MetaTileEntity_FusionComputer5 extends GT_MetaTileEntity_FusionC
 
     @Override
     public long maxEUStore() {
-        return 2560010000L * (Math.min(16, this.mEnergyHatches.size())) / 16L;
+        return 2100000000L * (Math.min(16, this.mEnergyHatches.size())) / 16L;
     }
 
     @Override
@@ -49,13 +49,13 @@ public class GT_MetaTileEntity_FusionComputer5 extends GT_MetaTileEntity_FusionC
 
     public String[] getDescription() {
         return new String[]{
-        		"A WHITE DWARF DOWN ON YOUR BASE", 
-        		"Fusion Machine Casings MK IV around Superconductor Fusion Coil Blocks MK II", 
-        		"2-16 Input Hatches", 
-        		"1-16 Output Hatches", 
-        		"1-16 Energy Hatches", 
-        		"All Hatches must be UEV or better", 
-        		"131072EU/t and 160mio EU Cap per Energy Hatch"};
+                "A WHITE DWARF DOWN ON YOUR BASE", 
+                "Fusion Machine Casings MK IV around Superconductor Fusion Coil Blocks MK II", 
+                "2-16 Input Hatches", 
+                "1-16 Output Hatches", 
+                "1-16 Energy Hatches", 
+                "All Hatches must be UEV or better", 
+                "131072EU/t and 132mio EU Cap per Energy Hatch"};
     }
 
     @Override

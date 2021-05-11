@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity_MultiBlockBase {
 
     public GT_Recipe mLastRecipe;
-    public long mEUStore;
+    public int mEUStore;
 
     public GT_MetaTileEntity_FusionComputer(int aID, String aName, String aNameRegional, int tier) {
         super(aID, aName, aNameRegional);
@@ -327,7 +327,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             if (mEfficiency < 0)
                 mEfficiency = 0;
             if (mRunningOnLoad && checkMachine(aBaseMetaTileEntity, mInventory[1])) {
-                this.mEUStore = aBaseMetaTileEntity.getStoredEU();
+                this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
                 checkRecipe(mInventory[1]);
             }
             if (--mUpdate == 0 || --mStartUpCheck == 0) {
@@ -374,7 +374,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                                     } catch (Exception e) {
                                     }
                                 }
-                                this.mEUStore = aBaseMetaTileEntity.getStoredEU();
+                                this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
                                 if (aBaseMetaTileEntity.isAllowedToWork())
                                     checkRecipe(mInventory[1]);
                             }
@@ -382,7 +382,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                             if (aTick % 100 == 0 || aBaseMetaTileEntity.hasWorkJustBeenEnabled() || aBaseMetaTileEntity.hasInventoryBeenModified()) {
                                 turnCasingActive(mMaxProgresstime > 0);
                                 if (aBaseMetaTileEntity.isAllowedToWork()) {
-                                    this.mEUStore = aBaseMetaTileEntity.getStoredEU();
+                                    this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
                                     if (checkRecipe(mInventory[1])) {
                                         if (this.mEUStore < this.mLastRecipe.mSpecialValue - this.mEUt) {
                                             mMaxProgresstime = 0;
