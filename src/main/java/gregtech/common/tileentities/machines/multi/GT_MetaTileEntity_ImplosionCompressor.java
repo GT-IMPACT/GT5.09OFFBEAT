@@ -97,7 +97,13 @@ public class GT_MetaTileEntity_ImplosionCompressor
                 if (this.mEUt > 0) {
                     this.mEUt = (-this.mEUt);
                 }
-                this.mOutputItems = new ItemStack[]{tRecipe.getOutput(0), tRecipe.getOutput(1)};
+    
+                mOutputItems = new ItemStack[tRecipe.mOutputs.length];
+                for (int i = 0; i < tRecipe.mOutputs.length; i++) {
+                    if (getBaseMetaTileEntity().getRandomNumber(10000) < tRecipe.getOutputChance(i)) {
+                        this.mOutputItems[i] = tRecipe.getOutput(i);
+                    }
+                }
                 sendLoopStart((byte) 20);
                 updateSlots();
                 return true;
