@@ -169,7 +169,7 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
         int zChunk = tChunk.zPosition;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                tChunk = getBaseMetaTileEntity().getWorld().getChunkFromChunkCoords(xChunk + i, zChunk + j);
+                tChunk = getBaseMetaTileEntity().getWorld().getChunkFromChunkCoords(xChunk + 16 * i, zChunk + 16 * j);
                 GT_Pollution.addPollution(tChunk, -mPollutionReduction);
             }
         }
