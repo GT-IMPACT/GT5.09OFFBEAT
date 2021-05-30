@@ -1,7 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
-
 import java.util.ArrayList;
 
 import gregtech.GT_Mod;
@@ -22,7 +20,6 @@ import net.minecraftforge.fluids.FluidStack;
 public class GT_MetaTileEntity_LargeTurbine_HPSteam extends GT_MetaTileEntity_LargeTurbine {
 
     public boolean achievement = false;
-    private boolean looseFit=false;
 
     public GT_MetaTileEntity_LargeTurbine_HPSteam(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -79,18 +76,6 @@ public class GT_MetaTileEntity_LargeTurbine_HPSteam extends GT_MetaTileEntity_La
 
     @Override
     int fluidIntoPower(ArrayList<FluidStack> aFluids, int aOptFlow, int aBaseEff) {
-        if(looseFit) {
-            aOptFlow*=4;
-            if(aBaseEff>10000){
-                aOptFlow*=Math.pow(1.1f,((aBaseEff-7500)/10000F)*20f);
-                aBaseEff=7500;
-            }else if(aBaseEff>7500){
-                aOptFlow*=Math.pow(1.1f,((aBaseEff-7500)/10000F)*20f);
-                aBaseEff*=0.75f;
-            }else{
-                aBaseEff*=0.75f;
-            }
-        }
         int tEU = 0;
         int totalFlow = 0; // Byproducts are based on actual flow
         int flow = 0;
@@ -130,84 +115,5 @@ public class GT_MetaTileEntity_LargeTurbine_HPSteam extends GT_MetaTileEntity_La
         }
 
         return tEU;
-    }
-
-    @Override
-    public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-        if (aSide == getBaseMetaTileEntity().getFrontFacing()) {
-            looseFit^=true;
-            GT_Utility.sendChatToPlayer(aPlayer, looseFit ? trans("500", "Fitting: Loose - More Flow") : trans("501", "Fitting: Tight - More Efficiency"));
-        }
-    }
-
-    @Override
-    public int getDamageToComponent(ItemStack aStack) {
-        return (looseFit && XSTR_INSTANCE.nextInt(4)==0)?0:1;
-    }
-
-    
-    
-    @Override
-    public String[] getInfoData() {
-    	super.looseFit = looseFit;
-    	return super.getInfoData();
-    }
-    /* 
-     * moved to super
-     * 
-        int mPollutionReduction=0;
-        for (GT_MetaTileEntity_Hatch_Muffler tHatch : mMufflerHatches) {
-            if (isValidMetaTileEntity(tHatch)) {
-                mPollutionReduction=Math.max(tHatch.calculatePollutionReduction(100),mPollutionReduction);
-            }
-        }
-
-        String tRunning = mMaxProgresstime>0 ?
-                EnumChatFormatting.GREEN+"Turbine running"+EnumChatFormatting.RESET :
-                EnumChatFormatting.RED+"Turbine stopped"+EnumChatFormatting.RESET;
-        String tMaintainance = getIdealStatus() == getRepairStatus() ?
-                EnumChatFormatting.GREEN+"No Maintainance issues"+EnumChatFormatting.RESET :
-                EnumChatFormatting.RED+"Needs Maintainance"+EnumChatFormatting.RESET ;
-        int tDura = 0;
-
-        if (mInventory[1] != null && mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01) {
-            tDura = GT_Utility.safeInt((long)(100.0f / GT_MetaGenerated_Tool.getToolMaxDamage(mInventory[1]) * (GT_MetaGenerated_Tool.getToolDamage(mInventory[1]))+1));
-        }
-
-        long storedEnergy=0;
-        long maxEnergy=0;
-        for(GT_MetaTileEntity_Hatch_Dynamo tHatch : mDynamoHatches) {
-            if (isValidMetaTileEntity(tHatch)) {
-                storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
-                maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
-            }
-        }
-
-        return new String[]{
-                // 8 Lines available for information panels
-                tRunning + ": " + EnumChatFormatting.RED+mEUt+EnumChatFormatting.RESET+" EU/t", // 1 
-                tMaintainance, // 2
-                "Current Speed: "+EnumChatFormatting.YELLOW+(mEfficiency/100F)+EnumChatFormatting.RESET+"%", // 2 
-                "Stored Energy:" + EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET +" EU / "+ // 3 
-                        EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET +" EU", 
-                "Optimal Flow: "+EnumChatFormatting.YELLOW+GT_Utility.safeInt((long)realOptFlow)+EnumChatFormatting.RESET+" L/t" + // 4 
-                        EnumChatFormatting.YELLOW+"("+(looseFit?"Loose":"Tight")+")", // 5 
-                "Fuel Remaining: "+EnumChatFormatting.GOLD+storedFluid+EnumChatFormatting.RESET+"L", // 6 
-                "Turbine Damage: "+EnumChatFormatting.RED+Integer.toString(tDura)+EnumChatFormatting.RESET+"%", // 7 
-                "Pollution reduced to: "+ EnumChatFormatting.GREEN + mPollutionReduction+ EnumChatFormatting.RESET+" %" // 8 
-        };
-    }
-    */
-    
-    @Override
-    public void saveNBTData(NBTTagCompound aNBT) {
-        super.saveNBTData(aNBT);
-        aNBT.setBoolean("turbineFitting",looseFit);
-    }
-
-    @Override
-    public void loadNBTData(NBTTagCompound aNBT) {
-        super.loadNBTData(aNBT);
-        looseFit=aNBT.getBoolean("turbineFitting");
     }
 }
