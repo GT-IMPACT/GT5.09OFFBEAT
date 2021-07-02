@@ -284,14 +284,14 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
                                         if (!hasValidMetaTileEntity()) return;
                                     }
                                 }
-                            byte oldConections =  mConnections;
+                            byte oldConnections =  mConnections;
                             // Mask-out Connection direction bits to keep only Foam related connections
                             mConnections = (byte) (mMetaTileEntity.mConnections | (mConnections & ~63));
                             // If foam not hardened, tries roll chance to harden
                             if ((mConnections & -64) == 64 && getRandomNumber(1000) == 0) {
                                 mConnections = (byte) ((mConnections & ~64) | -128);
                             }
-                            if (mTickTimer > 12 && oldConections != mConnections)
+                            if (mTickTimer > 12 && oldConnections != mConnections)
                                 GregTech_API.causeCableUpdate(worldObj,xCoord,yCoord,zCoord);
                         }
                     case 8:
@@ -982,7 +982,8 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
         try {
             if (!aPlayer.isSneaking() && hasValidMetaTileEntity()) return mMetaTileEntity.onRightclick(this, aPlayer, aSide, aX, aY, aZ);
         } catch (Throwable e) {
-            GT_Log.err.println("Encountered Exception while rightclicking TileEntity, the Game should've crashed now, but I prevented that. Please report immediately to GregTech Intergalactical!!!");            e.printStackTrace(GT_Log.err);
+            GT_Log.err.println("Encountered Exception while rightclicking TileEntity, the Game should've crashed now, but I prevented that. Please report immediately to GregTech Intergalactical!!!");
+            e.printStackTrace(GT_Log.err);
         }
 
         return false;
@@ -993,7 +994,7 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
         try {
             if (aPlayer != null && hasValidMetaTileEntity()) mMetaTileEntity.onLeftclick(this, aPlayer);
         } catch (Throwable e) {
-            GT_Log.err.println("Encountered Exception while leftclicking TileEntity, the Game should've crashed now, but I prevented that. Please report immidietly to GregTech Intergalactical!!!");
+            GT_Log.err.println("Encountered Exception while leftclicking TileEntity, the Game should've crashed now, but I prevented that. Please report immediately to GregTech Intergalactical!!!");
             e.printStackTrace(GT_Log.err);
         }
     }
