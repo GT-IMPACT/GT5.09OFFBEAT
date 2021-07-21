@@ -867,34 +867,15 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public boolean addOutput(ItemStack aStack) {
         if (GT_Utility.isStackInvalid(aStack)) return false;
         aStack = GT_Utility.copy(aStack);
-//		FluidStack aLiquid = GT_Utility.getFluidForFilledItem(aStack, true);
-//		if (aLiquid == null) {
+        for (GT_MetaTileEntity_Hatch_OutputBus tHatch : mOutputBusses) {
+            if (isValidMetaTileEntity(tHatch) && tHatch.storeAll(aStack)) {
+                return true;
+            }
+        }
         boolean outputSuccess = true;
         while (outputSuccess && aStack.stackSize > 0) {
             outputSuccess = false;
-            if (GregTech_API.mAE2) {
-                // this separate cycle may be refactored out, after this function will hopefully be totally refactored
-                // for now it is here to avoid splitting stack when we have ME output bus
-                for (GT_MetaTileEntity_Hatch_OutputBus tHatch : mOutputBusses) {
-                    // TODO: If ever there will be another hatch storing in some external storage, here should be an interface check
-                    if (tHatch instanceof GT_MetaTileEntity_Hatch_OutputBus_ME && isValidMetaTileEntity(tHatch)) {
-                        int rest = ((GT_MetaTileEntity_Hatch_OutputBus_ME) tHatch).store(aStack);
-                        if (rest != aStack.stackSize)
-                            outputSuccess = true;
-                        aStack.stackSize = rest;
-                        if (rest == 0)
-                            return true;
-                    }
-                }
-            }
             ItemStack single = aStack.splitStack(1);
-            for (GT_MetaTileEntity_Hatch_OutputBus tHatch : mOutputBusses) {
-                if (!outputSuccess && isValidMetaTileEntity(tHatch)) {
-                    for (int i = tHatch.getSizeInventory() - 1; i >= 0 && !outputSuccess; i--) {
-                        if (tHatch.getBaseMetaTileEntity().addStackToSlot(i, single)) outputSuccess = true;
-                    }
-                }
-            }
             for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
                 if (!outputSuccess && isValidMetaTileEntity(tHatch) && tHatch.outputsItems()) {
                     if (tHatch.getBaseMetaTileEntity().addStackToSlot(1, single)) outputSuccess = true;
@@ -902,16 +883,6 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             }
             
         }
-//		}else {
-//			for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
-//				if (isValidMetaTileEntity(tHatch) && GT_ModHandler.isSteam(aLiquid)?tHatch.outputsSteam():tHatch.outputsLiquids()) {
-//					int tAmount = tHatch.fill(aLiquid, false);
-//					if (tAmount >= aLiquid.amount) {
-//						return tHatch.fill(aLiquid, true) >= aLiquid.amount;
-//					}
-//				}
-//			}
-//		}
         return outputSuccess;
     }
     
