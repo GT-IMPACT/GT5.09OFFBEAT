@@ -469,7 +469,29 @@ public class GT_CraftingRecipeLoader implements Runnable {
         }
         GT_ModHandler.removeRecipeByOutput(ItemList.IC2_Energium_Dust.get(1L));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
-        
+		
+        if (Loader.isModLoaded("GraviSuite")) {
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 3, 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 3, 0));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "advJetpack", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "advLappack", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "advNanoChestPlate", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "ultimateLappack", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "relocator", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "vajra", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "graviTool", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "advChainsaw", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "advDDrill", 1));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 1L, 4));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 1L, 5));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 1L, 7));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 1L, 2));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 1L, 6));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem", 1L, 3));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "graviChestPlate", 1L));
+			GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "kpChestPlate", 1L));
+		}
+		
         GT_ModHandler.removeRecipe(GT_ModHandler.getIC2Item("miningPipe", 8));
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getIC2Item("miningPipe", 1), new Object[]{"hPf", 'P', OrePrefixes.pipeSmall.get(Materials.Steel)});
         GT_ModHandler.addShapelessCraftingRecipe(GT_ModHandler.getIC2Item("miningPipe", 1L), new Object[]{GT_ModHandler.getIC2Item("miningPipeTip", 1L)});
@@ -569,13 +591,12 @@ public class GT_CraftingRecipeLoader implements Runnable {
         if (GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.disabledrecipes, "QBoots", false)) {
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("quantumBoots", 1L));
         }
-        //GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorBatpack", 1L, GT_Values.W));
-        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorAdvBatpack", 1L, GT_Values.W));
-        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorEnergypack", 1L, GT_Values.W));
-        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemAdvBat", 1L, GT_Values.W));
-        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemNightvisionGoggles", 1L, GT_Values.W));
-        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorJetpackElectric", 1, GT_Values.W));
-        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("itemArmorJetpack", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorAdvBatpack", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorEnergypack", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemAdvBat", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemNightvisionGoggles", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorJetpackElectric", 1, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorJetpack", 1L, GT_Values.W));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, GT_Values.W));
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, 27), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"RCR", "RAR", "RTR", 'R', GT_ModHandler.getModItem("IC2", "itemBatREDischarged", 1, 0), 'C', OrePrefixes.circuit.get(Materials.Basic), 'A',  OrePrefixes.itemCasing.get(Materials.Aluminium),  'T', OrePrefixes.wireGt02.get(Materials.Tin)});
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorAdvBatpack", 1, 27), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"RCR", "RAR", "RTR", 'R', GT_ModHandler.getModItem("IC2", "itemAdvBat", 1, GT_Values.W), 'C', OrePrefixes.circuit.get(Materials.Good), 'A',  GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, GT_Values.W),  'T', OrePrefixes.wireGt04.get(Materials.AnnealedCopper)});
