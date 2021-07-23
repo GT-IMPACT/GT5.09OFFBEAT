@@ -91,6 +91,8 @@ public class GT_CraftingRecipeLoader implements Runnable {
         for (int i = 0; i < 29; i++) {
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "fences", 1L, i), true, false, true);
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "fencesFireproof", 1L, i), true, false, true);
+            GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "stairs", 1L, i), true, false, true);
+            GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "stairsFireproof", 1L, i), true, false, true);
         }
 		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "naturalistHelmet", 1L), true, false, true);
 		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Forestry", "bronzePickaxe", 1L), true, false, true);
