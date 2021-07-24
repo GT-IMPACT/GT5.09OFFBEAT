@@ -1524,6 +1524,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         makeWires(Materials.YttriumBariumCuprate, 1760, bEC ? 4L : 256L, bEC ? 8L : 512L, 4L, gregtech.api.enums.GT_Values.V[6], true, aBoolConst_0);
 
         makeWires(Materials.Naquadah, 1780, bEC ? 2L : 64L, bEC ? 4L : 128L, 2L, gregtech.api.enums.GT_Values.V[7], true, aBoolConst_0);
+        makeWires(Materials.Enderium, 11550, bEC ? 2L : 64L, bEC ? 4L : 128L, 3L, gregtech.api.enums.GT_Values.V[7], true, aBoolConst_0);
 
         makeWires(Materials.NaquadahAlloy, 1800, bEC ? 4L : 64L, bEC ? 8L : 128L, 2L, gregtech.api.enums.GT_Values.V[8], true, aBoolConst_0);
         makeWires(Materials.Duranium, 1820, bEC ? 8L : 64L, bEC ? 16L : 128L, 1L, gregtech.api.enums.GT_Values.V[8], true, aBoolConst_0);
@@ -1538,12 +1539,14 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
         makeWires(Materials.Quantium, 11370, 1L, 16L, 2L, GT_Values.V[12], aBoolConst_0, true);
 
+        makeWires(Materials.Longasssuperconductornameforlvwire, 11510, bEC ? 1L : 128L, bEC ? 2L : 256L, 1L, gregtech.api.enums.GT_Values.V[1], true, aBoolConst_0);
         makeWires(Materials.Pentacadmiummagnesiumhexaoxid, 2200, bEC ? 1L : 128L, bEC ? 2L : 256L, 1L, gregtech.api.enums.GT_Values.V[2], true, aBoolConst_0);
         makeWires(Materials.Titaniumonabariumdecacoppereikosaoxid, 2220, bEC ? 1L : 128L, bEC ? 2L : 256L, 1L, gregtech.api.enums.GT_Values.V[3], true, aBoolConst_0);
         makeWires(Materials.Uraniumtriplatinid, 2240, bEC ? 1L : 128L, bEC ? 2L : 256L, 2L, gregtech.api.enums.GT_Values.V[4], true, aBoolConst_0);
         makeWires(Materials.Vanadiumtriindinid, 2260, bEC ? 1L : 128L, bEC ? 2L : 256L, 2L, gregtech.api.enums.GT_Values.V[5], true, aBoolConst_0);
         makeWires(Materials.Tetraindiumditindibariumtitaniumheptacoppertetrakaidekaoxid, 2280, 2L, 2L, 4L, gregtech.api.enums.GT_Values.V[6], true, aBoolConst_0);
         makeWires(Materials.Tetranaquadahdiindiumhexaplatiumosminid, 2300, 2L, 2L, 4L, gregtech.api.enums.GT_Values.V[7], true, aBoolConst_0);
+        makeWires(Materials.SuperconductorLV, 11530, 0L, 0L, 2L, gregtech.api.enums.GT_Values.V[1], aBoolConst_0, true);
         makeWires(Materials.SuperconductorMV, 2320, 0L, 0L, 2L, gregtech.api.enums.GT_Values.V[2], aBoolConst_0, true);
         makeWires(Materials.SuperconductorHV, 2340, 0L, 0L, 2L, gregtech.api.enums.GT_Values.V[3], aBoolConst_0, true);
         makeWires(Materials.SuperconductorEV, 2360, 0L, 0L, 4L, gregtech.api.enums.GT_Values.V[4], aBoolConst_0, true);
