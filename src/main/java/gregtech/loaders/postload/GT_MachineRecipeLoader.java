@@ -3514,7 +3514,8 @@ public class GT_MachineRecipeLoader implements Runnable {
 
 
         //Sluice Juice and Sand
-        GT_Values.RA.addDistilleryRecipe(1, Materials.SluiceJuice.getFluid(1000L), GT_ModHandler.getDistilledWater(500L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.SluiceSand, 1), 100, 16, false);
+        GT_Values.RA.addUniversalDistillationRecipe(Materials.SluiceJuice.getFluid(1000L), new FluidStack[]{GT_ModHandler.getDistilledWater(500L)}, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.SluiceSand, 1), 300, 16);
+
         GT_Values.RA.addCentrifugeRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.SluiceSand, 1), null, null, null, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Iron, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Neodymium, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Nickel, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Cobalt, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Manganese, 1), new int[]{10000, 500, 500, 500, 500, 500}, 200, 16);
         GT_Values.RA.addCentrifugeRecipe(null, null, Materials.SluiceJuice.getFluid(1000), Materials.Water.getFluid(500L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Iron, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Copper, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Tin, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Zinc, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Chrome, 1), new int[]{1000, 200, 200, 200, 200, 200}, 40, 64);
 
