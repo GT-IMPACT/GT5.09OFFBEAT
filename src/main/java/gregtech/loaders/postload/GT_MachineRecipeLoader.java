@@ -1896,8 +1896,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addBrewingRecipeCustom(ItemList.IC2_Fertilizer.get(8), Materials.Bacteria.getFluid(750), Materials.BacterialSludge.getFluid(750), 800, 256, false);
         GT_Values.RA.addBrewingRecipeCustom(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Uranium, 1L), Materials.BacterialSludge.getFluid(750), Materials.EnrichedBacterialSludge.getFluid(750), 200, 48, false);
         GT_Values.RA.addBrewingRecipeCustom(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Uranium235, 1L), Materials.BacterialSludge.getFluid(6750), Materials.EnrichedBacterialSludge.getFluid(6750), 1800, 48, false);
-        GT_Values.RA.addDistilleryRecipe(GT_Utility.getIntegratedCircuit(1), Materials.EnrichedBacterialSludge.getFluid(10), Materials.Mutagen.getFluid(1L), 60, 1920, false);
-        //GT_Values.RA.addDistilleryRecipe(GT_Utility.getIntegratedCircuit(1), Materials.EnrichedBacterialSludge.getFluid(10), FluidRegistry.getFluidStack("mutagen", 1), 60, 1920, false);
+        GT_Values.RA.addUniversalDistillationRecipe(Materials.EnrichedBacterialSludge.getFluid(10), new FluidStack[]{Materials.Mutagen.getFluid(1L)}, GT_Values.NI, 60, 1920);
 
         //GT_Values.RA.addBrewingRecipeCustom(GT_ModHandler.getModItem("Genetics", "misc", 6L, 4), FluidRegistry.getFluidStack("water", 750), FluidRegistry.getFluidStack("binnie.growthmedium", 750), 600, 480, false);
         //GT_Values.RA.addBrewingRecipeCustom(GT_ModHandler.getModItem("IC2", "itemBiochaff", 16L, 0), FluidRegistry.getFluidStack("binnie.growthmedium", 750), FluidRegistry.getFluidStack("binnie.bacteria", 750), 1200, 480, false);
