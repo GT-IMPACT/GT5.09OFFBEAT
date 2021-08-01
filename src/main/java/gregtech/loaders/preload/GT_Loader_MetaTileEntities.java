@@ -2330,69 +2330,69 @@ public class GT_Loader_MetaTileEntities implements Runnable {
                 "MAX -> OPV (Use Soft Mallet to invert)").getStackForm(1L));
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_LV_ULV.get(1L), bitsd,
                 new Object[]{" BB", "CM ", " BB", 'M', ItemList.Transformer_LV_ULV, 'C',
-                        OrePrefixes.wireGt16.get(Materials.Tin), 'B',
-                        OrePrefixes.wireGt16.get(Materials.Lead)});
+                        OrePrefixes.wireGt04.get(Materials.Tin), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Lead)});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_MV_LV.get(1L), bitsd,
                 new Object[]{" BB", "CM ", " BB", 'M', ItemList.Transformer_MV_LV, 'C',
-                        OrePrefixes.wireGt16.get(Materials.Copper), 'B',
-                        OrePrefixes.wireGt16.get(Materials.Tin)});
+                        OrePrefixes.wireGt04.get(Materials.Copper), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Tin)});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_HV_MV.get(1L), bitsd,
                 new Object[]{" BB", "CM ", " BB", 'M', ItemList.Transformer_HV_MV, 'C',
-                        OrePrefixes.wireGt16.get(Materials.Gold), 'B',
-                        OrePrefixes.wireGt16.get(Materials.Copper)});
+                        OrePrefixes.wireGt04.get(Materials.Gold), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Copper)});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_EV_HV.get(1L), bitsd,
                 new Object[]{"KBB", "CM ", "KBB", 'M', ItemList.Transformer_EV_HV, 'C',
-                        OrePrefixes.wireGt16.get(Materials.Aluminium), 'B',
-                        OrePrefixes.wireGt16.get(Materials.Gold), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Aluminium), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Gold), 'K',
                         ItemList.Casing_Coil_Cupronickel});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_IV_EV.get(1L), bitsd,
                 new Object[]{"KBB", "CM ", "KBB", 'M', ItemList.Transformer_IV_EV, 'C',
-                        OrePrefixes.wireGt16.get(Materials.Tungsten), 'B',
-                        OrePrefixes.wireGt16.get(Materials.Aluminium), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Tungsten), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Aluminium), 'K',
                         ItemList.Casing_Coil_Kanthal});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_LuV_IV.get(1L), bitsd,
                 new Object[]{"KBB", "CM ", "KBB", 'M', ItemList.Transformer_LuV_IV, 'C',
-                        OrePrefixes.wireGt16.get(Materials.VanadiumGallium), 'B',
-                        OrePrefixes.wireGt16.get(Materials.Tungsten), 'K',
+                        OrePrefixes.wireGt04.get(Materials.VanadiumGallium), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Tungsten), 'K',
                         ItemList.Casing_Coil_Nichrome});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_ZPM_LuV.get(1L), bitsd,
                 new Object[]{"KBB", "CM ", "KBB", 'M', ItemList.Transformer_ZPM_LuV, 'C',
-                        OrePrefixes.wireGt16.get(Materials.Naquadah), 'B',
-                        OrePrefixes.wireGt16.get(Materials.VanadiumGallium), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Naquadah), 'B',
+                        OrePrefixes.wireGt04.get(Materials.VanadiumGallium), 'K',
                         ItemList.Casing_Coil_TungstenSteel});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UV_ZPM.get(1L), bitsd,
                 new Object[]{"KBB", "CM ", "KBB", 'M', ItemList.Transformer_UV_ZPM, 'C',
                         OrePrefixes.wireGt04.get(Materials.NaquadahAlloy), 'B',
-                        OrePrefixes.wireGt16.get(Materials.Naquadah), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Naquadah), 'K',
                         ItemList.Casing_Coil_Naquadah});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UHV_UV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_MAX_UV, 'C',
-                        OrePrefixes.wireGt02.get(Materials.Europium), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Europium), 'B',
                         OrePrefixes.wireGt04.get(Materials.NaquadahAlloy), 'K',
                         ItemList.Casing_Coil_NaquadahAlloy, 'E',
                         ItemList.Circuit_HighEnergyFlow});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UEV_UHV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_UEV_UHV, 'C',
                         OrePrefixes.wireGt04.get(Materials.Draconium), 'B',
-                        OrePrefixes.wireGt02.get(Materials.Europium), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Europium), 'K',
                         ItemList.Casing_Coil_Superconductor, 'E',
                         ItemList.Circuit_HighEnergyFlow});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UIV_UEV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_UIV_UEV, 'C',
-                        OrePrefixes.wireGt08.get(Materials.Neutronium), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Neutronium), 'B',
                         OrePrefixes.wireGt04.get(Materials.Draconium), 'K',
                         ItemList.Casing_Fusion_Coil, 'E',
                         ItemList.Circuit_HighEnergyFlow});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UMV_UIV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_UMV_UIV, 'C',
-                        OrePrefixes.wireGt08.get(Materials.Quantium), 'B',
-                        OrePrefixes.wireGt08.get(Materials.Neutronium), 'K',
+                        OrePrefixes.wireGt04.get(Materials.Quantium), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Neutronium), 'K',
                         ItemList.Casing_Fusion_Coil2, 'E',
                         ItemList.Circuit_HighEnergyFlow});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_HA_UXV_UMV.get(1L), bitsd,
                 new Object[]{"KBB", "CME", "KBB", 'M', ItemList.Transformer_UXV_UMV, 'C',
-                        OrePrefixes.wireGt12.get(Materials.BlackPlutonium), 'B',
-                        OrePrefixes.wireGt08.get(Materials.Quantium), 'K',
+                        OrePrefixes.wireGt04.get(Materials.BlackPlutonium), 'B',
+                        OrePrefixes.wireGt04.get(Materials.Quantium), 'K',
                         ItemList.Casing_Fusion_Coil3, 'E',
                         ItemList.Circuit_HighEnergyFlow});
 
