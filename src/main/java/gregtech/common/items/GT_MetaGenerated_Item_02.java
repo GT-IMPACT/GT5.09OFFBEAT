@@ -371,12 +371,12 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.double_plant, 1, 1), new ItemStack(Items.dye, 3, 13));
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.double_plant, 1, 4), new ItemStack(Items.dye, 3, 1));
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.double_plant, 1, 5), new ItemStack(Items.dye, 3, 9));
-        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Plumbilia.get(1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Lead, 1L));
-        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Argentia.get(1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Silver, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Plumbilia.get(9L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Lead, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Argentia.get(9L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Silver, 1L));
         GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Indigo.get(1L), ItemList.Dye_Indigo.get(1L));
-        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_MilkWart.get(1L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Milk, 1L));
-        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Coppon.get(1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Copper, 1L));
-        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Tine.get(1L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Tin, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_MilkWart.get(4L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Milk, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Coppon.get(9L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Copper, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Tine.get(9L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Tin, 1L));
 
         GT_ModHandler.addCompressionRecipe(ItemList.Crop_Drop_Coppon.get(4L), new ItemStack(Blocks.wool, 1, 1));
         GT_ModHandler.addCompressionRecipe(ItemList.Crop_Drop_Plumbilia.get(4L), ItemList.IC2_PlantballCompressed.get(1L));
