@@ -304,6 +304,9 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Crop_Drop_Iridium.set(addItem(tLastID = 533, "Quantaria Leaf", "Source of Iridium"));
         ItemList.Crop_Drop_Osmium.set(addItem(tLastID = 534, "Quantaria Leaf", "Source of Osmium"));
         ItemList.Crop_Drop_Naquadah.set(addItem(tLastID = 535, "Stargatium Leaf", "Source of Naquadah"));
+        ItemList.Crop_Drop_Lapis.set(addItem(tLastID = 538, "Lapis Leaf", "Source of Lapis"));
+        ItemList.Crop_Drop_Olivine.set(addItem(tLastID = 539, "Olivia Leaf", "Source of Olivine"));
+        ItemList.Crop_Drop_Sapphire.set(addItem(tLastID = 541, "Sapphirum Leaf", "Source of Sapphire"));
         
         ItemList.Crop_Drop_Chilly.set(addItem(tLastID = 550, "Chilly Pepper", "It is red and hot", new Object[]{"cropChilipepper", new GT_FoodStat(1, 0.3F, EnumAction.eat, null, false, true, false, new int[]{Potion.confusion.id, 200, 1, 40})}));
         ItemList.Crop_Drop_Lemon.set(addItem(tLastID = 551, "Lemon", "Don't make Lemonade", new Object[]{"cropLemon", new GT_FoodStat(1, 0.3F, EnumAction.eat, null, false, true, false, new int[0])}));
@@ -377,6 +380,9 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_MilkWart.get(4L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Milk, 1L));
         GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Coppon.get(9L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Copper, 1L));
         GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Tine.get(9L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Tin, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Lapis.get(9L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Lapis, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Olivine.get(9L), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Olivine, 1L));
+        GT_ModHandler.addExtractionRecipe(ItemList.Crop_Drop_Sapphire.get(9L), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Sapphire, 1L));
 
         GT_ModHandler.addCompressionRecipe(ItemList.Crop_Drop_Coppon.get(4L), new ItemStack(Blocks.wool, 1, 1));
         GT_ModHandler.addCompressionRecipe(ItemList.Crop_Drop_Plumbilia.get(4L), ItemList.IC2_PlantballCompressed.get(1L));
