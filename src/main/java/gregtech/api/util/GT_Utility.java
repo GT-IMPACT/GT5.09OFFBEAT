@@ -15,6 +15,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.*;
 import gregtech.api.items.GT_EnergyArmor_Item;
 import gregtech.api.items.GT_Generic_Item;
+import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_CableChain;
 import gregtech.api.net.GT_Packet_Sound;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
@@ -1834,6 +1835,21 @@ public class GT_Utility {
             } catch (Throwable e) {
                 if (D1) e.printStackTrace(GT_Log.err);
             }
+
+            try {
+                if (tTileEntity instanceof IGregTechTileEntity && ((IGregTechTileEntity) tTileEntity).getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable) {
+                    GT_MetaPipeEntity_Cable c = (GT_MetaPipeEntity_Cable) ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
+
+                    GT_MetaPipeEntity_CableChain chain = GT_MetaPipeEntity_Cable.getNetworkInfo(c);
+
+                    if(chain != null) {
+                        tList.add("Consumers: " + chain.consumers.size());
+                    }
+                }
+            } catch (Throwable e) {
+                if (D1) e.printStackTrace(GT_Log.err);
+            }
+
             try {
                 if (tTileEntity instanceof IGregTechTileEntity && (aPlayer.capabilities.isCreativeMode)) {
                     tList.add(trans("186","Owned by: ") +EnumChatFormatting.BLUE+ ((IGregTechTileEntity) tTileEntity).getOwnerName()+EnumChatFormatting.RESET);
