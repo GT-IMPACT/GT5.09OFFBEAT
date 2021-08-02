@@ -15,6 +15,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.*;
 import gregtech.api.items.GT_EnergyArmor_Item;
 import gregtech.api.items.GT_Generic_Item;
+import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_CableCash;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_CableChain;
 import gregtech.api.net.GT_Packet_Sound;
 import gregtech.api.objects.GT_ItemStack;
@@ -1844,6 +1845,17 @@ public class GT_Utility {
 
                     if(chain != null) {
                         tList.add("Consumers: " + chain.consumers.size());
+                        tList.add("====================================");
+                        int k = 0;
+
+                        for(GT_MetaPipeEntity_CableCash cash : chain.consumers) {
+                            k++;
+                            tList.add(k + ". " + cash.tTileEntity.toString() +
+                                    "id: (" + cash.tTileEntity.blockType.getIdFromBlock(cash.tTileEntity.blockType) +
+                                    ":" + cash.tTileEntity.getBlockMetadata() + ")");
+                            tList.add("Pos x: " + cash.tTileEntity.xCoord + " y: " + cash.tTileEntity.yCoord + " z: " + cash.tTileEntity.zCoord);
+                        }
+                        tList.add("====================================");
                     }
                 }
             } catch (Throwable e) {
