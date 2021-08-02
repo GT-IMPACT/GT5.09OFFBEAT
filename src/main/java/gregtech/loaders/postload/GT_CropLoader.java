@@ -117,7 +117,7 @@ public class GT_CropLoader
                     "Flower",
                     "Shiny"
             }, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.EnderPearl, 1L), new ItemStack[] {
-                    new ItemStack(Items.ender_pearl, 1), new ItemStack(Items.ender_pearl, 1), new ItemStack(Items.ender_eye, 1)
+                    GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Potash, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Potassium, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Potassium, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Blaze, 1L)
             });
             new GT_BaseCrop(136, "Meatrose", "VintageBeef", null, 7, 4, 1500, 1, 4, 0, 4, 1, 3, 0, new String[] {
                     "Food",
@@ -212,7 +212,7 @@ public class GT_CropLoader
                     "Bad",
                     "Crystal",
                     "Lapis"
-            }, Materials.Lapis, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Lapis, 1L), null);
+            }, Materials.Lapis, ItemList.Crop_Drop_Lapis.get(1), null);
             new GT_BaseCrop(151, "Glowheat", "unknown", null, 10, 7, 0, 5, 7, 3, 3, 3, 5, 4, new String[] {
                     "Light",
                     "Shiny",
@@ -293,17 +293,13 @@ public class GT_CropLoader
                     "Shiny",
                     "Processing",
                     "Olivine"
-            }, Materials.Olivine, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Olivine, 1L), new ItemStack[] {
-                    GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Olivine, 1L),
-            });
+            }, Materials.Olivine, ItemList.Crop_Drop_Olivine.get(1), null);
             new GT_BaseCrop(165, "Sapphirum", "unknown", null, 4, 4, 0, 3, 4, 1, 0, 1, 5, 0, new String[] {
                     "Crystal",
                     "Shiny",
                     "Metal",
                     "Sapphire"
-            }, Materials.Sapphire, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Sapphire, 1L), new ItemStack[] {
-                    GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Sapphire, 1L),
-            });
+            }, Materials.Sapphire, ItemList.Crop_Drop_Sapphire.get(1), null);
             new GT_BaseCrop(166, "Pyrolusium", "unknown", null, 12, 3, 0, 2, 3, 1, 0, 1, 1, 0, new String[] {
                     "Metal",
                     "Clean",
