@@ -117,7 +117,7 @@ public class ProcessingWire implements gregtech.api.interfaces.IOreRecipeRegistr
                 		GT_OreDictUnificator.get(correspondingCable, aMaterial, 1L), 100, 8, false);
                 for (Materials dielectric : dielectrics) {
                     for (Materials syntheticRubber : syntheticRubbers) {
-                    	GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{aStack, dielectric.getDust(costMultiplier)},
+                    	GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(4, aStack), dielectric.getDust(costMultiplier)},
                     			syntheticRubber.getMolten(costMultiplier * 144), GT_OreDictUnificator.get(correspondingCable, aMaterial, 4L), 100, 8, false);
                     }
                 }
@@ -130,7 +130,7 @@ public class ProcessingWire implements gregtech.api.interfaces.IOreRecipeRegistr
                 		GT_OreDictUnificator.get(correspondingCable, aMaterial, 1L), 100, 8, false);
                 for (Materials dielectric : dielectrics) {
                     for (Materials syntheticRubber : syntheticRubbers) {
-                    	GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{aStack, dielectric.getDust(costMultiplier)},
+                    	GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_Utility.copyAmount(4, aStack), dielectric.getDust(costMultiplier)},
                     			syntheticRubber.getMolten(costMultiplier * 144), GT_OreDictUnificator.get(correspondingCable, aMaterial, 4L), 100, 8, false);
                     }
                 }
