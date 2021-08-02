@@ -30,6 +30,8 @@ public class GT_MetaTileEntity_BasicBatteryBuffer extends GT_MetaTileEntity_Tier
     private long mStored = 0;
     private long mMax = 0;
 
+    public static final long AMPERS_MULTIPLIER = 1;
+
     public GT_MetaTileEntity_BasicBatteryBuffer(int aID, String aName, String aNameRegional, int aTier, String aDescription, int aSlotCount) {
         super(aID, aName, aNameRegional, aTier, aSlotCount, aDescription);
     }
@@ -137,7 +139,7 @@ public class GT_MetaTileEntity_BasicBatteryBuffer extends GT_MetaTileEntity_Tier
 
     @Override
     public long maxAmperesIn() {
-        return mChargeableCount * 2L;
+        return mChargeableCount * AMPERS_MULTIPLIER;
     }
 
     @Override
