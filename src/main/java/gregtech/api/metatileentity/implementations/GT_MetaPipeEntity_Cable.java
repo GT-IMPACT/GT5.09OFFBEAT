@@ -149,10 +149,12 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 			// System.out.println("Check tile entity " + i + " " + entity);
 			if (entity != null && entity instanceof BaseMetaPipeEntity) {
 				BaseMetaPipeEntity baseMetaPipeEntityTmp = (BaseMetaPipeEntity) entity;
-				GT_MetaPipeEntity_Cable cable = (GT_MetaPipeEntity_Cable) (baseMetaPipeEntityTmp.getMetaTileEntity());
-				// System.out.println("UpdateNearestCables() entity instanceof
-				// IMetaTileEntityCable");
-				UpdateCablesChain(cable);
+				if(baseMetaPipeEntityTmp.getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable) {
+					GT_MetaPipeEntity_Cable cable = (GT_MetaPipeEntity_Cable) (baseMetaPipeEntityTmp.getMetaTileEntity());
+					// System.out.println("UpdateNearestCables() entity instanceof
+					// IMetaTileEntityCable");
+					UpdateCablesChain(cable);
+				}
 			}
 		}
 	}
