@@ -109,6 +109,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
 
             Kerosene, KeroseneMixture,
 
+            SiliconTetrachloride,
+
     EndStatic;
 
     public static void genMaterials() {
@@ -863,6 +865,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Kerosene = new MaterialBuilder(750, TextureSet.SET_FLUID, "Kerosene").addCell().addFluid().setRGB(240, 240, 240).setColor(Dyes.dyeWhite).setFuelType(MaterialBuilder.DIESEL).setFuelPower(296).constructMaterial();
         KeroseneMixture = new MaterialBuilder(751, TextureSet.SET_FLUID, "Kerosene Mixture").addCell().addFluid().setRGB(250, 245, 240).setColor(Dyes.dyeWhite).setFuelType(MaterialBuilder.DIESEL).setFuelPower(328).constructMaterial();
 
+        SiliconTetrachloride = new MaterialBuilder(752, TextureSet.SET_FLUID, "Silicon Tetrachloride").addCell().addFluid().setRGB(250, 250, 250).setColor(Dyes.dyeWhite).constructMaterial();
 
 
         //Materials which are renamed automatically
