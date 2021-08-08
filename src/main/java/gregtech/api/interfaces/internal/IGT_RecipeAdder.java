@@ -665,6 +665,8 @@ public interface IGT_RecipeAdder {
      */
     public boolean addFormingPressRecipe(ItemStack aItemToImprint, ItemStack aForm, ItemStack aImprintedItem, int aDuration, int aEUt);
 
+    public boolean addFormingPressRecipe(ItemStack[] aInputs, ItemStack aImprintedItem, int aDuration, int aEUt);
+
     /**
      * Adds a Recipe for the Sifter. (up to 9 Outputs)
      */

@@ -1348,6 +1348,11 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
+    public boolean addFormingPressRecipe(ItemStack[] aInputs, ItemStack aImprintedItem, int aDuration, int aEUt) {
+        GT_Recipe.GT_Recipe_Map.sPressRecipes.addRecipe(true, aInputs, new ItemStack[]{aImprintedItem}, null, null, null, aDuration, aEUt, 0);
+        return true;
+    }
+
     public boolean addFluidHeaterRecipe(ItemStack aCircuit, FluidStack aInput, FluidStack aOutput, int aDuration, int aEUt) {
         if ((aInput == null) || (aOutput == null)) {
             return false;
