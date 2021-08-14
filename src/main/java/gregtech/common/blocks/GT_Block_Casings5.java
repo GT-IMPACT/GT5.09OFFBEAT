@@ -33,11 +33,7 @@ public class GT_Block_Casings5
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".5.name", "Naquadah Coil Block");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".6.name", "Naquadah Alloy Coil Block");
 	    GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".7.name", "Electrum Flux Coil Block");
-        if (Loader.isModLoaded("DraconicEvolution")){
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".8.name", "Awakening Draconium Coil Block");
-        }else {
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".8.name", "Diamericium Titanium Coil Block");
-        }
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".9.name", "Fusion Machine Casing MK III");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".10.name", "Fusion Machine Casing MK IV");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".11.name", "Superconductor Fusion Coil Block MK I");
@@ -85,11 +81,7 @@ public class GT_Block_Casings5
 	    case 7:
                 return Textures.BlockIcons.MACHINE_COIL_ELECTRUMFLUX.getIcon();
             case 8:
-            	if (Loader.isModLoaded("DraconicEvolution")){
-                return Textures.BlockIcons.MACHINE_COIL_AWAKENEDDRACONIUM.getIcon();
-            	}else {
             	return Textures.BlockIcons.MACHINE_COIL_DIAMERICIUM.getIcon();
-            	}
             case 9:
             	return Textures.BlockIcons.MACHINE_CASING_FUSION_3.getIcon();
             case 10:

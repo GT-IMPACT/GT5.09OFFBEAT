@@ -1489,11 +1489,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.Naquadah, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Osmium, 8L)}, Materials.TungstenSteel.getMolten(144L), ItemList.Casing_Coil_Naquadah.get(1L), 700, 30720, false);
         GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.NaquadahAlloy, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Osmiridium, 8L)}, Materials.Naquadah.getMolten(144L), ItemList.Casing_Coil_NaquadahAlloy.get(1L), 800, 122880, false);
         GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.ElectrumFlux, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Naquadria, 8L)}, Materials.NaquadahAlloy.getMolten(144L), ItemList.Casing_Coil_ElectrumFlux.get(1L), 900, 500000, false);
-        if (Loader.isModLoaded("DraconicEvolution")) {
-            GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.DraconiumAwakened, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Infuscolium, 8L)}, Materials.Neutronium.getMolten(144L), ItemList.Casing_Coil_Diamericiumtitanium.get(1L), 1000, 2000000, false);
-        } else {
             GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.Diamericiumtitanium, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Infuscolium, 8L)}, Materials.Neutronium.getMolten(144L), ItemList.Casing_Coil_Diamericiumtitanium.get(1L), 1000, 2000000, false);
-        }
         GT_Values.RA.addWireAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.CosmicNeutronium, 1L), GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.DraconiumAwakened, 8L), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Quantum, 8L)}, Materials.Phoenixite.getMolten(144L), ItemList.Casing_Coil_Infinity.get(1L), 1200, 8000000, false);
 
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Steel, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.Steel, 1L), GT_Utility.getIntegratedCircuit(1)}, null, ItemList.Casing_SolidSteel.get(2L), 50, 16);
@@ -1531,11 +1527,7 @@ public class GT_MachineRecipeLoader implements Runnable {
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Naquadah, 2L), ItemList.Casing_ZPM.get(1L), Materials.Polybenzimidazole.getMolten(288), ItemList.Hull_ZPM.get(1L), 50, 122880);
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.cableGt04, Materials.NaquadahAlloy, 2L), ItemList.Casing_UV.get(1L), Materials.Polybenzimidazole.getMolten(288), ItemList.Hull_UV.get(1L), 50, 500000);
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.Europium, 2L), ItemList.Casing_MAX.get(1L), Materials.Polybenzimidazole.getMolten(576), ItemList.Hull_MAX.get(1L), 50, 2000000);
-            if (Loader.isModLoaded("DraconicEvolution")) {
-                GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.cableGt04, Materials.Draconium, 2L), ItemList.Casing_UEV.get(1L), Materials.PerroxPolymer.getMolten(288), ItemList.Hull_UEV.get(1L), 50, 8000000);
-            } else {
                 GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.Diamericiumtitanium, 2L), ItemList.Casing_UEV.get(1L), Materials.PerroxPolymer.getMolten(288), ItemList.Hull_UEV.get(1L), 50, 8000000);
-            }
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt08, Materials.Neutronium, 2L), ItemList.Casing_UIV.get(1L), Materials.PerroxPolymer.getMolten(288), ItemList.Hull_UIV.get(1L), 50, 32000000);
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt08, Materials.Quantium, 2L), ItemList.Casing_UMV.get(1L), Materials.PerroxPolymer.getMolten(576), ItemList.Hull_UMV.get(1L), 50, 128000000);
         } else {
@@ -1550,11 +1542,7 @@ public class GT_MachineRecipeLoader implements Runnable {
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Naquadah, 2L), ItemList.Casing_ZPM.get(1L), ItemList.Hull_ZPM.get(1L), 50, 122880);
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.cableGt04, Materials.NaquadahAlloy, 2L), ItemList.Casing_UV.get(1L), ItemList.Hull_UV.get(1L), 50, 500000);
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.Europium, 2L), ItemList.Casing_MAX.get(1L), ItemList.Hull_MAX.get(1L), 50, 2000000);
-            if (Loader.isModLoaded("DraconicEvolution")) {
-                GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.cableGt04, Materials.Draconium, 2L), ItemList.Casing_UEV.get(1L), ItemList.Hull_UEV.get(1L), 50, 8000000);
-            } else {
                 GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.Diamericiumtitanium, 2L), ItemList.Casing_UEV.get(1L), ItemList.Hull_UEV.get(1L), 50, 8000000);
-            }
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.Neutronium, 2L), ItemList.Casing_UIV.get(1L), ItemList.Hull_UIV.get(1L), 50, 32000000);
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt08, Materials.Quantium, 2L), ItemList.Casing_UMV.get(1L), ItemList.Hull_UMV.get(1L), 50, 128000000);
         }
@@ -3703,13 +3691,6 @@ public class GT_MachineRecipeLoader implements Runnable {
 
             GT_Values.RA.addChemicalBathRecipe(GT_ModHandler.getModItem("EnderIO", "blockFusedQuartz", 1L), new FluidStack(FluidRegistry.getFluid("dye.chemical.dyeblack"), 72), GT_ModHandler.getModItem("EnderIO", "blockFusedQuartz", 1L, 4), GT_Values.NI, GT_Values.NI, new int[]{10000}, 500, 30);
             GT_Values.RA.addChemicalBathRecipe(GT_ModHandler.getModItem("EnderIO", "blockFusedQuartz", 1L, 1), new FluidStack(FluidRegistry.getFluid("dye.chemical.dyeblack"), 72), GT_ModHandler.getModItem("EnderIO", "blockFusedQuartz", 1L, 5), GT_Values.NI, GT_Values.NI, new int[]{10000}, 500, 30);
-        }
-
-        if (Loader.isModLoaded("DraconicEvolution")) {
-            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.NetherStar, 1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Draconium, 4L), ItemList.Circuit_Crystalmainframe.get(1L), GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Naquadah, 8L)}, GT_Values.NF, GT_ModHandler.getModItem("DraconicEvolution", "draconicCore", 1, 0), 400, 122880);
-            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.NetherStar, 1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Draconium, 4L), ItemList.Circuit_Wetwaresupercomputer.get(1L), GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Naquadah, 8L)}, GT_Values.NF, GT_ModHandler.getModItem("DraconicEvolution", "draconicCore", 1, 0), 400, 122880);
-            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.NetherStar, 1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Draconium, 4L), ItemList.Circuit_Biowarecomputer.get(1L), GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Naquadah, 8L)}, GT_Values.NF, GT_ModHandler.getModItem("DraconicEvolution", "draconicCore", 1, 0), 400, 122880);
-
         }
         
         //New coils
