@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
+import gregtech.api.enums.Materials;
 import gregtech.api.items.GT_Generic_Item;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -39,6 +40,8 @@ public class GT_FluidDisplayItem extends GT_Generic_Item {
         }
         if (aNBT != null) {
             long tToolTipAmount = aNBT.getLong("mFluidDisplayAmount");
+            if (!aNBT.getString("mChemicalFormula").isEmpty() && !aNBT.getString("mChemicalFormula").equals("?")) aList.add(aNBT.getString("mChemicalFormula"));
+
             if (tToolTipAmount > 0L) {
             	aList.add(EnumChatFormatting.BLUE + String.format(trans("016", "Amount: %s L"), "" + tToolTipAmount) + EnumChatFormatting.GRAY);
             }

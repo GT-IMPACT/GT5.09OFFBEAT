@@ -847,6 +847,10 @@ public class GT_Utility {
         tNBT.setLong("mFluidDisplayAmount", aUseStackSize ? aFluid.amount : 0);
         tNBT.setLong("mFluidDisplayHeat", aFluid.getFluid().getTemperature(aFluid));
         tNBT.setBoolean("mFluidState", aFluid.getFluid().isGaseous(aFluid));
+
+        if ( Materials.MATERIALS_FLUID.containsKey(aFluid.getFluid()) ) {
+            tNBT.setString("mChemicalFormula", Materials.MATERIALS_FLUID.get(aFluid.getFluid()).mChemicalFormula);
+        }
         rStack.setTagCompound(tNBT);
         return rStack;
     }

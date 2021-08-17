@@ -27,6 +27,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     private static Materials[] MATERIALS_ARRAY = new Materials[]{};
     private static final Map<String, Materials> MATERIALS_MAP = new LinkedHashMap<String, Materials>();
     public static final List<IMaterialHandler> mMaterialHandlers = new ArrayList<IMaterialHandler>();
+    public static Map<Fluid, Materials> MATERIALS_FLUID = new HashMap<>();
 
     /**
      * This is for keeping compatibility with addons mods (Such as TinkersGregworks etc) that looped over the old materials enum

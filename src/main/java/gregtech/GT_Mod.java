@@ -46,6 +46,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -841,6 +842,11 @@ public class GT_Mod implements IGT_Mod {
                     GT_Recipe.GT_Recipe_Map.sReplicatorFakeRecipes.addFakeRecipe(false, null, ISmat0, ISmat1, new FluidStack[]{Materials.UUMatter.getFluid(tMaterial.getMass())}, null, (int) (tMaterial.getMass() * 512L), 30, 0);
                 }
             }
+            if (tMaterial.mFluid != null) Materials.MATERIALS_FLUID.put(tMaterial.mFluid, tMaterial);
+            if (tMaterial.mGas != null) Materials.MATERIALS_FLUID.put(tMaterial.mGas, tMaterial);
+            if (tMaterial.mStandardMoltenFluid != null) Materials.MATERIALS_FLUID.put(tMaterial.mStandardMoltenFluid, tMaterial);
+            if (tMaterial.mStandardMoltenHot != null) Materials.MATERIALS_FLUID.put(tMaterial.mStandardMoltenHot, tMaterial);
+            if (tMaterial.mPlasma != null) Materials.MATERIALS_FLUID.put(tMaterial.mPlasma, tMaterial);
         }
         GT_Recipe.GT_Recipe_Map.sOrganicReplicatorFakeRecipes.addFakeRecipe(false,(new ItemStack[]{ItemList.IC2_Crop_Seeds.getWithName(1,"Instance seeds to duplicate(does not get consumed in progress)",new Object[0])}),(new ItemStack[]{ItemList.IC2_Crop_Seeds.getWithName(1,"Duplicated seeds; Chance equals efficiency")}),null, (new FluidStack[]{Materials.UUMatter.getFluid(1L)}),null,200,32,0);
         if (!GT_MetaTileEntity_Massfabricator.sRequiresUUA) GT_Recipe.GT_Recipe_Map.sMassFabFakeRecipes.addFakeRecipe(false, null, null, null, null, new FluidStack[]{Materials.UUMatter.getFluid(1L)}, GT_MetaTileEntity_Massfabricator.sDurationMultiplier, 256, 0);
