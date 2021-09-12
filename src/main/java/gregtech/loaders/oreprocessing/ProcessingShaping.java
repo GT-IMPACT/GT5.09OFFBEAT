@@ -52,7 +52,7 @@ public class ProcessingShaping implements gregtech.api.interfaces.IOreRecipeRegi
                         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Screw.get(0L), aMaterial.getMolten(18L), GT_OreDictUnificator.get(OrePrefixes.screw, aMaterial, 1L), 50, 2 * tVoltageMultiplier);
                         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Rod.get(0L), aMaterial.getMolten(72L), GT_OreDictUnificator.get(OrePrefixes.stick, aMaterial, 1L), 150, 8 * tVoltageMultiplier);
                         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Bolt.get(0L), aMaterial.getMolten(18L), GT_OreDictUnificator.get(OrePrefixes.bolt, aMaterial, 1L), 50, 2 * tVoltageMultiplier);
-                        GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Round.get(0L), aMaterial.getMolten(18L), GT_OreDictUnificator.get(OrePrefixes.round, aMaterial, 1L), 50, 2 * tVoltageMultiplier);
+                        GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Round.get(0L), aMaterial.getMolten(16L), GT_OreDictUnificator.get(OrePrefixes.round, aMaterial, 1L), 50, 2 * tVoltageMultiplier);
                         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Rod_Long.get(0L), aMaterial.getMolten(144L), GT_OreDictUnificator.get(OrePrefixes.stickLong, aMaterial, 1L), 300, 8 * tVoltageMultiplier);
                         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Turbine_Blade.get(0L), aMaterial.getMolten(864L), GT_OreDictUnificator.get(OrePrefixes.turbineBlade, aMaterial, 1L), 400, 8 * tVoltageMultiplier);
                      }
