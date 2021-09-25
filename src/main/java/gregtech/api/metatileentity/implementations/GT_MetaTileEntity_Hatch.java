@@ -12,6 +12,8 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
     private byte mTexturePage = 0;
     private byte actualTexture = 0;
 
+    public int idHatch = 0;
+
     public GT_MetaTileEntity_Hatch(int aID, String aName, String aNameRegional, int aTier, int aInvSlotCount, String aDescription, ITexture... aTextures) {
         super(aID, aName, aNameRegional, aTier, aInvSlotCount, aDescription, aTextures);
     }
@@ -63,6 +65,7 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
         super.saveNBTData(aNBT);
         aNBT.setByte("mMachineBlock", actualTexture);
         aNBT.setByte("mTexturePage", mTexturePage);
+        aNBT.setInteger("idHatch", idHatch);
     }
 
     @Override
@@ -70,6 +73,7 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
         super.loadNBTData(aNBT);
         actualTexture=aNBT.getByte("mMachineBlock");
         mTexturePage=aNBT.getByte("mTexturePage");
+        idHatch = aNBT.getInteger("idHatch");
 
         if(mTexturePage!=0 && GT_Values.GT.isServerSide())
             actualTexture|=0x80;//<- lets just hope no one needs the correct value for that on server
@@ -92,6 +96,10 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
     public final void updateTexture(byte texturePage, byte machineBlock){
         onValueUpdate(machineBlock);
         onTexturePageUpdate(texturePage);
+    }
+
+    public void setIDHatch(int id) {
+        this.idHatch = id;
     }
 
     @Override

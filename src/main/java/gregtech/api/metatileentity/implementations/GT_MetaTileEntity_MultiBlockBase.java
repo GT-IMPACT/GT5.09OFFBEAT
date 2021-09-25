@@ -31,6 +31,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static gregtech.api.enums.GT_Values.V;
 import static gregtech.api.enums.GT_Values.VN;
@@ -62,8 +63,53 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public Set<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesTT = new HashSet<>();
     public Set<GT_MetaTileEntity_Hatch_EnergyTunnel> mEnergyTunnelsTT = new HashSet<>();
     public Set<GT_MetaTileEntity_Hatch_DynamoTunnel> mDynamoTunnelsTT = new HashSet<>();
-    
-    
+
+    public void setupMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack stack) {
+        mInputHatches.clear();
+        mQuadrInputHatches.clear();
+        mInputBusses.clear();
+        mInputBusHatches.clear();
+        mOutputHatches.clear();
+        mOutputBusses.clear();
+        mDynamoHatches.clear();
+        mEnergyHatches.clear();
+        mEnergyHatchesTT.clear();
+        mDynamoHatchesTT.clear();
+        mEnergyTunnelsTT.clear();
+        mDynamoTunnelsTT.clear();
+        mMufflerHatches.clear();
+        mMaintenanceHatches.clear();
+        this.mMachine = checkMachine(aBaseMetaTileEntity, stack);
+        if (mInputHatches.size() > 0) {
+            AtomicInteger ih = new AtomicInteger();
+            mInputHatches.forEach(h -> h.setIDHatch(ih.incrementAndGet()));
+        }
+        if (mOutputHatches.size() > 0) {
+            AtomicInteger oh = new AtomicInteger();
+            mOutputHatches.forEach(h -> h.setIDHatch(oh.incrementAndGet()));
+        }
+        if (mInputBusses.size() > 0) {
+            AtomicInteger ib = new AtomicInteger();
+            mInputBusses.forEach(h -> h.setIDHatch(ib.incrementAndGet()));
+        }
+        if (mOutputBusses.size() > 0) {
+            AtomicInteger ob = new AtomicInteger();
+            mOutputBusses.forEach(h -> h.setIDHatch(ob.incrementAndGet()));
+        }
+        if (mMufflerHatches.size() > 0) {
+            AtomicInteger mh = new AtomicInteger();
+            mMufflerHatches.forEach(h -> h.setIDHatch(mh.incrementAndGet()));
+        }
+        if (mQuadrInputHatches.size() > 0) {
+            AtomicInteger qih = new AtomicInteger();
+            mQuadrInputHatches.forEach(h -> h.setIDHatch(qih.incrementAndGet()));
+        }
+        if (mInputBusHatches.size() > 0) {
+            AtomicInteger ibh = new AtomicInteger();
+            mInputBusHatches.forEach(h -> h.setIDHatch(ibh.incrementAndGet()));
+        }
+    }
+
     public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional) {
         this(aID, aName, aNameRegional, 2);
     }
@@ -232,21 +278,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         if (aBaseMetaTileEntity.isServerSide()) {
             if (mEfficiency < 0) mEfficiency = 0;
             if (--mUpdate == 0 || --mStartUpCheck == 0) {
-                mInputHatches.clear();
-                mQuadrInputHatches.clear();
-                mInputBusses.clear();
-                mInputBusHatches.clear();
-                mOutputHatches.clear();
-                mOutputBusses.clear();
-                mDynamoHatches.clear();
-                mEnergyHatches.clear();
-                mEnergyHatchesTT.clear();
-                mDynamoHatchesTT.clear();
-                mEnergyTunnelsTT.clear();
-                mDynamoTunnelsTT.clear();
-                mMufflerHatches.clear();
-                mMaintenanceHatches.clear();
-                mMachine = checkMachine(aBaseMetaTileEntity, mInventory[1]);
+                setupMachine(aBaseMetaTileEntity, mInventory[1]);
             }
             if (mStartUpCheck < 0) {
                 if (mMachine) {
@@ -383,7 +415,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
      * Checks the Machine. You have to assign the MetaTileEntities for the Hatches here.
      */
     public abstract boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack);
-    
+
     /**
      * Gets the maximum Efficiency that spare Part can get (0 - 10000)
      */
