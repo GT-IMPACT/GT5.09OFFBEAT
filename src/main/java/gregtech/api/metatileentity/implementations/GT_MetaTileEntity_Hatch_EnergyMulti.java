@@ -21,6 +21,11 @@ public class GT_MetaTileEntity_Hatch_EnergyMulti extends GT_MetaTileEntity_Hatch
 		this.Amp = aAmp;
 	}
 	
+	public GT_MetaTileEntity_Hatch_EnergyMulti(int aID, String aName, String aNameRegional, int aTier, int aAmp, String[] desc) {
+		super(aID, aName, aNameRegional, aTier, 0, desc);
+		this.Amp = aAmp;
+	}
+	
 	public GT_MetaTileEntity_Hatch_EnergyMulti(String aName, int aTier, int aAmp, String aDescription, ITexture[][][] aTextures) {
 		super(aName, aTier, 0, aDescription, aTextures);
 		this.Amp = aAmp;
