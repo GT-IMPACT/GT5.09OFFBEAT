@@ -14,7 +14,7 @@ public class GT_MetaTileEntity_Hatch_DynamoMulti extends GT_MetaTileEntity_Hatch
 	public final int Amp;
 	
 	public GT_MetaTileEntity_Hatch_DynamoMulti(int aID, String aNameRegional, int aTier, int aAmp) {
-		super(aID, "impact.hatch.multi.dynamo." + aTier, aNameRegional, aTier, 0, "Multiple Ampere Energy Extractor for Multiblocks");
+		super(aID, "impact.hatch.multi.dynamo.a" + aAmp + "." + aTier, aNameRegional, aTier, 0, "Multiple Ampere Energy Extractor for Multiblocks");
 		this.Amp = aAmp;
 	}
 	

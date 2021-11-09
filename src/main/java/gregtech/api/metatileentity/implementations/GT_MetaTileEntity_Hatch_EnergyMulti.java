@@ -15,7 +15,7 @@ public class GT_MetaTileEntity_Hatch_EnergyMulti extends GT_MetaTileEntity_Hatch
 	public final int Amp;
 	
 	public GT_MetaTileEntity_Hatch_EnergyMulti(int aID, String aNameRegional, int aTier, int aAmp) {
-		super(aID, "impact.hatch.multi.energy." + aTier, aNameRegional, aTier, 0, new String[]{
+		super(aID, "impact.hatch.multi.energy.a" + aAmp + "." + aTier, aNameRegional, aTier, 0, new String[]{
 				"Energy Injector for Multiblocks", "Accepts up to " + EnumChatFormatting.YELLOW + aAmp + EnumChatFormatting.GRAY + " Amp"
 		});
 		this.Amp = aAmp;
