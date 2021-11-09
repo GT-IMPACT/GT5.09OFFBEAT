@@ -43,7 +43,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import space.impact.api.multiblocks.alignment.IAlignment;
+import space.impact.api.multiblocks.alignment.IAlignmentLimits;
+import space.impact.api.multiblocks.alignment.IAlignmentProvider;
+import space.impact.api.multiblocks.alignment.constructable.IConstructable;
+import space.impact.api.multiblocks.alignment.constructable.IConstructableProvider;
+import space.impact.api.multiblocks.alignment.enumerable.ExtendedFacing;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -58,7 +65,7 @@ import static gregtech.api.enums.GT_Values.V;
 @Optional.InterfaceList(value = {
         @Optional.Interface(iface = "appeng.api.networking.security.IActionHost", modid = "appliedenergistics2", striprefs = true),
         @Optional.Interface(iface = "appeng.me.helpers.IGridProxyable", modid = "appliedenergistics2", striprefs = true)})
-public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileEntity, IActionHost, IGridProxyable {
+public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileEntity, IActionHost, IGridProxyable, IAlignmentProvider, IConstructableProvider {
     private final GT_CoverBehavior[] mCoverBehaviors = new GT_CoverBehavior[]{GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior};
     protected MetaTileEntity mMetaTileEntity;
     protected long mStoredEnergy = 0, mStoredSteam = 0;
@@ -2223,5 +2230,34 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         AENetworkProxy gp = getProxy();
         if (gp != null)
             gp.invalidate();
+    }
+    
+    @Override
+    public IAlignment getAlignment() {
+        return getMetaTileEntity() instanceof IAlignmentProvider ? ((IAlignmentProvider) getMetaTileEntity()).getAlignment() : new BasicAlignment();
+    }
+    
+    @Nullable
+    @Override
+    public IConstructable getConstructable() {
+        return getMetaTileEntity() instanceof IConstructable ? (IConstructable) getMetaTileEntity() : null;
+    }
+    
+    private class BasicAlignment implements IAlignment {
+        
+        @Override
+        public ExtendedFacing getExtendedFacing() {
+            return ExtendedFacing.of(ForgeDirection.getOrientation(getFrontFacing()));
+        }
+        
+        @Override
+        public void setExtendedFacing(ExtendedFacing alignment) {
+            setFrontFacing((byte) Math.min(alignment.getDirection().ordinal(), ForgeDirection.UNKNOWN.ordinal() - 1));
+        }
+        
+        @Override
+        public IAlignmentLimits getAlignmentLimits() {
+            return (direction, rotation, flip) -> rotation.isNotRotated() && flip.isNotFlipped();
+        }
     }
 }
