@@ -117,26 +117,26 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     public static void genMaterials() {
         _NULL = new Materials(-1, TextureSet.SET_NONE, 1.0F, 0, 0, 0, 255, 255, 255, 0, "NULL", "NULL", 0, 0, 0, 0, false, false, 1, 1, 1, Dyes._NULL, Element._NULL);
         Aluminium = new Materials(19, TextureSet.SET_DULL, 10.0F, 128, 2, 1 | 2 | 8 | 32 | 128, 128, 200, 240, 0, "Aluminium", "Aluminium", 0, 0, 933, 1700, true, false, 3, 1, 1, Dyes.dyeLightBlue, Element.Al);
-        Americium = new Materials(103, TextureSet.SET_METALLIC, 1.0F, 0, 3, 1 | 2 | 32, 200, 200, 200, 0, "Americium", "Americium", 0, 0, 1449, 0, false, false, 3, 1, 1, Dyes.dyeLightGray, Element.Am);
+        Americium = new Materials(103, TextureSet.SET_METALLIC, 1.0F, 0, 3, 1 | 2 | 32, 240, 100, 255, 0, "Americium", "Americium", 0, 0, 1449, 0, false, false, 3, 1, 1, Dyes.dyeLightGray, Element.Am);
         Antimony = new Materials(58, TextureSet.SET_SHINY, 1.0F, 0, 2, 1 | 2 | 8 | 32, 220, 220, 240, 0, "Antimony", "Antimony", 0, 0, 903, 0, false, false, 2, 1, 1, Dyes.dyeLightGray, Element.Sb);
         Argon = new Materials(24, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 0, 255, 0, 240, "Argon", "Argon", 0, 0, 83, 0, false, true, 5, 1, 1, Dyes.dyeGreen, Element.Ar);
-        Arsenic = new Materials(39, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 2 | 8 | 16 | 32, 255, 255, 255, 0, "Arsenic", "Arsenic", 0, 0, 1090, 0, false, false, 3, 1, 1, Dyes.dyeOrange, Element.As);
+        Arsenic = new Materials(39, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 2 | 8 | 16 | 32, 240, 220, 100, 0, "Arsenic", "Arsenic", 0, 0, 1090, 0, false, false, 3, 1, 1, Dyes.dyeOrange, Element.As);
         Barium = new Materials(63, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 32, 255, 255, 255, 0, "Barium", "Barium", 0, 0, 1000, 0, false, false, 1, 1, 1, Dyes._NULL, Element.Ba);
         Beryllium = new Materials(8, TextureSet.SET_METALLIC, 14.0F, 64, 2, 1 | 2 | 8 | 32, 100, 180, 100, 0, "Beryllium", "Beryllium", 0, 0, 1560, 0, false, false, 6, 1, 1, Dyes.dyeGreen, Element.Be);
         Bismuth = new Materials(90, TextureSet.SET_METALLIC, 6.0F, 64, 1, 1 | 2 | 8 | 32 | 128, 100, 160, 160, 0, "Bismuth", "Bismuth", 0, 0, 544, 0, false, false, 2, 1, 1, Dyes.dyeCyan, Element.Bi);
         Boron = new Materials(9, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 32, 210, 250, 210, 0, "Boron", "Boron", 0, 0, 2349, 0, false, false, 1, 1, 1, Dyes.dyeWhite, Element.B);
-        Caesium = new Materials(62, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Caesium", "Caesium", 0, 0, 301, 0, false, false, 4, 1, 1, Dyes._NULL, Element.Cs);
+        Caesium = new Materials(62, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 200, 170, 75, 0, "Caesium", "Caesium", 0, 0, 301, 0, false, false, 4, 1, 1, Dyes._NULL, Element.Cs);
         Calcium = new Materials(26, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 32, 255, 245, 245, 0, "Calcium", "Calcium", 0, 0, 1115, 0, false, false, 4, 1, 1, Dyes.dyePink, Element.Ca);
         Carbon = new Materials(10, TextureSet.SET_DULL, 1.0F, 64, 2, 1 | 2 | 16 | 32 | 64 | 128, 20, 20, 20, 0, "Carbon", "Carbon", 0, 0, 3800, 0, false, false, 2, 1, 1, Dyes.dyeBlack, Element.C);
         Cadmium = new Materials(55, TextureSet.SET_SHINY, 1.0F, 0, 2, 1 | 32, 50, 50, 60, 0, "Cadmium", "Cadmium", 0, 0, 594, 0, false, false, 3, 1, 1, Dyes.dyeGray, Element.Cd);
-        Cerium = new Materials(65, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Cerium", "Cerium", 0, 0, 1068, 1068, true, false, 4, 1, 1, Dyes._NULL, Element.Ce);
+        Cerium = new Materials(65, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 135, 145, 125, 0, "Cerium", "Cerium", 0, 0, 1068, 1068, true, false, 4, 1, 1, Dyes._NULL, Element.Ce);
         Chlorine = new Materials(23, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 255, 255, 255, 0, "Chlorine", "Chlorine", 0, 0, 171, 0, false, false, 2, 1, 1, Dyes.dyeCyan, Element.Cl);
         Chrome = new Materials(30, TextureSet.SET_SHINY, 11.0F, 256, 3, 1 | 2 | 8 | 32 | 128, 255, 230, 230, 0, "Chrome", "Chrome", 0, 0, 2180, 1700, true, false, 5, 1, 1, Dyes.dyePink, Element.Cr);
         Cobalt = new Materials(33, TextureSet.SET_METALLIC, 8.0F, 512, 3, 1 | 2 | 32 | 64, 80, 80, 250, 0, "Cobalt", "Cobalt", 0, 0, 1768, 0, false, false, 3, 1, 1, Dyes.dyeBlue, Element.Co);
         Copper = new Materials(35, TextureSet.SET_SHINY, 1.0F, 0, 1, 1 | 2 | 8 | 32 | 128, 255, 100, 0, 0, "Copper", "Copper", 0, 0, 1357, 0, false, false, 3, 1, 1, Dyes.dyeOrange, Element.Cu);
         Deuterium = new Materials(2, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 255, 255, 0, 240, "Deuterium", "Deuterium", 0, 0, 14, 0, false, true, 10, 1, 1, Dyes.dyeYellow, Element.D);
         Empty = new Materials(0, TextureSet.SET_NONE, 1.0F, 0, 2, 256/*Only for Prefixes which need it*/, 255, 255, 255, 255, "Empty", "Empty", 0, 0, -1, 0, false, true, 1, 1, 1, Dyes._NULL, Element._NULL);
-        Europium = new Materials(70, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 8 | 32, 255, 255, 255, 0, "Europium", "Europium", 0, 0, 3200, 5600, true, false, 4, 1, 1, Dyes._NULL, Element.Eu).disableAutoGeneratedBlastFurnaceRecipes();
+        Europium = new Materials(70, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 8 | 32, 120, 150, 240, 0, "Europium", "Europium", 0, 0, 3200, 5600, true, false, 4, 1, 1, Dyes._NULL, Element.Eu).disableAutoGeneratedBlastFurnaceRecipes();
         Fluorine = new Materials(14, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 255, 255, 255, 127, "Fluorine", "Fluorine", 0, 0, 53, 0, false, true, 2, 1, 1, Dyes.dyeGreen, Element.F);
         Gallium = new Materials(37, TextureSet.SET_SHINY, 1.0F, 64, 2, 1 | 2 | 32, 220, 220, 255, 0, "Gallium", "Gallium", 0, 0, 302, 0, false, false, 5, 1, 1, Dyes.dyeLightGray, Element.Ga);
         Gold = new Materials(86, TextureSet.SET_SHINY, 12.0F, 64, 2, 1 | 2 | 8 | 32 | 128, 255, 255, 30, 0, "Gold", "Gold", 0, 0, 1337, 0, false, false, 4, 1, 1, Dyes.dyeYellow, Element.Au);
@@ -146,16 +146,16 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Indium = new Materials(56, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 64, 0, 128, 0, "Indium", "Indium", 0, 0, 429, 0, false, false, 4, 1, 1, Dyes.dyeGray, Element.In);
         Iridium = new Materials(84, TextureSet.SET_DULL, 6.0F, 2560, 3, 1 | 2 | 8 | 32 | 64 | 128, 240, 240, 245, 0, "Iridium", "Iridium", 0, 0, 2719, 2719, true, false, 10, 1, 1, Dyes.dyeWhite, Element.Ir).disableAutoGeneratedBlastFurnaceRecipes();
         Iron = new Materials(32, TextureSet.SET_METALLIC, 6.0F, 256, 2, 1 | 2 | 8 | 32 | 64 | 128, 200, 200, 200, 0, "Iron", "Iron", 0, 0, 1811, 0, false, false, 3, 1, 1, Dyes.dyeLightGray, Element.Fe);
-        Lanthanum = new Materials(64, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Lanthanum", "Lanthanum", 0, 0, 1193, 1193, true, false, 4, 1, 1, Dyes._NULL, Element.La);
+        Lanthanum = new Materials(64, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 40, 180, 138, 0, "Lanthanum", "Lanthanum", 0, 0, 1193, 1193, true, false, 4, 1, 1, Dyes._NULL, Element.La);
         Lead = new Materials(89, TextureSet.SET_DULL, 8.0F, 64, 1, 1 | 2 | 8 | 32 | 128, 140, 100, 140, 0, "Lead", "Lead", 0, 0, 600, 0, false, false, 3, 1, 1, Dyes.dyePurple, Element.Pb);
         Lithium = new Materials(6, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 2 | 8 | 32, 225, 220, 255, 0, "Lithium", "Lithium", 0, 0, 454, 0, false, false, 4, 1, 1, Dyes.dyeLightBlue, Element.Li);
-        Lutetium = new Materials(78, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Lutetium", "Lutetium", 0, 0, 1925, 1925, true, false, 4, 1, 1, Dyes._NULL, Element.Lu);
+        Lutetium = new Materials(78, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 0, 170, 255, 50, "Lutetium", "Lutetium", 0, 0, 1925, 1925, true, false, 4, 1, 1, Dyes._NULL, Element.Lu);
         Magnesium = new Materials(18, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 200, 200, 0, "Magnesium", "Magnesium", 0, 0, 923, 0, false, false, 3, 1, 1, Dyes.dyePink, Element.Mg);
-        Manganese = new Materials(31, TextureSet.SET_DULL, 7.0F, 512, 2, 1 | 2 | 8 | 32, 250, 250, 250, 0, "Manganese", "Manganese", 0, 0, 1519, 0, false, false, 3, 1, 1, Dyes.dyeWhite, Element.Mn);
+        Manganese = new Materials(31, TextureSet.SET_DULL, 7.0F, 512, 2, 1 | 2 | 8 | 32, 205, 225, 185, 0, "Manganese", "Manganese", 0, 0, 1519, 0, false, false, 3, 1, 1, Dyes.dyeWhite, Element.Mn);
         Mercury = new Materials(87, TextureSet.SET_SHINY, 1.0F, 0, 0, 16 | 32, 255, 220, 220, 0, "Mercury", "Mercury", 5, 32, 234, 0, false, false, 3, 1, 1, Dyes.dyeLightGray, Element.Hg);
         Molybdenum = new Materials(48, TextureSet.SET_SHINY, 7.0F, 512, 2, 1 | 2 | 8 | 32, 180, 180, 220, 0, "Molybdenum", "Molybdenum", 0, 0, 2896, 0, false, false, 1, 1, 1, Dyes.dyeBlue, Element.Mo);
         Neodymium = new Materials(67, TextureSet.SET_METALLIC, 7.0F, 512, 2, 1 | 2 | 8 | 32 | 128, 100, 100, 100, 0, "Neodymium", "Neodymium", 0, 0, 1297, 1297, true, false, 4, 1, 1, Dyes._NULL, Element.Nd);
-        Neutronium = new Materials(129, TextureSet.SET_DULL, 24.0F, 655360, 6, 1 | 2 | 8 | 32 | 64 | 128, 250, 250, 250, 0, "Neutronium", "Neutronium", 0, 0, 10000, 10000, true, false, 20, 1, 1, Dyes.dyeWhite, Element.Nt).disableAutoGeneratedBlastFurnaceRecipes();
+        Neutronium = new Materials(129, TextureSet.SET_SHINY, 24.0F, 655360, 6, 1 | 2 | 8 | 32 | 64 | 128, 250, 250, 250, 0, "Neutronium", "Neutronium", 0, 0, 10000, 10000, true, false, 20, 1, 1, Dyes.dyeWhite, Element.Nt).disableAutoGeneratedBlastFurnaceRecipes();
         Nickel = new Materials(34, TextureSet.SET_METALLIC, 6.0F, 64, 2, 1 | 2 | 8 | 32 | 128, 200, 200, 250, 0, "Nickel", "Nickel", 0, 0, 1728, 0, false, false, 4, 1, 1, Dyes.dyeLightBlue, Element.Ni);
         Niobium = new Materials(47, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 190, 180, 200, 0, "Niobium", "Niobium", 0, 0, 2750, 2750, true, false, 5, 1, 1, Dyes._NULL, Element.Nb);
         Nitrogen = new Materials(12, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 0, 150, 200, 240, "Nitrogen", "Nitrogen", 0, 0, 63, 0, false, true, 2, 1, 1, Dyes.dyeCyan, Element.N);
@@ -166,7 +166,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Platinum = new Materials(85, TextureSet.SET_SHINY, 12.0F, 64, 2, 1 | 2 | 8 | 32 | 128, 255, 255, 200, 0, "Platinum", "Platinum", 0, 0, 2041, 0, false, false, 6, 1, 1, Dyes.dyeOrange, Element.Pt);
         Plutonium = new Materials(100, TextureSet.SET_METALLIC, 6.0F, 512, 3, 1 | 2 | 8 | 32, 240, 50, 50, 0, "Plutonium", "Plutonium 239", 0, 0, 912, 0, false, false, 6, 1, 1, Dyes.dyeLime, Element.Pu);
         Plutonium241 = new Materials(101, TextureSet.SET_SHINY, 6.0F, 512, 3, 1 | 2 | 8 | 32, 250, 70, 70, 0, "Plutonium241", "Plutonium 241", 0, 0, 912, 0, false, false, 6, 1, 1, Dyes.dyeLime, Element.Pu_241);
-        Potassium = new Materials(25, TextureSet.SET_METALLIC, 1.0F, 0, 1, 1 | 2 | 32, 250, 250, 250, 0, "Potassium", "Potassium", 0, 0, 336, 0, false, false, 2, 1, 1, Dyes.dyeWhite, Element.K);
+        Potassium = new Materials(25, TextureSet.SET_METALLIC, 1.0F, 0, 1, 1 | 2 | 32, 190, 220, 255, 0, "Potassium", "Potassium", 0, 0, 336, 0, false, false, 2, 1, 1, Dyes.dyeWhite, Element.K);
         Radon = new Materials(93, TextureSet.SET_FLUID, 1.0F, 0, 2, 16 | 32, 255, 0, 255, 240, "Radon", "Radon", 0, 0, 202, 0, false, true, 5, 1, 1, Dyes.dyePurple, Element.Rn);
         Rubidium = new Materials(-1/*43*/, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 240, 30, 30, 0, "Rubidium", "Rubidium", 0, 0, 312, 0, false, false, 4, 1, 1, Dyes.dyeRed, Element.Rb);
         Silicon = new Materials(20, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 8 | 32, 60, 60, 80, 0, "Silicon", "Silicon", 0, 0, 1687, 1687, false, false, 1, 1, 1, Dyes.dyeBlack, Element.Si);
@@ -174,7 +174,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Sodium = new Materials(17, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 32, 0, 0, 150, 0, "Sodium", "Sodium", 0, 0, 370, 0, false, false, 1, 1, 1, Dyes.dyeBlue, Element.Na);
         Strontium = new Materials(94, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1, 200, 200, 200, 0, "Strontium", "Strontium", 0, 0, 1050, 0, false, false, 1, 1, 1, Dyes.dyeLightGray, Element.Sr);
         Sulfur = new Materials(22, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 8 | 32, 200, 200, 0, 0, "Sulfur", "Sulfur", 0, 0, 388, 0, false, false, 2, 1, 1, Dyes.dyeYellow, Element.S);
-        Tantalum = new Materials(80, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Tantalum", "Tantalum", 0, 0, 3290, 0, false, false, 4, 1, 1, Dyes._NULL, Element.Ta);
+        Tantalum = new Materials(80, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 230, 110, 77, 0, "Tantalum", "Tantalum", 0, 0, 3290, 0, false, false, 4, 1, 1, Dyes._NULL, Element.Ta);
         Tellurium = new Materials(-1/*59*/, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1 | 2 | 32, 255, 255, 255, 0, "Tellurium", "Tellurium", 0, 0, 722, 0, false, false, 4, 1, 1, Dyes.dyeGray, Element.Te);
         Thorium = new Materials(96, TextureSet.SET_SHINY, 6.0F, 512, 2, 1 | 2 | 8 | 32, 0, 30, 0, 0, "Thorium", "Thorium", 0, 0, 2115, 0, false, false, 4, 1, 1, Dyes.dyeBlack, Element.Th);
         Tin = new Materials(57, TextureSet.SET_DULL, 1.0F, 0, 1, 1 | 2 | 8 | 32 | 128, 220, 220, 220, 0, "Tin", "Tin", 0, 0, 505, 505, false, false, 3, 1, 1, Dyes.dyeWhite, Element.Sn);
@@ -243,7 +243,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         DarkIron = new Materials(342, TextureSet.SET_DULL, 7.0F, 384, 3, 1 | 2, 55, 40, 60, 0, "DarkIron", "Dark Iron", 0, 0, -1, 0, false, false, 5, 1, 1, Dyes.dyePurple);
         Desh = new Materials(884, TextureSet.SET_DULL, 20.0F, 2560, 4, 1 | 2 | 8 | 64 | 128, 40, 40, 40, 0, "Desh", "Desh", 0, 0, 2500, 2500, true, false, 1, 1, 1, Dyes.dyeBlack).disableAutoGeneratedBlastFurnaceRecipes();
         Draconic = new Materials(-1, TextureSet.SET_NONE, 1.0F, 0, 2, 1, 255, 255, 255, 0, "Draconic", "Draconic", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeRed);
-        Duranium = new Materials(328, TextureSet.SET_METALLIC, 16.0F, 5120, 5, 1 | 2 | 64, 255, 255, 255, 0, "Duranium", "Duranium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeLightGray);
+        Duranium = new Materials(328, TextureSet.SET_METALLIC, 16.0F, 5120, 5, 1 | 2 | 64, 0, 110, 170, 0, "Duranium", "Duranium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeLightGray);
         Eclogite = new Materials(-1/*860*/, TextureSet.SET_DULL, 1.0F, 0, 2, 1, 255, 255, 255, 0, "Eclogite", "Eclogite", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes._NULL);
         ElectrumFlux = new Materials(320, TextureSet.SET_SHINY, 16.0F, 512, 3, 1 | 2, 255, 255, 120, 0, "ElectrumFlux", "Fluxed Electrum", 0, 0, 3000, 3000, true, false, 1, 1, 1, Dyes.dyeYellow).disableAutoGeneratedBlastFurnaceRecipes();
         Emery = new Materials(-1/*861*/, TextureSet.SET_DULL, 1.0F, 0, 2, 1, 255, 255, 255, 0, "Emery", "Emery", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes._NULL);
@@ -291,7 +291,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Tar = new MaterialBuilder(950, TextureSet.SET_FLUID, "Tar").addCell().addFluid().setRGB(220, 180, 5).setColor(Dyes.dyeOrange).setFuelPower(124).setCanBeCracked(true).constructMaterial();
         SulfuricTar = new MaterialBuilder(951, TextureSet.SET_FLUID, "Sulfuric Tar").addCell().addFluid().setRGB(230, 190, 2).setColor(Dyes.dyeOrange).setFuelPower(8).constructMaterial();
         Tartarite = new MaterialBuilder(956, TextureSet.SET_FLUID, "Tartarite").addCell().addFluid().setRGB(255, 118, 60).setColor(Dyes.dyeOrange).constructMaterial();
-        Tritanium = new Materials(329, TextureSet.SET_METALLIC, 20.0F, 10240, 6, 1 | 2 | 64, 255, 255, 255, 0, "Tritanium", "Tritanium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeWhite);
+        Tritanium = new Materials(329, TextureSet.SET_METALLIC, 20.0F, 10240, 6, 1 | 2 | 64, 160, 40, 190, 0, "Tritanium", "Tritanium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeWhite);
         UUAmplifier = new Materials(721, TextureSet.SET_FLUID, 1.0F, 0, 1, 16, 96, 0, 128, 0, "UUAmplifier", "UU-Amplifier", 0, 0, -1, 0, false, false, 10, 1, 1, Dyes.dyePink);
         UUMatter = new Materials(703, TextureSet.SET_FLUID, 1.0F, 0, 1, 16, 128, 0, 196, 0, "UUMatter", "UU-Matter", 0, 0, -1, 0, false, false, 10, 1, 1, Dyes.dyePink);
         Void = new Materials(-1, TextureSet.SET_NONE, 1.0F, 0, 1, 0, 255, 255, 255, 200, "Void", "Void", 0, 0, -1, 0, false, true, 1, 1, 1, Dyes._NULL);
@@ -550,7 +550,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         PhosphoricAcid = new MaterialBuilder(689, TextureSet.SET_FLUID, "Phosphoric Acid").setName("PhosphoricAcid_GT5U").addCell().addFluid().setRGB(220, 220, 0).setColor(Dyes.dyeYellow).setMaterialList(new MaterialStack(Hydrogen, 3), new MaterialStack(Phosphor, 1), new MaterialStack(Oxygen, 4)).addElectrolyzerRecipe().constructMaterial();
 
         SolderingAlloy = new Materials(314, TextureSet.SET_DULL, 1.0F, 0, 1, 1 | 2, 220, 220, 230, 0, "SolderingAlloy", "Soldering Alloy", 0, 0, 400, 400, false, false, 1, 1, 1, Dyes.dyeWhite, 2, Arrays.asList(new MaterialStack(Tin, 6), new MaterialStack(Lead, 3), new MaterialStack(Antimony, 1)));
-        GalliumArsenide = new Materials(980, TextureSet.SET_DULL, 1.0F, 0, 1, 1 | 2, 160, 160, 160, 0, "GalliumArsenide", "Gallium Arsenide", 0, 0, -1, 1200, true, false, 1, 1, 1, Dyes.dyeGray, 2, Arrays.asList(new MaterialStack(Arsenic, 1), new MaterialStack(Gallium, 1)));
+        GalliumArsenide = new Materials(980, TextureSet.SET_DULL, 1.0F, 0, 1, 1 | 2, 230, 220, 175, 0, "GalliumArsenide", "Gallium Arsenide", 0, 0, -1, 1200, true, false, 1, 1, 1, Dyes.dyeGray, 2, Arrays.asList(new MaterialStack(Arsenic, 1), new MaterialStack(Gallium, 1)));
         IndiumGalliumPhosphide = new Materials(981, TextureSet.SET_DULL, 1.0F, 0, 1, 1 | 2, 160, 140, 190, 0, "IndiumGalliumPhosphide", "Indium Gallium Phosphide", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeLightGray, 2, Arrays.asList(new MaterialStack(Indium, 1), new MaterialStack(Gallium, 1), new MaterialStack(Phosphor, 1)));
         Spessartine = new Materials(838, TextureSet.SET_DULL, 1.0F, 0, 2, 1 | 8, 255, 100, 100, 0, "Spessartine", "Spessartine", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes.dyeRed, 1, Arrays.asList(new MaterialStack(Aluminium, 2), new MaterialStack(Manganese, 3), new MaterialStack(Silicon, 3), new MaterialStack(Oxygen, 12)));
         Sphalerite = new Materials(839, TextureSet.SET_DULL, 1.0F, 0, 1, 1 | 8, 255, 255, 255, 0, "Sphalerite", "Sphalerite", 0, 0, -1, 0, false, false, 2, 1, 1, Dyes.dyeYellow, 1, Arrays.asList(new MaterialStack(Zinc, 1), new MaterialStack(Sulfur, 1)));
