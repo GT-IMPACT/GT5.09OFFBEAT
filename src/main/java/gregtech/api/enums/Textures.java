@@ -127,7 +127,11 @@ public class Textures {
         MACHINE_CASING_ROBUST_NEUTRONIUM, MACHINE_INTERMIX_CHAMBER_HIGHSPEED, MACHINE_CASING_DYSON_SUPERCODUCTOR_RING, MACHINE_CASING_FUSION_COIL3, BLOCK_PLASCRETE_GLASS, BLOCK_SOLID_FRAME_BOX,MACHINE_CASING_HSLA, BLOCK_COKE_OVEN_BRICK, OVERLAY_COKE_OVEN_BRICK, OVERLAY_COKE_OVEN_BRICK_ACTIVE, WATER_CAULDRON, WATER_CAULDRON_OVERLAY, FRAMEBOXGT,
 
         //Parallel MB
-        MP1a, MP1, MP2a, MP2, MP3a, MP3, MP4a, MP4, MP5a, MP5, MP6a, MP6, MP7a, MP7, MP8a, MP8
+        MP1a, MP1, MP2a, MP2, MP3a, MP3, MP4a, MP4, MP5a, MP5, MP6a, MP6, MP7a, MP7, MP8a, MP8,
+    
+    
+        OVERLAY_ENERGY_IN_POWER_MULTI, OVERLAY_ENERGY_OUT_POWER_MULTI
+        
         ;
 
         /**
@@ -715,7 +719,7 @@ public class Textures {
                         new GT_RenderedTexture(OVERLAY_ENERGY_OUT_MULTI_BUFFER, new short[]{100, 100, 245, 0}),
                         new GT_RenderedTexture(OVERLAY_ENERGY_OUT_MULTI_BUFFER, new short[]{80, 80, 245, 0}),
                         new GT_RenderedTexture(OVERLAY_ENERGY_OUT_MULTI_BUFFER, new short[]{60, 60, 245, 0}),
-                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_MULTI_BUFFER, new short[]{40, 40, 245, 0}),      
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_MULTI_BUFFER, new short[]{40, 40, 245, 0}),
                 },
                 LOCKERS = new ITexture[]{
                         new GT_RenderedTexture(OVERLAY_LOCKER_000),
@@ -733,9 +737,44 @@ public class Textures {
                         new GT_RenderedTexture(OVERLAY_LOCKER_012),
                         new GT_RenderedTexture(OVERLAY_LOCKER_013),
                 },
+                ENERGY_IN_POWER_MULTI = new ITexture[]{
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{180, 180, 180, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{220, 220, 220, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{255, 100, 0, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{255, 255, 30, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{128, 128, 128, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{240, 240, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{220, 220, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{200, 200, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{180, 180, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{160, 160, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{140, 140, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{120, 120, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{100, 100, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{80, 80, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{60, 60, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_IN_POWER_MULTI, new short[]{40, 40, 245, 0})
+                },
+                ENERGY_OUT_POWER_MULTI = new ITexture[]{
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{180, 180, 180, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{220, 220, 220, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{255, 100, 0, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{255, 255, 30, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{128, 128, 128, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{240, 240, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{220, 220, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{200, 200, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{180, 180, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{160, 160, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{140, 140, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{120, 120, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{100, 100, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{80, 80, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{60, 60, 245, 0}),
+                        new GT_RenderedTexture(OVERLAY_ENERGY_OUT_POWER_MULTI, new short[]{40, 40, 245, 0})
+                },
                 CASING_BLOCKS = new ITexture[128],//original variable still limited to 128
                 MACHINE_CASINGS[] = new ITexture[16][17];
-
         public static ITexture[][] casingTexturePages = new ITexture[128][];//page holder so we don't make an short long array
 
         static {

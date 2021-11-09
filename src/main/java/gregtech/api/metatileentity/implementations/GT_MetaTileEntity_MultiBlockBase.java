@@ -1,9 +1,5 @@
 package gregtech.api.metatileentity.implementations;
 
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoTunnel;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyMulti;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyTunnel;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ConfigCategories;
@@ -29,8 +25,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static gregtech.api.enums.GT_Values.V;
@@ -58,11 +52,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public ArrayList<GT_MetaTileEntity_Hatch_Maintenance> mMaintenanceHatches = new ArrayList<>();
     public ArrayList<GTMTE_Multi_Hatch_Input> mQuadrInputHatches = new ArrayList<>();
     public ArrayList<GTMTE_BusHatch_Input> mInputBusHatches = new ArrayList<>();
-    //TT hatches
-    public Set<GT_MetaTileEntity_Hatch_EnergyMulti> mEnergyHatchesTT = new HashSet<>();
-    public Set<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesTT = new HashSet<>();
-    public Set<GT_MetaTileEntity_Hatch_EnergyTunnel> mEnergyTunnelsTT = new HashSet<>();
-    public Set<GT_MetaTileEntity_Hatch_DynamoTunnel> mDynamoTunnelsTT = new HashSet<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_EnergyMulti> mEnergyHatchesMulti = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesMulti = new ArrayList<>();
 
     public void setupMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack stack) {
         mInputHatches.clear();
@@ -73,10 +64,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         mOutputBusses.clear();
         mDynamoHatches.clear();
         mEnergyHatches.clear();
-        mEnergyHatchesTT.clear();
-        mDynamoHatchesTT.clear();
-        mEnergyTunnelsTT.clear();
-        mDynamoTunnelsTT.clear();
+        mEnergyHatchesMulti.clear();
+        mDynamoHatchesMulti.clear();
         mMufflerHatches.clear();
         mMaintenanceHatches.clear();
         this.mMachine = checkMachine(aBaseMetaTileEntity, stack);
@@ -569,10 +558,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         for (MetaTileEntity tTileEntity : mDynamoHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
         for (MetaTileEntity tTileEntity : mMufflerHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
         for (MetaTileEntity tTileEntity : mEnergyHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mEnergyHatchesTT) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mDynamoHatchesTT) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mEnergyTunnelsTT) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mDynamoTunnelsTT) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        for (MetaTileEntity tTileEntity : mEnergyHatchesMulti) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        for (MetaTileEntity tTileEntity : mDynamoHatchesMulti) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
         for (MetaTileEntity tTileEntity : mMaintenanceHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
         for (MetaTileEntity tTileEntity : mQuadrInputHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
         getBaseMetaTileEntity().doExplosion(V[8]);
@@ -582,7 +569,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         if (aEU <= 0) {
             return true;
         }
-        if (mDynamoHatches.size() > 0 || mDynamoHatchesTT.size() > 0 || mDynamoTunnelsTT.size() > 0) {
+        if (mDynamoHatches.size() > 0 || mDynamoHatchesMulti.size() > 0) {
             return addEnergyOutputMultipleDynamos(aEU, true);
         }
         return false;
@@ -619,27 +606,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             }
         }
         
-        for (GT_MetaTileEntity_Hatch_DynamoMulti aDynamo : mDynamoHatchesTT) {
-            if (aDynamo == null) {
-                return false;
-            }
-            if (isValidMetaTileEntity(aDynamo)) {
-                long aVoltage = aDynamo.maxEUOutput();
-                long aTotal = aDynamo.maxAmperesOut() * aVoltage;
-                // Check against voltage to check when hatch mixing
-                if (aFirstVoltageFound == -1) {
-                    aFirstVoltageFound = aVoltage;
-                } else {
-                    //Long time calculation
-                    if (aFirstVoltageFound != aVoltage) {
-                        aFoundMixedDynamos = true;
-                    }
-                }
-                totalOutput += aTotal;
-            }
-        }
-        
-        for (GT_MetaTileEntity_Hatch_DynamoTunnel aDynamo : mDynamoTunnelsTT) {
+        for (GT_MetaTileEntity_Hatch_DynamoMulti aDynamo : mDynamoHatchesMulti) {
             if (aDynamo == null) {
                 return false;
             }
@@ -690,7 +657,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             }
         }
         
-        for (GT_MetaTileEntity_Hatch_DynamoMulti aDynamo : mDynamoHatchesTT) {
+        for (GT_MetaTileEntity_Hatch_DynamoMulti aDynamo : mDynamoHatchesMulti) {
             if (isValidMetaTileEntity(aDynamo)) {
                 leftToInject = aEU - injected;
                 aVoltage = aDynamo.maxEUOutput();
@@ -708,23 +675,6 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             }
         }
         
-        for (GT_MetaTileEntity_Hatch_DynamoTunnel aDynamo : mDynamoTunnelsTT) {
-            if (isValidMetaTileEntity(aDynamo)) {
-                leftToInject = aEU - injected;
-                aVoltage = aDynamo.maxEUOutput();
-                aAmpsToInject = (int) (leftToInject / aVoltage);
-                aRemainder = (int) (leftToInject - (aAmpsToInject * aVoltage));
-                ampsOnCurrentHatch = (int) Math.min(aDynamo.maxAmperesOut(), aAmpsToInject);
-                for (int i = 0; i < ampsOnCurrentHatch; i++) {
-                    aDynamo.getBaseMetaTileEntity().increaseStoredEnergyUnits(aVoltage, false);
-                }
-                injected += aVoltage * ampsOnCurrentHatch;
-                if (aRemainder > 0 && ampsOnCurrentHatch < aDynamo.maxAmperesOut()) {
-                    aDynamo.getBaseMetaTileEntity().increaseStoredEnergyUnits(aRemainder, false);
-                    injected += aRemainder;
-                }
-            }
-        }
         return injected > 0;
     }
     
@@ -732,10 +682,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         long rVoltage = 0;
         for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches)
             if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage();
-        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesTT)
-            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage() * tHatch.Amperes;
-        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyTunnelsTT)
-            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage() * tHatch.Amperes;
+        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesMulti)
+            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage() * tHatch.Amp;
         return rVoltage;
     }
     
@@ -788,18 +736,16 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     
     public boolean drainEnergyInput(long aEU) {
         if (aEU <= 0) return true;
-        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches)
+        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
             if (isValidMetaTileEntity(tHatch)) {
                 if (tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(aEU, false)) return true;
             }
-        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesTT)
+        }
+        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesMulti) {
             if (isValidMetaTileEntity(tHatch)) {
                 if (tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(aEU, false)) return true;
             }
-        for (GT_MetaTileEntity_Hatch_EnergyTunnel tHatch : mEnergyTunnelsTT)
-            if (isValidMetaTileEntity(tHatch)) {
-                if (tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(aEU, false)) return true;
-            }
+        }
         return false;
     }
     
@@ -1073,9 +1019,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Energy)
             return mEnergyHatches.add((GT_MetaTileEntity_Hatch_Energy) aMetaTileEntity);
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_EnergyMulti)
-            return mEnergyHatchesTT.add((GT_MetaTileEntity_Hatch_EnergyMulti) aMetaTileEntity);
+            return mEnergyHatchesMulti.add((GT_MetaTileEntity_Hatch_EnergyMulti) aMetaTileEntity);
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_DynamoMulti)
-            return mDynamoHatchesTT.add((GT_MetaTileEntity_Hatch_DynamoMulti) aMetaTileEntity);
+            return mDynamoHatchesMulti.add((GT_MetaTileEntity_Hatch_DynamoMulti) aMetaTileEntity);
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Dynamo)
             return mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) aMetaTileEntity);
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Maintenance)
@@ -1110,7 +1056,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_EnergyMulti) {
             ((GT_MetaTileEntity_Hatch_EnergyMulti) aMetaTileEntity).updateTexture(aBaseCasingIndex);
-            return mEnergyHatchesTT.add((GT_MetaTileEntity_Hatch_EnergyMulti) aMetaTileEntity);
+            return mEnergyHatchesMulti.add((GT_MetaTileEntity_Hatch_EnergyMulti) aMetaTileEntity);
         }
         return false;
     }
@@ -1125,7 +1071,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_DynamoMulti) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
-            return mDynamoHatchesTT.add((GT_MetaTileEntity_Hatch_DynamoMulti) aMetaTileEntity);
+            return mDynamoHatchesMulti.add((GT_MetaTileEntity_Hatch_DynamoMulti) aMetaTileEntity);
         }
         return false;
     }
@@ -1209,11 +1155,11 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             }
         }
         
-        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesTT) {
+        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesMulti) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
                 maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
-                ampers += tHatch.Amperes;
+                ampers += tHatch.Amp;
                 baseInput += tHatch.maxEUInput();
             }
         }
@@ -1221,8 +1167,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             baseInput /= mEnergyHatches.size();
         }
         
-        if (mEnergyHatchesTT.size() > 1) {
-            baseInput /= mEnergyHatchesTT.size();
+        if (mEnergyHatchesMulti.size() > 1) {
+            baseInput /= mEnergyHatchesMulti.size();
         }
         
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.Progress") + ": " + EnumChatFormatting.GREEN +

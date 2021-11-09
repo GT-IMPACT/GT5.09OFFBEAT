@@ -1,8 +1,6 @@
 package gregtech.api.util;
 
 import cofh.api.transport.IItemDuct;
-import com.github.technus.tectech.mechanics.alignment.IAlignment;
-import com.github.technus.tectech.mechanics.alignment.IAlignmentProvider;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.FMLCommonHandler;
 import gregtech.api.GregTech_API;
@@ -68,6 +66,8 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
+import space.impact.api.multiblocks.alignment.IAlignment;
+import space.impact.api.multiblocks.alignment.IAlignmentProvider;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

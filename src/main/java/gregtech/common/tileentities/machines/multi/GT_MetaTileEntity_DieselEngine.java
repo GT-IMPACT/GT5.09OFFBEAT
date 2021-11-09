@@ -1,6 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
@@ -8,10 +7,7 @@ import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Dynamo;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
@@ -105,14 +101,14 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                                 this.mEfficiencyIncrease = 15;
                                 if (this.mDynamoHatches.size() > 0) {
                                     for (GT_MetaTileEntity_Hatch_Dynamo hatch : mDynamoHatches) {
-                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.mAmpers) < (mEUt * mEfficiency / 10000L)) {
+                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.mAmpers) < ((long) mEUt * mEfficiency / 10000L)) {
                                             explodeMultiblock();
                                         }
                                     }
                                 }
-                                if (this.mDynamoHatchesTT.size() > 0) {
-                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT) {
-                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.Amperes) < (mEUt * mEfficiency / 10000L)) {
+                                if (this.mDynamoHatchesMulti.size() > 0) {
+                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesMulti) {
+                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.Amp) < ((long) mEUt * mEfficiency / 10000L)) {
                                             explodeMultiblock();
                                         }
                                     }
@@ -181,14 +177,14 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
             }
         }
         this.mDynamoHatches.clear();
-        this.mDynamoHatchesTT.clear();
+        this.mDynamoHatchesMulti.clear();
         IGregTechTileEntity tTileEntity = getBaseMetaTileEntity().getIGregTechTileEntityAtSideAndDistance(getBaseMetaTileEntity().getBackFacing(), 3);
         if ((tTileEntity != null) && (tTileEntity.getMetaTileEntity() != null)) {
             if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Dynamo)) {
                 this.mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) tTileEntity.getMetaTileEntity());
                 ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
             } else if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_DynamoMulti)) {
-                this.mDynamoHatchesTT.add((GT_MetaTileEntity_Hatch_DynamoMulti) tTileEntity.getMetaTileEntity());
+                this.mDynamoHatchesMulti.add((GT_MetaTileEntity_Hatch_DynamoMulti) tTileEntity.getMetaTileEntity());
                 ((GT_MetaTileEntity_Hatch_DynamoMulti) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
             } else {
                 return false;
@@ -281,7 +277,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
             }
         }
 
-        for (GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
+        for (GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesMulti) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
                 maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();

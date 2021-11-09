@@ -1,6 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
@@ -8,6 +7,7 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Dynamo;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_DynamoMulti;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
@@ -99,9 +99,9 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
                                         }
                                     }
                                 }
-                                if (this.mDynamoHatchesTT.size() > 0) {
-                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesTT) {
-                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.Amperes) < (mEUt * mEfficiency / 10000L)) {
+                                if (this.mDynamoHatchesMulti.size() > 0) {
+                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesMulti) {
+                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.Amp) < (mEUt * mEfficiency / 10000L)) {
                                             explodeMultiblock();
                                         }
                                     }
@@ -179,7 +179,7 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
             }
         }
 
-        for (GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesTT) {
+        for (GT_MetaTileEntity_Hatch_DynamoMulti tHatch : mDynamoHatchesMulti) {
             if (isValidMetaTileEntity(tHatch)) {
                 storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
                 maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
