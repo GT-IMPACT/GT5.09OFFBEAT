@@ -73,7 +73,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        if (aTick % 20 == 0) {
+        if (aTick % 7 == 0) {
             for (int i = 0; i < mFluids.length; i++) {
                 if (mFluids[i] != null && mFluids[i].amount <= 0) {
                     mFluids[i] = null;
@@ -146,11 +146,6 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
         return false;
     }
 
-    public void updateSlots() {
-        if (mInventory[getInputSlot()] != null && mInventory[getInputSlot()].stackSize <= 0)
-            mInventory[getInputSlot()] = null;
-    }
-
     @Override
     public boolean isFluidInputAllowed(FluidStack aFluid) {
         return true;
@@ -158,12 +153,12 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return aSide == aBaseMetaTileEntity.getFrontFacing() && aIndex == 1;
+        return false;
     }
 
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return aSide == aBaseMetaTileEntity.getFrontFacing();
+        return false;
     }
 
     @Override
