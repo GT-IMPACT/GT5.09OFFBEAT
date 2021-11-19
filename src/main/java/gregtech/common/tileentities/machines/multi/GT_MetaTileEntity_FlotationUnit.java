@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
+@Deprecated
 public class GT_MetaTileEntity_FlotationUnit extends GT_MetaTileEntity_MultiBlockBase{
 
 	public GT_MetaTileEntity_FlotationUnit(int aID, String aName, String aNameRegional) {
@@ -291,7 +292,11 @@ public class GT_MetaTileEntity_FlotationUnit extends GT_MetaTileEntity_MultiBloc
             for (int j = -one; j < two; j++) {
                 if (xDir + i != 0 || zDir + j != 0) {//sneak exclusion of the controller block
                     IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
-                    if (!addMaintenanceToMachineList(tTileEntity, 50) && !addInputToMachineList(tTileEntity, 50) && !addOutputToMachineList(tTileEntity, 50) && !addMufflerToMachineList(tTileEntity, 50) && !addEnergyInputToMachineList(tTileEntity, 50)) {
+                    if (!addMaintenanceToMachineList(tTileEntity, 50)
+							&& !addInputToMachineList(tTileEntity, 50)
+							&& !addOutputToMachineList(tTileEntity, 50)
+							&& !addMufflerToMachineList(tTileEntity, 50)
+							&& !addEnergyInputToMachineList(tTileEntity, 50)) {
                         if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != GregTech_API.sBlockCasings4) {
                             return false;
                         }
