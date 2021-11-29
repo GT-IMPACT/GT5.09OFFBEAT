@@ -180,13 +180,21 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
             this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, getHarvestData(aMeta, ((GT_Block_Ores_Abstract) tTileEntity.blockType).getBaseBlockHarvestLevel(aMeta % 16000 / 1000)), 0);
         }
     }
-
+    
+    @Override
+    public void updateEntity() {
+        if (!worldObj.isRemote) {
+            worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.stone, 0, 3);
+        }
+        super.updateEntity();
+    }
+    
     public short getMetaData() {
         return this.mMetaData;
     }
 
     public boolean canUpdate() {
-        return false;
+        return true;
     }
 
     public ArrayList<ItemStack> getDrops(Block aDroppedOre, int aFortune) {
