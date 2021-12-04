@@ -1211,9 +1211,6 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
         ItemList.Machine_Multi_AirFilter.set(new GT_MetaTileEntity_AirFilter(12105, "multimachine.airfilter", "Electric Air Filter").getStackForm(1L));
         
-        //Antimatter
-        ItemList.Antimatter_Reactor.set(new GT_MetaTileEntity_AntimatterReactor(12071, "basicgenerator.antimatter.tier.09", "Antimatter Reactor", 9).getStackForm(1L));
-
         GT_ModHandler.addCraftingRecipe(ItemList.Casing_RadiationProof.get(2L), GT_ModHandler.RecipeBits.DISMANTLEABLE | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE | GT_ModHandler.RecipeBits.BUFFERED, new Object[]{"PhP", "PFP", "PwP", 'P', OrePrefixes.plate.get(Materials.TungstenCarbide), 'F', OrePrefixes.frameGt.get(Materials.TungstenCarbide)});
         GT_ModHandler.addCraftingRecipe(ItemList.Block_Magnetic_Coil.get(1L), GT_ModHandler.RecipeBits.DISMANTLEABLE | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE | GT_ModHandler.RecipeBits.BUFFERED, new Object[]{"PPP", "WWW", "PPP", 'W', OrePrefixes.wireGt04.get(Materials.SuperconductorZPM), 'P', OrePrefixes.plate.get(Materials.NeodymiumMagnetic)});
         GT_ModHandler.addCraftingRecipe(ItemList.Casing_Core_Chamber.get(1L), GT_ModHandler.RecipeBits.DISMANTLEABLE | GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE | GT_ModHandler.RecipeBits.BUFFERED, new Object[]{"FPE", "ACT", "FPS", 'F', ItemList.Field_Generator_ZPM, 'P', ItemList.Electric_Pump_ZPM, 'E', ItemList.Emitter_ZPM, 'A', OrePrefixes.pipeMedium.get(Materials.Superconductor), 'C', ItemList.Hull_ZPM, 'T', OrePrefixes.circuit.get(Materials.Master), 'S', ItemList.Sensor_ZPM});
@@ -1256,12 +1253,6 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
         //Multiblock Electrolyzer
         ItemList.Machine_MultiblockElectrolyzer.set(new GT_MetaTileEntity_MultiblockElectrolyzer(12194, "multimachine.multielectrolyzer", "Multiblock Electrolyzer").getStackForm(1));
-
-        //Tesseract
-        ItemList.Machine_MultiblockTesseract.set(new GT_MetaTileEntity_Tesseract(12195, "multimachine.tesseract", "Tesseract").getStackForm(1L));
-
-        //Tiny Wormhole
-        ItemList.Machine_MultiblockTinyWormHole.set(new GT_MetaTileEntity_TinyWormHole(12197, "multimachine.tinywormhole", "Tiny Wormhole").getStackForm(1L));
     }
 
     private static void run4() {

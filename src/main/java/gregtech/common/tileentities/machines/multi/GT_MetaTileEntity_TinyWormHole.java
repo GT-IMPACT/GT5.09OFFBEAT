@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
+@Deprecated
 public class GT_MetaTileEntity_TinyWormHole extends GT_MetaTileEntity_MultiBlockBase{
 
 	public GT_MetaTileEntity_TinyWormHole(int aID, String aName, String aNameRegional) {
