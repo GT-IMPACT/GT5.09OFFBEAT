@@ -307,7 +307,7 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	
 	@Override
 	public void onEmptyingContainerWhenEmpty() {
-		if (this.lockedFluid == null && this.mFluid != null) {
+		if (this.lockedFluid == null && this.mFluid != null && isFluidLocked()) {
 			this.setLockedFluid(this.mFluid.getFluid());
 			doDisplayThings();
 			GT_Utility.sendChatToPlayer(playerThatLockedfluid, String.format(trans("151.4", "Sucessfully locked Fluid to %s"), mFluid.getLocalizedName()));
