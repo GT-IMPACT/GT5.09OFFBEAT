@@ -1,7 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import java.util.ArrayList;
-
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
@@ -18,27 +16,29 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_MultiBlockBase {
+import java.util.ArrayList;
 
+public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_MultiBlockBase {
+	
 	private final int CASING_INDEX = 16;
 	
 	public GT_MetaTileEntity_IndustrialPulverizer(int aID, String aName, String aNameRegional) {
-        super(aID, aName, aNameRegional);
-    }
-
-    public GT_MetaTileEntity_IndustrialPulverizer(String aName) {
-        super(aName);
-    }
-
-    @Override
-    public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_IndustrialPulverizer(this.mName);
-    }
-
-    @Override
-    public String[] getDescription() {
-        return new String[]{
-        		"Controller block for the Industrial Pulverizer",
+		super(aID, aName, aNameRegional);
+	}
+	
+	public GT_MetaTileEntity_IndustrialPulverizer(String aName) {
+		super(aName);
+	}
+	
+	@Override
+	public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
+		return new GT_MetaTileEntity_IndustrialPulverizer(this.mName);
+	}
+	
+	@Override
+	public String[] getDescription() {
+		return new String[]{
+				"Controller block for the Industrial Pulverizer",
 				"Has the all recipes as the Macerator, Ore Washer and Chemical Bath",
 				"Does not lose efficiency when overclocked",
 				"Size(WxHxD): 3x3x3",
@@ -49,39 +49,44 @@ public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_Mu
 				"1x Input Bus/Hatch (Any inert casing)",
 				"1x Output Bus/Hatch (Any inert casing)",
 				"1x Maintenance Hatch (Any inert casing)",
-				"1x Energy Hatch (Any inert casing)" };
-    }
-
-    @Override
+				"1x Energy Hatch (Any inert casing)"};
+	}
+	
+	@Override
 	public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive,
-			boolean aRedstone) {
+								 boolean aRedstone) {
 		if (aSide == aFacing) {
-			return new ITexture[] {
+			return new ITexture[]{
 					Textures.BlockIcons.casingTexturePages[0][16],
 					new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_ACTIVE
-							: Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR) };
+							: Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR)};
 		}
-		return new ITexture[] { Textures.BlockIcons.casingTexturePages[0][16] };
+		return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][16]};
 	}
-
+	
 	@Override
 	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeChemicalReactor.png");
+		return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeChemicalReactor.png");
 	}
-
+	
 	@Override
 	public boolean isCorrectMachinePart(ItemStack aStack) {
 		return true;
 	}
-
+	
+	@Override
+	public GT_Recipe.GT_Recipe_Map getRecipeMap() {
+		return GT_Recipe.GT_Recipe_Map.sIndustrialPulverizerRecipes;
+	}
+	
 	@Override
 	public boolean checkRecipe(ItemStack aStack) {
 		ArrayList<ItemStack> tInputList = getStoredInputs();
 		int tInputList_sS = tInputList.size();
 		for (int i = 0; i < tInputList_sS - 1; i++) {
 			for (int j = i + 1; j < tInputList_sS; j++) {
-				if (GT_Utility.areStacksEqual((ItemStack) tInputList.get(i), (ItemStack) tInputList.get(j))) {
-					if (((ItemStack) tInputList.get(i)).stackSize >= ((ItemStack) tInputList.get(j)).stackSize) {
+				if (GT_Utility.areStacksEqual(tInputList.get(i), tInputList.get(j))) {
+					if (tInputList.get(i).stackSize >= tInputList.get(j).stackSize) {
 						tInputList.remove(j--);
 						tInputList_sS = tInputList.size();
 					} else {
@@ -94,7 +99,7 @@ public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_Mu
 		}
 		tInputList.add(mInventory[1]);
 		ItemStack[] inputs = tInputList.toArray(new ItemStack[tInputList.size()]);
-
+		
 		ArrayList<FluidStack> tFluidList = getStoredFluids();
 		int tFluidList_sS = tFluidList.size();
 		for (int i = 0; i < tFluidList_sS - 1; i++) {
@@ -112,36 +117,38 @@ public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_Mu
 			}
 		}
 		FluidStack[] fluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
-
+		
 		if (inputs.length > 0 || fluids.length > 0) {
 			long voltage = getMaxInputVoltage();
 			byte tier = (byte) Math.max(1, GT_Utility.getTier(voltage));
-			GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sIndustrialPulverizerRecipes.findRecipe(getBaseMetaTileEntity(), false,
-					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs);
+			GT_Recipe recipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe, false,
+					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs
+			);
 			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
-				this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+				cashedRecipe = recipe;
+				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;
-
+				
 				int EUt = recipe.mEUt;
 				int maxProgresstime = recipe.mDuration;
-
+				
 				while (EUt <= gregtech.api.enums.GT_Values.V[tier - 1] && maxProgresstime > 2) {
 					EUt *= 4;
 					maxProgresstime /= 4;
 				}
 				if (maxProgresstime < 2) {
 					maxProgresstime = 2;
-					EUt = recipe.mEUt * recipe.mDuration / 2;
+					EUt             = recipe.mEUt * recipe.mDuration / 2;
 				}
-
-				this.mEUt = -EUt;
+				
+				this.mEUt             = -EUt;
 				this.mMaxProgresstime = maxProgresstime;
-				mOutputItems = new ItemStack[recipe.mOutputs.length];
- 		        for (int i = 0; i < recipe.mOutputs.length; i++) {
- 		            if (getBaseMetaTileEntity().getRandomNumber(10000) < recipe.getOutputChance(i)) {
- 		                this.mOutputItems[i] = recipe.getOutput(i);
- 		            }
- 		        }
+				mOutputItems          = new ItemStack[recipe.mOutputs.length];
+				for (int i = 0; i < recipe.mOutputs.length; i++) {
+					if (getBaseMetaTileEntity().getRandomNumber(10000) < recipe.getOutputChance(i)) {
+						this.mOutputItems[i] = recipe.getOutput(i);
+					}
+				}
 				this.mOutputFluids = recipe.mFluidOutputs;
 				this.updateSlots();
 				return true;
@@ -151,12 +158,12 @@ public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_Mu
 	}
 	
 	public void startSoundLoop(byte aIndex, double aX, double aY, double aZ) {
-        super.startSoundLoop(aIndex, aX, aY, aZ);
-        if (aIndex == 1) {
-            GT_Utility.doSoundAtClient((String) GregTech_API.sSoundList.get(Integer.valueOf(201)), 10, 1.0F, aX, aY, aZ);;
-        }
-    }
-
+		super.startSoundLoop(aIndex, aX, aY, aZ);
+		if (aIndex == 1) {
+			GT_Utility.doSoundAtClient(GregTech_API.sSoundList.get(Integer.valueOf(201)), 10, 1.0F, aX, aY, aZ);
+		}
+	}
+	
 	@Override
 	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
 		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
@@ -202,32 +209,32 @@ public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_Mu
 							return false;
 						}
 					}
-
+					
 				}
 			}
-
+			
 		}
 		return casingAmount >= 8 && hasHeatingCoil;
 	}
-
+	
 	@Override
 	public int getMaxEfficiency(ItemStack aStack) {
 		return 10000;
 	}
-
+	
 	@Override
 	public int getPollutionPerTick(ItemStack aStack) {
 		return 0;
 	}
-
+	
 	@Override
 	public int getDamageToComponent(ItemStack aStack) {
 		return 0;
 	}
-
+	
 	@Override
 	public boolean explodesOnComponentBreak(ItemStack aStack) {
 		return false;
 	}
-
+	
 }

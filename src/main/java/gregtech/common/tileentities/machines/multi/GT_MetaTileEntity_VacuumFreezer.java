@@ -75,10 +75,11 @@ public class GT_MetaTileEntity_VacuumFreezer
         if (tInputList.size() > 0 || tFluids.length > 0) {
             long tVoltage = getMaxInputVoltage();
             byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-            GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sVacuumRecipes.findRecipe(getBaseMetaTileEntity(),
+            GT_Recipe tRecipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe,
                     false, GT_Values.V[tTier], tFluids, tInput);
             if (tRecipe != null) {
                 if (tRecipe.isRecipeInputEqual(true, tFluids, tInput)) {
+                    cashedRecipe = tRecipe;
                     this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
                     this.mEfficiencyIncrease = 10000;
                     calculateOverclockedNessMulti(tRecipe.mEUt, tRecipe.mDuration, 1, tVoltage);

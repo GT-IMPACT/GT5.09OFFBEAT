@@ -1,25 +1,22 @@
 package gregtech.common.tileentities.machines.multi;
 
-import java.util.ArrayList;
-
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import gregtech.common.GT_Pollution;
-import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
 
 public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity_MultiBlockBase{
 	
@@ -76,15 +73,20 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity
 	public boolean isCorrectMachinePart(ItemStack aStack) {
 		return true;
 	}
-
+	
+	@Override
+	public GT_Recipe.GT_Recipe_Map getRecipeMap() {
+		return GT_Recipe.GT_Recipe_Map.sMultiblockElectrolyzerRecipes;
+	}
+	
 	@Override
 	public boolean checkRecipe(ItemStack aStack) {
 		ArrayList<ItemStack> tInputList = getStoredInputs();
 		int tInputList_sS = tInputList.size();
 		for (int i = 0; i < tInputList_sS - 1; i++) {
 			for (int j = i + 1; j < tInputList_sS; j++) {
-				if (GT_Utility.areStacksEqual((ItemStack) tInputList.get(i), (ItemStack) tInputList.get(j))) {
-					if (((ItemStack) tInputList.get(i)).stackSize >= ((ItemStack) tInputList.get(j)).stackSize) {
+				if (GT_Utility.areStacksEqual(tInputList.get(i), tInputList.get(j))) {
+					if (tInputList.get(i).stackSize >= tInputList.get(j).stackSize) {
 						tInputList.remove(j--);
 						tInputList_sS = tInputList.size();
 					} else {
@@ -96,8 +98,8 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity
 			}
 		}
 		tInputList.add(mInventory[1]);
-		ItemStack[] inputs = tInputList.toArray(new ItemStack[tInputList.size()]);
-
+		ItemStack[] inputs = tInputList.toArray(new ItemStack[0]);
+		
 		ArrayList<FluidStack> tFluidList = getStoredFluids();
 		int tFluidList_sS = tFluidList.size();
 		for (int i = 0; i < tFluidList_sS - 1; i++) {
@@ -114,37 +116,39 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity
 				}
 			}
 		}
-		FluidStack[] fluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
-
+		FluidStack[] fluids = tFluidList.toArray(new FluidStack[0]);
+		
 		if (inputs.length > 0 || fluids.length > 0) {
 			long voltage = getMaxInputVoltage();
 			byte tier = (byte) Math.max(1, GT_Utility.getTier(voltage));
-			GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sMultiblockElectrolyzerRecipes.findRecipe(getBaseMetaTileEntity(), false,
-					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs);
+			GT_Recipe recipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe, false,
+					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs
+			);
 			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
-				this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+				cashedRecipe             = recipe;
+				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;
-
+				
 				int EUt = recipe.mEUt;
 				int maxProgresstime = recipe.mDuration;
-
+				
 				while (EUt <= gregtech.api.enums.GT_Values.V[tier - 1] && maxProgresstime > 2) {
 					EUt *= 4;
 					maxProgresstime /= 4;
 				}
 				if (maxProgresstime < 2) {
 					maxProgresstime = 2;
-					EUt = recipe.mEUt * recipe.mDuration / 2;
+					EUt             = recipe.mEUt * recipe.mDuration / 2;
 				}
-
-				this.mEUt = -EUt;
+				
+				this.mEUt             = -EUt;
 				this.mMaxProgresstime = maxProgresstime;
-				mOutputItems = new ItemStack[recipe.mOutputs.length];
- 		        for (int i = 0; i < recipe.mOutputs.length; i++) {
- 		            if (getBaseMetaTileEntity().getRandomNumber(10000) < recipe.getOutputChance(i)) {
- 		                this.mOutputItems[i] = recipe.getOutput(i);
- 		            }
- 		        }
+				mOutputItems          = new ItemStack[recipe.mOutputs.length];
+				for (int i = 0; i < recipe.mOutputs.length; i++) {
+					if (getBaseMetaTileEntity().getRandomNumber(10000) < recipe.getOutputChance(i)) {
+						this.mOutputItems[i] = recipe.getOutput(i);
+					}
+				}
 				this.mOutputFluids = recipe.mFluidOutputs;
 				this.updateSlots();
 				return true;
