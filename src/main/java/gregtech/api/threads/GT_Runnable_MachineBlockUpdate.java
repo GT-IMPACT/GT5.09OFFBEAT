@@ -1,7 +1,10 @@
 package gregtech.api.threads;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IMachineBlockUpdateable;
+import gregtech.api.metatileentity.BaseMetaPipeEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
@@ -26,9 +29,14 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
             return;
         aList.add(new ChunkPosition(aX, aY, aZ));
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if (tTileEntity instanceof IMachineBlockUpdateable)
+        if (tTileEntity instanceof IMachineBlockUpdateable) {
             ((IMachineBlockUpdateable) tTileEntity).onMachineBlockUpdate();
-        if (aList.size() < 5 || (tTileEntity instanceof IMachineBlockUpdateable) || GregTech_API.isMachineBlock(aWorld.getBlock(aX, aY, aZ), aWorld.getBlockMetadata(aX, aY, aZ))) {
+        }
+        boolean isCable = false;
+        if (tTileEntity instanceof IGregTechTileEntity) {
+            isCable = tTileEntity instanceof BaseMetaPipeEntity;
+        }
+        if (aList.size() < 5 || (tTileEntity instanceof IMachineBlockUpdateable && !isCable) || (GregTech_API.isMachineBlock(aWorld.getBlock(aX, aY, aZ), aWorld.getBlockMetadata(aX, aY, aZ)) && !isCable)) {
             if (!aList.contains(new ChunkPosition(aX + 1, aY, aZ))) stepToUpdateMachine(aWorld, aX + 1, aY, aZ, aList);
             if (!aList.contains(new ChunkPosition(aX - 1, aY, aZ))) stepToUpdateMachine(aWorld, aX - 1, aY, aZ, aList);
             if (!aList.contains(new ChunkPosition(aX, aY + 1, aZ))) stepToUpdateMachine(aWorld, aX, aY + 1, aZ, aList);
@@ -52,7 +60,7 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
     @Override
     public void run() {
         try {
-            stepToUpdateMachine(mWorld, mX, mY, mZ, new ArrayList<ChunkPosition>());
+            stepToUpdateMachine(mWorld, mX, mY, mZ, new ArrayList<>());
         } catch (Throwable e) {/**/}
     }
 }
