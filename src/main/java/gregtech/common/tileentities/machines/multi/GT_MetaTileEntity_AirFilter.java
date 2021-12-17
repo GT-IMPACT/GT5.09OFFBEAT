@@ -432,9 +432,18 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
             if (mMachine && aTick % 200L == 0L) {
+                int pollution = 0;
+                Chunk tChunk = getBaseMetaTileEntity().getWorld().getChunkFromBlockCoords(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
+                int xChunk = tChunk.xPosition;
+                int zChunk = tChunk.zPosition;
+                for (int i = -1; i <= 1; i++) {
+                    for (int j = -1; j <= 1; j++) {
+                        tChunk = getBaseMetaTileEntity().getWorld().getChunkFromChunkCoords(xChunk + i, zChunk + j);
+                        pollution += GT_Pollution.getPollution(tChunk);
+                    }
+                }
                 //check for pollution
-                int pollution = GT_Pollution.getPollution(getBaseMetaTileEntity());
-                hasPollution = pollution >= 10000 || (hasPollution && pollution >= 1000);//HYSTERESIS :O !!! (trust me i am engineer)
+                hasPollution = pollution >= 10000 || (hasPollution && pollution >= 1000);
             }
         } else if (aTick % 200L == 0L) {
             //refresh casing on state change
@@ -486,7 +495,7 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
     @Override
     public String[] addInfoData() {
         final ArrayList<String> ll = new ArrayList<>();
-        ll.add("Pollution reduction: "+ EnumChatFormatting.GREEN + mPollutionReduction/60 + EnumChatFormatting.RESET+" gibbl/s");
+        ll.add("Pollution reduction: "+ EnumChatFormatting.GREEN + mPollutionReduction + EnumChatFormatting.RESET+" gibbl/t (for Chunk)");
         final String[] a = new String[ll.size()];
         return ll.toArray(a);
     }
