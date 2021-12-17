@@ -127,6 +127,7 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
     public void onUpdated() {
         if ((!this.worldObj.isRemote) && (this.mBlocked)) {
             this.mBlocked = false;
+            worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.stone, 0, 3);
             GT_Values.NW.sendPacketToAllPlayersInRange(this.worldObj, new GT_Packet_Ores(this.xCoord, (short) this.yCoord, this.zCoord, this.mMetaData), this.xCoord, this.zCoord);
         }
     }
@@ -181,20 +182,20 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         }
     }
     
-    @Override
-    public void updateEntity() {
-        if (!worldObj.isRemote) {
-            worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.stone, 0, 3);
-        }
-        super.updateEntity();
-    }
+//    @Override
+//    public void updateEntity() {
+//        if (!worldObj.isRemote) {
+//            worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.stone, 0, 3);
+//        }
+//        super.updateEntity();
+//    }
     
     public short getMetaData() {
         return this.mMetaData;
     }
 
     public boolean canUpdate() {
-        return true;
+        return false;
     }
 
     public ArrayList<ItemStack> getDrops(Block aDroppedOre, int aFortune) {
