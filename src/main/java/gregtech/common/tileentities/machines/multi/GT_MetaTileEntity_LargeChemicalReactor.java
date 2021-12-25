@@ -22,25 +22,25 @@ import java.util.ArrayList;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
 
 public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_MultiBlockBase {
-
+	
 	private final int CASING_INDEX = 176;
-
+	
 	public GT_MetaTileEntity_LargeChemicalReactor(int aID, String aName, String aNameRegional) {
 		super(aID, aName, aNameRegional);
 	}
-
+	
 	public GT_MetaTileEntity_LargeChemicalReactor(String aName) {
 		super(aName);
 	}
-
+	
 	@Override
 	public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
 		return new GT_MetaTileEntity_LargeChemicalReactor(this.mName);
 	}
-
+	
 	@Override
 	public String[] getDescription() {
-		return new String[] {
+		return new String[]{
 				"Controller block for the Large Chemical Reactor",
 				"Has the same recipes as the Chemical Reactor",
 				"Does not lose efficiency when overclocked",
@@ -55,37 +55,37 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 				"1x Maintenance Hatch (Any inert casing)",
 				"1x Energy Hatch (Any inert casing)"};
 	}
-
+	
 	@Override
 	public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive,
-			boolean aRedstone) {
+								 boolean aRedstone) {
 		if (aSide == aFacing) {
-			return new ITexture[] {
+			return new ITexture[]{
 					Textures.BlockIcons.casingTexturePages[1][48],
 					new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_ACTIVE
-							: Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR) };
+							: Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR)};
 		}
-		return new ITexture[] { Textures.BlockIcons.casingTexturePages[1][48] };
+		return new ITexture[]{Textures.BlockIcons.casingTexturePages[1][48]};
 	}
 	
 	@Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeChemicalReactor.png");
-    }
-
+	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
+		return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeChemicalReactor.png");
+	}
+	
 	@Override
 	public boolean isCorrectMachinePart(ItemStack aStack) {
 		return true;
 	}
-
+	
 	@Override
 	public boolean checkRecipe(ItemStack aStack) {
 		ArrayList<ItemStack> tInputList = getStoredInputs();
 		int tInputList_sS = tInputList.size();
 		for (int i = 0; i < tInputList_sS - 1; i++) {
 			for (int j = i + 1; j < tInputList_sS; j++) {
-				if (GT_Utility.areStacksEqual((ItemStack) tInputList.get(i), (ItemStack) tInputList.get(j))) {
-					if (((ItemStack) tInputList.get(i)).stackSize >= ((ItemStack) tInputList.get(j)).stackSize) {
+				if (GT_Utility.areStacksEqual(tInputList.get(i), tInputList.get(j))) {
+					if (tInputList.get(i).stackSize >= tInputList.get(j).stackSize) {
 						tInputList.remove(j--);
 						tInputList_sS = tInputList.size();
 					} else {
@@ -97,8 +97,8 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 			}
 		}
 		tInputList.add(mInventory[1]);
-		ItemStack[] inputs = tInputList.toArray(new ItemStack[tInputList.size()]);
-
+		ItemStack[] inputs = tInputList.toArray(new ItemStack[0]);
+		
 		ArrayList<FluidStack> tFluidList = getStoredFluids();
 		int tFluidList_sS = tFluidList.size();
 		for (int i = 0; i < tFluidList_sS - 1; i++) {
@@ -115,47 +115,43 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 				}
 			}
 		}
-		FluidStack[] fluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
-
+		FluidStack[] fluids = tFluidList.toArray(new FluidStack[0]);
+		
 		if (inputs.length > 0 || fluids.length > 0) {
 			long voltage = getMaxInputVoltage();
 			byte tier = (byte) Math.max(1, GT_Utility.getTier(voltage));
 			GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sMultiblockChemicalRecipes.findRecipe(getBaseMetaTileEntity(), false,
-					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs);
+					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs
+			);
 			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
-
-				if (GT_Mod.gregtechproxy.mLowGravProcessing && (recipe.mSpecialValue == -100) && !isValidForLowGravity(recipe, getBaseMetaTileEntity().getWorld().provider.dimensionId))
+				if (GT_Mod.gregtechproxy.mLowGravProcessing && (recipe.mSpecialValue == -100) && !isValidForLowGravity(recipe, getBaseMetaTileEntity().getWorld().provider.dimensionId)) {
 					return false;
-
-				if (recipe.mSpecialValue == -200 && (mCleanroom == null || mCleanroom.mEfficiency == 0))
+				}
+				if (recipe.mSpecialValue == -200 && (mCleanroom == null || mCleanroom.mEfficiency == 0)) {
 					return false;
-
-				this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+				}
+				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;
-
-				int EUt = recipe.mEUt;
-				int maxProgresstime = recipe.mDuration;
-
-				while (EUt <= gregtech.api.enums.GT_Values.V[tier - 1] && maxProgresstime > 2) {
-					EUt *= 4;
-					maxProgresstime /= 4;
-				}
-				if (maxProgresstime < 2) {
-					maxProgresstime = 2;
-					EUt = recipe.mEUt * recipe.mDuration / 2;
-				}
 				
-				this.mEUt = -EUt;
-				this.mMaxProgresstime = maxProgresstime;
-				this.mOutputItems = recipe.mOutputs;
-				this.mOutputFluids = recipe.mFluidOutputs;
+				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+				this.mEfficiencyIncrease = 10000;
+				calculateOverclockedNessMulti(recipe.mEUt, recipe.mDuration, 1, voltage);
+				//In case recipe is too OP for that machine
+				if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
+					return false;
+				if (this.mEUt > 0) {
+					this.mEUt = (-this.mEUt);
+				}
+				this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+				this.mOutputItems     = recipe.mOutputs;
+				this.mOutputFluids    = recipe.mFluidOutputs;
 				this.updateSlots();
 				return true;
 			}
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
 		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
@@ -192,41 +188,41 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 						hasHeatingCoil = true;
 						continue;
 					}
-						if (!addInputToMachineList(tileEntity, CASING_INDEX) && !addOutputToMachineList(tileEntity, CASING_INDEX)
-								&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
-								&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-							if (block == GregTech_API.sBlockCasings8 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
-								casingAmount++;
-							} else {
-								return false;
-							}
+					if (!addInputToMachineList(tileEntity, CASING_INDEX) && !addOutputToMachineList(tileEntity, CASING_INDEX)
+							&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
+							&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
+						if (block == GregTech_API.sBlockCasings8 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
+							casingAmount++;
+						} else {
+							return false;
 						}
-
+					}
+					
 				}
 			}
-
+			
 		}
 		return casingAmount >= 8 && hasHeatingCoil;
 	}
-
+	
 	@Override
 	public int getMaxEfficiency(ItemStack aStack) {
 		return 10000;
 	}
-
+	
 	@Override
 	public int getPollutionPerTick(ItemStack aStack) {
 		return 0;
 	}
-
+	
 	@Override
 	public int getDamageToComponent(ItemStack aStack) {
 		return 0;
 	}
-
+	
 	@Override
 	public boolean explodesOnComponentBreak(ItemStack aStack) {
 		return false;
 	}
-
+	
 }

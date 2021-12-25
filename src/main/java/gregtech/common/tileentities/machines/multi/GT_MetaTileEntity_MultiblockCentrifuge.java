@@ -128,21 +128,17 @@ public class GT_MetaTileEntity_MultiblockCentrifuge extends GT_MetaTileEntity_Mu
 				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;
 				
-				int EUt = recipe.mEUt;
-				int maxProgresstime = recipe.mDuration;
-				
-				while (EUt <= gregtech.api.enums.GT_Values.V[tier - 1] && maxProgresstime > 2) {
-					EUt *= 4;
-					maxProgresstime /= 4;
+				this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+				this.mEfficiencyIncrease = 10000;
+				calculateOverclockedNessMulti(recipe.mEUt, recipe.mDuration, 1, voltage);
+				//In case recipe is too OP for that machine
+				if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
+					return false;
+				if (this.mEUt > 0) {
+					this.mEUt = (-this.mEUt);
 				}
-				if (maxProgresstime < 2) {
-					maxProgresstime = 2;
-					EUt             = recipe.mEUt * recipe.mDuration / 2;
-				}
-				
-				this.mEUt             = -EUt;
-				this.mMaxProgresstime = maxProgresstime;
-				mOutputItems          = new ItemStack[recipe.mOutputs.length];
+				this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+				this.mOutputItems     = new ItemStack[recipe.mOutputs.length];
 				for (int i = 0; i < recipe.mOutputs.length; i++) {
 					if (getBaseMetaTileEntity().getRandomNumber(10000) < recipe.getOutputChance(i)) {
 						this.mOutputItems[i] = recipe.getOutput(i);
