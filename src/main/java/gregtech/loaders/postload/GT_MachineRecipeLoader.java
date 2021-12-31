@@ -2723,7 +2723,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.Carbon.getDust(2), GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Hydrogen.getGas(4000), Materials.Oxygen.getGas(2000)}, new FluidStack[]{Materials.AceticAcid.getFluid(1000)}, null, 480, 30);
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.CarbonMonoxide.getGas(2000), Materials.Hydrogen.getGas(4000)}, new FluidStack[]{Materials.AceticAcid.getFluid(1000)}, null, 320, 30);
 
-        GT_Values.RA.addFermentingRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L), Materials.Biomass.getFluid(100), Materials.FermentedBiomass.getFluid(100), 150, false);
+        GT_Values.RA.addFermentingRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L), Materials.Biomass.getFluid(1000), Materials.FermentedBiomass.getFluid(1000), 370, false);
         GT_Values.RA.addFermentingRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L), new FluidStack(FluidRegistry.getFluid("ic2biomass"), 100), Materials.FermentedBiomass.getFluid(100), 150, false);
         GT_Values.RA.addFermentingRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 2L), Materials.Biomass.getFluid(100), new FluidStack(FluidRegistry.getFluid("ic2biomass"), 100), 150, false);
 
