@@ -2227,7 +2227,7 @@ public class GT_MachineRecipeLoader implements Runnable {
                 GT_OreDictUnificator.get(OrePrefixes.bolt, Materials.HSSE, 8L),
         }, new FluidStack[]{
                 GregTech_API.mIC2Classic ? Materials.Water.getFluid(250L) : Materials.GrowthMediumSterilized.getFluid(250L),
-                Materials.UUMatter.getFluid(250L),
+                Materials.Radon.getGas(1000L),
                 GregTech_API.mIC2Classic ? Materials.Lava.getFluid(1000L) : new FluidStack(FluidRegistry.getFluid("ic2coolant"), 1000)
         }, ItemList.Circuit_Chip_NeuroCPU.get(1L), 600, 80000);
 
@@ -2241,7 +2241,7 @@ public class GT_MachineRecipeLoader implements Runnable {
                 GT_OreDictUnificator.get(OrePrefixes.bolt, Materials.HSSS, 32),
         }, new FluidStack[]{
                 GregTech_API.mIC2Classic ? Materials.Water.getFluid(500L) : Materials.BioMediumSterilized.getFluid(500L),
-                Materials.UUMatter.getFluid(500L),
+                Materials.Radon.getGas(1000L),
                 GregTech_API.mIC2Classic ? Materials.Lava.getFluid(2000L) : new FluidStack(FluidRegistry.getFluid("ic2coolant"), 2000)
         }, ItemList.Circuit_Chip_BioCPU.get(1L), 600, 600000);
 
@@ -2561,11 +2561,11 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addAutoclaveRecipe(ItemList.Circuit_Parts_RawCrystalParts.get(1), Materials.Europium.getMolten(16), ItemList.Circuit_Parts_RawCrystalChip.get(1L), 10000, 12000, 480);
 
         if (Loader.isModLoaded("GalacticraftCore")) {
-            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Emerald, 12), Materials.UUMatter.getFluid(250), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
-            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Olivine, 12), Materials.UUMatter.getFluid(250), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
+            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Emerald, 12), Materials.Iridium.getMolten(288), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
+            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Olivine, 12), Materials.Iridium.getMolten(288), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
         } else {
-            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Emerald, 12), Materials.UUMatter.getFluid(250), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
-            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Olivine, 12), Materials.UUMatter.getFluid(250), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
+            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Emerald, 12), Materials.Iridium.getMolten(288), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
+            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, Materials.Olivine, 12), Materials.Iridium.getMolten(288), ItemList.Tool_DataOrb.get(1), 10000, 12000, 960, true);
         }
         //GT_ModHandler.addShapelessCraftingRecipe(ItemList.Circuit_Parts_RawCrystalChip.get(9), new Object[]{ItemList.Circuit_Chip_CrystalCPU.get(1)});
 
@@ -2573,11 +2573,11 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         GT_Values.RA.addChemicalBathRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.MysteriousCrystal, 1), Materials.Naquadria.getMolten(144), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.EnrichedMysteriousCrystal, 1), null, null, null, 600, 500000);
         if (Loader.isModLoaded("GalacticraftCore")) {
-            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.EnrichedMysteriousCrystal, 1), Materials.UUMatter.getFluid(250), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnrichedMysteriousCrystal, 1), 8500, 2000, 500000, true);
-            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.MysteriousCrystal, 1), Materials.UUMatter.getFluid(250), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.MysteriousCrystal, 1), 10000, 2000, 500000, true);
+            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.EnrichedMysteriousCrystal, 1), Materials.EnrichedNaquadria.getMolten(288), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnrichedMysteriousCrystal, 1), 8500, 2000, 500000, true);
+            GT_Values.RA.addAutoclaveSpaceRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.MysteriousCrystal, 1), Materials.EnrichedNaquadria.getMolten(288), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.MysteriousCrystal, 1), 10000, 2000, 500000, true);
         } else {
-            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.EnrichedMysteriousCrystal, 1), Materials.UUMatter.getFluid(250), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnrichedMysteriousCrystal, 1), 8500, 2000, 500000, true);
-            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.MysteriousCrystal, 1), Materials.UUMatter.getFluid(250), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.MysteriousCrystal, 1), 10000, 2000, 500000, true);
+            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.EnrichedMysteriousCrystal, 1), Materials.EnrichedNaquadria.getMolten(288), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnrichedMysteriousCrystal, 1), 8500, 2000, 500000, true);
+            GT_Values.RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.MysteriousCrystal, 1), Materials.EnrichedNaquadria.getMolten(288), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.MysteriousCrystal, 1), 10000, 2000, 500000, true);
         }
 
 
@@ -3473,7 +3473,7 @@ public class GT_MachineRecipeLoader implements Runnable {
                 new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 4},
                 GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.SuperconductorUV, 16)
         }, new FluidStack[]{
-                Materials.UUMatter.getFluid(1000),
+                Materials.EnrichedNaquadria.getMolten(1296),
                 Materials.Infuscolium.getMolten(1296),
                 new FluidStack(FluidRegistry.getFluid("ic2coolant"), 2000),
                 Materials.Osmiridium.getMolten(1152)
