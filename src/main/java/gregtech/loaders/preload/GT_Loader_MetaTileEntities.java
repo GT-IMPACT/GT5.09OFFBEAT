@@ -981,18 +981,18 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Machine_EV_E_Furnace.get(1L), bits, new Object[]{ItemList.Machine_EV_Oven});
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Machine_IV_E_Furnace.get(1L), bits, new Object[]{ItemList.Machine_IV_Oven});
 
-        ItemList.Machine_LV_Miner.set(new GT_MetaTileEntity_Miner(679, "basicmachine.miner.tier.01", "LV Miner", 1).getStackForm(1L));
-        ItemList.Machine_MV_Miner.set(new GT_MetaTileEntity_Miner(680, "basicmachine.miner.tier.02", "MV Miner", 2).getStackForm(1L));
-        ItemList.Machine_HV_Miner.set(new GT_MetaTileEntity_Miner(681, "basicmachine.miner.tier.03", "HV Miner", 3).getStackForm(1L));
-        ItemList.Machine_EV_Miner.set(new GT_MetaTileEntity_Miner(12101, "basicmachine.miner.tier.04", "EV Miner", 4).getStackForm(1L));
-        ItemList.Machine_IV_Miner.set(new GT_MetaTileEntity_Miner(12102, "basicmachine.miner.tier.05", "IV Miner", 5).getStackForm(1L));
+        ItemList.Machine_LV_Miner.set(new GT_MetaTileEntity_Miner(679, "basicmachine.miner.tier.01", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "LV Miner", 1).getStackForm(1L));
+        ItemList.Machine_MV_Miner.set(new GT_MetaTileEntity_Miner(680, "basicmachine.miner.tier.02", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "MV Miner", 2).getStackForm(1L));
+        ItemList.Machine_HV_Miner.set(new GT_MetaTileEntity_Miner(681, "basicmachine.miner.tier.03", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "HV Miner", 3).getStackForm(1L));
+        ItemList.Machine_EV_Miner.set(new GT_MetaTileEntity_Miner(12101, "basicmachine.miner.tier.04", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "EV Miner", 4).getStackForm(1L));
+        ItemList.Machine_IV_Miner.set(new GT_MetaTileEntity_Miner(12102, "basicmachine.miner.tier.05", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "IV Miner", 5).getStackForm(1L));
 
 
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_LV_Miner.get(1L), bitsd, new Object[]{"EEE", aTextWireHull, "CSC", 'M', ItemList.Hull_LV, 'E', ItemList.Electric_Motor_LV, 'C', OrePrefixes.circuit.get(Materials.Basic), 'W', OrePrefixes.cableGt01.get(Materials.Tin), 'S', ItemList.Sensor_LV});
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_MV_Miner.get(1L), bitsd, new Object[]{"PEP", aTextWireHull, "CSC", 'M', ItemList.Hull_MV, 'E', ItemList.Electric_Motor_MV, 'P', ItemList.Electric_Piston_MV, 'C', OrePrefixes.circuit.get(Materials.Good), 'W', OrePrefixes.cableGt02.get(Materials.Copper), 'S', ItemList.Sensor_MV});
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_HV_Miner.get(1L), bitsd, new Object[]{"RPR", aTextWireHull, "CSC", 'M', ItemList.Hull_HV, 'E', ItemList.Electric_Motor_HV, 'P', ItemList.Electric_Piston_HV, 'R', ItemList.Robot_Arm_HV, 'C', OrePrefixes.circuit.get(Materials.Advanced), 'W', OrePrefixes.cableGt04.get(Materials.Gold), 'S', ItemList.Sensor_HV});
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_EV_Miner.get(1L), bitsd, new Object[]{"RPR", aTextWireHull, "CSC", 'M', ItemList.Hull_EV, 'P', ItemList.Electric_Piston_EV, 'R', ItemList.Robot_Arm_EV, 'C', OrePrefixes.circuit.get(Materials.Data), 'W', OrePrefixes.cableGt08.get(Materials.Aluminium), 'S', ItemList.Sensor_EV});
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_IV_Miner.get(1L), bitsd, new Object[]{"RRR", aTextWireHull, "CSC", 'M', ItemList.Hull_IV, 'R', ItemList.Robot_Arm_IV, 'C', OrePrefixes.circuit.get(Materials.Elite), 'W', OrePrefixes.cableGt12.get(Materials.Platinum), 'S', ItemList.Sensor_IV});
+        //GT_ModHandler.addCraftingRecipe(ItemList.Machine_LV_Miner.get(1L), bitsd, new Object[]{"EEE", aTextWireHull, "CSC", 'M', ItemList.Hull_LV, 'E', ItemList.Electric_Motor_LV, 'C', OrePrefixes.circuit.get(Materials.Basic), 'W', OrePrefixes.cableGt01.get(Materials.Tin), 'S', ItemList.Sensor_LV});
+        //GT_ModHandler.addCraftingRecipe(ItemList.Machine_MV_Miner.get(1L), bitsd, new Object[]{"PEP", aTextWireHull, "CSC", 'M', ItemList.Hull_MV, 'E', ItemList.Electric_Motor_MV, 'P', ItemList.Electric_Piston_MV, 'C', OrePrefixes.circuit.get(Materials.Good), 'W', OrePrefixes.cableGt02.get(Materials.Copper), 'S', ItemList.Sensor_MV});
+        //GT_ModHandler.addCraftingRecipe(ItemList.Machine_HV_Miner.get(1L), bitsd, new Object[]{"RPR", aTextWireHull, "CSC", 'M', ItemList.Hull_HV, 'E', ItemList.Electric_Motor_HV, 'P', ItemList.Electric_Piston_HV, 'R', ItemList.Robot_Arm_HV, 'C', OrePrefixes.circuit.get(Materials.Advanced), 'W', OrePrefixes.cableGt04.get(Materials.Gold), 'S', ItemList.Sensor_HV});
+        //GT_ModHandler.addCraftingRecipe(ItemList.Machine_EV_Miner.get(1L), bitsd, new Object[]{"RPR", aTextWireHull, "CSC", 'M', ItemList.Hull_EV, 'P', ItemList.Electric_Piston_EV, 'R', ItemList.Robot_Arm_EV, 'C', OrePrefixes.circuit.get(Materials.Data), 'W', OrePrefixes.cableGt08.get(Materials.Aluminium), 'S', ItemList.Sensor_EV});
+        //GT_ModHandler.addCraftingRecipe(ItemList.Machine_IV_Miner.get(1L), bitsd, new Object[]{"RRR", aTextWireHull, "CSC", 'M', ItemList.Hull_IV, 'R', ItemList.Robot_Arm_IV, 'C', OrePrefixes.circuit.get(Materials.Elite), 'W', OrePrefixes.cableGt12.get(Materials.Platinum), 'S', ItemList.Sensor_IV});
 
     }
 
@@ -1124,15 +1124,15 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.ConcreteBackfiller1.get(1L), bitsd, new Object[]{"WPW", "EME", "CQC", 'M', ItemList.Hull_MV, 'W', OrePrefixes.frameGt.get(Materials.Steel), 'E', OrePrefixes.circuit.get(Materials.Good), 'C', ItemList.Electric_Motor_MV, 'P', OrePrefixes.pipeLarge.get(Materials.Steel), 'Q', ItemList.Electric_Pump_MV});
         GT_ModHandler.addCraftingRecipe(ItemList.ConcreteBackfiller2.get(1L), bitsd, new Object[]{"WPW", "EME", "CQC", 'M', ItemList.ConcreteBackfiller1, 'W', OrePrefixes.frameGt.get(Materials.Titanium), 'E', OrePrefixes.circuit.get(Materials.Data), 'C', ItemList.Electric_Motor_EV, 'P', OrePrefixes.pipeLarge.get(Materials.Steel), 'Q', ItemList.Electric_Pump_EV});
 
-        ItemList.OreDrill1.set(new GT_MetaTileEntity_OreDrillingPlant1(1158, "multimachine.oredrill1", "Ore Drilling Plant").getStackForm(1));
+        ItemList.OreDrill1.set(new GT_MetaTileEntity_OreDrillingPlant1(1158, "multimachine.oredrill1", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant").getStackForm(1));
 
-        ItemList.OreDrill2.set(new GT_MetaTileEntity_OreDrillingPlant2(1177, "multimachine.oredrill2", "Ore Drilling Plant II").getStackForm(1));
+        ItemList.OreDrill2.set(new GT_MetaTileEntity_OreDrillingPlant2(1177, "multimachine.oredrill2", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant II").getStackForm(1));
 
-        ItemList.OreDrill3.set(new GT_MetaTileEntity_OreDrillingPlant3(1178, "multimachine.oredrill3", "Ore Drilling Plant III").getStackForm(1));
+        ItemList.OreDrill3.set(new GT_MetaTileEntity_OreDrillingPlant3(1178, "multimachine.oredrill3", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant III").getStackForm(1));
 
-        ItemList.OreDrill4.set(new GT_MetaTileEntity_OreDrillingPlant4(1179, "multimachine.oredrill4", "Ore Drilling Plant IV").getStackForm(1));
+        ItemList.OreDrill4.set(new GT_MetaTileEntity_OreDrillingPlant4(1179, "multimachine.oredrill4", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant IV").getStackForm(1));
 
-        ItemList.OreDrill5.set(new GT_MetaTileEntity_OreDrillingPlant5(12190, "multimachine.oredrill5", "Ore Drilling Plant V").getStackForm(1));
+        ItemList.OreDrill5.set(new GT_MetaTileEntity_OreDrillingPlant5(12190, "multimachine.oredrill5", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant V").getStackForm(1));
 
         ItemList.OilCracker.set(new GT_MetaTileEntity_OilCracker(1160, "multimachine.cracker", "Oil Cracking Unit").getStackForm(1));
 
