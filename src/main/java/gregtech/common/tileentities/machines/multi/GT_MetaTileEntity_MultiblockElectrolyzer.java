@@ -40,7 +40,6 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity
         return new String[]{
         		"Controller block for the Multiblock Electrolyzer",
 				"Has the all recipes as the Electrolyzer",
-				"Does not lose efficiency when overclocked",
 				"Size(WxHxD): 3x3x3",
 				"3x3x3 of Stable Titanium Machine Casing (hollow, min 8!)",
 				"Controller (Front centered)",

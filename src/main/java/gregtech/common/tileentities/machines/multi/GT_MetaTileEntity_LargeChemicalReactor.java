@@ -43,7 +43,6 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 		return new String[]{
 				"Controller block for the Large Chemical Reactor",
 				"Has the same recipes as the Chemical Reactor",
-				"Does not lose efficiency when overclocked",
 				"Accepts fluids instead of fluid cells",
 				"Size(WxHxD): 3x3x3",
 				"3x3x3 of Chemically Inert Machine Casings (hollow, min 8!)",

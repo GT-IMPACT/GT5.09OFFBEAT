@@ -40,7 +40,6 @@ public class GT_MetaTileEntity_MultiblockCentrifuge extends GT_MetaTileEntity_Mu
         return new String[]{
         		"Controller block for the Large Centrifuge",
 				"Has the all recipes as the Centrifuge",
-				"Does not lose efficiency when overclocked",
 				"Size(WxHxD): 3x3x3",
 				"3x3x3 of Clean Stainless Steel Machine Casing (hollow, min 8!)",
 				"Controller (Front centered)",
