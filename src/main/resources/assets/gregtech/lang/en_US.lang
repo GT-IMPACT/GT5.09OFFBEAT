@@ -671,6 +671,11 @@ achievement.gt.metaitem.03.32207.desc=Pickup this item to see the recipe in NEI
 achievement.gt.blockmachines.blockmachine.teleporter=Teleporter
 achievement.gt.blockmachines.blockmachine.teleporter.desc=Pickup this item to see the recipe in NEI
 
+achievement.gt.metaitem.02.32587=Solar Panel UHV
+achievement.gt.metaitem.02.32587.desc=Is it legal?
+achievement.gt.metaitem.02.32588=Solar Panel UEV
+achievement.gt.metaitem.02.32588.desc=Star in a one panel? No way!
+
 achievement.item.impact_item2.147=Stargate-Radiation-Containment-Plate
 achievement.item.impact_item2.147.desc=Pickup this item to see the recipe in NEI
 achievement.item.impact_item2.148=Stargate Frame Part
