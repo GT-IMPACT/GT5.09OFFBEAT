@@ -9,6 +9,7 @@ import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -16,12 +17,16 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class Behaviour_None
-        implements IItemBehaviour<GT_MetaBase_Item> {
+public class Behaviour_None implements IItemBehaviour<GT_MetaBase_Item> {
+    
     public boolean onLeftClickEntity(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, Entity aEntity) {
         return false;
     }
-
+    
+    public boolean itemInteractionForEntity(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, EntityLivingBase aEntity) {
+        return false;
+    }
+    
     public boolean onItemUse(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int aSide, float hitX, float hitY, float hitZ) {
         return false;
     }

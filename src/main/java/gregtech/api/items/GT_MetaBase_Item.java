@@ -112,7 +112,33 @@ public abstract class GT_MetaBase_Item extends GT_Generic_Item implements ISpeci
         }
         return false;
     }
-
+    
+    @Override
+    public boolean itemInteractionForEntity(ItemStack aStack, EntityPlayer aPlayer, EntityLivingBase aEntity) {
+        use(aStack, 0, aPlayer);
+        isItemStackUsable(aStack);
+        ArrayList<IItemBehaviour<GT_MetaBase_Item>> tList = mItemBehaviors.get((short) getDamage(aStack));
+        try {
+            if (tList != null) {
+                for (IItemBehaviour<GT_MetaBase_Item> tBehavior : tList) {
+                    if (tBehavior.itemInteractionForEntity(this, aStack, aPlayer, aEntity)) {
+                        if (aStack.stackSize <= 0) {
+                            aPlayer.destroyCurrentEquippedItem();
+                        }
+                        return true;
+                    }
+                    if (aStack.stackSize <= 0) {
+                        aPlayer.destroyCurrentEquippedItem();
+                        return false;
+                    }
+                }
+            }
+        } catch (Throwable e) {
+            if (D1) e.printStackTrace(GT_Log.err);
+        }
+        return false;
+    }
+    
     @Override
     public boolean onItemUse(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int aSide, float hitX, float hitY, float hitZ) {
         use(aStack, 0, aPlayer);
