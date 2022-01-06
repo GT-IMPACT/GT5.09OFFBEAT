@@ -2,6 +2,7 @@ package gregtech.common.tools;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.interfaces.IAxeWrenchable;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import net.minecraft.block.Block;
@@ -81,7 +82,11 @@ public class GT_Tool_Axe
 
     public boolean isMinableBlock(Block aBlock, byte aMetaData) {
         String tTool = aBlock.getHarvestTool(aMetaData);
-        return aBlock.getHarvestLevel(aMetaData) != -1 && (tTool == null || tTool.isEmpty() || (tTool.equals("axe"))) || (aBlock.getMaterial() == Material.wood || (aBlock.getMaterial() == Material.plants) || (aBlock.getMaterial() == Material.leaves));
+        if (aBlock instanceof IAxeWrenchable) {
+            return true;
+        }
+        return aBlock.getHarvestLevel(aMetaData) != -1 && (tTool == null || tTool.isEmpty() || (tTool.equals("axe")))
+                || (aBlock.getMaterial() == Material.wood || (aBlock.getMaterial() == Material.plants) || (aBlock.getMaterial() == Material.leaves));
     }
 
     public int convertBlockDrops(List<ItemStack> aDrops, ItemStack aStack, EntityPlayer aPlayer, Block aBlock, int aX, int aY, int aZ, byte aMetaData, int aFortune, boolean aSilkTouch, BlockEvent.HarvestDropsEvent aEvent) {
