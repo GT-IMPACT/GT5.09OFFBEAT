@@ -409,8 +409,6 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
 
         // AE2-p2p Compat
         if (GT_Mod.gregtechproxy.mAE2Integration) {
-            if (tTileEntity instanceof IEnergySource && tTileEntity instanceof IPartHost && ((IPartHost)tTileEntity).getPart(tDir) instanceof PartP2PGTPower && ((IEnergySource) tTileEntity).emitsEnergyTo((TileEntity) baseMetaTile, tDir))
-                return true;
             if (tTileEntity instanceof appeng.tile.powersink.IC2 && ((appeng.tile.powersink.IC2)tTileEntity).acceptsEnergyFrom((TileEntity)baseMetaTile, tDir))
                 return true;
         }
