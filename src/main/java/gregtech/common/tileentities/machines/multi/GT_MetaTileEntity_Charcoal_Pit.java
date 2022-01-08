@@ -199,7 +199,7 @@ public class GT_MetaTileEntity_Charcoal_Pit extends GT_MetaTileEntity_MultiBlock
                 return true;
         }
         String tTool = log.getHarvestTool(meta);
-        return OrePrefixes.log.contains(new ItemStack(log, 1,meta)) && ((tTool != null) && (tTool.equals("axe"))) && (log.getMaterial() == Material.wood);
+        return OrePrefixes.log.contains(new ItemStack(log, 1, meta)) && ("axe".equals(tTool)) && (log.getMaterial() == Material.wood);
     }
 
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
