@@ -75,6 +75,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     private static final EnumSet<OreGenEvent.GenerateMinable.EventType> PREVENTED_ORES = EnumSet.of(OreGenEvent.GenerateMinable.EventType.COAL,
@@ -216,6 +217,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean mHardRadonRecipe = true;
     public boolean mComponentAssembler = false;
     public final HashSet<IReactor> reactorsDone=new HashSet<>();
+    
+    // Locking
+    public static ReentrantLock TICK_LOCK = new ReentrantLock();
     
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);
