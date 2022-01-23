@@ -1069,6 +1069,13 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     @SubscribeEvent
     public void onServerTickEvent(TickEvent.ServerTickEvent aEvent) {
         reactorsDone.clear();
+        if (aEvent.side.isServer()) {
+            if (aEvent.phase == TickEvent.Phase.START) {
+                TICK_LOCK.lock();
+            } else {
+                TICK_LOCK.unlock();
+            }
+        }
     }
     
     @SubscribeEvent

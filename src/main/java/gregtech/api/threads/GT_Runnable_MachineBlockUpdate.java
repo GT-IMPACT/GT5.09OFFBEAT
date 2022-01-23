@@ -31,7 +31,7 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
         return thread;
     };
     protected static ExecutorService EXECUTOR_SERVICE;
-
+    
     // This class should never be initiated outside of this class!
     protected GT_Runnable_MachineBlockUpdate(World aWorld, ChunkCoordinates aCoords) {
         this.world = aWorld;
@@ -39,35 +39,35 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
         visited.add(aCoords);
         tQueue.add(aCoords);
     }
-
+    
     public static boolean isEnabled() {
         return isEnabled;
     }
-
+    
     public static void setEnabled() {
         GT_Runnable_MachineBlockUpdate.isEnabled = true;
     }
-
+    
     public static void setDisabled() {
         GT_Runnable_MachineBlockUpdate.isEnabled = false;
     }
-
+    
     public static void setEnabled(boolean isEnabled) {
         GT_Runnable_MachineBlockUpdate.isEnabled = isEnabled;
     }
-
+    
     protected static boolean isEnabled = true;
-
+    
     public static void setMachineUpdateValues(World aWorld, ChunkCoordinates aCoords) {
         if (isEnabled) {
             EXECUTOR_SERVICE.submit(new GT_Runnable_MachineBlockUpdate(aWorld, aCoords));
         }
     }
-
+    
     public static void initExecutorService() {
-        EXECUTOR_SERVICE = Executors.newFixedThreadPool((Runtime.getRuntime().availableProcessors() * 2 / 3), THREAD_FACTORY);
+        EXECUTOR_SERVICE = Executors.newFixedThreadPool(Math.max(1, (Runtime.getRuntime().availableProcessors() * 2 / 3)), THREAD_FACTORY);
     }
-
+    
     public static void shutdownExecutorService() {
         try {
             GT_Mod.GT_FML_LOGGER.info("Shutting down Machine block update executor service");
@@ -94,7 +94,7 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
             GT_Mod.GT_FML_LOGGER.info("Leaving... GT_Runnable_MachineBlockUpdate.shutdownExecutorService");
         }
     }
-
+    
     @Override
     public void run() {
         try {
@@ -116,14 +116,14 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
                 // See if the block itself needs an update
                 if (tTileEntity instanceof IMachineBlockUpdateable)
                     ((IMachineBlockUpdateable) tTileEntity).onMachineBlockUpdate();
-
+                
                 // Now see if we should add the nearby blocks to the queue:
                 // 1) If we've visited less than 5 blocks, then yes
                 // 2) If the tile says we should recursively updated (pipes don't, machine blocks do)
                 // 3) If the block at the coordinates is marked as a machine block
-                if (visited.size() < 5 
-                    || (tTileEntity instanceof IMachineBlockUpdateable && ((IMachineBlockUpdateable) tTileEntity).isMachineBlockUpdateRecursive()) 
-                    || isMachineBlock) 
+                if (visited.size() < 5
+                        || (tTileEntity instanceof IMachineBlockUpdateable && ((IMachineBlockUpdateable) tTileEntity).isMachineBlockUpdateRecursive())
+                        || isMachineBlock)
                 {
                     ChunkCoordinates tCoords;
                     
@@ -137,8 +137,8 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
             }
         } catch (Exception e) {
             GT_Mod.GT_FML_LOGGER.error(
-                "Well this update was broken... " + mCoords + ", mWorld={" + world.getProviderName() + " @dimId " + world.provider.dimensionId + "}", e);
+                    "Well this update was broken... " + mCoords + ", mWorld={" + world.getProviderName() + " @dimId " + world.provider.dimensionId + "}", e);
         }
     }
-
+    
 }
