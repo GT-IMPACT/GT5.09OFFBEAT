@@ -16,6 +16,7 @@ import gregtech.api.objects.GT_Cover_Default;
 import gregtech.api.objects.GT_Cover_None;
 import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.threads.GT_Runnable_Cable_Update;
 import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
 import gregtech.api.world.GT_Worldgen;
@@ -25,6 +26,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
@@ -288,9 +290,20 @@ public class GregTech_API {
      * @param aZ     is the Z-Coord of the update causing Block
      */
     public static boolean causeMachineUpdate(World aWorld, int aX, int aY, int aZ) {
-        if (!aWorld.isRemote)
-            new Thread(new GT_Runnable_MachineBlockUpdate(aWorld, aX, aY, aZ), "Machine Block Updating").start();
-        return true;
+        if (aWorld != null && !aWorld.isRemote) { // World might be null during Worldgen
+            GT_Runnable_MachineBlockUpdate.setMachineUpdateValues(aWorld, new ChunkCoordinates(aX, aY, aZ));
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean causeCableUpdate(World aWorld, int aX, int aY, int aZ) {
+        if (aWorld != null && !aWorld.isRemote) { // World might be null during Worldgen
+            GT_Runnable_Cable_Update.setCableUpdateValues(aWorld, new ChunkCoordinates(aX, aY, aZ));
+            return true;
+        }
+        return false;
+
     }
 
     /**
