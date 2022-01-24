@@ -1,6 +1,7 @@
 package gregtech.api.metatileentity;
 
 import cpw.mods.fml.common.FMLLog;
+import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
@@ -10,6 +11,7 @@ import gregtech.api.interfaces.tileentity.IPipeRenderedTileEntity;
 import gregtech.api.net.GT_Packet_TileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.*;
+import gregtech.common.GT_Client;
 import gregtech.common.covers.GT_Cover_Fluidfilter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -467,6 +469,10 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     public ITexture getCoverTexture(byte aSide) {
+        if (getCoverIDAtSide(aSide) == 0) return null;
+        if (GT_Mod.instance.isClientSide() && (GT_Client.hideValue & 0x1) != 0) {
+            return Textures.BlockIcons.HIDDEN_TEXTURE[0]; // See through
+        }
         return GregTech_API.sCovers.get(new GT_ItemStack(getCoverIDAtSide(aSide)));
     }
 

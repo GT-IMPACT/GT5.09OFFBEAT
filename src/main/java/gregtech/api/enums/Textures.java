@@ -5,6 +5,7 @@ import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.objects.GT_SidedTexture;
+import gregtech.api.objects.GT_StdRenderedTexture;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -130,7 +131,9 @@ public class Textures {
         MP1a, MP1, MP2a, MP2, MP3a, MP3, MP4a, MP4, MP5a, MP5, MP6a, MP6, MP7a, MP7, MP8a, MP8,
     
     
-        OVERLAY_ENERGY_IN_POWER_MULTI, OVERLAY_ENERGY_OUT_POWER_MULTI
+        OVERLAY_ENERGY_IN_POWER_MULTI, OVERLAY_ENERGY_OUT_POWER_MULTI,
+    
+        HIDDEN_FACE
         
         ;
 
@@ -591,10 +594,16 @@ public class Textures {
                 BLOCK_NETHERSTAR,
                 BLOCK_CHARCOAL
             };
+    
+        public static ITexture[] HIDDEN_TEXTURE = new ITexture[]{
+                new GT_StdRenderedTexture(BlockIcons.HIDDEN_FACE)
+        };
         public static ITexture[]
                 ERROR_RENDERING = new ITexture[]{
                 new GT_RenderedTexture(RENDERING_ERROR)
         },
+        
+        
                 OVERLAYS_ENERGY_IN = new ITexture[]{
                 		new GT_RenderedTexture(OVERLAY_ENERGY_IN, new short[]{180, 180, 180, 0}),
                         new GT_RenderedTexture(OVERLAY_ENERGY_IN, new short[]{220, 220, 220, 0}),
@@ -888,7 +897,7 @@ public class Textures {
                 };
 
         public static final ITexture[] ERROR_RENDERING = new ITexture[]{new GT_RenderedTexture(RENDERING_ERROR)};
-
+        
         protected IIcon mIcon, mOverlay;
 
         private ItemIcons() {
