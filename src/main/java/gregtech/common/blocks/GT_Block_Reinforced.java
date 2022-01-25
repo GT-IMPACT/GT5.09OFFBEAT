@@ -11,6 +11,7 @@ import gregtech.api.items.GT_Generic_Block;
 import gregtech.api.objects.GT_CopiedBlockTexture;
 import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -42,7 +43,7 @@ public class GT_Block_Reinforced extends GT_Generic_Block {
     public GT_Block_Reinforced(String aName) {
         super(GT_Item_Storage.class, aName, new GT_Material_Reinforced());
         for (byte i = 0; i < 16; i = (byte) (i + 1)) {
-            Textures.BlockIcons.CASING_BLOCKS[(i + 80)] = new GT_CopiedBlockTexture(this, 6, i);
+            Textures.BlockIcons.casingTexturePages[0][(i + 80)] = TextureFactory.of(this, i);
         }
         setStepSound(soundTypeStone);
         setCreativeTab(GregTech_API.TAB_GREGTECH);

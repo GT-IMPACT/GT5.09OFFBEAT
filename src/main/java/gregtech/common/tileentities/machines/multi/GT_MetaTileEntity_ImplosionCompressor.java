@@ -7,7 +7,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
@@ -16,6 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_ImplosionCompressor extends GT_MetaTileEntity_MultiBlockBase {
  
@@ -45,11 +48,19 @@ public class GT_MetaTileEntity_ImplosionCompressor extends GT_MetaTileEntity_Mul
 				"Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
 	}
 	
+	@Override
 	public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
 		if (aSide == aFacing) {
-			return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[16], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_IMPLOSION_COMPRESSOR_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_IMPLOSION_COMPRESSOR)};
+			if (aActive) return new ITexture[]{
+					Textures.BlockIcons.casingTexturePages[0][16],
+					TextureFactory.of(OVERLAY_FRONT_IMPLOSION_COMPRESSOR_ACTIVE),
+					TextureFactory.builder().addIcon(OVERLAY_FRONT_IMPLOSION_COMPRESSOR_ACTIVE_GLOW).glow().build()};
+			return new ITexture[]{
+					Textures.BlockIcons.casingTexturePages[0][16],
+					TextureFactory.of(OVERLAY_FRONT_IMPLOSION_COMPRESSOR),
+					TextureFactory.builder().addIcon(OVERLAY_FRONT_IMPLOSION_COMPRESSOR_GLOW).glow().build()};
 		}
-		return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[16]};
+		return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][16]};
 	}
 	
 	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {

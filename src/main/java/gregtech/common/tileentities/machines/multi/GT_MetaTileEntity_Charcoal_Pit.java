@@ -9,7 +9,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.common.GT_Pollution;
 import net.minecraft.block.Block;
@@ -19,6 +20,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.oredict.OreDictionary;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_Charcoal_Pit extends GT_MetaTileEntity_MultiBlockBase {
 
@@ -48,12 +51,19 @@ public class GT_MetaTileEntity_Charcoal_Pit extends GT_MetaTileEntity_MultiBlock
                 "No air between logs allowed",
                 "Causes 100 Pollution per second"};
     }
-
+    
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == 1) {
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[10], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER)};
+            if (aActive) return new ITexture[]{
+                    casingTexturePages[0][10],
+                    TextureFactory.of(OVERLAY_FRONT_ROCK_BREAKER_ACTIVE),
+                    TextureFactory.builder().addIcon(OVERLAY_FRONT_ROCK_BREAKER_ACTIVE_GLOW).glow().build()};
+            return new ITexture[]{
+                    casingTexturePages[0][10],
+                    TextureFactory.of(OVERLAY_FRONT_ROCK_BREAKER)};
         }
-        return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[10]};
+        return new ITexture[]{casingTexturePages[0][10]};
     }
 
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {

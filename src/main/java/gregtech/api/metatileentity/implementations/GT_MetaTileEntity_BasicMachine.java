@@ -10,7 +10,8 @@ import gregtech.api.gui.GT_GUIContainer_BasicMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.objects.GT_ItemStack;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe;
@@ -1017,26 +1018,26 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     }
 
     public ITexture[] getBottomFacingPipeActive(byte aColor) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
     }
 
     public ITexture[] getBottomFacingPipeInactive(byte aColor) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
     }
 
     public ITexture[] getTopFacingPipeActive(byte aColor) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
     }
 
     public ITexture[] getTopFacingPipeInactive(byte aColor) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
     }
 
     public ITexture[] getSideFacingPipeActive(byte aColor) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
     }
 
     public ITexture[] getSideFacingPipeInactive(byte aColor) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
     }
 }

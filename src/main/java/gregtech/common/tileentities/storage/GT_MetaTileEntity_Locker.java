@@ -7,7 +7,8 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
 import gregtech.api.objects.GT_ItemStack;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -43,7 +44,7 @@ public class GT_MetaTileEntity_Locker
             rTextures[0][(i + 1)] = tmp0;
             ITexture[] tmp1 = {Textures.BlockIcons.MACHINE_CASINGS[this.mTier][(i + 1)], Textures.BlockIcons.OVERLAYS_ENERGY_IN[this.mTier]};
             rTextures[1][(i + 1)] = tmp1;
-            ITexture[] tmp2 = {Textures.BlockIcons.MACHINE_CASINGS[this.mTier][(i + 1)], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_LOCKER)};
+            ITexture[] tmp2 = {Textures.BlockIcons.MACHINE_CASINGS[this.mTier][(i + 1)], TextureFactory.of(Textures.BlockIcons.OVERLAY_LOCKER)};
             rTextures[2][(i + 1)] = tmp2;
         }
         return rTextures;

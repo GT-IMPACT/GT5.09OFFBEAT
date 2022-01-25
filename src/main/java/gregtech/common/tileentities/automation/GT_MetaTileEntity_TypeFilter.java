@@ -6,8 +6,9 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Buffer;
-import gregtech.api.objects.GT_RenderedTexture;
+
 import gregtech.api.objects.ItemData;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_TypeFilter;
@@ -41,9 +42,11 @@ public class GT_MetaTileEntity_TypeFilter
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_TypeFilter(this.mName, this.mTier, this.mInventory.length, this.mDescriptionArray, this.mTextures);
     }
-
+    
     public ITexture getOverlayIcon() {
-        return new GT_RenderedTexture(Textures.BlockIcons.AUTOMATION_TYPEFILTER);
+        return TextureFactory.of(
+                TextureFactory.of(Textures.BlockIcons.AUTOMATION_TYPEFILTER),
+                TextureFactory.builder().addIcon(Textures.BlockIcons.AUTOMATION_TYPEFILTER_GLOW).glow().build());
     }
 
     public boolean isValidSlot(int aIndex) {

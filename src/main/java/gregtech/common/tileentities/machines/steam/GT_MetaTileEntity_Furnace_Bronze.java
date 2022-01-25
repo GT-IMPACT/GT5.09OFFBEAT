@@ -7,11 +7,14 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_Bronze;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_Furnace_Bronze extends GT_MetaTileEntity_BasicMachine_Bronze {
     public GT_MetaTileEntity_Furnace_Bronze(int aID, String aName, String aNameRegional) {
@@ -60,36 +63,61 @@ public class GT_MetaTileEntity_Furnace_Bronze extends GT_MetaTileEntity_BasicMac
     public void startProcess() {
         sendLoopStart((byte) 1);
     }
-
+    
+    @Override
     public ITexture[] getSideFacingActive(byte aColor) {
-        return new ITexture[]{super.getSideFacingActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_STEAM_FURNACE_ACTIVE)};
+        return new ITexture[]{
+                super.getSideFacingActive(aColor)[0],
+                TextureFactory.of(OVERLAY_SIDE_STEAM_FURNACE_ACTIVE)};
     }
-
+    
+    @Override
     public ITexture[] getSideFacingInactive(byte aColor) {
-        return new ITexture[]{super.getSideFacingInactive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_STEAM_FURNACE)};
+        return new ITexture[]{
+                super.getSideFacingInactive(aColor)[0],
+                TextureFactory.of(OVERLAY_SIDE_STEAM_FURNACE)};
     }
-
+    
+    @Override
     public ITexture[] getFrontFacingActive(byte aColor) {
-        return new ITexture[]{super.getFrontFacingActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_STEAM_FURNACE_ACTIVE)};
+        return new ITexture[]{
+                super.getFrontFacingActive(aColor)[0],
+                TextureFactory.of(OVERLAY_FRONT_STEAM_FURNACE_ACTIVE),
+                TextureFactory.builder().addIcon(OVERLAY_FRONT_STEAM_FURNACE_ACTIVE_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getFrontFacingInactive(byte aColor) {
-        return new ITexture[]{super.getFrontFacingInactive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_STEAM_FURNACE)};
+        return new ITexture[]{
+                super.getFrontFacingInactive(aColor)[0],
+                TextureFactory.of(OVERLAY_FRONT_STEAM_FURNACE)};
     }
-
+    
+    @Override
     public ITexture[] getTopFacingActive(byte aColor) {
-        return new ITexture[]{super.getTopFacingActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_STEAM_FURNACE_ACTIVE)};
+        return new ITexture[]{
+                super.getTopFacingActive(aColor)[0],
+                TextureFactory.of(OVERLAY_TOP_STEAM_FURNACE_ACTIVE)};
     }
-
+    
+    @Override
     public ITexture[] getTopFacingInactive(byte aColor) {
-        return new ITexture[]{super.getTopFacingInactive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_STEAM_FURNACE)};
+        return new ITexture[]{
+                super.getTopFacingInactive(aColor)[0],
+                TextureFactory.of(OVERLAY_TOP_STEAM_FURNACE)};
     }
-
+    
+    @Override
     public ITexture[] getBottomFacingActive(byte aColor) {
-        return new ITexture[]{super.getBottomFacingActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_STEAM_FURNACE_ACTIVE)};
+        return new ITexture[]{
+                super.getBottomFacingActive(aColor)[0],
+                TextureFactory.of(OVERLAY_BOTTOM_STEAM_FURNACE_ACTIVE)};
     }
-
+    
+    @Override
     public ITexture[] getBottomFacingInactive(byte aColor) {
-        return new ITexture[]{super.getBottomFacingInactive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_STEAM_FURNACE)};
+        return new ITexture[]{
+                super.getBottomFacingInactive(aColor)[0],
+                TextureFactory.of(OVERLAY_BOTTOM_STEAM_FURNACE)};
     }
 }

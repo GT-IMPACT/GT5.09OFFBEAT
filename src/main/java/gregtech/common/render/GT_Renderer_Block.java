@@ -45,13 +45,13 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
     private static final float coverInnerMax = blockMax - coverThickness;
     public static GT_Renderer_Block INSTANCE;
     public final int mRenderID;
-
+    
     public GT_Renderer_Block() {
         this.mRenderID = RenderingRegistry.getNextAvailableRenderId();
         INSTANCE = this;
         RenderingRegistry.registerBlockHandler(this);
     }
-
+    
     public static boolean renderStandardBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, RenderBlocks aRenderer) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IPipeRenderedTileEntity)) {
@@ -74,11 +74,11 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
         }
         return false;
     }
-
+    
     public static boolean renderStandardBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, RenderBlocks aRenderer, ITexture[][] aTextures) {
         aBlock.setBlockBounds(blockMin, blockMin, blockMin, blockMax, blockMax, blockMax);
         aRenderer.setRenderBoundsFromBlock(aBlock);
-
+        
         renderNegativeYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures[DOWN.ordinal()], true);
         renderPositiveYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures[UP.ordinal()], true);
         renderNegativeZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures[NORTH.ordinal()], true);
@@ -87,7 +87,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
         renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures[EAST.ordinal()], true);
         return true;
     }
-
+    
     public static boolean renderPipeBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, IPipeRenderedTileEntity aTileEntity, RenderBlocks aRenderer) {
         final byte aConnections = aTileEntity.getConnections();
         if ((aConnections & (HAS_FRESHFOAM | HAS_HARDENEDFOAM)) != 0) {
@@ -104,14 +104,14 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
         for (int i = 0; i < VALID_DIRECTIONS.length; i++) {
             tIsCovered[i] = (aTileEntity.getCoverIDAtSide((byte) i) != 0);
         }
-
+        
         final ITexture[][] tIcons = new ITexture[VALID_DIRECTIONS.length][];
         final ITexture[][] tCovers = new ITexture[VALID_DIRECTIONS.length][];
         for (int i = 0; i < VALID_DIRECTIONS.length; i++) {
             tCovers[i] = aTileEntity.getTexture(aBlock, (byte) i);
             tIcons[i] = aTileEntity.getTextureUncovered((byte) i);
         }
-
+        
         switch (aConnections) {
             case NO_CONNECTION:
                 aBlock.setBlockBounds(pipeMin, pipeMin, pipeMin, pipeMax, pipeMax, pipeMax);
@@ -131,7 +131,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                 renderPositiveYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[UP.ordinal()], false);
                 renderNegativeZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[NORTH.ordinal()], false);
                 renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[SOUTH.ordinal()], false);
-
+                
                 // EAST - WEST Pipe Ends
                 renderNegativeXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[WEST.ordinal()], false);
                 renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[EAST.ordinal()], false);
@@ -144,7 +144,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                 renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[SOUTH.ordinal()], false);
                 renderNegativeXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[WEST.ordinal()], false);
                 renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[EAST.ordinal()], false);
-
+                
                 // UP - DOWN Pipe Ends
                 renderNegativeYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[DOWN.ordinal()], false);
                 renderPositiveYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[UP.ordinal()], false);
@@ -157,7 +157,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                 renderPositiveYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[UP.ordinal()], false);
                 renderNegativeXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[WEST.ordinal()], false);
                 renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[EAST.ordinal()], false);
-
+                
                 // NORTH - SOUTH Pipe Ends
                 renderNegativeZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[NORTH.ordinal()], false);
                 renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[SOUTH.ordinal()], false);
@@ -175,7 +175,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                     renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[SOUTH.ordinal()], false);
                 }
                 renderNegativeXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[WEST.ordinal()], false);
-
+                
                 if ((aConnections & CONNECTED_EAST) == 0) {
                     aBlock.setBlockBounds(pipeMin, pipeMin, pipeMin, pipeMax, pipeMax, pipeMax);
                     aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -188,7 +188,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                     renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[SOUTH.ordinal()], false);
                 }
                 renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[EAST.ordinal()], false);
-
+                
                 if ((aConnections & CONNECTED_DOWN) == 0) {
                     aBlock.setBlockBounds(pipeMin, pipeMin, pipeMin, pipeMax, pipeMax, pipeMax);
                     aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -201,7 +201,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                     renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[EAST.ordinal()], false);
                 }
                 renderNegativeYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[DOWN.ordinal()], false);
-
+                
                 if ((aConnections & CONNECTED_UP) == 0) {
                     aBlock.setBlockBounds(pipeMin, pipeMin, pipeMin, pipeMax, pipeMax, pipeMax);
                     aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -214,7 +214,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                     renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[EAST.ordinal()], false);
                 }
                 renderPositiveYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[UP.ordinal()], false);
-
+                
                 if ((aConnections & CONNECTED_NORTH) == 0) {
                     aBlock.setBlockBounds(pipeMin, pipeMin, pipeMin, pipeMax, pipeMax, pipeMax);
                     aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -227,7 +227,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                     renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[EAST.ordinal()], false);
                 }
                 renderNegativeZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[NORTH.ordinal()], false);
-
+                
                 if ((aConnections & CONNECTED_SOUTH) == 0) {
                     aBlock.setBlockBounds(pipeMin, pipeMin, pipeMin, pipeMax, pipeMax, pipeMax);
                     aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -242,7 +242,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                 renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tIcons[SOUTH.ordinal()], false);
                 break;
         }
-
+        
         // Render covers on pipes
         if (tIsCovered[DOWN.ordinal()]) {
             aBlock.setBlockBounds(blockMin, blockMin, blockMin, blockMax, coverInnerMin, blockMax);
@@ -276,7 +276,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
             renderNegativeYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tCovers[DOWN.ordinal()], false);
         }
-
+        
         if (tIsCovered[UP.ordinal()]) {
             aBlock.setBlockBounds(blockMin, coverInnerMax, blockMin, blockMax, blockMax, blockMax);
             aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -309,7 +309,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
             renderPositiveYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tCovers[UP.ordinal()], false);
         }
-
+        
         if (tIsCovered[NORTH.ordinal()]) {
             aBlock.setBlockBounds(blockMin, blockMin, blockMin, blockMax, blockMax, coverInnerMin);
             aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -342,7 +342,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
             renderNegativeZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tCovers[NORTH.ordinal()], false);
         }
-
+        
         if (tIsCovered[SOUTH.ordinal()]) {
             aBlock.setBlockBounds(blockMin, blockMin, coverInnerMax, blockMax, blockMax, blockMax);
             aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -375,7 +375,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
             renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tCovers[SOUTH.ordinal()], false);
         }
-
+        
         if (tIsCovered[WEST.ordinal()]) {
             aBlock.setBlockBounds(blockMin, blockMin, blockMin, coverInnerMin, blockMax, blockMax);
             aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -408,7 +408,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
             renderNegativeXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tCovers[WEST.ordinal()], false);
         }
-
+        
         if (tIsCovered[EAST.ordinal()]) {
             aBlock.setBlockBounds(coverInnerMax, blockMin, blockMin, blockMax, blockMax, blockMax);
             aRenderer.setRenderBoundsFromBlock(aBlock);
@@ -425,7 +425,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
                 renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tCovers[EAST.ordinal()], false);
             }
             renderNegativeXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, tCovers[EAST.ordinal()], false);
-
+            
             if ((aConnections & CONNECTED_EAST) != 0) {
                 // Split outer face to leave hole for pipe
                 // Lower panel
@@ -444,61 +444,55 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
         }
         aBlock.setBlockBounds(blockMin, blockMin, blockMin, blockMax, blockMax, blockMax);
         aRenderer.setRenderBoundsFromBlock(aBlock);
-
+        
         return true;
     }
-
+    
+    @Override
     public void renderInventoryBlock(Block aBlock, int aMeta, int aModelID, RenderBlocks aRenderer) {
         aRenderer.enableAO = false;
         aRenderer.useInventoryTint = true;
-
+        
+        Tessellator.instance.startDrawingQuads(); // TODO: Remove this once all addons have migrated to the new Texture API
+        
         GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-
-        Tessellator.instance.startDrawingQuads();
-
-        if ((aBlock instanceof GT_Block_Machines)) {
-            if ((aMeta > 0)
-                    && (aMeta < GregTech_API.METATILEENTITIES.length)
-                    && (GregTech_API.METATILEENTITIES[aMeta] != null)
-                    && (!GregTech_API.METATILEENTITIES[aMeta].renderInInventory(aBlock, aMeta, aRenderer))) {
-                renderNormalInventoryMetaTileEntity(aBlock, aMeta, aRenderer);
-            }
-        } else if ((aBlock instanceof GT_Block_Ores_Abstract)) {
+        
+        if (aBlock instanceof GT_Block_Ores_Abstract) {
             GT_TileEntity_Ores tTileEntity = new GT_TileEntity_Ores();
             tTileEntity.mMetaData = ((short) aMeta);
-
+            
             aBlock.setBlockBoundsForItemRender();
             aRenderer.setRenderBoundsFromBlock(aBlock);
-
-            Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
+            Tessellator.instance.setNormal(0, -1, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, tTileEntity.getTexture(aBlock, (byte) DOWN.ordinal()), true);
-
-            Tessellator.instance.setNormal(0.0F, 1.0F, 0.0F);
+            Tessellator.instance.setNormal(0, 1, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, tTileEntity.getTexture(aBlock, (byte) UP.ordinal()), true);
-
-            Tessellator.instance.setNormal(0.0F, 0.0F, -1.0F);
+            Tessellator.instance.setNormal(0, 0, -1); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, tTileEntity.getTexture(aBlock, (byte) NORTH.ordinal()), true);
-
-            Tessellator.instance.setNormal(0.0F, 0.0F, 1.0F);
+            Tessellator.instance.setNormal(0, 0, 1); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, tTileEntity.getTexture(aBlock, (byte) SOUTH.ordinal()), true);
-
-            Tessellator.instance.setNormal(-1.0F, 0.0F, 0.0F);
+            Tessellator.instance.setNormal(-1, 0, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, tTileEntity.getTexture(aBlock, (byte) WEST.ordinal()), true);
-
-            Tessellator.instance.setNormal(1.0F, 0.0F, 0.0F);
+            Tessellator.instance.setNormal(1, 0, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, tTileEntity.getTexture(aBlock, (byte) EAST.ordinal()), true);
-
+            
+        } else if (aMeta > 0
+                && (aMeta < GregTech_API.METATILEENTITIES.length)
+                && aBlock instanceof GT_Block_Machines
+                && (GregTech_API.METATILEENTITIES[aMeta] != null)
+                && (!GregTech_API.METATILEENTITIES[aMeta].renderInInventory(aBlock, aMeta, aRenderer))) {
+            renderNormalInventoryMetaTileEntity(aBlock, aMeta, aRenderer);
         }
-        Tessellator.instance.draw();
-
+        
         aBlock.setBlockBounds(blockMin, blockMin, blockMin, blockMax, blockMax, blockMax);
         aRenderer.setRenderBoundsFromBlock(aBlock);
-
+        
+        Tessellator.instance.draw(); // TODO: Remove this once all addons have migrated to the new Texture API
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
         aRenderer.useInventoryTint = false;
     }
-
+    
     private static void renderNormalInventoryMetaTileEntity(Block aBlock, int aMeta, RenderBlocks aRenderer) {
         if ((aMeta <= 0) || (aMeta >= GregTech_API.METATILEENTITIES.length)) {
             return;
@@ -509,55 +503,44 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
         }
         aBlock.setBlockBoundsForItemRender();
         aRenderer.setRenderBoundsFromBlock(aBlock);
-
+        
         final IGregTechTileEntity iGregTechTileEntity = tMetaTileEntity.getBaseMetaTileEntity();
-
+        
         if ((iGregTechTileEntity instanceof IPipeRenderedTileEntity)) {
             final float tThickness = ((IPipeRenderedTileEntity) iGregTechTileEntity).getThickNess();
             final float pipeMin = (blockMax - tThickness) / 2.0F;
             final float pipeMax = blockMax - pipeMin;
-
+            
             aBlock.setBlockBounds(blockMin, pipeMin, pipeMin, blockMax, pipeMax, pipeMax);
             aRenderer.setRenderBoundsFromBlock(aBlock);
-
-            Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
+            Tessellator.instance.setNormal(0, -1, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) DOWN.ordinal(), (byte) (CONNECTED_WEST | CONNECTED_EAST), (byte) -1, false, false), true);
-
-            Tessellator.instance.setNormal(0.0F, 1.0F, 0.0F);
+            Tessellator.instance.setNormal(0, 1, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) UP.ordinal(), (byte) (CONNECTED_WEST | CONNECTED_EAST), (byte) -1, false, false), true);
-
-            Tessellator.instance.setNormal(0.0F, 0.0F, -1.0F);
+            Tessellator.instance.setNormal(0, 0, -1); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) NORTH.ordinal(), (byte) (CONNECTED_WEST | CONNECTED_EAST), (byte) -1, false, false), true);
-
-            Tessellator.instance.setNormal(0.0F, 0.0F, 1.0F);
+            Tessellator.instance.setNormal(0, 0, 1); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) SOUTH.ordinal(), (byte) (CONNECTED_WEST | CONNECTED_EAST), (byte) -1, false, false), true);
-
-            Tessellator.instance.setNormal(-1.0F, 0.0F, 0.0F);
+            Tessellator.instance.setNormal(-1, 0, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) WEST.ordinal(), (byte) (CONNECTED_WEST | CONNECTED_EAST), (byte) -1, true, false), true);
-
-            Tessellator.instance.setNormal(1.0F, 0.0F, 0.0F);
+            Tessellator.instance.setNormal(1, 0, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) EAST.ordinal(), (byte) (CONNECTED_WEST | CONNECTED_EAST), (byte) -1, true, false), true);
         } else {
-            Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
+            Tessellator.instance.setNormal(0, -1, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) DOWN.ordinal(), (byte) WEST.ordinal(), (byte) -1, true, false), true);
-
-            Tessellator.instance.setNormal(0.0F, 1.0F, 0.0F);
+            Tessellator.instance.setNormal(0, 1, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) UP.ordinal(), (byte) WEST.ordinal(), (byte) -1, true, false), true);
-
-            Tessellator.instance.setNormal(0.0F, 0.0F, -1.0F);
+            Tessellator.instance.setNormal(0, 0, -1); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) NORTH.ordinal(), (byte) WEST.ordinal(), (byte) -1, true, false), true);
-
-            Tessellator.instance.setNormal(0.0F, 0.0F, 1.0F);
+            Tessellator.instance.setNormal(0, 0, 1); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) SOUTH.ordinal(), (byte) WEST.ordinal(), (byte) -1, true, false), true);
-
-            Tessellator.instance.setNormal(-1.0F, 0.0F, 0.0F);
+            Tessellator.instance.setNormal(-1, 0, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) WEST.ordinal(), (byte) WEST.ordinal(), (byte) -1, true, false), true);
-
-            Tessellator.instance.setNormal(1.0F, 0.0F, 0.0F);
+            Tessellator.instance.setNormal(1, 0, 0); // TODO: Remove this once all addons have migrated to the new Texture API
             renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(iGregTechTileEntity, (byte) EAST.ordinal(), (byte) WEST.ordinal(), (byte) -1, true, false), true);
         }
     }
-
+    
     public static void renderNegativeYFacing(IBlockAccess aWorld, RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ, ITexture[] aIcon, boolean aFullBlock) {
         if (aWorld != null) {
             if ((aFullBlock) && (!aBlock.shouldSideBeRendered(aWorld, aX, aY - 1, aZ, 0))) return;
@@ -570,7 +553,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
         }
     }
-
+    
     public static void renderPositiveYFacing(IBlockAccess aWorld, RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ, ITexture[] aIcon, boolean aFullBlock) {
         if (aWorld != null) {
             if ((aFullBlock) && (!aBlock.shouldSideBeRendered(aWorld, aX, aY + 1, aZ, 1))) return;
@@ -583,7 +566,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
         }
     }
-
+    
     public static void renderNegativeZFacing(IBlockAccess aWorld, RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ, ITexture[] aIcon, boolean aFullBlock) {
         if (aWorld != null) {
             if ((aFullBlock) && (!aBlock.shouldSideBeRendered(aWorld, aX, aY, aZ - 1, 2))) return;
@@ -596,7 +579,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
         }
     }
-
+    
     public static void renderPositiveZFacing(IBlockAccess aWorld, RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ, ITexture[] aIcon, boolean aFullBlock) {
         if (aWorld != null) {
             if ((aFullBlock) && (!aBlock.shouldSideBeRendered(aWorld, aX, aY, aZ + 1, 3))) return;
@@ -609,7 +592,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
         }
     }
-
+    
     public static void renderNegativeXFacing(IBlockAccess aWorld, RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ, ITexture[] aIcon, boolean aFullBlock) {
         if (aWorld != null) {
             if ((aFullBlock) && (!aBlock.shouldSideBeRendered(aWorld, aX - 1, aY, aZ, 4))) return;
@@ -622,7 +605,7 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
         }
     }
-
+    
     public static void renderPositiveXFacing(IBlockAccess aWorld, RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ, ITexture[] aIcon, boolean aFullBlock) {
         if (aWorld != null) {
             if ((aFullBlock) && (!aBlock.shouldSideBeRendered(aWorld, aX + 1, aY, aZ, 5))) return;
@@ -635,7 +618,8 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
             }
         }
     }
-
+    
+    @Override
     public boolean renderWorldBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, int aModelID, RenderBlocks aRenderer) {
         aRenderer.enableAO = Minecraft.isAmbientOcclusionEnabled() && GT_Mod.gregtechproxy.mRenderTileAmbientOcclusion;
         aRenderer.useInventoryTint = false;
@@ -660,11 +644,13 @@ public class GT_Renderer_Block implements ISimpleBlockRenderingHandler {
         }
         return false;
     }
-
+    
+    @Override
     public boolean shouldRender3DInInventory(int aModel) {
         return true;
     }
-
+    
+    @Override
     public int getRenderId() {
         return this.mRenderID;
     }

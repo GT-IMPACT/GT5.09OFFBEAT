@@ -5,12 +5,14 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
 import net.minecraftforge.fluids.FluidStack;
 
 import static gregtech.api.enums.GT_Values.V;
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_Massfabricator
         extends GT_MetaTileEntity_BasicMachine {
@@ -20,7 +22,17 @@ public class GT_MetaTileEntity_Massfabricator
     public static boolean sRequiresUUA = false;
 
     public GT_MetaTileEntity_Massfabricator(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 1, "UUM = Matter * Fabrication Squared", 1, 1, "Massfabricator.png", "", new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_MASSFAB_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_MASSFAB), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_MASSFAB_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_MASSFAB), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_MASSFAB_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_MASSFAB), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_MASSFAB_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_MASSFAB)});
+        super(aID, aName, aNameRegional, aTier, 1, "UUM = Matter * Fabrication Squared", 1, 1, "Massfabricator.png", "",
+                TextureFactory.of(OVERLAY_SIDE_MASSFAB_ACTIVE),
+                TextureFactory.of(OVERLAY_SIDE_MASSFAB),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_MASSFAB_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_MASSFAB_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(OVERLAY_FRONT_MASSFAB),
+                TextureFactory.of(OVERLAY_TOP_MASSFAB_ACTIVE),
+                TextureFactory.of(OVERLAY_TOP_MASSFAB),
+                TextureFactory.of(OVERLAY_BOTTOM_MASSFAB_ACTIVE),
+                TextureFactory.of(OVERLAY_BOTTOM_MASSFAB));
     }
 
     public GT_MetaTileEntity_Massfabricator(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {

@@ -5,7 +5,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaPipeEntity;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_ModHandler.RecipeBits;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -43,7 +44,7 @@ public class GT_MetaPipeEntity_Frame extends MetaPipeEntity {
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aConnections, byte aColorIndex, boolean aConnected, boolean aRedstone) {
-        return new ITexture[]{new GT_RenderedTexture(mMaterial.mIconSet.mTextures[OrePrefixes.frameGt.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa))};
+        return new ITexture[]{TextureFactory.of(mMaterial.mIconSet.mTextures[OrePrefixes.frameGt.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa))};
     }
 
     @Override

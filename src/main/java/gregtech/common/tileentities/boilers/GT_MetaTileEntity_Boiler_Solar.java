@@ -5,7 +5,8 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
@@ -46,15 +47,19 @@ public class GT_MetaTileEntity_Boiler_Solar
 
     public ITexture[][][] getTextureSet(ITexture[] aTextures) {
         ITexture[][][] rTextures = new ITexture[4][17][];
-        for (byte i = -1; i < 16; i = (byte) (i + 1)) {
-            ITexture[] tmp0 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_BRONZEBRICKS_BOTTOM, Dyes.getModulation(i, Dyes._NULL.mRGBa))};
-            rTextures[0][(i + 1)] = tmp0;
-            ITexture[] tmp1 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_BRONZEBRICKS_TOP, Dyes.getModulation(i, Dyes._NULL.mRGBa)), new GT_RenderedTexture(Textures.BlockIcons.BOILER_SOLAR)};
-            rTextures[1][(i + 1)] = tmp1;
-            ITexture[] tmp2 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_BRONZEBRICKS_SIDE, Dyes.getModulation(i, Dyes._NULL.mRGBa))};
-            rTextures[2][(i + 1)] = tmp2;
-            ITexture[] tmp3 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_BRONZEBRICKS_SIDE, Dyes.getModulation(i, Dyes._NULL.mRGBa)), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE)};
-            rTextures[3][(i + 1)] = tmp3;
+        for (int color = -1; color < 16; color++) {
+            int i = color + 1;
+            short[] colorModulation = Dyes.getModulation(color, Dyes._NULL.mRGBa);
+            rTextures[0][i] = new ITexture[]{
+                    TextureFactory.of(Textures.BlockIcons.MACHINE_BRONZEBRICKS_BOTTOM, colorModulation)};
+            rTextures[1][i] = new ITexture[]{
+                    TextureFactory.of(Textures.BlockIcons.MACHINE_BRONZEBRICKS_TOP, colorModulation),
+                    TextureFactory.of(Textures.BlockIcons.BOILER_SOLAR)};
+            rTextures[2][i] = new ITexture[]{
+                    TextureFactory.of(Textures.BlockIcons.MACHINE_BRONZEBRICKS_SIDE, colorModulation)};
+            rTextures[3][i] = new ITexture[]{
+                    TextureFactory.of(Textures.BlockIcons.MACHINE_BRONZEBRICKS_SIDE, colorModulation),
+                    TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE)};
         }
         return rTextures;
     }

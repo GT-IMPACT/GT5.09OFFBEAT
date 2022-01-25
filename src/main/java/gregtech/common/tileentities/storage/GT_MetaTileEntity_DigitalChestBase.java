@@ -6,7 +6,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
 import gregtech.api.objects.AE2DigitalChestHandler;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_QuantumChest;
 import gregtech.common.gui.GT_GUIContainer_QuantumChest;
@@ -15,6 +16,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 @Optional.Interface(iface = "appeng.api.storage.IMEInventory", modid = "appliedenergistics2")
 public abstract class GT_MetaTileEntity_DigitalChestBase extends GT_MetaTileEntity_TieredMachineBlock implements appeng.api.storage.IMEInventory<appeng.api.storage.data.IAEItemStack> {
@@ -191,13 +194,15 @@ public abstract class GT_MetaTileEntity_DigitalChestBase extends GT_MetaTileEnti
         if (aNBT.hasKey("mItemStack"))
             setItemStack(ItemStack.loadItemStackFromNBT((NBTTagCompound) aNBT.getTag("mItemStack")));
     }
-
+    
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        if (aBaseMetaTileEntity.getFrontFacing() == 0 && aSide == 4) {
-            return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_QCHEST)};
-        }
-        return aSide == aBaseMetaTileEntity.getFrontFacing() ? new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_QCHEST)} : new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1]};//aSide != aFacing ? mMachineBlock != 0 ? new ITexture[] {Textures.BlockIcons.CASING_BLOCKS[mMachineBlock]} : new ITexture[] {Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex+1]} : mMachineBlock != 0 ? aActive ? getTexturesActive(Textures.BlockIcons.CASING_BLOCKS[mMachineBlock]) : getTexturesInactive(Textures.BlockIcons.CASING_BLOCKS[mMachineBlock]) : aActive ? getTexturesActive(Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex+1]) : getTexturesInactive(Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex+1]);
+        if (aSide != aFacing) return new ITexture[]{MACHINE_CASINGS[mTier][aColorIndex + 1]};
+        return new ITexture[]{
+                MACHINE_CASINGS[mTier][aColorIndex + 1],
+                TextureFactory.of(OVERLAY_SCHEST),
+                TextureFactory.builder().addIcon(OVERLAY_SCHEST_GLOW).glow().build()
+        };
     }
 
     @Override

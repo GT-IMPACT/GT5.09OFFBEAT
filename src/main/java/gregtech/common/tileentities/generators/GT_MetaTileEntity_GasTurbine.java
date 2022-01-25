@@ -7,8 +7,11 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicGenerator;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_GasTurbine
         extends GT_MetaTileEntity_BasicGenerator {
@@ -58,47 +61,88 @@ public class GT_MetaTileEntity_GasTurbine
     public int getEfficiency() {
         return this.mEfficiency;
     }
-
+    
+    @Override
     public ITexture[] getFront(byte aColor) {
-        return new ITexture[]{super.getFront(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_FRONT), Textures.BlockIcons.OVERLAYS_ENERGY_OUT[this.mTier]};
+        return new ITexture[]{
+                super.getFront(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_GLOW).glow().build(),
+                OVERLAYS_ENERGY_OUT[mTier]};
     }
-
+    
+    @Override
     public ITexture[] getBack(byte aColor) {
-        return new ITexture[]{super.getBack(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_BACK)};
+        return new ITexture[]{
+                super.getBack(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC_FRONT),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_FRONT_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getBottom(byte aColor) {
-        return new ITexture[]{super.getBottom(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_BOTTOM)};
+        return new ITexture[]{
+                super.getBottom(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getTop(byte aColor) {
-        return new ITexture[]{super.getTop(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_TOP)};
+        return new ITexture[]{
+                super.getTop(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getSides(byte aColor) {
-        return new ITexture[]{super.getSides(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_SIDE)};
+        return new ITexture[]{
+                super.getSides(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getFrontActive(byte aColor) {
-        return new ITexture[]{super.getFrontActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_FRONT_ACTIVE), Textures.BlockIcons.OVERLAYS_ENERGY_OUT[this.mTier]};
+        return new ITexture[]{
+                super.getFrontActive(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC_ACTIVE),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_ACTIVE_GLOW).glow().build(),
+                OVERLAYS_ENERGY_OUT[mTier]};
     }
-
+    
+    @Override
     public ITexture[] getBackActive(byte aColor) {
-        return new ITexture[]{super.getBackActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_BACK_ACTIVE)};
+        return new ITexture[]{
+                super.getBackActive(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC_FRONT_ACTIVE),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_FRONT_ACTIVE_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getBottomActive(byte aColor) {
-        return new ITexture[]{super.getBottomActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_BOTTOM_ACTIVE)};
+        return new ITexture[]{
+                super.getBottomActive(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC_ACTIVE),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_ACTIVE_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getTopActive(byte aColor) {
-        return new ITexture[]{super.getTopActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_TOP_ACTIVE)};
+        return new ITexture[]{
+                super.getTopActive(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC_ACTIVE),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_ACTIVE_GLOW).glow().build()};
     }
-
+    
+    @Override
     public ITexture[] getSidesActive(byte aColor) {
-        return new ITexture[]{super.getSidesActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.GAS_TURBINE_SIDE_ACTIVE)};
+        return new ITexture[]{
+                super.getSidesActive(aColor)[0],
+                TextureFactory.of(MACHINE_CASING_MAGIC_ACTIVE),
+                TextureFactory.builder().addIcon(MACHINE_CASING_MAGIC_ACTIVE_GLOW).glow().build()};
     }
-
     @Override
     public int getPollution() {
         return (int) (GT_MetaTileEntity_GasTurbine.BASE_POLLUTION * Math.pow(2, mTier - 1));

@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.objects.GT_CopiedBlockTexture;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
@@ -18,9 +19,9 @@ public class GT_Block_Casings9
         extends GT_Block_Casings_Abstract {
     public GT_Block_Casings9() {
         super(GT_Item_Casings9.class, "gt.blockcasings9", GT_Material_Casings.INSTANCE);
-        GT_Utility.addTexturePage((byte) 2);
+        
         for (int i = 0; i < 16; i = (byte) (i + 1)) {
-            Textures.BlockIcons.casingTexturePages[2][i] = new GT_CopiedBlockTexture(this, 6, i);
+            Textures.BlockIcons.casingTexturePages[2][i] = TextureFactory.of(this, i);
         }
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Cleanroom Glass");
 

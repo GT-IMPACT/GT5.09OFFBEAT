@@ -8,7 +8,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.*;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
@@ -21,6 +22,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlockBase {
     protected int fuelConsumption = 0;
@@ -54,12 +57,20 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                 "Boosted: Produces 6144EU/t at 150% efficiency",
                 "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
     }
-
+    
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[50], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE)};
+            if (aActive) return new ITexture[]{
+                    casingTexturePages[0][50],
+                    TextureFactory.of(OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE),
+                    TextureFactory.builder().addIcon(OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE_GLOW).glow().build()};
+            return new ITexture[]{
+                    casingTexturePages[0][50],
+                    TextureFactory.of(OVERLAY_FRONT_DIESEL_ENGINE),
+                    TextureFactory.builder().addIcon(OVERLAY_FRONT_DIESEL_ENGINE_GLOW).glow().build()};
         }
-        return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[50]};
+        return new ITexture[]{casingTexturePages[0][50]};
     }
 
     @Override

@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * @deprecated Replaced by the {@link gregtech.api.render.TextureFactory} API.
+ */
+@Deprecated
 public class GT_CopiedBlockTexture implements ITexture {
     private final Block mBlock;
     private final byte mSide, mMeta;
@@ -104,5 +108,13 @@ public class GT_CopiedBlockTexture implements ITexture {
     @Override
     public boolean isValidTexture() {
         return mBlock != null;
+    }
+    
+    public Block getBlock() {
+        return mBlock;
+    }
+    
+    public byte getMeta() {
+        return mMeta;
     }
 }

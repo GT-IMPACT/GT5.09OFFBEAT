@@ -11,7 +11,8 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_DataAccess;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
@@ -24,6 +25,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 
 import static gregtech.api.enums.GT_Values.W;
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_MultiBlockBase {
     private static final ItemStack miningPipe = GT_ModHandler.getIC2Item("miningPipe", 0);
@@ -61,11 +63,20 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         casingTextureIndex = getCasingTextureIndex();
         workState = STATE_DOWNWARD;
     }
-
+    
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        if (aSide == aFacing)
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[casingTextureIndex],new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ORE_DRILL_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_ORE_DRILL)};
-        return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[casingTextureIndex]};
+        if (aSide == aFacing) {
+            if (aActive) return new ITexture[]{
+                    getCasingTextureForId(casingTextureIndex),
+                    TextureFactory.of(OVERLAY_FRONT_ORE_DRILL_ACTIVE),
+                    TextureFactory.builder().addIcon(OVERLAY_FRONT_ORE_DRILL_ACTIVE_GLOW).glow().build()};
+            return new ITexture[]{
+                    getCasingTextureForId(casingTextureIndex),
+                    TextureFactory.of(OVERLAY_FRONT_ORE_DRILL),
+                    TextureFactory.builder().addIcon(OVERLAY_FRONT_ORE_DRILL_GLOW).glow().build()};
+        }
+        return new ITexture[]{getCasingTextureForId(casingTextureIndex)};
     }
 
     @Override

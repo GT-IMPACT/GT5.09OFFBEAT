@@ -9,7 +9,8 @@ import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
 import gregtech.api.metatileentity.MetaPipeEntity;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
@@ -94,7 +95,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aConnections, byte aColorIndex, boolean aConnected, boolean aRedstone) {
         float tThickNess = getThickNess();
-        if (mDisableInput == 0) return new ITexture[]{aConnected ? getBaseTexture(tThickNess, mPipeAmount, mMaterial, aColorIndex) : new GT_RenderedTexture(mMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa))};
+        if (mDisableInput == 0) return new ITexture[]{aConnected ? getBaseTexture(tThickNess, mPipeAmount, mMaterial, aColorIndex) : TextureFactory.of(mMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa))};
         byte tMask = 0;
         byte[][] sRestrictionArray = new byte[][]{
                 {2, 3, 5, 4},
@@ -111,37 +112,37 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
                 if (tMask > 3 && tMask < 12)
                     tMask = (byte) (tMask ^ 12);
         }
-        return new ITexture[]{aConnected ? getBaseTexture(tThickNess, mPipeAmount, mMaterial, aColorIndex) : new GT_RenderedTexture(mMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa)), getRestrictorTexture(tMask)};
+        return new ITexture[]{aConnected ? getBaseTexture(tThickNess, mPipeAmount, mMaterial, aColorIndex) : TextureFactory.of(mMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa)), getRestrictorTexture(tMask)};
     }
 
     protected static final ITexture getBaseTexture(float aThickNess, int aPipeAmount, Materials aMaterial, byte aColorIndex) {
-        if (aPipeAmount >= 9) return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipeNonuple.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
-        if (aPipeAmount >= 4) return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipeQuadruple.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
-        if (aThickNess < 0.124F) return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
-        if (aThickNess < 0.374F) return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipeTiny.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
-        if (aThickNess < 0.499F) return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipeSmall.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
-        if (aThickNess < 0.749F) return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipeMedium.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
-        if (aThickNess < 0.874F) return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipeLarge.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
-        return new GT_RenderedTexture(aMaterial.mIconSet.mTextures[OrePrefixes.pipeHuge.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        if (aPipeAmount >= 9) return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipeNonuple.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        if (aPipeAmount >= 4) return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipeQuadruple.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        if (aThickNess < 0.124F) return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        if (aThickNess < 0.374F) return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipeTiny.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        if (aThickNess < 0.499F) return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipeSmall.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        if (aThickNess < 0.749F) return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipeMedium.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        if (aThickNess < 0.874F) return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipeLarge.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
+        return TextureFactory.of(aMaterial.mIconSet.mTextures[OrePrefixes.pipeHuge.mTextureIndex], Dyes.getModulation(aColorIndex, aMaterial.mRGBa));
     }
 
     protected static final ITexture getRestrictorTexture(byte aMask) {
         switch (aMask) {
-            case 1: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_UP);
-            case 2: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_DOWN);
-            case 3: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_UD);
-            case 4: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_LEFT);
-            case 5: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_UL);
-            case 6: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_DL);
-            case 7: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_NR);
-            case 8: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_RIGHT);
-            case 9: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_UR);
-            case 10: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_DR);
-            case 11: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_NL);
-            case 12: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_LR);
-            case 13: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_ND);
-            case 14: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR_NU);
-            case 15: return new GT_RenderedTexture(Textures.BlockIcons.PIPE_RESTRICTOR);
+            case 1: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_UP);
+            case 2: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_DOWN);
+            case 3: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_UD);
+            case 4: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_LEFT);
+            case 5: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_UL);
+            case 6: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_DL);
+            case 7: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_NR);
+            case 8: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_RIGHT);
+            case 9: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_UR);
+            case 10: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_DR);
+            case 11: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_NL);
+            case 12: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_LR);
+            case 13: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_ND);
+            case 14: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR_NU);
+            case 15: return TextureFactory.of(Textures.BlockIcons.PIPE_RESTRICTOR);
             default: return null;
         }
     }

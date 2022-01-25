@@ -8,8 +8,9 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
-import gregtech.api.objects.GT_RenderedTexture;
+
 import gregtech.api.objects.ItemData;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
@@ -27,6 +28,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.*;
 
+import static gregtech.api.enums.Textures.BlockIcons.*;
 import static gregtech.common.GT_UndergroundOil.undergroundOilReadInformation;
 
 @Deprecated
@@ -44,15 +46,16 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
                 1, // output slot count
                 "Default.png", // GUI name
                 "", // NEI name
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_ROCK_BREAKER_ACTIVE),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_ROCK_BREAKER),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_ROCK_BREAKER_ACTIVE),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_ROCK_BREAKER),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER_ACTIVE),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_ROCK_BREAKER_ACTIVE),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_ROCK_BREAKER)
-        );
+                TextureFactory.of(OVERLAY_SIDE_ROCK_BREAKER_ACTIVE),
+                TextureFactory.of(OVERLAY_SIDE_ROCK_BREAKER),
+                TextureFactory.of(OVERLAY_TOP_ROCK_BREAKER_ACTIVE),
+                TextureFactory.of(OVERLAY_TOP_ROCK_BREAKER),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_ROCK_BREAKER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_ROCK_BREAKER_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(OVERLAY_FRONT_ROCK_BREAKER),
+                TextureFactory.of(OVERLAY_BOTTOM_ROCK_BREAKER_ACTIVE),
+                TextureFactory.of(OVERLAY_BOTTOM_ROCK_BREAKER));
         radius = aRadius;
         step = aStep;
     }

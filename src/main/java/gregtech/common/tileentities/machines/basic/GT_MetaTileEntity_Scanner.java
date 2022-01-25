@@ -14,8 +14,9 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
-import gregtech.api.objects.GT_RenderedTexture;
+
 import gregtech.api.objects.ItemData;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Assemblyline_Server;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
@@ -29,13 +30,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
+import static gregtech.api.enums.Textures.BlockIcons.*;
 import static gregtech.api.util.GT_Recipe.GT_Recipe_Map.sScannerFakeRecipes;
 
 public class GT_MetaTileEntity_Scanner
         extends GT_MetaTileEntity_BasicMachine {
 	
     public GT_MetaTileEntity_Scanner(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 1, "Scans Crops and other things.", 1, 1, "Scanner.png", "", new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_SCANNER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_SCANNER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_SCANNER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_SCANNER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_SCANNER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_SCANNER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_SCANNER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_SCANNER)});
+        super(aID, aName, aNameRegional, aTier, 1, "Scans Crops and other things.", 1, 1, "Scanner.png", "",
+                TextureFactory.of(OVERLAY_SIDE_SCANNER_ACTIVE),
+                TextureFactory.of(OVERLAY_SIDE_SCANNER),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_SCANNER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_SCANNER_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_SCANNER),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_SCANNER_GLOW).glow().build()),
+                TextureFactory.of(OVERLAY_TOP_SCANNER_ACTIVE),
+                TextureFactory.of(OVERLAY_TOP_SCANNER),
+                TextureFactory.of(OVERLAY_BOTTOM_SCANNER_ACTIVE),
+                TextureFactory.of(OVERLAY_BOTTOM_SCANNER));
     }
 
     public GT_MetaTileEntity_Scanner(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {
