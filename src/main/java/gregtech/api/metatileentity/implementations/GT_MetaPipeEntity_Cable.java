@@ -208,21 +208,12 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
             lastWorldTick = aBaseMetaTileEntity.getWorld().getTotalWorldTime() - 1;//sets initial value -1 since it is in the same tick as first on post tick
         }
     }
-
-
+    
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPostTick(aBaseMetaTileEntity, aTick);
-        if (aBaseMetaTileEntity.isServerSide()) {
-            if (GT_Mod.gregtechproxy.ic2EnergySourceCompat) pullFromIc2EnergySources(aBaseMetaTileEntity);
-
-            mTransferredAmperage = 0;
-            if(mOverheat>0)mOverheat--;
-            if (aTick % 20 == 0) {
-                mTransferredVoltageLast20 = 0;
-                mTransferredAmperageLast20 = 0;
-                if (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections) checkConnections();
-            }
+        if (aTick%20 == 0 && aBaseMetaTileEntity.isServerSide() && (!GT_Mod.gregtechproxy.gt6Cable || mCheckConnections)) {
+            checkConnections();
         }
     }
 

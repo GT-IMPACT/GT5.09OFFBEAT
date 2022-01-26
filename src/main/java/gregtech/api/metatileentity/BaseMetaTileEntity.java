@@ -14,6 +14,9 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.enums.Textures.BlockIcons;
+import gregtech.api.graphs.GenerateNodeMap;
+import gregtech.api.graphs.GenerateNodeMapPower;
+import gregtech.api.graphs.Node;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IEnergyConnected;
@@ -42,8 +45,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -61,8 +66,10 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 
+import static gregtech.GT_Mod.GT_FML_LOGGER;
 import static gregtech.api.enums.GT_Values.NW;
 import static gregtech.api.enums.GT_Values.V;
+import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
