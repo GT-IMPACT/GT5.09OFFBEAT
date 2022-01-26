@@ -225,7 +225,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
             }
         }
     }
-
+    
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPostTick(aBaseMetaTileEntity, aTick);

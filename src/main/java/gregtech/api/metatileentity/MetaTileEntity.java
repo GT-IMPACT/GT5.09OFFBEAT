@@ -12,6 +12,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Client;
@@ -50,6 +51,7 @@ import static gregtech.api.enums.GT_Values.V;
  * Call the Constructor like the following example inside the Load Phase, to register it.
  * "new GT_MetaTileEntity_E_Furnace(54, "GT_E_Furnace", "Automatic E-Furnace");"
  */
+@SuppressWarnings("unused")
 public abstract class MetaTileEntity implements IMetaTileEntity {
     /**
      * Only assigned for the MetaTileEntity in the List! Also only used to get the localized Name for the ItemStack and for getInvName.
@@ -60,10 +62,13 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
      */
     public final ItemStack[] mInventory;
     public boolean doTickProfilingInThisTick = true;
+
     /**
      * accessibility to this Field is no longer given, see below
      */
     private IGregTechTileEntity mBaseMetaTileEntity;
+
+    public long mSoundRequests=0;
 
     /**
      * This registers your Machine at the List.
@@ -90,11 +95,6 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
         getBaseMetaTileEntity().setMetaTileID((short) aID);
         GT_LanguageManager.addStringLocalization("gt.blockmachines." + mName + ".name", aRegionalName);
         mInventory = new ItemStack[aInvSlotCount];
-
-//        if (GT.isClientSide()) {
-//            ItemStack tStack = new ItemStack(GregTech_API.sBlockMachines, 1, aID);
-//            tStack.getItem().addInformation(tStack, null, new ArrayList<String>(), true);
-//        }
     }
 
     /**
@@ -103,6 +103,14 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public MetaTileEntity(String aName, int aInvSlotCount) {
         mInventory = new ItemStack[aInvSlotCount];
         mName = aName;
+    }
+
+    /**
+     * This method will only be called on client side
+     * @return whether the secondary description should be display. default is false
+     */
+    public boolean isDisplaySecondaryDescription() {
+        return false;
     }
 
     @Override
@@ -176,21 +184,21 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     @Override
     public boolean onWireCutterRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if(!aPlayer.isSneaking()) return false;
-		byte tSide = GT_Utility.getOppositeSide(aWrenchingSide);
-		TileEntity tTileEntity = getBaseMetaTileEntity().getTileEntityAtSide(aWrenchingSide);
-        if (tTileEntity != null && (tTileEntity instanceof IGregTechTileEntity) && (((IGregTechTileEntity) tTileEntity).getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable)) {
-			// The tile entity we're facing is a cable, let's try to connect to it
+        byte tSide = GT_Utility.getOppositeSide(aWrenchingSide);
+        TileEntity tTileEntity = getBaseMetaTileEntity().getTileEntityAtSide(aWrenchingSide);
+        if ((tTileEntity instanceof IGregTechTileEntity) && (((IGregTechTileEntity) tTileEntity).getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable)) {
+            // The tile entity we're facing is a cable, let's try to connect to it
             return ((IGregTechTileEntity) tTileEntity).getMetaTileEntity().onWireCutterRightClick(aWrenchingSide, tSide, aPlayer, aX, aY, aZ);
         }
         return false;
-		}
-		
+    }
+
     @Override
     public boolean onSolderingToolRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if(!aPlayer.isSneaking()) return false;
         byte tSide = GT_Utility.getOppositeSide(aWrenchingSide);
         TileEntity tTileEntity = getBaseMetaTileEntity().getTileEntityAtSide(aWrenchingSide);
-        if (tTileEntity != null && (tTileEntity instanceof IGregTechTileEntity) && (((IGregTechTileEntity) tTileEntity).getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable)) {
+        if ((tTileEntity instanceof IGregTechTileEntity) && (((IGregTechTileEntity) tTileEntity).getMetaTileEntity() instanceof GT_MetaPipeEntity_Cable)) {
             // The tile entity we're facing is a cable, let's try to connect to it
             return ((IGregTechTileEntity) tTileEntity).getMetaTileEntity().onSolderingToolRightClick(aWrenchingSide, tSide, aPlayer, aX, aY, aZ);
         }
@@ -198,9 +206,11 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     }
 
     public void receiveClientEvent(int aB1, int aB2, int aB3, int aB4) {/*Do nothing*/}
-        
+    
     @Override
-    public void onExplosion() {/*Do nothing*/}
+    public void onExplosion() {
+        GT_Log.exp.println("Machine at "+this.getBaseMetaTileEntity().getXCoord()+" | "+this.getBaseMetaTileEntity().getYCoord()+" | "+this.getBaseMetaTileEntity().getZCoord()+" DIMID: "+ this.getBaseMetaTileEntity().getWorld().provider.dimensionId+ " exploded.");
+    }
 
     @Override
     public void onFirstTick(IGregTechTileEntity aBaseMetaTileEntity) {/*Do nothing*/}
@@ -279,6 +289,7 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     @Override
     public final void sendLoopStart(byte aIndex) {
         if (!getBaseMetaTileEntity().hasMufflerUpgrade()) getBaseMetaTileEntity().sendBlockEvent((byte) 5, aIndex);
+        mSoundRequests++;
     }
 
     @Override
@@ -882,27 +893,27 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
 
     @Override
     public void doExplosion(long aExplosionPower) {
-    	float tStrength =
-                aExplosionPower < V[0] ? 1.0F :
-                aExplosionPower < V[1] ? 2.0F :
-                aExplosionPower < V[2] ? 3.0F :
-                aExplosionPower < V[3] ? 4.0F :
-                aExplosionPower < V[4] ? 5.0F :
-                aExplosionPower < V[4] * 2 ? 6.0F :
-                aExplosionPower < V[5] ? 7.0F :
-                aExplosionPower < V[6] ? 8.0F :
-                aExplosionPower < V[7] ? 9.0F :
-                aExplosionPower < V[8] ? 10.0F :
-                aExplosionPower < V[8] * 2 ? 11.0F :
-                aExplosionPower < V[9] ? 12.0F :
-                aExplosionPower < V[10] ? 13.0F :
-                aExplosionPower < V[11] ? 14.0F :
-                aExplosionPower < V[12] ? 15.0F :
-                aExplosionPower < V[12] * 2 ? 16.0F :
-                aExplosionPower < V[13] ? 17.0F :
-                aExplosionPower < V[14] ? 18.0F :
-                aExplosionPower < V[15] ? 19.0F : 20.0F;
-    	int tX = getBaseMetaTileEntity().getXCoord(), tY = getBaseMetaTileEntity().getYCoord(), tZ = getBaseMetaTileEntity().getZCoord();
+        float tStrength =
+            aExplosionPower < V[0] ? 1.0F :
+            aExplosionPower < V[1] ? 2.0F :
+            aExplosionPower < V[2] ? 3.0F :
+            aExplosionPower < V[3] ? 4.0F :
+            aExplosionPower < V[4] ? 5.0F :
+            aExplosionPower < V[4] * 2 ? 6.0F :
+            aExplosionPower < V[5] ? 7.0F :
+            aExplosionPower < V[6] ? 8.0F :
+            aExplosionPower < V[7] ? 9.0F :
+            aExplosionPower < V[8] ? 10.0F :
+            aExplosionPower < V[8] * 2 ? 11.0F :
+            aExplosionPower < V[9] ? 12.0F :
+            aExplosionPower < V[10] ? 13.0F :
+            aExplosionPower < V[11] ? 14.0F :
+            aExplosionPower < V[12] ? 15.0F :
+            aExplosionPower < V[12] * 2 ? 16.0F :
+            aExplosionPower < V[13] ? 17.0F :
+            aExplosionPower < V[14] ? 18.0F :
+            aExplosionPower < V[15] ? 19.0F : 20.0F;
+        int tX = getBaseMetaTileEntity().getXCoord(), tY = getBaseMetaTileEntity().getYCoord(), tZ = getBaseMetaTileEntity().getZCoord();
         World tWorld = getBaseMetaTileEntity().getWorld();
         GT_Utility.sendSoundToPlayers(tWorld, GregTech_API.sSoundList.get(209), 1.0F, -1, tX, tY, tZ);
         tWorld.setBlock(tX, tY, tZ, Blocks.air);
@@ -954,6 +965,11 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public String getAlternativeModeText(){
     	return "";
     }
+
+    @Override
+    public boolean shouldJoinIc2Enet() { return false; }
+    
+    public boolean shouldTriggerBlockUpdate() { return false; }
 
     @Optional.Method(modid = "appliedenergistics2")
     public AECableType getCableConnectionType(ForgeDirection forgeDirection) {

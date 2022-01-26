@@ -12,6 +12,7 @@ import gregtech.api.enums.*;
 import gregtech.api.interfaces.internal.IGT_Mod;
 import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
+import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
 import gregtech.common.GT_DummyWorld;
 import gregtech.common.GT_Network;
@@ -1033,7 +1034,11 @@ public class GT_Mod implements IGT_Mod {
             for (Runnable tRunnable : GregTech_API.sAfterGTServerstart) {
                 tRunnable.run();
             }
-        } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
+        } catch (Throwable e) {
+            e.printStackTrace(GT_Log.err);
+        }
+        // Sets a new Machine Block Update Thread everytime a world is loaded
+        GT_Runnable_MachineBlockUpdate.initExecutorService();
     }
 
     @Mod.EventHandler
@@ -1141,7 +1146,11 @@ public class GT_Mod implements IGT_Mod {
             for (Runnable tRunnable : GregTech_API.sAfterGTServerstop) {
                 tRunnable.run();
             }
-        } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
+        } catch (Throwable e) {
+            e.printStackTrace(GT_Log.err);
+        }
+        //Interrupt IDLE Threads to close down cleanly
+        GT_Runnable_MachineBlockUpdate.shutdownExecutorService();
     }
 
     public boolean isServerSide() {
