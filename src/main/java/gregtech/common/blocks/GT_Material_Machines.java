@@ -12,6 +12,7 @@ public class GT_Material_Machines
         setAdventureModeExempt();
     }
 
+    @Override
     public boolean isOpaque() {
         return true;
     }

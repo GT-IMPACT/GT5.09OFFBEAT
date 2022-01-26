@@ -51,14 +51,17 @@ public class GT_Block_Granites
         GT_OreDictUnificator.registerOre(OrePrefixes.stone, Materials.GraniteRed, new ItemStack(this, 1, 15));
     }
 
+    @Override
     public int getHarvestLevel(int aMeta) {
         return 3;
     }
 
+    @Override
     public float getBlockHardness(World aWorld, int aX, int aY, int aZ) {
         return this.blockHardness = Blocks.stone.getBlockHardness(aWorld, aX, aY, aZ) * 3.0F;
     }
 
+    @Override
     public IIcon getIcon(int aSide, int aMeta) {
         if ((aMeta >= 0) && (aMeta < 16)) {
             return gregtech.api.enums.Textures.BlockIcons.GRANITES[aMeta].getIcon();
@@ -66,6 +69,7 @@ public class GT_Block_Granites
         return gregtech.api.enums.Textures.BlockIcons.GRANITES[0].getIcon();
     }
 
+    @Override
     public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity) {
         return !(entity instanceof EntityWither);
     }

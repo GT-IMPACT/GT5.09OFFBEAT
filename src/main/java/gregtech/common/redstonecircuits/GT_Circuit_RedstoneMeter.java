@@ -9,6 +9,7 @@ public class GT_Circuit_RedstoneMeter
         super(aIndex);
     }
 
+    @Override
     public void initParameters(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock) {
         aCircuitData[0] = 1;
         aCircuitData[1] = 15;
@@ -16,6 +17,7 @@ public class GT_Circuit_RedstoneMeter
         aCircuitData[3] = 15;
     }
 
+    @Override
     public void validateParameters(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock) {
         if (aCircuitData[0] < 0) {
             aCircuitData[0] = 0;
@@ -46,19 +48,23 @@ public class GT_Circuit_RedstoneMeter
         }
     }
 
+    @Override
     public void onTick(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock) {
         byte tRedstone = getStrongestRedstone(aRedstoneCircuitBlock);
         aRedstoneCircuitBlock.setRedstone((byte) (((tRedstone >= aCircuitData[0]) && (tRedstone <= aCircuitData[1]) ? 1 : 0) != (aCircuitData[2] != 0 ? 1 : 0) ? (byte) aCircuitData[3] : 0), aRedstoneCircuitBlock.getOutputFacing());
     }
 
+    @Override
     public String getName() {
         return "Redstone Meter";
     }
 
+    @Override
     public String getDescription() {
         return "Checks Boundaries";
     }
 
+    @Override
     public String getDataDescription(int[] aCircuitData, int aCircuitDataIndex) {
         switch (aCircuitDataIndex) {
             case 0:
@@ -73,10 +79,12 @@ public class GT_Circuit_RedstoneMeter
         return "";
     }
 
+    @Override
     public boolean displayItemStack(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock, int aIndex) {
         return false;
     }
 
+    @Override
     public String getDataDisplay(int[] aCircuitData, int aCircuitDataIndex) {
         if (aCircuitDataIndex == 2) {
             return aCircuitData[2] == 0 ? "OFF" : "ON";

@@ -61,7 +61,9 @@ public class GT_MetaTileEntity_Charcoal_Pit extends GT_MetaTileEntity_MultiBlock
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_ROCK_BREAKER_ACTIVE_GLOW).glow().build()};
             return new ITexture[]{
                     casingTexturePages[0][10],
-                    TextureFactory.of(OVERLAY_FRONT_ROCK_BREAKER)};
+                    TextureFactory.of(OVERLAY_FRONT_ROCK_BREAKER),
+                    TextureFactory.builder().addIcon(OVERLAY_FRONT_ROCK_BREAKER_GLOW).glow().build(),
+            };
         }
         return new ITexture[]{casingTexturePages[0][10]};
     }

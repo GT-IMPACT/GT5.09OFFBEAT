@@ -16,6 +16,7 @@ public class ProcessingCompressed implements IOreRecipeRegistrator {
         OrePrefixes.compressed.add(this);
     }
 
+    @Override
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
         GT_ModHandler.removeRecipeByOutput(aStack);
         GregTech_API.registerCover(aStack, TextureFactory.of(aMaterial.mIconSet.mTextures[72], aMaterial.mRGBa, false), null);

@@ -37,6 +37,7 @@ public class GT_MetaTileEntity_LargeTurbine_Steam extends GT_MetaTileEntity_Larg
         return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? TextureFactory.of(Textures.BlockIcons.LARGETURBINE_ST_ACTIVE5) : TextureFactory.of(Textures.BlockIcons.LARGETURBINE_ST5) : Textures.BlockIcons.casingTexturePages[0][57]};
     }
 
+    @Override
     public String[] getDescription() {
         return new String[]{
                 "Controller Block for the Large Steam Turbine",

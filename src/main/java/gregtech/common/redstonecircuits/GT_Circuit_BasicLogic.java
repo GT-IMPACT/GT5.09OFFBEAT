@@ -9,10 +9,12 @@ public class GT_Circuit_BasicLogic
         super(aIndex);
     }
 
+    @Override
     public void initParameters(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock) {
         aCircuitData[0] = 0;
     }
 
+    @Override
     public void validateParameters(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock) {
         if (aCircuitData[0] < 0) {
             aCircuitData[0] = 0;
@@ -22,6 +24,7 @@ public class GT_Circuit_BasicLogic
         }
     }
 
+    @Override
     public void onTick(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock) {
         if (aCircuitData[0] < 2) {
             aRedstoneCircuitBlock.setRedstone((byte) (aCircuitData[0] % 2 == (getAnyRedstone(aRedstoneCircuitBlock) ? 0 : 1) ? 15 : 0), aRedstoneCircuitBlock.getOutputFacing());
@@ -42,14 +45,17 @@ public class GT_Circuit_BasicLogic
         }
     }
 
+    @Override
     public String getName() {
         return "Basic Logic";
     }
 
+    @Override
     public String getDescription() {
         return "Regular Logic Gates";
     }
 
+    @Override
     public String getDataDescription(int[] aCircuitData, int aCircuitDataIndex) {
         if (aCircuitDataIndex == 0) {
             switch (aCircuitData[0]) {
@@ -86,10 +92,12 @@ public class GT_Circuit_BasicLogic
         return "";
     }
 
+    @Override
     public boolean displayItemStack(int[] aCircuitData, IRedstoneCircuitBlock aRedstoneCircuitBlock, int aIndex) {
         return false;
     }
 
+    @Override
     public String getDataDisplay(int[] aCircuitData, int aCircuitDataIndex) {
         return "";
     }

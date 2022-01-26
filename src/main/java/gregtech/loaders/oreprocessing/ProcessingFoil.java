@@ -16,6 +16,7 @@ public class ProcessingFoil implements IOreRecipeRegistrator {
         OrePrefixes.foil.add(this);
     }
 
+    @Override
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
 //        if (!aMaterial.contains(SubTag.NO_SMASHING)) {
             GT_Values.RA.addBenderRecipe(GT_Utility.copyAmount(1L, GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 4L)), GT_OreDictUnificator.get(OrePrefixes.foil, aMaterial, 4L), (int) Math.max(aMaterial.getMass(), 1L), 24);

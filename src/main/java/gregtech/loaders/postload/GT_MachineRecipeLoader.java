@@ -136,6 +136,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         }
     }
 
+    @Override
     public void run() {
         GT_Log.out.println("GT_Mod: Adding non-OreDict Machine Recipes.");
 

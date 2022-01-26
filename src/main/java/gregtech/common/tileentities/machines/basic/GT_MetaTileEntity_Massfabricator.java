@@ -23,16 +23,30 @@ public class GT_MetaTileEntity_Massfabricator
 
     public GT_MetaTileEntity_Massfabricator(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 1, "UUM = Matter * Fabrication Squared", 1, 1, "Massfabricator.png", "",
-                TextureFactory.of(OVERLAY_SIDE_MASSFAB_ACTIVE),
-                TextureFactory.of(OVERLAY_SIDE_MASSFAB),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_MASSFAB_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_MASSFAB_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_MASSFAB),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_MASSFAB_GLOW).glow().build()),
                 TextureFactory.of(
                         TextureFactory.of(OVERLAY_FRONT_MASSFAB_ACTIVE),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_MASSFAB_ACTIVE_GLOW).glow().build()),
-                TextureFactory.of(OVERLAY_FRONT_MASSFAB),
-                TextureFactory.of(OVERLAY_TOP_MASSFAB_ACTIVE),
-                TextureFactory.of(OVERLAY_TOP_MASSFAB),
-                TextureFactory.of(OVERLAY_BOTTOM_MASSFAB_ACTIVE),
-                TextureFactory.of(OVERLAY_BOTTOM_MASSFAB));
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_MASSFAB),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_MASSFAB_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_MASSFAB_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_MASSFAB_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_MASSFAB),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_MASSFAB_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_MASSFAB_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_MASSFAB_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_MASSFAB),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_MASSFAB_GLOW).glow().build()));
     }
 
     public GT_MetaTileEntity_Massfabricator(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {

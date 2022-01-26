@@ -12,12 +12,39 @@ import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.item.ItemStack;
 
+import static gregtech.api.enums.Textures.BlockIcons.*;
+
 /**
  * This Example Implementation still works, however I use something completely different in my own Code.
  */
 public class GT_MetaTileEntity_E_Furnace extends GT_MetaTileEntity_BasicMachine {
     public GT_MetaTileEntity_E_Furnace(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 1, "Not like using a Commodore 64", 1, 1, "E_Furnace.png", "smelting", TextureFactory.of(Textures.BlockIcons.OVERLAY_SIDE_STEAM_FURNACE_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_SIDE_STEAM_FURNACE), TextureFactory.of(Textures.BlockIcons.OVERLAY_FRONT_STEAM_FURNACE_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_FRONT_STEAM_FURNACE), TextureFactory.of(Textures.BlockIcons.OVERLAY_TOP_STEAM_FURNACE_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_TOP_STEAM_FURNACE), TextureFactory.of(Textures.BlockIcons.OVERLAY_BOTTOM_STEAM_FURNACE_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_BOTTOM_STEAM_FURNACE));
+        super(aID, aName, aNameRegional, aTier, 1, "Not like using a Commodore 64", 1, 1, "E_Furnace.png", "smelting",
+                
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_STEAM_FURNACE_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_STEAM_FURNACE_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_STEAM_FURNACE),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_STEAM_FURNACE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_STEAM_FURNACE_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_STEAM_FURNACE_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_STEAM_FURNACE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_STEAM_FURNACE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_STEAM_FURNACE_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_STEAM_FURNACE_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_STEAM_FURNACE),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_STEAM_FURNACE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_STEAM_FURNACE_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_STEAM_FURNACE_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_STEAM_FURNACE),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_STEAM_FURNACE_GLOW).glow().build()));
     }
 
     public GT_MetaTileEntity_E_Furnace(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {

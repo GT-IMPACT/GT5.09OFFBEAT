@@ -44,6 +44,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     public abstract int tier();
 
+    @Override
     public abstract long maxEUStore();
 
     @Override
@@ -225,6 +226,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     public abstract int getFusionCoilMeta();
 
+    @Override
     public abstract String[] getDescription();
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {

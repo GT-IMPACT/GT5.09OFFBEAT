@@ -57,6 +57,7 @@ public class GT_Block_Casings2
         ItemList.Casing_Pipe_TungstenSteel.set(new ItemStack(this, 1, 15));
 }
 
+    @Override
     public IIcon getIcon(int aSide, int aMeta) {
         switch (aMeta) {
             case 0:
@@ -95,6 +96,7 @@ public class GT_Block_Casings2
         return Textures.BlockIcons.MACHINE_CASING_SOLID_STEEL.getIcon();
     }
 
+    @Override
     public float getExplosionResistance(Entity aTNT, World aWorld, int aX, int aY, int aZ, double eX, double eY, double eZ) {
         return aWorld.getBlockMetadata(aX, aY, aZ) == 8 ? Blocks.bedrock.getExplosionResistance(aTNT) : super.getExplosionResistance(aTNT, aWorld, aX, aY, aZ, eX, eY, eZ);
     }

@@ -19,6 +19,7 @@ public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistra
         OrePrefixes.log.add(this);
     }
 
+    @Override
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
         if (aOreDictName.equals("logRubber")) {
             GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(1L, aStack), null, null, Materials.Methane.getGas(60L), ItemList.IC2_Resin.get(1L), GT_ModHandler.getIC2Item("plantBall", 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Carbon, 1L), null, null, null, new int[]{5000, 3750, 2500}, 200, 20);

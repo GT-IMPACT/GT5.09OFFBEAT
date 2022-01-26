@@ -28,6 +28,7 @@ public class GT_MetaTileEntity_SuperBuffer
         super(aName, aTier, aInvSlotCount, aDescription, aTextures);
     }
 
+    @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_SuperBuffer(this.mName, this.mTier, this.mInventory.length, this.mDescriptionArray, this.mTextures);
     }
@@ -38,10 +39,12 @@ public class GT_MetaTileEntity_SuperBuffer
                 TextureFactory.builder().addIcon(Textures.BlockIcons.AUTOMATION_SUPERBUFFER_GLOW).glow().build());
     }
 
+    @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_Container_SuperBuffer(aPlayerInventory, aBaseMetaTileEntity);
     }
 
+    @Override
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_SuperBuffer(aPlayerInventory, aBaseMetaTileEntity);
     }

@@ -38,18 +38,30 @@ public class GT_MetaTileEntity_Scanner
 	
     public GT_MetaTileEntity_Scanner(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 1, "Scans Crops and other things.", 1, 1, "Scanner.png", "",
-                TextureFactory.of(OVERLAY_SIDE_SCANNER_ACTIVE),
-                TextureFactory.of(OVERLAY_SIDE_SCANNER),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_SCANNER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_SCANNER_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_SCANNER),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_SCANNER_GLOW).glow().build()),
                 TextureFactory.of(
                         TextureFactory.of(OVERLAY_FRONT_SCANNER_ACTIVE),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_SCANNER_ACTIVE_GLOW).glow().build()),
                 TextureFactory.of(
                         TextureFactory.of(OVERLAY_FRONT_SCANNER),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_SCANNER_GLOW).glow().build()),
-                TextureFactory.of(OVERLAY_TOP_SCANNER_ACTIVE),
-                TextureFactory.of(OVERLAY_TOP_SCANNER),
-                TextureFactory.of(OVERLAY_BOTTOM_SCANNER_ACTIVE),
-                TextureFactory.of(OVERLAY_BOTTOM_SCANNER));
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_SCANNER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_SCANNER_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_SCANNER),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_SCANNER_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_SCANNER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_SCANNER_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_SCANNER),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_SCANNER_GLOW).glow().build()));
     }
 
     public GT_MetaTileEntity_Scanner(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {
@@ -60,10 +72,12 @@ public class GT_MetaTileEntity_Scanner
         super(aName, aTier, 1, aDescription, aTextures, 1, 1, aGUIName, aNEIName);
     }
 
+    @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_Scanner(this.mName, this.mTier, this.mDescriptionArray, this.mTextures, this.mGUIName, this.mNEIName);
     }
 
+    @Override
     public int checkRecipe() {
         ItemStack aStack = getInputAt(0);
         if (getOutputAt(0) != null) {
@@ -353,10 +367,12 @@ public class GT_MetaTileEntity_Scanner
     }
 
 
+    @Override
     public GT_Recipe.GT_Recipe_Map getRecipeList() {
         return sScannerFakeRecipes;
     }
 
+    @Override
     public int getCapacity() {
         return 1000;
     }
@@ -365,6 +381,7 @@ public class GT_MetaTileEntity_Scanner
         return (super.allowPutStack(aBaseMetaTileEntity, aIndex, aSide, aStack)) && (getRecipeList().containsInput(aStack));
     }
 
+    @Override
     public void startSoundLoop(byte aIndex, double aX, double aY, double aZ) {
         super.startSoundLoop(aIndex, aX, aY, aZ);
         if (aIndex == 1) {
@@ -372,6 +389,7 @@ public class GT_MetaTileEntity_Scanner
         }
     }
 
+    @Override
     public void startProcess() {
         sendLoopStart((byte) 1);
     }

@@ -23,8 +23,12 @@ public class GT_MetaTileEntity_Disassembler
         super(aID, aName, aNameRegional, aTier, 1,
                 "Disassembles Machines at " + Math.min(50 + 10 * aTier, 100) + "% Efficiency", 1, 9,
                 "Disassembler.png", "",
-                TextureFactory.of(OVERLAY_SIDE_DISASSEMBLER_ACTIVE),
-                TextureFactory.of(OVERLAY_SIDE_DISASSEMBLER),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_DISASSEMBLER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_DISASSEMBLER_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_DISASSEMBLER),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_DISASSEMBLER_GLOW).glow().build()),
                 TextureFactory.of(
                         TextureFactory.of(OVERLAY_FRONT_DISASSEMBLER_ACTIVE),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_DISASSEMBLER_ACTIVE_GLOW).glow().build()),
@@ -34,9 +38,15 @@ public class GT_MetaTileEntity_Disassembler
                 TextureFactory.of(
                         TextureFactory.of(OVERLAY_TOP_DISASSEMBLER_ACTIVE),
                         TextureFactory.builder().addIcon(OVERLAY_TOP_DISASSEMBLER_ACTIVE_GLOW).glow().build()),
-                TextureFactory.of(OVERLAY_TOP_DISASSEMBLER),
-                TextureFactory.of(OVERLAY_BOTTOM_DISASSEMBLER_ACTIVE),
-                TextureFactory.of(OVERLAY_BOTTOM_DISASSEMBLER));
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_DISASSEMBLER),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_DISASSEMBLER_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_DISASSEMBLER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_DISASSEMBLER_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_DISASSEMBLER),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_DISASSEMBLER_GLOW).glow().build()));
     }
 
     public GT_MetaTileEntity_Disassembler(String aName, int aTier, String aDescription,

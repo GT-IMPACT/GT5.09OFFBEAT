@@ -17,6 +17,7 @@ public class GT_Cover_SolarPanel
         this.mVoltage = aVoltage;
     }
 
+    @Override
     public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity, long aTimer) {
         if(aSide != 1)return 0;
         int coverState=aCoverVariable&0x3;
@@ -74,10 +75,12 @@ public class GT_Cover_SolarPanel
         return false;
     }
 
+    @Override
     public boolean alwaysLookConnected(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
         return true;
     }
     
+    @Override
     public int getTickRate(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
         return 1;
     }

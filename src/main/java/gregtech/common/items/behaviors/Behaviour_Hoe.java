@@ -24,6 +24,7 @@ public class Behaviour_Hoe
         this.mCosts = aCosts;
     }
 
+    @Override
     public boolean onItemUse(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int aSide, float hitX, float hitY, float hitZ) {
         if (!aPlayer.canPlayerEdit(aX, aY, aZ, aSide, aStack)) {
             return false;
@@ -53,6 +54,7 @@ public class Behaviour_Hoe
         return false;
     }
 
+    @Override
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         aList.add(this.mTooltip);
         return aList;

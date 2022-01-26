@@ -22,6 +22,7 @@ public class Behaviour_Scoop
         this.mCosts = aCosts;
     }
 
+    @Override
     public boolean onLeftClickEntity(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, Entity aEntity) {
         if ((aEntity instanceof IEntityButterfly)) {
             if (aPlayer.worldObj.isRemote) {
@@ -38,6 +39,7 @@ public class Behaviour_Scoop
         return false;
     }
 
+    @Override
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         aList.add(this.mTooltip);
         return aList;

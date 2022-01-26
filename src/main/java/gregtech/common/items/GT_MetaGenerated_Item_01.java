@@ -823,6 +823,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
 
     }
 
+    @Override
     public boolean onEntityItemUpdate(EntityItem aItemEntity) {
         int aDamage = aItemEntity.getEntityItem().getItemDamage();
         if ((aDamage < 32000) && (aDamage >= 0) && (!aItemEntity.worldObj.isRemote)) {
@@ -862,6 +863,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         return false;
     }
 
+    @Override
     protected void addAdditionalToolTips(List aList, ItemStack aStack, EntityPlayer aPlayer) {
         super.addAdditionalToolTips(aList, aStack, aPlayer);
         int aDamage = aStack.getItemDamage();
@@ -889,10 +891,12 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         return false;
     }
 
+    @Override
     public boolean doesShowInCreative(OrePrefixes aPrefix, Materials aMaterial, boolean aDoShowAllItems) {
         return (aDoShowAllItems) || (((aPrefix != OrePrefixes.gem) || (!aMaterial.mName.startsWith("Infused"))) && (aPrefix != OrePrefixes.dustTiny) && (aPrefix != OrePrefixes.dustSmall) && (aPrefix != OrePrefixes.dustImpure) && (aPrefix != OrePrefixes.dustPure) && (aPrefix != OrePrefixes.crushedPurified) && (aPrefix != OrePrefixes.crushedCentrifuged) && (aPrefix != OrePrefixes.ingotHot) && !(aPrefix == OrePrefixes.cellPlasma && !isPlasmaCellUsed(aPrefix, aMaterial)));
     }
 
+    @Override
     public ItemStack getContainerItem(ItemStack aStack) {
         int aDamage = aStack.getItemDamage();
         if ((aDamage >= 32430) && (aDamage <= 32461)) {
@@ -907,6 +911,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         return super.getContainerItem(aStack);
     }
 
+    @Override
     public boolean doesMaterialAllowGeneration(OrePrefixes aPrefix, Materials aMaterial) {
         return (super.doesMaterialAllowGeneration(aPrefix, aMaterial));
     }

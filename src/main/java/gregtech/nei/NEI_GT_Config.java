@@ -12,6 +12,7 @@ public class NEI_GT_Config
     public static GT_NEI_Pyro PYRO;
     public static GT_NEI_3DPrinter D3;
 
+    @Override
     public void loadConfig() {
         sIsAdded = false;
         for (GT_Recipe.GT_Recipe_Map tMap : GT_Recipe.GT_Recipe_Map.sMappings) {
@@ -29,10 +30,12 @@ public class NEI_GT_Config
         sIsAdded = true;
     }
 
+    @Override
     public String getName() {
         return "GregTech NEI Plugin";
     }
 
+    @Override
     public String getVersion() {
         return "(5.03a)";
     }

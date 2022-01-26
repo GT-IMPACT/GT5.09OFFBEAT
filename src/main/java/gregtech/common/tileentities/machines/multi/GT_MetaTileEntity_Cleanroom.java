@@ -20,9 +20,11 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.api.enums.GT_Values.debugCleanroom;
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBase {
 
@@ -235,12 +237,19 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        if (aSide == 0 || aSide == 1) {
-            return new ITexture[]{TextureFactory.of(Textures.BlockIcons.BLOCK_PLASCRETE),
-                    TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_TOP_CLEANROOM_ACTIVE : Textures.BlockIcons.OVERLAY_TOP_CLEANROOM)};
-
+		if (aSide == ForgeDirection.DOWN.ordinal() || aSide == ForgeDirection.UP.ordinal()) {
+			return new ITexture[]{
+					TextureFactory.of(BLOCK_PLASCRETE),
+					aActive ?
+							TextureFactory.of(
+									TextureFactory.of(OVERLAY_TOP_CLEANROOM_ACTIVE),
+									TextureFactory.builder().addIcon(OVERLAY_TOP_CLEANROOM_ACTIVE_GLOW).glow().build()) :
+							TextureFactory.of(
+									TextureFactory.of(OVERLAY_TOP_CLEANROOM),
+									TextureFactory.builder().addIcon(OVERLAY_TOP_CLEANROOM_GLOW).glow().build())
+			};
         }
-        return new ITexture[]{TextureFactory.of(Textures.BlockIcons.BLOCK_PLASCRETE)};
+        return new ITexture[]{TextureFactory.of(BLOCK_PLASCRETE)};
     }
 
 	@Override

@@ -318,6 +318,7 @@ public class GT_MetaGenerated_Item_03
 		
     }
 
+    @Override
     public boolean doesShowInCreative(OrePrefixes aPrefix, Materials aMaterial, boolean aDoShowAllItems) {
         return aDoShowAllItems;
     }

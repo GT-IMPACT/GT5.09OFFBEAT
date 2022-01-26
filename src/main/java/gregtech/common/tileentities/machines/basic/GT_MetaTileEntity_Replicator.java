@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static gregtech.api.enums.Textures.BlockIcons.*;
+
 public class GT_MetaTileEntity_Replicator
         extends GT_MetaTileEntity_BasicMachine {
     private static int sHeaviestElementMass = 0;
@@ -33,7 +35,31 @@ public class GT_MetaTileEntity_Replicator
     }
 
     public GT_MetaTileEntity_Replicator(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 1, "Producing Elemental Matter", 1, 1, "Replicator.png", "", TextureFactory.of(Textures.BlockIcons.OVERLAY_SIDE_REPLICATOR_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_SIDE_REPLICATOR), TextureFactory.of(Textures.BlockIcons.OVERLAY_FRONT_REPLICATOR_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_FRONT_REPLICATOR), TextureFactory.of(Textures.BlockIcons.OVERLAY_TOP_REPLICATOR_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_TOP_REPLICATOR), TextureFactory.of(Textures.BlockIcons.OVERLAY_BOTTOM_REPLICATOR_ACTIVE), TextureFactory.of(Textures.BlockIcons.OVERLAY_BOTTOM_REPLICATOR));
+        super(aID, aName, aNameRegional, aTier, 1, "Producing Elemental Matter", 1, 1, "Replicator.png", "",
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_REPLICATOR_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_REPLICATOR_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_SIDE_REPLICATOR),
+                        TextureFactory.builder().addIcon(OVERLAY_SIDE_REPLICATOR_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_REPLICATOR_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_REPLICATOR_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_FRONT_REPLICATOR),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_REPLICATOR_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_REPLICATOR_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_REPLICATOR_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_TOP_REPLICATOR),
+                        TextureFactory.builder().addIcon(OVERLAY_TOP_REPLICATOR_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_REPLICATOR_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_REPLICATOR_ACTIVE_GLOW).glow().build()),
+                TextureFactory.of(
+                        TextureFactory.of(OVERLAY_BOTTOM_REPLICATOR),
+                        TextureFactory.builder().addIcon(OVERLAY_BOTTOM_REPLICATOR_GLOW).glow().build()));
     }
 
     public GT_MetaTileEntity_Replicator(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {

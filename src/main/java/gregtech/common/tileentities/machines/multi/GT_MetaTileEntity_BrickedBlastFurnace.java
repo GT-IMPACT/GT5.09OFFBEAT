@@ -30,6 +30,7 @@ public class GT_MetaTileEntity_BrickedBlastFurnace extends GT_MetaTileEntity_Pri
         return new GT_MetaTileEntity_BrickedBlastFurnace(this.mName);
     }
 
+    @Override
     public String[] getDescription() {
         return new String[]{
                 "Controller Block for the Bricked Blast Furnace",

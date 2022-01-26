@@ -35,6 +35,7 @@ public class GT_MetaTileEntity_LargeTurbine_HPSteam extends GT_MetaTileEntity_La
         return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? TextureFactory.of(Textures.BlockIcons.LARGETURBINE_TI_ACTIVE5) : TextureFactory.of(Textures.BlockIcons.LARGETURBINE_TI5) : Textures.BlockIcons.CASING_BLOCKS[59]};
     }
 
+    @Override
     public String[] getDescription() {
         return new String[]{
                 "Controller Block for the Large High Pressure Steam Turbine",

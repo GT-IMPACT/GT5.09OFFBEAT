@@ -15,6 +15,7 @@ public class ProcessingCrushedOre implements gregtech.api.interfaces.IOreRecipeR
         OrePrefixes.crushedPurified.add(this);
     }
 
+    @Override
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
 
         switch (aPrefix) {

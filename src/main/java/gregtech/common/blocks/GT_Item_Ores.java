@@ -17,14 +17,17 @@ public class GT_Item_Ores
         setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS);
     }
 
+    @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         return false;
     }
 
+    @Override
     public String getUnlocalizedName(ItemStack aStack) {
         return this.field_150939_a.getUnlocalizedName() + "." + getDamage(aStack);
     }
 
+    @Override
     public String getItemStackDisplayName(ItemStack aStack) {
     	String aName = super.getItemStackDisplayName(aStack);
     	if (this.field_150939_a instanceof GT_Block_Ores_Abstract) {
@@ -33,6 +36,7 @@ public class GT_Item_Ores
     	return aName;
     }
 
+    @Override
     public boolean placeBlockAt(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side, float hitX, float hitY, float hitZ, int aMeta) {
         return false;
     }

@@ -32,6 +32,7 @@ public class GT_MetaTileEntity_CuringOven
         super(aName, aTier, 1, aDescription, aTextures, 1, 1, aGUIName, aNEIName);
     }
 
+    @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_CuringOven(this.mName, this.mTier, this.mDescriptionArray, this.mTextures, this.mGUIName, this.mNEIName);
     }
@@ -40,6 +41,7 @@ public class GT_MetaTileEntity_CuringOven
         return (super.allowPutStack(aBaseMetaTileEntity, aIndex, aSide, aStack)) && (ItemList.Cell_Empty.isStackEqual(aStack));
     }
 
+    @Override
     public boolean isFluidInputAllowed(FluidStack aFluid) {
         return false;
     }

@@ -113,12 +113,14 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         return false;
     }
 
+    @Override
     public void readFromNBT(NBTTagCompound aNBT) {
         super.readFromNBT(aNBT);
         this.mMetaData = aNBT.getShort("m");
         this.mNatural = aNBT.getBoolean("n");
     }
 
+    @Override
     public void writeToNBT(NBTTagCompound aNBT) {
         super.writeToNBT(aNBT);
         aNBT.setShort("m", this.mMetaData);
@@ -133,6 +135,7 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         }
     }
 
+    @Override
     public Packet getDescriptionPacket() {
         if (!this.worldObj.isRemote) {
             if ((this.mBlocked == (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord + 1, this.yCoord, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord - 1, this.yCoord, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord - 1, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord + 1)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord - 1)) ? 1 : 0) == 0) {
@@ -195,6 +198,7 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         return this.mMetaData;
     }
 
+    @Override
     public boolean canUpdate() {
         return false;
     }
@@ -277,6 +281,7 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         return rList;
     }
 
+    @Override
     public ITexture[] getTexture(Block aBlock, byte aSide) {
         Materials aMaterial = GregTech_API.sGeneratedMaterials[(this.mMetaData % 1000)];
         if ((aMaterial != null) && (this.mMetaData < 32000)) {
