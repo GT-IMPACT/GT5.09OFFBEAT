@@ -8,7 +8,8 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
@@ -75,6 +76,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_Hatch {
         return new GT_MetaTileEntity_Pump(this.mName, this.mTier, this.mDescriptionArray, this.mTextures);
     }
 
+    @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         boolean wasPumping = this.wasPumping || !this.mPumpList.isEmpty();
         if (D1) {
@@ -86,6 +88,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_Hatch {
         aNBT.setBoolean("wasPumping", wasPumping);
     }
 
+    @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         this.wasPumping = aNBT.getBoolean("wasPumping");
@@ -590,7 +593,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_Hatch {
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1], (aSide == 0 || aSide == 1) ? new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT) : new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ADV_PUMP)};
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColorIndex + 1], (aSide == 0 || aSide == 1) ? TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT) : TextureFactory.of(Textures.BlockIcons.OVERLAY_ADV_PUMP)};
     }
 
     @Override
@@ -601,8 +604,8 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_Hatch {
     @Override
     public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
         return new ITexture[]{
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ADV_PUMP), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ADV_PUMP),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ADV_PUMP), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ADV_PUMP),};
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_ADV_PUMP), TextureFactory.of(Textures.BlockIcons.OVERLAY_ADV_PUMP),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_ADV_PUMP), TextureFactory.of(Textures.BlockIcons.OVERLAY_ADV_PUMP),};
     }
     private FakePlayer mFakePlayer = null;
 

@@ -637,5 +637,22 @@ public class GregTech_API {
         System.err.println("Failed to find " + oredictName + " in OreDict");
         return new ItemStack(ItemDebug.getInstance(), amount);
     }
-
+    
+    /**
+     * Sets the {@link IIconRegister} for Block Icons
+     * @param aIconRegister The {@link IIconRegister} Icon Register
+     */
+    @SideOnly(Side.CLIENT)
+    public static void setBlockIconRegister(IIconRegister aIconRegister) {
+        sBlockIcons = aIconRegister;
+    };
+    
+    /**
+     * Sets the {@link IIconRegister} for Items Icons
+     * @param aIconRegister The {@link IIconRegister} Icon Register
+     */
+    @SideOnly(Side.CLIENT)
+    public static void setItemIconRegister(IIconRegister aIconRegister) {
+        GregTech_API.sItemIcons = aIconRegister;
+    }
 }

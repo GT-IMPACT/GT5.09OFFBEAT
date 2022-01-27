@@ -1,5 +1,6 @@
 package gregtech.common.tileentities.machines.basic;
 
+import gregtech.api.render.TextureFactory;
 import gregtech.common.gui.GT_Container_DigitalTransformer;
 import gregtech.common.gui.GT_GUIContainer_DigitalTransformer;
 import cpw.mods.fml.relauncher.Side;
@@ -11,7 +12,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Transformer;
-import gregtech.api.objects.GT_RenderedTexture;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -43,18 +44,18 @@ public class GT_MetaTileEntity_Digital_Transformer extends GT_MetaTileEntity_Tra
 		public ITexture[][][] getTextureSet(ITexture[] aTextures) {
 	        ITexture[][][] rTextures = new ITexture[12][17][];
 	        for (byte i = -1; i < 16; i++) {
-	            rTextures[0][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), new GT_RenderedTexture(Textures.BlockIcons.IDSU_Out)};
-	            rTextures[1][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), new GT_RenderedTexture(Textures.BlockIcons.IDSU_Out)};
-	            rTextures[2][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), new GT_RenderedTexture(Textures.BlockIcons.IDSU_Out)};
-	            rTextures[3][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI[mTier]};
-	            rTextures[4][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI[mTier]};
-	            rTextures[5][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI[mTier]};
-	            rTextures[6][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN[mTier]};
-	            rTextures[7][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN[mTier]};
-	            rTextures[8][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN[mTier]};
-	            rTextures[9][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), new GT_RenderedTexture(Textures.BlockIcons.IDSU_Out)};
-	            rTextures[10][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), new GT_RenderedTexture(Textures.BlockIcons.IDSU_Out)};
-	            rTextures[11][i + 1] = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.IDSU), new GT_RenderedTexture(Textures.BlockIcons.IDSU_Out)};
+	            rTextures[0][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), TextureFactory.of(Textures.BlockIcons.IDSU_Out)};
+	            rTextures[1][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), TextureFactory.of(Textures.BlockIcons.IDSU_Out)};
+	            rTextures[2][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), TextureFactory.of(Textures.BlockIcons.IDSU_Out)};
+	            rTextures[3][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI[mTier]};
+	            rTextures[4][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI[mTier]};
+	            rTextures[5][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI[mTier]};
+	            rTextures[6][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN[mTier]};
+	            rTextures[7][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN[mTier]};
+	            rTextures[8][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), Textures.BlockIcons.OVERLAYS_ENERGY_IN[mTier]};
+	            rTextures[9][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), TextureFactory.of(Textures.BlockIcons.IDSU_Out)};
+	            rTextures[10][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), TextureFactory.of(Textures.BlockIcons.IDSU_Out)};
+	            rTextures[11][i + 1] = new ITexture[]{TextureFactory.of(Textures.BlockIcons.IDSU), TextureFactory.of(Textures.BlockIcons.IDSU_Out)};
 	        }
 	        return rTextures;
 	    }

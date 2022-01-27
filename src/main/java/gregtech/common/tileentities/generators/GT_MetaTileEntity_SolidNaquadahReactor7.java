@@ -7,7 +7,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicGenerator;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 
 @Deprecated
@@ -51,43 +52,43 @@ public class GT_MetaTileEntity_SolidNaquadahReactor7
     }
 
     public ITexture[] getFront(byte aColor) {
-        return new ITexture[]{super.getFront(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_FRONT)};
+        return new ITexture[]{super.getFront(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_FRONT)};
     }
 
     public ITexture[] getBack(byte aColor) {
-        return new ITexture[]{super.getBack(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BACK)};
+        return new ITexture[]{super.getBack(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BACK)};
     }
 
     public ITexture[] getBottom(byte aColor) {
-        return new ITexture[]{super.getBottom(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BOTTOM)};
+        return new ITexture[]{super.getBottom(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BOTTOM)};
     }
 
     public ITexture[] getTop(byte aColor) {
-        return new ITexture[]{super.getTop(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_TOP)};
+        return new ITexture[]{super.getTop(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_TOP)};
     }
 
     public ITexture[] getSides(byte aColor) {
-        return new ITexture[]{super.getSides(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_SIDE)};
+        return new ITexture[]{super.getSides(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_SIDE)};
     }
 
     public ITexture[] getFrontActive(byte aColor) {
-        return new ITexture[]{super.getFrontActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_FRONT_ACTIVE)};
+        return new ITexture[]{super.getFrontActive(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_FRONT_ACTIVE)};
     }
 
     public ITexture[] getBackActive(byte aColor) {
-        return new ITexture[]{super.getBackActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BACK_ACTIVE)};
+        return new ITexture[]{super.getBackActive(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BACK_ACTIVE)};
     }
 
     public ITexture[] getBottomActive(byte aColor) {
-        return new ITexture[]{super.getBottomActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BOTTOM_ACTIVE)};
+        return new ITexture[]{super.getBottomActive(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_BOTTOM_ACTIVE)};
     }
 
     public ITexture[] getTopActive(byte aColor) {
-        return new ITexture[]{super.getTopActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_TOP_ACTIVE)};
+        return new ITexture[]{super.getTopActive(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_TOP_ACTIVE)};
     }
 
     public ITexture[] getSidesActive(byte aColor) {
-        return new ITexture[]{super.getSidesActive(aColor)[0], new GT_RenderedTexture(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_SIDE_ACTIVE)};
+        return new ITexture[]{super.getSidesActive(aColor)[0], TextureFactory.of(Textures.BlockIcons.NAQUADAH_REACTOR_SOLID_SIDE_ACTIVE)};
     }
 
     @Override

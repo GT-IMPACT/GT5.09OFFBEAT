@@ -7,7 +7,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -16,14 +17,14 @@ public class GT_MetaTileEntity_AirCondenser extends GT_MetaTileEntity_BasicMachi
 
     public GT_MetaTileEntity_AirCondenser(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 1, "Condense " + 100 * (1 << aTier - 1) * (1 << aTier - 1) + " L per tick of Air.", 0, 0, "AirCondenser.png", "",
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_DRAIN),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT),
-                new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT));
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_DRAIN),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_DRAIN),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_DRAIN),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_DRAIN),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT),
+                TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_OUT));
     }
 
     public GT_MetaTileEntity_AirCondenser(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {

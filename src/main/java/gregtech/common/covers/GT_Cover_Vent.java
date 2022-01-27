@@ -13,6 +13,7 @@ public class GT_Cover_Vent
         this.mEfficiency = aEfficiency;
     }
 
+    @Override
     public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity, long aTimer) {
         if ((aTileEntity instanceof IMachineProgress)) {
             if ((((IMachineProgress) aTileEntity).hasThingsToDo()) && (aCoverVariable != ((IMachineProgress) aTileEntity).getProgress()) &&
@@ -24,10 +25,12 @@ public class GT_Cover_Vent
         return 0;
     }
 
+    @Override
     public boolean alwaysLookConnected(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
         return true;
     }
 
+    @Override
     public int getTickRate(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
         return 100;
     }

@@ -8,7 +8,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -17,6 +18,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_VacuumFreezer
         extends GT_MetaTileEntity_MultiBlockBase {
@@ -43,12 +46,26 @@ public class GT_MetaTileEntity_VacuumFreezer
                 "1x Energy Hatch (Any casing)",
                 "Frost Proof Machine Casings for the rest (16 at least!)"};
     }
-
+    
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
+        ITexture[] rTexture;
         if (aSide == aFacing) {
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[17], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_VACUUM_FREEZER_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_VACUUM_FREEZER)};
+            if (aActive) {
+                rTexture = new ITexture[]{
+                        casingTexturePages[0][17],
+                        TextureFactory.of(OVERLAY_FRONT_VACUUM_FREEZER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_VACUUM_FREEZER_ACTIVE_GLOW).glow().build()};
+            } else {
+                rTexture = new ITexture[]{
+                        casingTexturePages[0][17],
+                        TextureFactory.of(OVERLAY_FRONT_VACUUM_FREEZER),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_VACUUM_FREEZER_GLOW).glow().build()};
+            }
+        } else {
+            rTexture = new ITexture[]{casingTexturePages[0][17]};
         }
-        return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[17]};
+        return rTexture;
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {

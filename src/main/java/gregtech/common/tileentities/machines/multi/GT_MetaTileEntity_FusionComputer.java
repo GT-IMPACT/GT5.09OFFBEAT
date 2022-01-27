@@ -11,7 +11,8 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_ItemStack;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_GUIContainer_FusionReactor;
@@ -25,6 +26,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity_MultiBlockBase {
 
@@ -41,6 +44,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     public abstract int tier();
 
+    @Override
     public abstract long maxEUStore();
 
     @Override
@@ -58,6 +62,14 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
     public boolean allowCoverOnSide(byte aSide, GT_ItemStack aStack) {
 
         return aSide != getBaseMetaTileEntity().getFrontFacing();
+    }
+    
+    static {
+        Textures.BlockIcons.setCasingTextureForId(52,
+                TextureFactory.of(
+                        TextureFactory.of(MACHINE_CASING_FUSION_GLASS_YELLOW),
+                        TextureFactory.builder().addIcon(MACHINE_CASING_FUSION_GLASS_YELLOW_GLOW).glow().build()
+                ));
     }
 
     @Override
@@ -214,21 +226,19 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     public abstract int getFusionCoilMeta();
 
+    @Override
     public abstract String[] getDescription();
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        ITexture[] sTexture;
-        if (aSide == aFacing) {
-            sTexture = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_FUSION_GLASS, Dyes.getModulation(-1, Dyes._NULL.mRGBa)), new GT_RenderedTexture(getIconOverlay())};
-        } else {
-            if (!aActive) {
-                sTexture = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_FUSION_GLASS, Dyes.getModulation(-1, Dyes._NULL.mRGBa))};
-            } else {
-                sTexture = new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_FUSION_GLASS_YELLOW, Dyes.getModulation(-1, Dyes._NULL.mRGBa))};
-            }
-        }
-        return sTexture;
+        if (aSide == aFacing) return new ITexture[]{TextureFactory.of(MACHINE_CASING_FUSION_GLASS), getTextureOverlay()};
+        if (aActive) return new ITexture[]{Textures.BlockIcons.getCasingTextureForId(52)};
+        return new ITexture[]{TextureFactory.of(MACHINE_CASING_FUSION_GLASS)};
     }
+    
+    /**
+     * @return The list of textures overlay
+     */
+    public abstract ITexture getTextureOverlay();
 
     public abstract IIconContainer getIconOverlay();
 

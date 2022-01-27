@@ -6,7 +6,8 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import net.minecraft.item.ItemStack;
 
 public class GT_MetaTileEntity_OreDrillingPlant5 extends GT_MetaTileEntity_OreDrillingPlantBase {
@@ -36,7 +37,7 @@ public class GT_MetaTileEntity_OreDrillingPlant5 extends GT_MetaTileEntity_OreDr
 		if (aSide == aFacing) {
 			return new ITexture[] {
 					Textures.BlockIcons.casingTexturePages[1][66],
-					new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ORE_DRILL_ACTIVE
+					TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ORE_DRILL_ACTIVE
 							: Textures.BlockIcons.OVERLAY_FRONT_ORE_DRILL) };
 		}
 		return new ITexture[] { Textures.BlockIcons.casingTexturePages[1][66] };

@@ -1,17 +1,8 @@
 package gregtech.api.metatileentity;
 
-import static gregtech.GT_Mod.GT_FML_LOGGER;
-import static gregtech.api.enums.GT_Values.NW;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
-import gregtech.api.enums.Textures.BlockIcons;
 import gregtech.api.graphs.Node;
 import gregtech.api.graphs.paths.NodePath;
 import gregtech.api.interfaces.ITexture;
@@ -22,6 +13,7 @@ import gregtech.api.interfaces.tileentity.IPipeRenderedTileEntity;
 import gregtech.api.net.GT_Packet_TileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.*;
+import gregtech.common.GT_Client;
 import gregtech.common.covers.GT_Cover_Fluidfilter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -52,7 +44,7 @@ import static gregtech.api.enums.GT_Values.NW;
  */
 public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileEntity, IPipeRenderedTileEntity {
     private final GT_CoverBehavior[] mCoverBehaviors = new GT_CoverBehavior[]{GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior};
-    public byte mConnections = 0;
+    public byte mConnections = IConnectable.NO_CONNECTION;
     protected MetaPipeEntity mMetaTileEntity;
     private byte[] mSidedRedstone = new byte[]{0, 0, 0, 0, 0, 0};
     private int[] mCoverSides = new int[]{0, 0, 0, 0, 0, 0}, mCoverData = new int[]{0, 0, 0, 0, 0, 0}, mTimeStatistics = new int[GregTech_API.TICKS_FOR_LAG_AVERAGING];
@@ -260,91 +252,88 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
                             mMetaTileEntity.onColorChangeClient(oColor = mColor);
                             issueTextureUpdate();
                         }
-
-                            if (mNeedsUpdate) {
-                                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                                //worldObj.func_147479_m(xCoord, yCoord, zCoord);
-                                mNeedsUpdate = false;
-                            }
+        
+                        if (mNeedsUpdate) {
+                            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                            //worldObj.func_147479_m(xCoord, yCoord, zCoord);
+                            mNeedsUpdate = false;
                         }
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                        if (isServerSide() && mTickTimer > 10) {
-                            for (byte i = (byte) (tCode - 2); i < 6; i++)
-                                if (getCoverIDAtSide(i) != 0) {
-                                    tCode++;
-                                    GT_CoverBehavior tCover = getCoverBehaviorAtSide(i);
-                                    int tCoverTickRate = tCover.getTickRate(i, getCoverIDAtSide(i), mCoverData[i], this);
-                                    if (tCoverTickRate > 0 && mTickTimer % tCoverTickRate == 0) {
-                                        mCoverData[i] = tCover.doCoverThings(i, getInputRedstoneSignal(i), getCoverIDAtSide(i), mCoverData[i], this, mTickTimer);
-                                        if (!hasValidMetaTileEntity()) return;
-                                    }
-                                }
-                            byte oldConnections =  mConnections;
-                            // Mask-out Connection direction bits to keep only Foam related connections
-                            mConnections = (byte) (mMetaTileEntity.mConnections | (mConnections & ~63));
-                            // If foam not hardened, tries roll chance to harden
-                            if ((mConnections & -64) == 64 && getRandomNumber(1000) == 0) {
-                                mConnections = (byte) ((mConnections & ~64) | -128);
-                            }
-                            if (mTickTimer > 12 && oldConnections != mConnections)
-                                GregTech_API.causeCableUpdate(worldObj,xCoord,yCoord,zCoord);
-                        }
-                    case 8:
-                        tCode = 9;
-                        mMetaTileEntity.onPreTick(this, mTickTimer);
-                        if (!hasValidMetaTileEntity()) return;
-                    case 9:
-                        tCode++;
-                        if (isServerSide()) {
-                            if (mTickTimer == 10) {
-                                for (byte i = 0; i < 6; i++)
-                                    mCoverBehaviors[i] = GregTech_API.getCoverBehavior(mCoverSides[i]);
-                                issueBlockUpdate();
-                                joinEnet();
-                            }
-
-                            if (xCoord != oX || yCoord != oY || zCoord != oZ) {
-                                oX = xCoord;
-                                oY = yCoord;
-                                oZ = zCoord;
-                                issueClientUpdate();
-                                clearTileEntityBuffer();
-                            }
-                        }
-                    case 10:
-                        tCode++;
-                        mMetaTileEntity.onPostTick(this, mTickTimer);
-                        if (!hasValidMetaTileEntity()) return;
-                    case 11:
-                        tCode++;
-                        if (isServerSide()) {
-                            if (mTickTimer % 10 == 0) {
-                                if (mSendClientData) {
-                                    NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_TileEntity(xCoord, (short) yCoord, zCoord, mID, mCoverSides[0], mCoverSides[1], mCoverSides[2], mCoverSides[3], mCoverSides[4], mCoverSides[5], oTextureData = mConnections, oUpdateData = hasValidMetaTileEntity() ? mMetaTileEntity.getUpdateData() : 0, oRedstoneData = (byte) (((mSidedRedstone[0] > 0) ? 1 : 0) | ((mSidedRedstone[1] > 0) ? 2 : 0) | ((mSidedRedstone[2] > 0) ? 4 : 0) | ((mSidedRedstone[3] > 0) ? 8 : 0) | ((mSidedRedstone[4] > 0) ? 16 : 0) | ((mSidedRedstone[5] > 0) ? 32 : 0)), oColor = mColor), xCoord, zCoord);
-                                    mSendClientData = false;
+                    }
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    if (isServerSide() && mTickTimer > 10) {
+                        for (byte i = (byte) (tCode - 2); i < 6; i++)
+                            if (getCoverIDAtSide(i) != 0) {
+                                tCode++;
+                                GT_CoverBehavior tCover = getCoverBehaviorAtSide(i);
+                                int tCoverTickRate = tCover.getTickRate(i, getCoverIDAtSide(i), mCoverData[i], this);
+                                if (tCoverTickRate > 0 && mTickTimer % tCoverTickRate == 0) {
+                                    mCoverData[i] = tCover.doCoverThings(i, getInputRedstoneSignal(i), getCoverIDAtSide(i), mCoverData[i], this, mTickTimer);
+                                    if (!hasValidMetaTileEntity()) return;
                                 }
                             }
-
-                            if (mTickTimer > 10) {
-                                if (mConnections != oTextureData) sendBlockEvent((byte) 0, oTextureData = mConnections);
-                                byte tData = mMetaTileEntity.getUpdateData();
-                                if (tData != oUpdateData) sendBlockEvent((byte) 1, oUpdateData = tData);
-                                if (mColor != oColor) sendBlockEvent((byte) 2, oColor = mColor);
-                                tData = (byte) (((mSidedRedstone[0] > 0) ? 1 : 0) | ((mSidedRedstone[1] > 0) ? 2 : 0) | ((mSidedRedstone[2] > 0) ? 4 : 0) | ((mSidedRedstone[3] > 0) ? 8 : 0) | ((mSidedRedstone[4] > 0) ? 16 : 0) | ((mSidedRedstone[5] > 0) ? 32 : 0));
-                                if (tData != oRedstoneData) sendBlockEvent((byte) 3, oRedstoneData = tData);
-                            }
-
-                            if (mNeedsBlockUpdate) {
-                                updateNeighbours(mStrongRedstone, oStrongRedstone);
-                                oStrongRedstone = mStrongRedstone;
-                                mNeedsBlockUpdate = false;
+                        // Mask-out Connection direction bits to keep only Foam related connections
+                        mConnections = (byte) (mMetaTileEntity.mConnections | (mConnections & ~IConnectable.CONNECTED_ALL));
+                        // If foam not hardened, tries roll chance to harden
+                        if ((mConnections & IConnectable.HAS_FOAM) == IConnectable.HAS_FRESHFOAM && getRandomNumber(1000) == 0) {
+                            mConnections = (byte) ((mConnections & ~IConnectable.HAS_FRESHFOAM) | IConnectable.HAS_HARDENEDFOAM);
+                        }
+                    }
+                case 8:
+                    tCode = 9;
+                    mMetaTileEntity.onPreTick(this, mTickTimer);
+                    if (!hasValidMetaTileEntity()) return;
+                case 9:
+                    tCode++;
+                    if (isServerSide()) {
+                        if (mTickTimer == 10) {
+                            for (byte i = 0; i < 6; i++)
+                                 mCoverBehaviors[i] = GregTech_API.getCoverBehavior(mCoverSides[i]);
+                            issueBlockUpdate();
+                            joinEnet();
+                        }
+            
+                        if (xCoord != oX || yCoord != oY || zCoord != oZ) {
+                            oX = xCoord;
+                            oY = yCoord;
+                            oZ = zCoord;
+                            issueClientUpdate();
+                            clearTileEntityBuffer();
+                        }
+                    }
+                case 10:
+                    tCode++;
+                    mMetaTileEntity.onPostTick(this, mTickTimer);
+                    if (!hasValidMetaTileEntity()) return;
+                case 11:
+                    tCode++;
+                    if (isServerSide()) {
+                        if (mTickTimer % 10 == 0) {
+                            if (mSendClientData) {
+                                NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_TileEntity(xCoord, (short) yCoord, zCoord, mID, mCoverSides[0], mCoverSides[1], mCoverSides[2], mCoverSides[3], mCoverSides[4], mCoverSides[5], oTextureData = mConnections, oUpdateData = hasValidMetaTileEntity() ? mMetaTileEntity.getUpdateData() : 0, oRedstoneData = (byte) (((mSidedRedstone[0] > 0) ? 1 : 0) | ((mSidedRedstone[1] > 0) ? 2 : 0) | ((mSidedRedstone[2] > 0) ? 4 : 0) | ((mSidedRedstone[3] > 0) ? 8 : 0) | ((mSidedRedstone[4] > 0) ? 16 : 0) | ((mSidedRedstone[5] > 0) ? 32 : 0)), oColor = mColor), xCoord, zCoord);
+                                mSendClientData = false;
                             }
                         }
+            
+                        if (mTickTimer > 10) {
+                            if (mConnections != oTextureData) sendBlockEvent((byte) 0, oTextureData = mConnections);
+                            byte tData = mMetaTileEntity.getUpdateData();
+                            if (tData != oUpdateData) sendBlockEvent((byte) 1, oUpdateData = tData);
+                            if (mColor != oColor) sendBlockEvent((byte) 2, oColor = mColor);
+                            tData = (byte) (((mSidedRedstone[0] > 0) ? 1 : 0) | ((mSidedRedstone[1] > 0) ? 2 : 0) | ((mSidedRedstone[2] > 0) ? 4 : 0) | ((mSidedRedstone[3] > 0) ? 8 : 0) | ((mSidedRedstone[4] > 0) ? 16 : 0) | ((mSidedRedstone[5] > 0) ? 32 : 0));
+                            if (tData != oRedstoneData) sendBlockEvent((byte) 3, oRedstoneData = tData);
+                        }
+            
+                        if (mNeedsBlockUpdate) {
+                            updateNeighbours(mStrongRedstone, oStrongRedstone);
+                            oStrongRedstone   = mStrongRedstone;
+                            mNeedsBlockUpdate = false;
+                        }
+                    }
                 default:
                     tCode = -1;
                     break;
@@ -515,6 +504,10 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     public ITexture getCoverTexture(byte aSide) {
+        if (getCoverIDAtSide(aSide) == 0) return null;
+        if (GT_Mod.instance.isClientSide() && (GT_Client.hideValue & 0x1) != 0) {
+            return Textures.BlockIcons.HIDDEN_TEXTURE[0]; // See through
+        }
         return GregTech_API.sCovers.get(new GT_ItemStack(getCoverIDAtSide(aSide)));
     }
 
@@ -815,16 +808,32 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
+    public ITexture[] getTextureCovered(byte aSide) {
+        ITexture coverTexture = getCoverTexture(aSide);
+        ITexture[] textureUncovered = getTextureUncovered(aSide);
+        ITexture[] textureCovered;
+        if (coverTexture != null) {
+            textureCovered = Arrays.copyOf(textureUncovered, textureUncovered.length + 1);
+            textureCovered[textureUncovered.length] = coverTexture;
+            return textureCovered;
+        } else {
+            return textureUncovered;
+        }
+    }
+
+    @Override
     public ITexture[] getTextureUncovered(byte aSide) {
-        if ((mConnections & 64) != 0) return Textures.BlockIcons.FRESHFOAM;
-        if ((mConnections & -128) != 0) return Textures.BlockIcons.HARDENEDFOAMS[mColor];
-        if ((mConnections & -64) != 0) return Textures.BlockIcons.ERROR_RENDERING;
+        if ((mConnections & IConnectable.HAS_FRESHFOAM) != 0) return Textures.BlockIcons.FRESHFOAM;
+        if ((mConnections & IConnectable.HAS_HARDENEDFOAM) != 0) return Textures.BlockIcons.HARDENEDFOAMS[mColor];
+        if ((mConnections & IConnectable.HAS_FOAM) != 0) return Textures.BlockIcons.ERROR_RENDERING;
         byte tConnections = mConnections;
-        if (tConnections == 1 || tConnections == 2) tConnections = 3;
-        else if (tConnections == 4 || tConnections == 8) tConnections = 12;
-        else if (tConnections == 16 || tConnections == 32) tConnections = 48;
+        if (tConnections == IConnectable.CONNECTED_WEST || tConnections == IConnectable.CONNECTED_EAST) tConnections = (byte) (IConnectable.CONNECTED_WEST | IConnectable.CONNECTED_EAST);
+        else if (tConnections == IConnectable.CONNECTED_DOWN || tConnections == IConnectable.CONNECTED_UP) tConnections = (byte) (IConnectable.CONNECTED_DOWN | IConnectable.CONNECTED_UP);
+        else if (tConnections == IConnectable.CONNECTED_NORTH || tConnections == IConnectable.CONNECTED_SOUTH) tConnections = (byte) (IConnectable.CONNECTED_NORTH | IConnectable.CONNECTED_SOUTH);
         if (hasValidMetaTileEntity())
-            return mMetaTileEntity.getTexture(this, aSide, tConnections, (byte) (mColor - 1), tConnections == 0 || (tConnections & (1 << aSide)) != 0, getOutputRedstoneSignal(aSide) > 0);
+            return mMetaTileEntity.getTexture(this, aSide, tConnections, (byte) (mColor - 1),
+                    tConnections == 0 || (tConnections & (1 << aSide)) != 0,
+                    getOutputRedstoneSignal(aSide) > 0);
         return Textures.BlockIcons.ERROR_RENDERING;
     }
 
@@ -1418,7 +1427,7 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
 
     @Override
     public float getBlastResistance(byte aSide) {
-        return (mConnections & 192) != 0 ? 50.0F : 5.0F;
+        return (mConnections & IConnectable.HAS_FOAM) != 0 ? 50.0F : 5.0F;
     }
 
     @Override

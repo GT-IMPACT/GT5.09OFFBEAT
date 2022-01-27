@@ -11,6 +11,7 @@ public class GT_Material_Reinforced
         setAdventureModeExempt();
     }
 
+    @Override
     public boolean isOpaque() {
         return true;
     }

@@ -8,8 +8,9 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.ITexturedTileEntity;
 import gregtech.api.objects.GT_CopiedBlockTexture;
-import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.objects.GT_StdRenderedTexture;
 import gregtech.api.objects.XSTR;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
@@ -112,12 +113,14 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         return false;
     }
 
+    @Override
     public void readFromNBT(NBTTagCompound aNBT) {
         super.readFromNBT(aNBT);
         this.mMetaData = aNBT.getShort("m");
         this.mNatural = aNBT.getBoolean("n");
     }
 
+    @Override
     public void writeToNBT(NBTTagCompound aNBT) {
         super.writeToNBT(aNBT);
         aNBT.setShort("m", this.mMetaData);
@@ -132,6 +135,7 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         }
     }
 
+    @Override
     public Packet getDescriptionPacket() {
         if (!this.worldObj.isRemote) {
             if ((this.mBlocked == (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord + 1, this.yCoord, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord - 1, this.yCoord, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord - 1, this.zCoord)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord + 1)) && (GT_Utility.isOpaqueBlock(this.worldObj, this.xCoord, this.yCoord, this.zCoord - 1)) ? 1 : 0) == 0) {
@@ -194,6 +198,7 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         return this.mMetaData;
     }
 
+    @Override
     public boolean canUpdate() {
         return false;
     }
@@ -276,14 +281,16 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
         return rList;
     }
 
+    @Override
     public ITexture[] getTexture(Block aBlock, byte aSide) {
         Materials aMaterial = GregTech_API.sGeneratedMaterials[(this.mMetaData % 1000)];
         if ((aMaterial != null) && (this.mMetaData < 32000)) {
-            GT_RenderedTexture aIconSet = new GT_RenderedTexture(aMaterial.mIconSet.mTextures[this.mMetaData / 16000 == 0 ? OrePrefixes.ore.mTextureIndex : OrePrefixes.oreSmall.mTextureIndex], aMaterial.mRGBa);
+            GT_StdRenderedTexture aIconSet = new GT_StdRenderedTexture(aMaterial.mIconSet.mTextures[this.mMetaData / 16000 == 0 ? OrePrefixes.ore.mTextureIndex : OrePrefixes.oreSmall.mTextureIndex], aMaterial.mRGBa);
             if (aBlock instanceof GT_Block_Ores_Abstract) {
                 return new ITexture[]{((GT_Block_Ores_Abstract) aBlock).getTextureSet()[((this.mMetaData / 1000) % 16)], aIconSet};
             }
         }
-        return new ITexture[]{new GT_CopiedBlockTexture(Blocks.stone, 0, 0), new GT_RenderedTexture(gregtech.api.enums.TextureSet.SET_NONE.mTextures[OrePrefixes.ore.mTextureIndex])};
+        ItemStack tStack = new ItemStack(Blocks.stone, 0, 0);
+        return new ITexture[]{TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), new GT_StdRenderedTexture(gregtech.api.enums.TextureSet.SET_NONE.mTextures[OrePrefixes.ore.mTextureIndex])};
     }
 }

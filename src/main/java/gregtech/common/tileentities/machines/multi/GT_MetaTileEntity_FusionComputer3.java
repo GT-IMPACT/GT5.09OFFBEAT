@@ -3,9 +3,13 @@ package gregtech.common.tileentities.machines.multi;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
+import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.render.TextureFactory;
 import net.minecraft.block.Block;
+
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_FusionComputer3 extends GT_MetaTileEntity_FusionComputer {
 
@@ -70,7 +74,14 @@ public class GT_MetaTileEntity_FusionComputer3 extends GT_MetaTileEntity_FusionC
 
     @Override
     public IIconContainer getIconOverlay() {
-        return Textures.BlockIcons.OVERLAY_FUSION3;
+        return OVERLAY_FUSION3;
+    }
+    
+    @Override
+    public ITexture getTextureOverlay() {
+        return TextureFactory.of(
+                TextureFactory.of(OVERLAY_FUSION3),
+                TextureFactory.builder().addIcon(OVERLAY_FUSION3_GLOW).glow().build());
     }
 }
 

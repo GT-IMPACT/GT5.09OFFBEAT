@@ -3,9 +3,13 @@ package gregtech.api.interfaces.tileentity;
 import gregtech.api.interfaces.ITexture;
 
 public interface IPipeRenderedTileEntity extends ICoverable, ITexturedTileEntity {
-    public float getThickNess();
+    float getThickNess();
 
-    public byte getConnections();
+    byte getConnections();
 
-    public ITexture[] getTextureUncovered(byte aSide);
+    ITexture[] getTextureUncovered(byte aSide);
+
+    default ITexture[] getTextureCovered(byte aSide) {
+        return getTextureUncovered(aSide);
+    }
 }

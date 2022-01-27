@@ -81,21 +81,26 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
     }
 
     /**
-     * 
-     * @param textureIndex
-     * Index between 0-127.
-     * Add 128 per page, if texture index is not on first page.
-     * 
+     *
+     * Sets texture with page and index, called on add to machine list
+     * @param id (page<<7)+index of the texture
+     *
      */
-    
-    public final void updateTexture(int textureIndex){
-        onValueUpdate((byte) textureIndex);
-        onTexturePageUpdate((byte) (textureIndex>>7));
-    }
 
-    public final void updateTexture(byte texturePage, byte machineBlock){
-        onValueUpdate(machineBlock);
-        onTexturePageUpdate(texturePage);
+    public final void updateTexture(int id){
+        onValueUpdate((byte) id);
+        onTexturePageUpdate((byte) (id >> 7));
+    }
+    
+    /**
+     * Sets texture with page and index, rather unusable, but kept FFS
+     * @param page page of texure
+     * @param index index of texure
+     */
+    @Deprecated
+    public final void updateTexture(byte page, byte index){
+        onValueUpdate(index);
+        onTexturePageUpdate(page);
     }
 
     public void setIDHatch(int id) {

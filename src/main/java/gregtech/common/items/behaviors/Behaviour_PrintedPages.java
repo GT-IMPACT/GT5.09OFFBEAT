@@ -25,6 +25,7 @@ public class Behaviour_PrintedPages
         return tNBT.getString("author");
     }
 
+    @Override
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         if (GT_Utility.isStringValid(getTitle(aStack))) {
             aList.add(getTitle(aStack));

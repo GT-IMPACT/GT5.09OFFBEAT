@@ -4,7 +4,8 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.common.gui.GT_Container_SuperBuffer;
 import gregtech.common.gui.GT_GUIContainer_SuperBuffer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -27,18 +28,23 @@ public class GT_MetaTileEntity_SuperBuffer
         super(aName, aTier, aInvSlotCount, aDescription, aTextures);
     }
 
+    @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_SuperBuffer(this.mName, this.mTier, this.mInventory.length, this.mDescriptionArray, this.mTextures);
     }
-
+    
     public ITexture getOverlayIcon() {
-        return new GT_RenderedTexture(Textures.BlockIcons.AUTOMATION_SUPERBUFFER);
+        return TextureFactory.of(
+                TextureFactory.of(Textures.BlockIcons.AUTOMATION_SUPERBUFFER),
+                TextureFactory.builder().addIcon(Textures.BlockIcons.AUTOMATION_SUPERBUFFER_GLOW).glow().build());
     }
 
+    @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_Container_SuperBuffer(aPlayerInventory, aBaseMetaTileEntity);
     }
 
+    @Override
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_SuperBuffer(aPlayerInventory, aBaseMetaTileEntity);
     }

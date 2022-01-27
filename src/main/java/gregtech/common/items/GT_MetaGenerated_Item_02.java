@@ -4,11 +4,13 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.items.GT_MetaGenerated_Item_X32;
 import gregtech.api.objects.GT_CopiedBlockTexture;
-import gregtech.api.objects.GT_RenderedTexture;
+
 import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
 import gregtech.common.covers.GT_Cover_SolarPanel;
+import net.minecraft.block.Block;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -240,38 +242,33 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Jungle.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 3)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_Acacia.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 4)});
         GT_ModHandler.addCraftingRecipe(ItemList.Plank_DarkOak.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', new ItemStack(Blocks.wooden_slab, 1, 5)});
+        
 
-        GregTech_API.registerCover(ItemList.Plank_Oak.get(1L), new GT_CopiedBlockTexture(Blocks.planks, 0, 0), null);
-        GregTech_API.registerCover(ItemList.Plank_Spruce.get(1L), new GT_CopiedBlockTexture(Blocks.planks, 0, 1), null);
-        GregTech_API.registerCover(ItemList.Plank_Birch.get(1L), new GT_CopiedBlockTexture(Blocks.planks, 0, 2), null);
-        GregTech_API.registerCover(ItemList.Plank_Jungle.get(1L), new GT_CopiedBlockTexture(Blocks.planks, 0, 3), null);
-        GregTech_API.registerCover(ItemList.Plank_Acacia.get(1L), new GT_CopiedBlockTexture(Blocks.planks, 0, 4), null);
-        GregTech_API.registerCover(ItemList.Plank_DarkOak.get(1L), new GT_CopiedBlockTexture(Blocks.planks, 0, 5), null);
-        GregTech_API.registerCover(ItemList.Plank_Larch.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 0, new ItemStack(Blocks.planks, 1, 0))), 0, 0), null);
-        GregTech_API.registerCover(ItemList.Plank_Teak.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 1, new ItemStack(Blocks.planks, 1, 0))), 0, 1), null);
-        GregTech_API.registerCover(ItemList.Plank_Acacia_Green.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 2, new ItemStack(Blocks.planks, 1, 0))), 0, 2), null);
-        GregTech_API.registerCover(ItemList.Plank_Lime.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 3, new ItemStack(Blocks.planks, 1, 0))), 0, 3), null);
-        GregTech_API.registerCover(ItemList.Plank_Chestnut.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 4, new ItemStack(Blocks.planks, 1, 0))), 0, 4), null);
-        GregTech_API.registerCover(ItemList.Plank_Wenge.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 5, new ItemStack(Blocks.planks, 1, 0))), 0, 5), null);
-        GregTech_API.registerCover(ItemList.Plank_Baobab.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 6, new ItemStack(Blocks.planks, 1, 0))), 0, 6), null);
-        GregTech_API.registerCover(ItemList.Plank_Sequoia.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 7, new ItemStack(Blocks.planks, 1, 0))), 0, 7), null);
-        GregTech_API.registerCover(ItemList.Plank_Kapok.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 8, new ItemStack(Blocks.planks, 1, 0))), 0, 8), null);
-        GregTech_API.registerCover(ItemList.Plank_Ebony.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 9, new ItemStack(Blocks.planks, 1, 0))), 0, 9), null);
-        GregTech_API.registerCover(ItemList.Plank_Mahagony.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 10, new ItemStack(Blocks.planks, 1, 0))), 0, 10), null);
-        GregTech_API.registerCover(ItemList.Plank_Balsa.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 11, new ItemStack(Blocks.planks, 1, 0))), 0, 11), null);
-        GregTech_API.registerCover(ItemList.Plank_Willow.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 12, new ItemStack(Blocks.planks, 1, 0))), 0, 12), null);
-        GregTech_API.registerCover(ItemList.Plank_Walnut.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 13, new ItemStack(Blocks.planks, 1, 0))), 0, 13), null);
-        GregTech_API.registerCover(ItemList.Plank_Greenheart.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 14, new ItemStack(Blocks.planks, 1, 0))), 0, 14), null);
-        GregTech_API.registerCover(ItemList.Plank_Cherry.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 15, new ItemStack(Blocks.planks, 1, 0))), 0, 15), null);
-        GregTech_API.registerCover(ItemList.Plank_Mahoe.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 16, new ItemStack(Blocks.planks, 1, 0))), 0, 0), null);
-        GregTech_API.registerCover(ItemList.Plank_Poplar.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 17, new ItemStack(Blocks.planks, 1, 0))), 0, 1), null);
-        GregTech_API.registerCover(ItemList.Plank_Palm.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 18, new ItemStack(Blocks.planks, 1, 0))), 0, 2), null);
-        GregTech_API.registerCover(ItemList.Plank_Papaya.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 19, new ItemStack(Blocks.planks, 1, 0))), 0, 3), null);
-        GregTech_API.registerCover(ItemList.Plank_Pine.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 20, new ItemStack(Blocks.planks, 1, 0))), 0, 4), null);
-        GregTech_API.registerCover(ItemList.Plank_Plum.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 21, new ItemStack(Blocks.planks, 1, 0))), 0, 5), null);
-        GregTech_API.registerCover(ItemList.Plank_Maple.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 22, new ItemStack(Blocks.planks, 1, 0))), 0, 6), null);
-        GregTech_API.registerCover(ItemList.Plank_Citrus.get(1L), new GT_CopiedBlockTexture(GT_Utility.getBlockFromStack(GT_ModHandler.getModItem(aTextForestry, "planks", 1L, 23, new ItemStack(Blocks.planks, 1, 0))), 0, 7), null);
+        ItemStack aStack = ItemList.Plank_Oak.get(1L);
+        ItemStack tStack = new ItemStack(Blocks.planks, 0, 0);
+        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        
+        aStack = ItemList.Plank_Spruce.get(1L);
+        tStack = new ItemStack(Blocks.planks, 0, 1);
+        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+    
+        aStack = ItemList.Plank_Birch.get(1L);
+        tStack = new ItemStack(Blocks.planks, 0, 2);
+        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        
+        aStack = ItemList.Plank_Jungle.get(1L);
+        tStack = new ItemStack(Blocks.planks, 0, 3);
+        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+    
+        aStack = ItemList.Plank_Acacia.get(1L);
+        tStack = new ItemStack(Blocks.planks, 0, 4);
+        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+    
+        aStack = ItemList.Plank_DarkOak.get(1L);
+        tStack = new ItemStack(Blocks.planks, 0, 5);
+        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
 
+        
         ItemList.Crop_Drop_Plumbilia.set(addItem(tLastID = 500, "Plumbilia Leaf", "Source of Lead"));
         ItemList.Crop_Drop_Argentia.set(addItem(tLastID = 501, "Argentia Leaf", "Source of Silver"));
         ItemList.Crop_Drop_Indigo.set(addItem(tLastID = 502, "Indigo Blossom", "Used for making Blue Dye"));
@@ -356,9 +353,9 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Cover_SolarPanel_UEV.set(addItem(tLastID = 588, "Solar Panel (UEV)", "Ultimate Extreme Voltage Solar Panel (Needs cleaning with right click)"));
         ItemList.Cover_SolarPanel_UIV.set(addItem(tLastID = 589, "Solar Panel (UIV)", "Ultimate Insane Voltage Solar Panel (Needs cleaning with right click)"));
         
-        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UHV.get(1L), new GT_RenderedTexture(Textures.BlockIcons.SOLARPANEL_UHV), new GT_Cover_SolarPanel(2097152));
-        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UEV.get(1L), new GT_RenderedTexture(Textures.BlockIcons.SOLARPANEL_UEV), new GT_Cover_SolarPanel(8388608));
-        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UIV.get(1L), new GT_RenderedTexture(Textures.BlockIcons.SOLARPANEL_UIV), new GT_Cover_SolarPanel(33554432));
+        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UHV.get(1L), TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UHV), new GT_Cover_SolarPanel(2097152));
+        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UEV.get(1L), TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UEV), new GT_Cover_SolarPanel(8388608));
+        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UIV.get(1L), TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UIV), new GT_Cover_SolarPanel(33554432));
         
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.red_flower, 1, 0), new ItemStack(Items.dye, 2, 1));
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.red_flower, 1, 1), new ItemStack(Items.dye, 2, 12));

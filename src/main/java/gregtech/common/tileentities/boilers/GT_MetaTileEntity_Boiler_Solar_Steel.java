@@ -2,10 +2,12 @@ package gregtech.common.tileentities.boilers;
 
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.Textures;
+import gregtech.api.enums.Textures.BlockIcons;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.common.gui.GT_Container_Boiler;
 import gregtech.common.gui.GT_GUIContainer_Boiler;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -34,15 +36,19 @@ public class GT_MetaTileEntity_Boiler_Solar_Steel extends GT_MetaTileEntity_Boil
 
     public ITexture[][][] getTextureSet(ITexture[] aTextures) {
         ITexture[][][] rTextures = new ITexture[4][17][];
-        for (byte i = -1; i < 16; i = (byte) (i + 1)) {
-            ITexture[] tmp0 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_STEELBRICKS_BOTTOM, Dyes.getModulation(i, Dyes._NULL.mRGBa))};
-            rTextures[0][(i + 1)] = tmp0;
-            ITexture[] tmp1 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_STEELBRICKS_TOP, Dyes.getModulation(i, Dyes._NULL.mRGBa)), new GT_RenderedTexture(Textures.BlockIcons.BOILER_SOLAR)};
-            rTextures[1][(i + 1)] = tmp1;
-            ITexture[] tmp2 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_STEELBRICKS_SIDE, Dyes.getModulation(i, Dyes._NULL.mRGBa))};
-            rTextures[2][(i + 1)] = tmp2;
-            ITexture[] tmp3 = {new GT_RenderedTexture(Textures.BlockIcons.MACHINE_STEELBRICKS_SIDE, Dyes.getModulation(i, Dyes._NULL.mRGBa)), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE)};
-            rTextures[3][(i + 1)] = tmp3;
+        for (int color = -1; color < 16; color++) {
+            int i = color + 1;
+            short[] colorModulation = Dyes.getModulation(color, Dyes._NULL.mRGBa);
+            rTextures[0][i] = new ITexture[]{
+                    TextureFactory.of(BlockIcons.MACHINE_STEELBRICKS_BOTTOM, colorModulation)};
+            rTextures[1][i] = new ITexture[]{
+                    TextureFactory.of(BlockIcons.MACHINE_STEELBRICKS_TOP, colorModulation),
+                    TextureFactory.of(BlockIcons.BOILER_SOLAR)};
+            rTextures[2][i] = new ITexture[]{
+                    TextureFactory.of(BlockIcons.MACHINE_STEELBRICKS_SIDE, colorModulation)};
+            rTextures[3][i] = new ITexture[]{
+                    TextureFactory.of(BlockIcons.MACHINE_STEELBRICKS_SIDE, colorModulation),
+                    TextureFactory.of(BlockIcons.OVERLAY_PIPE)};
         }
         return rTextures;
     }

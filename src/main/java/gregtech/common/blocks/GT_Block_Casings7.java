@@ -4,6 +4,7 @@ import gregtech.api.enums.Dyes;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.objects.GT_CopiedBlockTexture;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_LanguageManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -30,7 +31,7 @@ public class GT_Block_Casings7
     public GT_Block_Casings7() {
         super(GT_Item_Casings7.class, "gt.blockcasings7", GT_Material_Casings.INSTANCE);
     	for (byte i = 0; i < 16; i = (byte) (i + 1)) {
-            Textures.BlockIcons.casingTexturePages[1][i + 64] = new GT_CopiedBlockTexture(this, 6, i);
+            Textures.BlockIcons.casingTexturePages[1][i + 64] = TextureFactory.of(this, i);
         }
 
     	GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Robust Naquadah Alloy Machine Casing");

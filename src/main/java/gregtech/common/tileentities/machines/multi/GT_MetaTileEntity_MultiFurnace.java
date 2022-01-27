@@ -1,6 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import static gregtech.api.enums.GT_Values.VN;
+import static gregtech.api.enums.Textures.BlockIcons.*;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
@@ -11,7 +12,8 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
@@ -26,6 +28,7 @@ public class GT_MetaTileEntity_MultiFurnace
         extends GT_MetaTileEntity_MultiBlockBase {
     private int mLevel = 0;
     private int mCostDiscount = 1;
+    private static final int CASING_INDEX = 11;
 
     public GT_MetaTileEntity_MultiFurnace(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -53,12 +56,18 @@ public class GT_MetaTileEntity_MultiFurnace
                 "Heat Proof Machine Casings for the rest",
                 "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
     }
-
+    
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        if (aSide == aFacing) {
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[11], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_MULTI_SMELTER_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_MULTI_SMELTER)};
-        }
-        return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[11]};
+        if (aSide != aFacing) return new ITexture[]{casingTexturePages[0][CASING_INDEX]};
+        if (aActive) return new ITexture[]{
+                casingTexturePages[0][CASING_INDEX],
+                TextureFactory.of(OVERLAY_FRONT_MULTI_SMELTER_ACTIVE),
+                TextureFactory.builder().addIcon(OVERLAY_FRONT_MULTI_SMELTER_ACTIVE_GLOW).glow().build()};
+        return new ITexture[]{
+                casingTexturePages[0][CASING_INDEX],
+                TextureFactory.of(OVERLAY_FRONT_MULTI_SMELTER),
+                TextureFactory.builder().addIcon(OVERLAY_FRONT_MULTI_SMELTER_GLOW).glow().build()};
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {

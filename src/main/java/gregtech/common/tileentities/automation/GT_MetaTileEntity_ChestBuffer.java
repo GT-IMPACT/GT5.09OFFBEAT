@@ -5,7 +5,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Buffer;
-import gregtech.api.objects.GT_RenderedTexture;
+
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_ChestBuffer;
 import gregtech.common.gui.GT_GUIContainer_ChestBuffer;
@@ -16,6 +17,9 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Arrays;
 import java.util.Comparator;
+
+import static gregtech.api.enums.Textures.BlockIcons.AUTOMATION_CHESTBUFFER;
+import static gregtech.api.enums.Textures.BlockIcons.AUTOMATION_CHESTBUFFER_GLOW;
 
 public class GT_MetaTileEntity_ChestBuffer
         extends GT_MetaTileEntity_Buffer {
@@ -51,7 +55,9 @@ public class GT_MetaTileEntity_ChestBuffer
     }
 
     public ITexture getOverlayIcon() {
-        return new GT_RenderedTexture(Textures.BlockIcons.AUTOMATION_CHESTBUFFER);
+        return TextureFactory.of(
+                TextureFactory.of(AUTOMATION_CHESTBUFFER),
+                TextureFactory.builder().addIcon(AUTOMATION_CHESTBUFFER_GLOW).glow().build());
     }
 
     public boolean isValidSlot(int aIndex) {

@@ -5,7 +5,7 @@ import gregtech.api.enums.*;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.items.GT_MetaGenerated_Item_X32;
 import gregtech.api.objects.GT_MultiTexture;
-import gregtech.api.objects.GT_RenderedTexture;
+
 import gregtech.common.covers.GT_Cover_FluidRegulator;
 import gregtech.common.items.behaviors.Behaviour_NoteBook;
 

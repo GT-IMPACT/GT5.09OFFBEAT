@@ -16,6 +16,7 @@ public class ProcessingTransforming
                 tPrefix.add(this);
     }
 
+    @Override
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
         if (aPrefix == OrePrefixes.plank) aPrefix = OrePrefixes.plate;
         switch (aMaterial.mName) {

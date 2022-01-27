@@ -12,6 +12,7 @@ public class ProcessingSlab implements gregtech.api.interfaces.IOreRecipeRegistr
         OrePrefixes.slab.add(this);
     }
 
+    @Override
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
 
     }

@@ -12,6 +12,7 @@ public class GT_Material_Casings
         setRequiresTool();
     }
 
+    @Override
     public boolean isOpaque() {
         return true;
     }
