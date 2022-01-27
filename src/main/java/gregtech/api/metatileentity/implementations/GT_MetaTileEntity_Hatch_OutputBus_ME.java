@@ -7,6 +7,7 @@ import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;
@@ -24,17 +25,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_ME_HATCH;
 
 public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatch_OutputBus {
-	ItemStack cachedStack = null;
+	IItemList<IAEItemStack> itemCache = GregTech_API.mAE2 ? AEApi.instance().storage().createItemList() : null;
 	long lastOutputTick = 0;
 	long tickCounter = 0;
 	boolean lastOutputFailed = false;
 	private BaseActionSource requestSource = null;
 	private AENetworkProxy gridProxy = null;
+	boolean infiniteCache = true;
 	
 	public GT_MetaTileEntity_Hatch_OutputBus_ME(int aID, String aName, String aNameRegional) {
 		super(aID, aName, aNameRegional, 1, 0, new String[]{
@@ -82,63 +86,9 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 	 */
 	@Optional.Method(modid = "appliedenergistics2")
 	public int store(final ItemStack stack) {
-		if (stack == null)
-			return 0;
-		try {
-			AENetworkProxy proxy = getProxy();
-			if (proxy == null) {
-				lastOutputFailed = true;
-				int cacheSize = cachedStack == null ? 0 : cachedStack.stackSize;
-				cachedStack = null;
-				return stack.stackSize + cacheSize;
-			}
-			if (lastOutputFailed) // if last output failed, don't buffer
-			{
-				IMEMonitor<IAEItemStack> sg = proxy.getStorage().getItemInventory();
-				IAEItemStack toStore = AEApi.instance().storage().createItemStack(stack);
-				IAEItemStack rest = Platform.poweredInsert(proxy.getEnergy(), sg, toStore, getRequest());
-				if (rest != null && rest.getStackSize() > 0)
-					return (int) rest.getStackSize();
-				else
-					lastOutputFailed = false;
-			} else if (cachedStack != null && ((tickCounter > (lastOutputTick + 20)) || !cachedStack.isItemEqual(stack))) {
-				lastOutputTick = tickCounter;
-				boolean sameStack = cachedStack.isItemEqual(stack);
-				if (sameStack)
-					cachedStack.stackSize += stack.stackSize;
-				IMEMonitor<IAEItemStack> sg = proxy.getStorage().getItemInventory();
-				IAEItemStack toStore = AEApi.instance().storage().createItemStack(cachedStack);
-				IAEItemStack rest = Platform.poweredInsert(proxy.getEnergy(), sg, toStore, getRequest());
-				if (rest != null && rest.getStackSize() > 0) {
-					lastOutputFailed      = true;
-					cachedStack.stackSize = (int) rest.getStackSize();
-					if (sameStack) // return all that was cached to sender
-					{
-						cachedStack = null;
-						return (int) rest.getStackSize();
-					} else // leave the cache, and return input to sender
-					{
-						cachedStack.stackSize = (int) rest.getStackSize();
-						return stack.stackSize;
-					}
-				} else {
-					if (!sameStack)
-						cachedStack = stack.copy();
-					else
-						cachedStack = null;
-					return 0;
-				}
-			} else {
-				if (cachedStack == null)
-					cachedStack = stack.copy();
-				else
-					cachedStack.stackSize += stack.stackSize;
-			}
-			return 0;
-		} catch (final GridAccessException ignored) {
-			lastOutputFailed = true;
-		}
-		return stack.stackSize;
+		if (!infiniteCache && lastOutputFailed) return stack.stackSize;
+		itemCache.add(AEApi.instance().storage().createItemStack(stack));
+		return 0;
 	}
 	
 	@Optional.Method(modid = "appliedenergistics2")
@@ -157,6 +107,14 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 	@Override
 	public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
 		return false;
+	}
+	
+	@Override
+	public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+		if (!getBaseMetaTileEntity().getCoverBehaviorAtSideNew(aSide).isGUIClickable(aSide, getBaseMetaTileEntity().getCoverIDAtSide(aSide), getBaseMetaTileEntity().getComplexCoverDataAtSide(aSide), getBaseMetaTileEntity()))
+			return;
+		infiniteCache = !infiniteCache;
+		GT_Utility.sendChatToPlayer(aPlayer, StatCollector.translateToLocal("GT5U.hatch.infiniteCache." + infiniteCache));
 	}
 	
 	@Override
@@ -179,8 +137,6 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 	
 	@Optional.Method(modid = "appliedenergistics2")
 	private void flushCachedStack() {
-		if (cachedStack == null)
-			return;
 		AENetworkProxy proxy = getProxy();
 		if (proxy == null) {
 			lastOutputFailed = true;
@@ -188,13 +144,17 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 		}
 		try {
 			IMEMonitor<IAEItemStack> sg = proxy.getStorage().getItemInventory();
-			IAEItemStack toStore = AEApi.instance().storage().createItemStack(cachedStack);
-			IAEItemStack rest = Platform.poweredInsert(proxy.getEnergy(), sg, toStore, getRequest());
-			if (rest != null && rest.getStackSize() > 0) {
-				lastOutputFailed      = true;
-				cachedStack.stackSize = (int) rest.getStackSize();
-			} else
-				cachedStack = null;
+			for (IAEItemStack s: itemCache) {
+				if (s.getStackSize() == 0)
+					continue;
+				IAEItemStack rest = Platform.poweredInsert(proxy.getEnergy(), sg, s, getRequest());
+				if (rest != null && rest.getStackSize() > 0) {
+					lastOutputFailed = true;
+					s.setStackSize(rest.getStackSize());
+					break;
+				}
+				s.setStackSize(0);
+			}
 		} catch (final GridAccessException ignored) {
 			lastOutputFailed = true;
 		}
@@ -212,19 +172,34 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 	@Override
 	public void saveNBTData(NBTTagCompound aNBT) {
 		super.saveNBTData(aNBT);
-		if (cachedStack != null) {
-			NBTTagCompound tTag = new NBTTagCompound();
-			cachedStack.writeToNBT(tTag);
-			aNBT.setTag("cachedStack", tTag);
+		if (GregTech_API.mAE2) {
+			NBTTagList items = new NBTTagList();
+			for (IAEItemStack s: itemCache) {
+				if (s.getStackSize() == 0)
+					continue;
+				NBTTagCompound tag = new NBTTagCompound();
+				s.getItemStack().writeToNBT(tag);
+				items.appendTag(tag);
+			}
+			aNBT.setTag("cachedItems", items);
 		}
 	}
 	
 	@Override
 	public void loadNBTData(NBTTagCompound aNBT) {
 		super.loadNBTData(aNBT);
-		NBTBase t = aNBT.getTag("cachedStack");
-		if (t instanceof NBTTagCompound)
-			cachedStack = GT_Utility.loadItem((NBTTagCompound) t);
+		if (GregTech_API.mAE2) {
+			NBTBase t = aNBT.getTag("cachedStack"); // legacy
+			if (t instanceof NBTTagCompound)
+				itemCache.add(AEApi.instance().storage().createItemStack(GT_Utility.loadItem((NBTTagCompound) t)));
+			t = aNBT.getTag("cachedItems");
+			if (t instanceof NBTTagList) {
+				NBTTagList l = (NBTTagList)t;
+				for (int i = 0; i < l.tagCount(); ++i) {
+					itemCache.add(AEApi.instance().storage().createItemStack(GT_Utility.loadItem(l.getCompoundTagAt(i))));
+				}
+			}
+		}
 	}
 	
 	public boolean isLastOutputFailed() {
