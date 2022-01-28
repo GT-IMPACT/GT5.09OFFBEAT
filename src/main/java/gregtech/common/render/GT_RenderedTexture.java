@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IconFlipped;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -355,7 +356,9 @@ class GT_RenderedTexture implements ITexture, IColorModulationContainer {
 
     private ExtendedFacing getExtendedFacing(int x, int y, int z) {
         if (stdOrient) return ExtendedFacing.DEFAULT;
-        World w = Minecraft.getMinecraft().theWorld;
+        EntityPlayer player = GT_Mod.gregtechproxy.getThePlayer();
+        if (player == null) return ExtendedFacing.DEFAULT;
+        World w = player.getEntityWorld();
         if (w == null) return ExtendedFacing.DEFAULT;
         TileEntity te = w.getTileEntity(x, y, z);
         if (te instanceof IGregTechTileEntity) {
