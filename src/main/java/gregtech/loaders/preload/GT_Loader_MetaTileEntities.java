@@ -1422,7 +1422,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         generateFluidMultiPipes(Materials.NetherStar, Materials.NetherStar.mName, "Nether Star", 5425, 19200, 1000000, true);
         generateFluidMultiPipes(Materials.Duranium, Materials.Duranium.mName, "Duranium", 5430, 12400, 1000000, true);
         generateFluidMultiPipes(Materials.Polybenzimidazole, Materials.Polybenzimidazole.mName, "PBI", 5435, 600, 1000, true);
-        generateFluidMultiPipes(Materials.DraconiumAwakened, Materials.DraconiumAwakened.mName, "Awakened Draconium", 5440, 45000, 10000000, true);
+        generateFluidMultiPipes(Materials.DraconiumAwakened, Materials.DraconiumAwakened.mName, "Enriched Meitnerium", 5440, 45000, 10000000, true);
 
         generateFluidMultiPipes(Materials.Plastic, Materials.Plastic.mName, "Plastic", 5230, 360, 350, true);
         generateFluidMultiPipes(Materials.Polytetrafluoroethylene, Materials.Polytetrafluoroethylene.mName, "PTFE", 5235, 480, 600, true);
