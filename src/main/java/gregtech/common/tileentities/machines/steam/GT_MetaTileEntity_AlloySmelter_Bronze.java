@@ -56,6 +56,7 @@ public class GT_MetaTileEntity_AlloySmelter_Bronze extends GT_MetaTileEntity_Bas
         sendLoopStart((byte) 1);
     }
     
+    @Override
     public ITexture[] getSideFacingActive(byte aColor) {
         return new ITexture[]{
                 super.getSideFacingActive(aColor)[0],
@@ -69,6 +70,14 @@ public class GT_MetaTileEntity_AlloySmelter_Bronze extends GT_MetaTileEntity_Bas
                 super.getSideFacingInactive(aColor)[0],
                 TextureFactory.of(OVERLAY_SIDE_STEAM_ALLOY_SMELTER),
                 TextureFactory.builder().addIcon(OVERLAY_SIDE_STEAM_ALLOY_SMELTER_GLOW).glow().build()};
+    }
+    
+    @Override
+    public ITexture[] getFrontFacingActive(byte aColor) {
+        return new ITexture[]{
+                super.getFrontFacingActive(aColor)[0],
+                TextureFactory.of(OVERLAY_FRONT_STEAM_ALLOY_SMELTER_ACTIVE),
+                TextureFactory.builder().addIcon(OVERLAY_FRONT_STEAM_ALLOY_SMELTER_ACTIVE_GLOW).glow().build()};
     }
     
     @Override

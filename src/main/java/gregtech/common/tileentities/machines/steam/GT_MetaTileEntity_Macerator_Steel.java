@@ -87,6 +87,7 @@ public class GT_MetaTileEntity_Macerator_Steel extends GT_MetaTileEntity_BasicMa
         sendLoopStart((byte) 1);
     }
     
+    @Override
     public ITexture[] getSideFacingActive(byte aColor) {
         return new ITexture[]{
                 super.getSideFacingActive(aColor)[0],
@@ -102,12 +103,26 @@ public class GT_MetaTileEntity_Macerator_Steel extends GT_MetaTileEntity_BasicMa
                 TextureFactory.builder().addIcon(OVERLAY_SIDE_STEAM_MACERATOR_GLOW).glow().build()};
     }
     
+    @Override
+    public ITexture[] getFrontFacingActive(byte aColor) {
+        return new ITexture[]{
+                super.getFrontFacingActive(aColor)[0],
+                TextureFactory.of(OVERLAY_FRONT_STEAM_MACERATOR_ACTIVE),
+                TextureFactory.builder().addIcon(OVERLAY_FRONT_STEAM_MACERATOR_ACTIVE_GLOW).glow().build()};
+    }
     
     @Override
     public ITexture[] getFrontFacingInactive(byte aColor) {
         return new ITexture[]{super.getFrontFacingInactive(aColor)[0],
                 TextureFactory.of(OVERLAY_FRONT_STEAM_MACERATOR),
                 TextureFactory.builder().addIcon(OVERLAY_FRONT_STEAM_MACERATOR_GLOW).glow().build()};
+    }
+    
+    @Override
+    public ITexture[] getTopFacingActive(byte aColor) {
+        return new ITexture[]{super.getTopFacingActive(aColor)[0],
+                TextureFactory.of(OVERLAY_TOP_STEAM_MACERATOR_ACTIVE),
+                TextureFactory.builder().addIcon(OVERLAY_TOP_STEAM_MACERATOR_ACTIVE_GLOW).glow().build()};
     }
     
     @Override
