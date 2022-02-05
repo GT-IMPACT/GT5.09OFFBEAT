@@ -70,6 +70,7 @@ public class GT_MetaTileEntity_Disassembler
     }
 
     public int checkRecipe() {
+        if (getInputAt(0) == null) return DID_NOT_FIND_RECIPE;
         NBTTagCompound tNBT = getInputAt(0).getTagCompound();
         if (tNBT != null) {
             tNBT = tNBT.getCompoundTag("GT.CraftingComponents");
