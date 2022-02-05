@@ -217,6 +217,11 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean mRenderTileAmbientOcclusion = true;
     /** This enables rendering of glowing textures */
     public boolean mRenderGlowTextures = true;
+    
+    /** Enable bound for multiblock tick */
+    public boolean enableMultiBlocksTickBounds = false;
+    /** Min bound for multiblock tick */
+    public int mMultiBlocksMaxProgressTimeBound = 1;
 
     public static final int GUI_ID_COVER_SIDE_BASE = 10; // Takes GUI ID 10 - 15
     public boolean mMoreComplicatedChemicalRecipes = false;

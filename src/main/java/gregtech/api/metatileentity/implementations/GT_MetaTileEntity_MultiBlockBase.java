@@ -306,6 +306,11 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                                 if (!polluteEnvironment(getPollutionPerTick(mInventory[1]))) {
                                     stopMachine();
                                 }
+                                
+                                if (GT_Mod.gregtechproxy.enableMultiBlocksTickBounds && mMaxProgresstime > 0 && mMaxProgresstime < GT_Mod.gregtechproxy.mMultiBlocksMaxProgressTimeBound) {
+                                    mMaxProgresstime = GT_Mod.gregtechproxy.mMultiBlocksMaxProgressTimeBound;
+                                }
+                                
                                 if (mMaxProgresstime > 0 && ++mProgresstime >= mMaxProgresstime) {
                                     if (mOutputItems != null) for (ItemStack tStack : mOutputItems)
                                         if (tStack != null) {
