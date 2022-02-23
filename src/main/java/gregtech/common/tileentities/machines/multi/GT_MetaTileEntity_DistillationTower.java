@@ -25,7 +25,6 @@ import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_DistillationTower extends GT_MetaTileEntity_MultiBlockBase {
     private static final int CASING_INDEX = 49;
-    private short controllerY;
 
     public GT_MetaTileEntity_DistillationTower(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -118,7 +117,6 @@ public class GT_MetaTileEntity_DistillationTower extends GT_MetaTileEntity_Multi
     }
 
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        controllerY = aBaseMetaTileEntity.getYCoord();
         int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
         int y = 0; //height
@@ -228,7 +226,7 @@ public class GT_MetaTileEntity_DistillationTower extends GT_MetaTileEntity_Multi
 
         ArrayList<GT_MetaTileEntity_Hatch_Output> tOutputHatches = new ArrayList<GT_MetaTileEntity_Hatch_Output>();
         for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
-            if (tHatch.getBaseMetaTileEntity().getYCoord() == this.controllerY + 1 + i) {
+            if (tHatch.getBaseMetaTileEntity().getYCoord() == getBaseMetaTileEntity().getYCoord() + 1 + i) {
                 tOutputHatches.add(tHatch);
             }
         }
