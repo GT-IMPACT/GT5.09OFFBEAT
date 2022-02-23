@@ -98,6 +98,26 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             AtomicInteger ibh = new AtomicInteger();
             mInputBusHatches.forEach(h -> h.setIDHatch(ibh.incrementAndGet()));
         }
+        if (mDynamoHatches.size() > 0) {
+            AtomicInteger dh = new AtomicInteger();
+            mDynamoHatches.forEach(h -> h.setIDHatch(dh.incrementAndGet()));
+        }
+        if (mDynamoHatchesMulti.size() > 0) {
+            AtomicInteger dh = new AtomicInteger();
+            mDynamoHatchesMulti.forEach(h -> h.setIDHatch(dh.incrementAndGet()));
+        }
+        if (mEnergyHatches.size() > 0) {
+            AtomicInteger eh = new AtomicInteger();
+            mEnergyHatches.forEach(h -> h.setIDHatch(eh.incrementAndGet()));
+        }
+        if (mEnergyHatchesMulti.size() > 0) {
+            AtomicInteger eh = new AtomicInteger();
+            mEnergyHatchesMulti.forEach(h -> h.setIDHatch(eh.incrementAndGet()));
+        }
+        if (mMaintenanceHatches.size() > 0) {
+            AtomicInteger eh = new AtomicInteger();
+            mMaintenanceHatches.forEach(h -> h.setIDHatch(eh.incrementAndGet()));
+        }
     }
 
     public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional) {
