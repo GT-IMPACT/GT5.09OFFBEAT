@@ -18,9 +18,9 @@ public class ProcessingDirty implements gregtech.api.interfaces.IOreRecipeRegist
 	}
 	
 	public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, net.minecraft.item.ItemStack aStack) {
-		GT_Values.RA.addForgeHammerRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dustImpure, aMaterial.mMacerateInto, 1L), 10, 16);
+		GT_Values.RA.addForgeHammerRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dustImpure, aMaterial.mMacerateInto, 1L), 10, 12);
 		GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, aStack), GT_OreDictUnificator.get(OrePrefixes.dustImpure, aMaterial.mMacerateInto, GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 1L), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(0, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1L), 10, false);
-		GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, aStack), new ItemStack[]{GT_OreDictUnificator.get(aPrefix == OrePrefixes.crushed ? OrePrefixes.crushedPurified : OrePrefixes.dustPure, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(0, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L)}, Materials.Water.getFluid(1000L), new int[]{10000, 1000, 10000}, 500, 16);
+		GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, aStack), new ItemStack[]{GT_OreDictUnificator.get(aPrefix == OrePrefixes.crushed ? OrePrefixes.crushedPurified : OrePrefixes.dustPure, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(0, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L)}, Materials.Water.getFluid(1000L), new int[]{10000, 1000, 10000}, 500, 12);
 		GT_Values.RA.addThermalCentrifugeRecipe(GT_Utility.copyAmount(1L, aStack), new ItemStack[]{GT_OreDictUnificator.get(aPrefix == OrePrefixes.crushed ? OrePrefixes.crushedCentrifuged : OrePrefixes.dust, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(1, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L)}, new int[]{10000, 1000, 10000}, (int) Math.min(5000L, Math.abs(aMaterial.getMass() * 20L)), 48);
 		
 		chemicalBath(aPrefix, aMaterial, aStack, aMaterial);
@@ -48,7 +48,7 @@ public class ProcessingDirty implements gregtech.api.interfaces.IOreRecipeRegist
 				GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(1, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1),
 				GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(2, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1),
 				GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1),
-				new int[]{10000, 10000, 5000, 2500, 2000, 10000}, 300, 1024
+				new int[]{10000, 10000, 5000, 2500, 2000, 10000}, 300, 960
 		);
 		GT_Values.RA.addFlotationUnitRecipe(
 				GT_Utility.copyAmount(1, aStack), Materials.OilHeavy.getFluid(1600L),
@@ -59,7 +59,7 @@ public class ProcessingDirty implements gregtech.api.interfaces.IOreRecipeRegist
 				GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(1, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1),
 				GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(2, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1),
 				GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1),
-				new int[]{10000, 10000, 5000, 2500, 2000, 10000}, 360, 1024
+				new int[]{10000, 10000, 5000, 2500, 2000, 10000}, 360, 960
 		);
 		
 		GT_Values.RA.addFlotationUnitRecipe(
@@ -71,7 +71,7 @@ public class ProcessingDirty implements gregtech.api.interfaces.IOreRecipeRegist
 				GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(1, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1),
 				GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(2, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1),
 				GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1),
-				new int[]{10000, 10000, 10000, 8000, 5000, 10000}, 440, 4096
+				new int[]{10000, 10000, 10000, 8000, 5000, 10000}, 440, 4082
 		);
 		
 		if (aMaterial.contains(SubTag.WASHING_MERCURY))
@@ -117,9 +117,9 @@ public class ProcessingDirty implements gregtech.api.interfaces.IOreRecipeRegist
 	
 	private void chemicalBath(OrePrefixes aPrefix, Materials aMaterial, ItemStack aStack, Materials tMaterial) {
 		if (tMaterial.contains(SubTag.WASHING_MERCURY))
-			GT_Values.RA.addChemicalBathRecipe(GT_Utility.copyAmount(1L, aStack), Materials.Mercury.getFluid(1000L), GT_OreDictUnificator.get(aPrefix == OrePrefixes.crushed ? OrePrefixes.crushedPurified : OrePrefixes.dustPure, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L), new int[]{10000, 7000, 4000}, 800, 8);
+			GT_Values.RA.addChemicalBathRecipe(GT_Utility.copyAmount(1L, aStack), Materials.Mercury.getFluid(1000L), GT_OreDictUnificator.get(aPrefix == OrePrefixes.crushed ? OrePrefixes.crushedPurified : OrePrefixes.dustPure, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L), new int[]{10000, 7000, 4000}, 800, 6);
 		if (tMaterial.contains(SubTag.WASHING_SODIUMPERSULFATE))
-			GT_Values.RA.addChemicalBathRecipe(GT_Utility.copyAmount(1L, aStack), Materials.SodiumPersulfate.getFluid(1000L), GT_OreDictUnificator.get(aPrefix == OrePrefixes.crushed ? OrePrefixes.crushedPurified : OrePrefixes.dustPure, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L), new int[]{10000, 7000, 4000}, 800, 8);
+			GT_Values.RA.addChemicalBathRecipe(GT_Utility.copyAmount(1L, aStack), Materials.SodiumPersulfate.getFluid(1000L), GT_OreDictUnificator.get(aPrefix == OrePrefixes.crushed ? OrePrefixes.crushedPurified : OrePrefixes.dustPure, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial.mMacerateInto, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L), new int[]{10000, 7000, 4000}, 800, 6);
 	}
 	
 }
