@@ -20,7 +20,7 @@ public class GT_MetaTileEntity_Ultra_Transformer extends GT_MetaTileEntity_Trans
 
 	@Override
 	public long maxEUStore() {
-		return 2048L + V[mTier + 1] * 512L;
+		return Math.max(512L, 1L << (mTier + 2)) + V[mTier + 1] * 256L;
 	}
 
 	@Override

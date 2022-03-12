@@ -9,6 +9,8 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Transformer;
 
+import static gregtech.api.enums.GT_Values.V;
+
 public class GT_MetaTileEntity_TransformerHiAmp extends GT_MetaTileEntity_Transformer {
 
 	public GT_MetaTileEntity_TransformerHiAmp(int aID, String aName, String aNameRegional, int aTier, String aDescription) {
@@ -18,10 +20,10 @@ public class GT_MetaTileEntity_TransformerHiAmp extends GT_MetaTileEntity_Transf
 	public GT_MetaTileEntity_TransformerHiAmp(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
 		super(aName, aTier, aDescription, aTextures);
 	}
-
+	
 	@Override
 	public long maxEUStore() {
-		return ((512L + gregtech.api.enums.GT_Values.V[(this.mTier + 1)] * 2L) * 8);
+		return Math.max(512L, 1L << (mTier + 2)) + V[mTier + 1] * 16L;
 	}
 
 	@Override
