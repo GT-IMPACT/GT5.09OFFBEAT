@@ -25,6 +25,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static gregtech.api.enums.GT_Values.V;
@@ -56,7 +57,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public ArrayList<GT_MetaTileEntity_Hatch_EnergyMulti> mEnergyHatchesMulti = new ArrayList<>();
     public ArrayList<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesMulti = new ArrayList<>();
 
-    public void setupMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack stack) {
+    protected void setupMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack stack) {
         mInputHatches.clear();
         mQuadrInputHatches.clear();
         mInputBusses.clear();
@@ -70,53 +71,28 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         mMufflerHatches.clear();
         mMaintenanceHatches.clear();
         this.mMachine = checkMachine(aBaseMetaTileEntity, stack);
-        if (mInputHatches.size() > 0) {
-            AtomicInteger ih = new AtomicInteger();
-            mInputHatches.forEach(h -> h.setIDHatch(ih.incrementAndGet()));
-        }
-        if (mOutputHatches.size() > 0) {
-            AtomicInteger oh = new AtomicInteger();
-            mOutputHatches.forEach(h -> h.setIDHatch(oh.incrementAndGet()));
-        }
-        if (mInputBusses.size() > 0) {
-            AtomicInteger ib = new AtomicInteger();
-            mInputBusses.forEach(h -> h.setIDHatch(ib.incrementAndGet()));
-        }
-        if (mOutputBusses.size() > 0) {
-            AtomicInteger ob = new AtomicInteger();
-            mOutputBusses.forEach(h -> h.setIDHatch(ob.incrementAndGet()));
-        }
-        if (mMufflerHatches.size() > 0) {
-            AtomicInteger mh = new AtomicInteger();
-            mMufflerHatches.forEach(h -> h.setIDHatch(mh.incrementAndGet()));
-        }
-        if (mQuadrInputHatches.size() > 0) {
-            AtomicInteger qih = new AtomicInteger();
-            mQuadrInputHatches.forEach(h -> h.setIDHatch(qih.incrementAndGet()));
-        }
-        if (mInputBusHatches.size() > 0) {
-            AtomicInteger ibh = new AtomicInteger();
-            mInputBusHatches.forEach(h -> h.setIDHatch(ibh.incrementAndGet()));
-        }
-        if (mDynamoHatches.size() > 0) {
-            AtomicInteger dh = new AtomicInteger();
-            mDynamoHatches.forEach(h -> h.setIDHatch(dh.incrementAndGet()));
-        }
-        if (mDynamoHatchesMulti.size() > 0) {
-            AtomicInteger dh = new AtomicInteger();
-            mDynamoHatchesMulti.forEach(h -> h.setIDHatch(dh.incrementAndGet()));
-        }
-        if (mEnergyHatches.size() > 0) {
-            AtomicInteger eh = new AtomicInteger();
-            mEnergyHatches.forEach(h -> h.setIDHatch(eh.incrementAndGet()));
-        }
-        if (mEnergyHatchesMulti.size() > 0) {
-            AtomicInteger eh = new AtomicInteger();
-            mEnergyHatchesMulti.forEach(h -> h.setIDHatch(eh.incrementAndGet()));
-        }
-        if (mMaintenanceHatches.size() > 0) {
-            AtomicInteger eh = new AtomicInteger();
-            mMaintenanceHatches.forEach(h -> h.setIDHatch(eh.incrementAndGet()));
+        setupIDHatches();
+    }
+    
+    protected void setupIDHatches() {
+        setHatchID(mInputHatches);
+        setHatchID(mOutputHatches);
+        setHatchID(mInputBusses);
+        setHatchID(mOutputBusses);
+        setHatchID(mMufflerHatches);
+        setHatchID(mQuadrInputHatches);
+        setHatchID(mInputBusHatches);
+        setHatchID(mDynamoHatches);
+        setHatchID(mDynamoHatchesMulti);
+        setHatchID(mEnergyHatches);
+        setHatchID(mEnergyHatchesMulti);
+        setHatchID(mMaintenanceHatches);
+    }
+    
+    private <T extends GT_MetaTileEntity_Hatch> void setHatchID(List<T> hatches) {
+        if (hatches.size() > 0) {
+            AtomicInteger id = new AtomicInteger();
+            hatches.forEach(h -> h.setIDHatch(id.incrementAndGet()));
         }
     }
 
