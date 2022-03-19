@@ -1499,7 +1499,6 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Titanium, 6L), ItemList.Casing_Turbine.get(1L), GT_Utility.getIntegratedCircuit(1)}, null, ItemList.Casing_Turbine2.get(2L), 50, 16);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plate, Materials.TungstenSteel, 6L), ItemList.Casing_Turbine.get(1L), GT_Utility.getIntegratedCircuit(1)}, null, ItemList.Casing_Turbine3.get(2L), 50, 16);
         GT_Values.RA.addAssemblerRecipe(ItemList.Casing_SolidSteel.get(1), GT_Utility.getIntegratedCircuit(6), Materials.Polytetrafluoroethylene.getMolten(216), ItemList.Casing_Chemically_Inert.get(1), 50, 16);
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plate, Materials.TungstenCarbide, 6L), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.TungstenCarbide, 1L), GT_Utility.getIntegratedCircuit(1)}, null, ItemList.Casing_RadiationProof.get(2L), 50, 16);
         if (GT_Mod.gregtechproxy.mComponentAssembler) {
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Bronze, 4L), new ItemStack(Blocks.brick_block, 1), ItemList.Casing_BronzePlatedBricks.get(1L), 60, 4);
             GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Bronze, 4L), ItemList.Casing_Firebricks.get(1), ItemList.Casing_BronzePlatedBricks.get(1L), 60, 4);
