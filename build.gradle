@@ -494,7 +494,7 @@ if (isNewBuildScriptVersionAvailable(projectDir.toString())) {
 }
 
 static URL availableBuildScriptUrl() {
-    new URL("https://gtimpact.space/media/gradle/build.gradle")
+    new URL("http://gtimpact.space/media/gradle/build.gradle")
 }
 
 boolean performBuildScriptUpdate(String projectDir) {
