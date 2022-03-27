@@ -1,6 +1,7 @@
 package gregtech.api.util;
 
 import codechicken.nei.PositionedStack;
+import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -731,6 +732,91 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             GregTech_API.sFluidMappings.add(mRecipeFluidMap);
             GregTech_API.sItemStackMappings.add(mRecipeItemMap);
             GT_LanguageManager.addStringLocalization(mUnlocalizedName = aUnlocalizedName, aLocalName);
+        }
+    
+        private static class RecipeBuilder {
+            private final GT_Recipe.GT_Recipe_Map map;
+            
+            private ItemStack[] mInputs = null, mOutputs = null;
+            private Object mSpecialItems = null;
+            private int[] mChances = null;
+            private FluidStack[] mFluidInputs = null, mFluidOutputs = null;
+            private int mDuration = 0, mSpecialValue = 0, mEUt = 0;
+    
+            private RecipeBuilder(GT_Recipe.GT_Recipe_Map map) {
+                this.map = map;
+            }
+            
+            public RecipeBuilder addInputItems(ItemStack... items) {
+                mInputs = items;
+                return this;
+            }
+    
+            public RecipeBuilder addOutputItems(ItemStack... items) {
+                mOutputs = items;
+                return this;
+            }
+    
+            public RecipeBuilder addInputFluids(FluidStack... fluids) {
+                mFluidInputs = fluids;
+                return this;
+            }
+    
+            public RecipeBuilder addOutputFluids(FluidStack... fluids) {
+                mFluidOutputs = fluids;
+                return this;
+            }
+            
+            public RecipeBuilder addChance(int... chances) {
+                mChances = chances;
+                return this;
+            }
+    
+            public RecipeBuilder addSpecialItem(Object... special) {
+                mSpecialItems = special;
+                return this;
+            }
+    
+            public RecipeBuilder addDuration(int ticks) {
+                mDuration = ticks;
+                return this;
+            }
+    
+            public RecipeBuilder addEUt(int eut) {
+                mEUt = eut;
+                return this;
+            }
+    
+            public RecipeBuilder addSpecialValue(int specialValue) {
+                mSpecialValue = specialValue;
+                return this;
+            }
+    
+            public RecipeBuilder addCleanRoom() {
+                if (GT_Mod.gregtechproxy.mEnableCleanroom) {
+                    mSpecialItems = -200;
+                }
+                return this;
+            }
+    
+            public RecipeBuilder addLowGravity() {
+                if (GT_Mod.gregtechproxy.mLowGravProcessing) {
+                    mSpecialItems = -100;
+                }
+                return this;
+            }
+            
+            public void build(boolean optimize) {
+                map.addRecipe(optimize, mInputs, mOutputs, mSpecialItems, mChances, mFluidInputs, mFluidOutputs, mDuration, mEUt, mSpecialValue);
+            }
+    
+            public void build() {
+                build(true);
+            }
+        }
+        
+        public RecipeBuilder recipeCreate() {
+            return new RecipeBuilder(this);
         }
 
         public GT_Recipe addRecipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecial, int[] aOutputChances, FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue) {
