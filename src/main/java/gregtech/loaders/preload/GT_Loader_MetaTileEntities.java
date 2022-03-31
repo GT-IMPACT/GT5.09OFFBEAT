@@ -310,7 +310,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
         ItemList.Quantum_Tank_LV.set(new GT_MetaTileEntity_QuantumTank(120, "quantum.tank.tier.06", "LuV Quantum Tank I", 6).getStackForm(1L));
         ItemList.Quantum_Tank_MV.set(new GT_MetaTileEntity_QuantumTank(121, "quantum.tank.tier.07", "ZPM Quantum Tank II", 7).getStackForm(1L));
-        ItemList.Quantum_Tank_HV.set(new GT_MetaTileEntity_QuantumTank(122, "quantum.tank.tier.08", "UV  Quantum Tank III", 8).getStackForm(1L));
+        ItemList.Quantum_Tank_HV.set(new GT_MetaTileEntity_QuantumTank(122, "quantum.tank.tier.08", "UV Quantum Tank III", 8).getStackForm(1L));
         ItemList.Quantum_Tank_EV.set(new GT_MetaTileEntity_QuantumTank(123, "quantum.tank.tier.09", "UHV Quantum Tank IV", 9).getStackForm(1L));
         ItemList.Quantum_Tank_IV.set(new GT_MetaTileEntity_QuantumTank(124, "quantum.tank.tier.10", "UEV Quantum Tank V", 10).getStackForm(1L));
 
