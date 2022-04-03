@@ -30,7 +30,7 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	public GT_MetaTileEntity_Hatch_Output(int aID, String aName, String aNameRegional, int aTier) {
 		super(aID, aName, aNameRegional, aTier, 3, new String[]{
 				"Fluid Output for Multiblocks",
-				"Capacity: " + (8000 + 8000 * (aTier * (aTier + 1) >> 1)) + "L",
+				"Capacity: " + (2 << aTier + 2) * 1000 + "L",
 				"Right click with screwdriver to restrict output",
 				"Can be restricted to put out Items and/or Steam/No Steam/1 specific Fluid",
 				"Restricted Output Hatches are given priority for Multiblock Fluid output"});
@@ -191,7 +191,7 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	
 	@Override
 	public int getCapacity() {
-		return 8000 + 8000 * (mTier * (mTier + 1) >> 1);
+		return (2 << mTier + 2) * 1000;
 	}
 	
 	@Override
