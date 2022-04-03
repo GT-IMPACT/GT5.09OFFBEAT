@@ -734,7 +734,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             GT_LanguageManager.addStringLocalization(mUnlocalizedName = aUnlocalizedName, aLocalName);
         }
     
-        private static class RecipeBuilder {
+        public static class RecipeBuilder {
             private final GT_Recipe.GT_Recipe_Map map;
             
             private ItemStack[] mInputs = null, mOutputs = null;
@@ -743,7 +743,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             private FluidStack[] mFluidInputs = null, mFluidOutputs = null;
             private int mDuration = 0, mSpecialValue = 0, mEUt = 0;
     
-            private RecipeBuilder(GT_Recipe.GT_Recipe_Map map) {
+            public RecipeBuilder(GT_Recipe.GT_Recipe_Map map) {
                 this.map = map;
             }
             
