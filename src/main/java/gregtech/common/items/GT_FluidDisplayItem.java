@@ -43,7 +43,7 @@ public class GT_FluidDisplayItem extends GT_Generic_Item {
             if (!aNBT.getString("mChemicalFormula").isEmpty() && !aNBT.getString("mChemicalFormula").equals("?")) aList.add(aNBT.getString("mChemicalFormula"));
 
             if (tToolTipAmount > 0L) {
-            	aList.add(EnumChatFormatting.BLUE + String.format(trans("016", "Amount: %s L"), "" + tToolTipAmount) + EnumChatFormatting.GRAY);
+            	aList.add(EnumChatFormatting.BLUE + String.format(trans("016", "Amount: %s L"), GT_Utility.formatNumbers(tToolTipAmount)) + EnumChatFormatting.GRAY);
             }
             aList.add(EnumChatFormatting.RED + String.format(trans("017", "Temperature: %s K"), "" + aNBT.getLong("mFluidDisplayHeat")) + EnumChatFormatting.GRAY);
             aList.add(EnumChatFormatting.GREEN + String.format(trans("018", "State: %s"), aNBT.getBoolean("mFluidState") ? "Gas" : "Liquid") + EnumChatFormatting.GRAY);

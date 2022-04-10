@@ -7,6 +7,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -18,7 +19,7 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
     public static Fluid mLockedFluid;
 
     public GT_MetaTileEntity_Hatch_Input(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 3, new String[]{"Fluid Input for Multiblocks", "Capacity: " + (2 << aTier + 2) * 1000 + "L"});
+        super(aID, aName, aNameRegional, aTier, 3, new String[]{"Fluid Input for Multiblocks", "Capacity: " + GT_Utility.formatNumbers((2L << aTier + 2) * 1000L) + "L"});
     }
 
     public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
