@@ -33,7 +33,7 @@ public class ItemDebug extends Item {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
         list.add("If this item shows up, you may report it to:");
-        list.add("https://discord.gg/bMf2qvd");
+        list.add("https://github.com/GT-IMPACT/IMPACT-MODPACK/issues");
     }
 
     @Override
