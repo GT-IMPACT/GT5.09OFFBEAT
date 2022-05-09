@@ -265,6 +265,17 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch {
     }
 
     @Override
+    public FluidStack drain(ForgeDirection aSide, FluidStack aFluid, boolean doDrain) {
+        for (int i = 0; i < mPerFluidAmount; i++) {
+            if (mFluids[i] == null || !mFluids[i].getFluid().equals(aFluid.getFluid())) {
+                continue;
+            }
+            return drainFromIndex(aFluid.amount, doDrain, i);
+        }
+        return null;
+    }
+
+    @Override
     public final FluidStack drain(int maxDrain, boolean doDrain) {
         FluidStack drained = null;
         for (int i = 0; i < mPerFluidAmount; i++) {
