@@ -24,6 +24,7 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 	public static boolean mIgnoreMap = false;
 	public GT_Recipe.GT_Recipe_Map mRecipeMap = null;
 	public boolean disableSort;
+	public boolean restrictFluid;
 	
 	public GTMTE_BusHatch_Input(int aID, String aName, String aNameRegional, int aTier) {
 		super(aID, aName, aNameRegional, aTier, 19, new String[]{
@@ -121,6 +122,13 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 			GT_Utility.sendChatToPlayer(aPlayer, trans("200", "Sort mode: " + (disableSort ? "Disabled" : "Enabled")));
 		}
 	}
+
+	@Override
+	public boolean onSolderingToolRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+		restrictFluid = !restrictFluid;
+		GT_Utility.sendChatToPlayer(aPlayer, trans("200", "Restrict Fluid: " + (restrictFluid ? "Enabled" : "Disabled")));
+		return true;
+	}
 	
 	public String trans(String aKey, String aEnglish) {
 		return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_" + aKey, aEnglish, false);
@@ -130,12 +138,14 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 	public void saveNBTData(NBTTagCompound aNBT) {
 		super.saveNBTData(aNBT);
 		aNBT.setBoolean("disableSort", disableSort);
+		aNBT.setBoolean("restrictFluid", restrictFluid);
 	}
 	
 	@Override
 	public void loadNBTData(NBTTagCompound aNBT) {
 		super.loadNBTData(aNBT);
 		disableSort = aNBT.getBoolean("disableSort");
+		restrictFluid = aNBT.getBoolean("restrictFluid");
 	}
 	
 	@Override
@@ -145,11 +155,12 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 	
 	@Override
 	public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-		if (aIndex == 0) return aStack.getItem() instanceof IFluidContainerItem &&
+		boolean isFluid = aStack.getItem() instanceof IFluidContainerItem &&
 				((IFluidContainerItem) aStack.getItem()).getCapacity(aStack) > 0 &&
 				((IFluidContainerItem) aStack.getItem()).getFluid(aStack) != null;
+		if (aIndex == 0) return isFluid;
 		if (aIndex == 17) return false;
-		return aIndex >= 1 && aIndex <= 16;
+		return (aIndex >= 1 && aIndex <= 16) && (!restrictFluid || !isFluid);
 	}
 	
 	@Override
