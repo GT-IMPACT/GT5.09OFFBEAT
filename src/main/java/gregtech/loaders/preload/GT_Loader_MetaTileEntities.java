@@ -301,6 +301,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Hatch_Output_ZPM.set(new GT_MetaTileEntity_Hatch_Output(67, "hatch.output.tier.07", "ZPM Output Hatch", 7).getStackForm(1L));
         ItemList.Hatch_Output_UV.set(new GT_MetaTileEntity_Hatch_Output(68, "hatch.output.tier.08", "UV Output Hatch", 8).getStackForm(1L));
         ItemList.Hatch_Output_MAX.set(new GT_MetaTileEntity_Hatch_Output(69, "hatch.output.tier.09", "UHV Output Hatch", 9).getStackForm(1L));
+        ItemList.Hatch_Output_ME.set(new GT_MetaTileEntity_Hatch_Output_ME(14770, "hatch.output.me", "ME Output Hatch", 2).getStackForm(1L));
         //ItemList.Hatch_Output_UEV.set(new GT_MetaTileEntity_Hatch_Output(11505, "hatch.output.tier.10", "Output Hatch (UEV)", 10).getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Output_ULV.get(1L), bitsd, new Object[]{" XC", "IM ", 'M', ItemList.Hull_ULV, 'C', OrePrefixes.plate.get(Materials.Rubber), 'I', OrePrefixes.pipeMedium.get(Materials.Copper), 'X', ItemList.Cell_Empty});
