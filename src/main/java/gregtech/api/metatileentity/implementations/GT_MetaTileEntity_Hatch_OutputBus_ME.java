@@ -3,6 +3,7 @@ package gregtech.api.metatileentity.implementations;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import gregtech.api.render.TextureFactory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -26,6 +27,7 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.util.GT_Utility;
 
 
 import java.util.Arrays;
@@ -34,14 +36,15 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
     private BaseActionSource requestSource = null;
     private AENetworkProxy gridProxy = null;
     private int update = 0;
+    private static final int DEFAULT_TIER = 3; // HV (4x4)
 
     public GT_MetaTileEntity_Hatch_OutputBus_ME(int aID, String aName, String aNameRegional) {
-        super(aID, aName, aNameRegional, 1, 0, new String[]{
+        super(aID, aName, aNameRegional, DEFAULT_TIER, getSlots(DEFAULT_TIER), new String[]{
                 "Item Output for Multiblocks", "Stores directly into ME"});
     }
 
     public GT_MetaTileEntity_Hatch_OutputBus_ME(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier,0, aDescription, aTextures);
+        super(aName, aTier, getSlots(aTier), aDescription, aTextures);
     }
 
     @Override
@@ -70,7 +73,41 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
         if (!GregTech_API.mAE2)
             return false;
         aStack.stackSize = store(aStack);
-        return aStack.stackSize == 0;
+        return aStack.stackSize == 0 ? true : super.storeAll(aStack);
+    }
+
+    @Override
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        super.onPostTick(aBaseMetaTileEntity, aTick);
+        if (aBaseMetaTileEntity.isServerSide() && aBaseMetaTileEntity.isAllowedToWork() && (aTick&0x7)==0) {
+            storeInventory(aBaseMetaTileEntity);
+        }
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    public void storeInventory(IInventory aInventory) {
+        try {
+            AENetworkProxy proxy = getProxy();
+            if (proxy == null) {
+                return;
+            }
+            IMEMonitor<IAEItemStack> sg = proxy.getStorage().getItemInventory();
+            for (int i = 0, mInventoryLength = mInventory.length; i < mInventoryLength; i++) {
+                ItemStack aStack = mInventory[i];
+                if (GT_Utility.isStackInvalid(aStack)) {
+                    continue;
+                }
+                IAEItemStack toStore = AEApi.instance().storage().createItemStack(aStack);
+                IAEItemStack rest = Platform.poweredInsert( proxy.getEnergy(), sg, toStore, getRequest());
+                if (rest != null) {
+                    aStack.stackSize = (int)rest.getStackSize();
+                } else {
+                    mInventory[i] = null;
+                }
+            }
+        } catch (final GridAccessException ignored) {
+
+        }
     }
 
     /**
@@ -115,7 +152,9 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 
     @Override
     public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-        return false;
+        if (aBaseMetaTileEntity.isClientSide()) return true;
+        aBaseMetaTileEntity.openGUI(aPlayer);
+        return true;
     }
 
     @Override
