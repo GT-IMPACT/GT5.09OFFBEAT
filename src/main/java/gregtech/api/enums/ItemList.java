@@ -667,7 +667,7 @@ public enum ItemList implements IItemContainer {
     Hatch_Dynamo_UEV, Hatch_Dynamo_UIV, Hatch_Dynamo_UMV, Hatch_Dynamo_UXV, Hatch_Dynamo_OPV,
 	Hatch_Energy_UEV, Hatch_Energy_UIV, Hatch_Energy_UMV, Hatch_Energy_UXV, Hatch_Energy_OPV,
 
-    Hatch_Output_Bus_ME,
+    Hatch_Output_Bus_ME, Hatch_Output_ME,
 
 	Battery_Charger_4by4_UEV, Battery_Charger_4by4_UIV, Battery_Charger_4by4_UMV, Battery_Charger_4by4_UXV, Battery_Charger_4by4_OPV, Battery_Charger_4by4_MAXV,
 	Battery_Buffer_1by1_UEV, Battery_Buffer_1by1_UIV, Battery_Buffer_1by1_UMV, Battery_Buffer_1by1_UXV, Battery_Buffer_1by1_OPV, Battery_Buffer_1by1_MAXV,

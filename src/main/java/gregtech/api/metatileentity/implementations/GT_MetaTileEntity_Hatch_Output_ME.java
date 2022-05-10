@@ -3,7 +3,6 @@ package gregtech.api.metatileentity.implementations;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import gregtech.api.render.TextureFactory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -15,7 +14,7 @@ import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;
@@ -27,29 +26,31 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.util.GT_Utility;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 
 
 import java.util.Arrays;
 
-public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatch_OutputBus {
+public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_Output {
     private BaseActionSource requestSource = null;
     private AENetworkProxy gridProxy = null;
     private int update = 0;
-    private static final int DEFAULT_TIER = 3; // HV (4x4)
 
-    public GT_MetaTileEntity_Hatch_OutputBus_ME(int aID, String aName, String aNameRegional) {
-        super(aID, aName, aNameRegional, DEFAULT_TIER, getSlots(DEFAULT_TIER), new String[]{
-                "Item Output for Multiblocks", "Stores directly into ME"});
+    public GT_MetaTileEntity_Hatch_Output_ME(int aID, String aName, String aNameRegional, int aTier) {
+        super(aID, aName, aNameRegional, aTier, new String[]{
+                "Fluid Output for Multiblocks", "Stores directly into ME"});
     }
 
-    public GT_MetaTileEntity_Hatch_OutputBus_ME(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, getSlots(aTier), aDescription, aTextures);
+    public GT_MetaTileEntity_Hatch_Output_ME(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
+        super(aName, aTier, aDescription, aTextures);
     }
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_Hatch_OutputBus_ME(mName, mTier, mDescriptionArray, mTextures);
+        return new GT_MetaTileEntity_Hatch_Output_ME(mName, mTier, mDescriptionArray, mTextures);
     }
 
     @Override
@@ -69,72 +70,59 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
     }
 
     @Override
-    public boolean storeAll(ItemStack aStack) {
-        if (!GregTech_API.mAE2)
-            return false;
-        aStack.stackSize = store(aStack);
-        return aStack.stackSize == 0 ? true : super.storeAll(aStack);
-    }
+	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+		super.onPostTick(aBaseMetaTileEntity, aTick);
+		if (aBaseMetaTileEntity.isServerSide()) {
+			if (aBaseMetaTileEntity.isAllowedToWork() && (aTick & 0x7) == 0 && mFluid != null) {
+                FluidStack tDrained = drain(mFluid.amount, true);
+                if (tDrained != null) {
+                    FluidStack tRemaining = store_fluid(tDrained, true);
+                    if (tRemaining != null && tRemaining.amount > 0) {
+                        super.fill(tRemaining, true);
+                    }
+                }
+			}
+		}
+	}
 
     @Override
-    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        super.onPostTick(aBaseMetaTileEntity, aTick);
-        if (aBaseMetaTileEntity.isServerSide() && aBaseMetaTileEntity.isAllowedToWork() && (aTick&0x7)==0) {
-            storeInventory(aBaseMetaTileEntity);
+    public int fill(FluidStack aFluid, boolean doFill) {
+        FluidStack remaining = store_fluid(aFluid.copy(), doFill);
+        if (remaining != null) {
+            return super.fill(remaining, doFill);
         }
-    }
-
-    @Optional.Method(modid = "appliedenergistics2")
-    public void storeInventory(IInventory aInventory) {
-        try {
-            AENetworkProxy proxy = getProxy();
-            if (proxy == null) {
-                return;
-            }
-            IMEMonitor<IAEItemStack> sg = proxy.getStorage().getItemInventory();
-            for (int i = 0, mInventoryLength = mInventory.length; i < mInventoryLength; i++) {
-                ItemStack aStack = mInventory[i];
-                if (GT_Utility.isStackInvalid(aStack)) {
-                    continue;
-                }
-                IAEItemStack toStore = AEApi.instance().storage().createItemStack(aStack);
-                IAEItemStack rest = Platform.poweredInsert( proxy.getEnergy(), sg, toStore, getRequest());
-                if (rest != null) {
-                    aStack.stackSize = (int)rest.getStackSize();
-                } else {
-                    mInventory[i] = null;
-                }
-            }
-        } catch (final GridAccessException ignored) {
-
-        }
+        return 0;
     }
 
     /**
-     * Attempt to store items in connected ME network. Returns how many items did not fit (if the network was down e.g.)
+     * Attempt to store fluid in connected ME network. Returns how much fluid did not fit (if the network was down e.g.)
      *
-     * @param stack  input stack
-     * @return amount of items left over
+     * @param stack input fluid
+     * @return amount of fluid left over
      */
     @Optional.Method(modid = "appliedenergistics2")
-    public int store(final ItemStack stack) {
+    public FluidStack store_fluid(final FluidStack stack, boolean doFill) {
         if (stack == null)
-            return 0;
+            return null;
+        if (!doFill)
+            return stack.copy();
         try {
             AENetworkProxy proxy = getProxy();
-            if (proxy == null)
-                return stack.stackSize;
-            IMEMonitor<IAEItemStack> sg = proxy.getStorage().getItemInventory();
-            IAEItemStack toStore = AEApi.instance().storage().createItemStack(stack);
-            IAEItemStack rest = Platform.poweredInsert( proxy.getEnergy(), sg, toStore, getRequest());
-            if (rest != null)
-                return (int)rest.getStackSize();
-            return 0;
+            if (proxy == null) {
+                return stack.copy();
+            }
+            IMEMonitor<IAEFluidStack> sg = proxy.getStorage().getFluidInventory();
+            IAEFluidStack toStore = AEApi.instance().storage().createFluidStack(stack);
+            IAEFluidStack rest = Platform.poweredInsert( proxy.getEnergy(), sg, toStore, getRequest());
+            if (rest != null) {
+                return rest.getFluidStack().copy();
+            }
+            return null;
         }
         catch( final GridAccessException ignored )
         {
         }
-        return stack.stackSize;
+        return stack.copy();
     }
 
     @Optional.Method(modid = "appliedenergistics2")
@@ -152,9 +140,9 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 
     @Override
     public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-        if (aBaseMetaTileEntity.isClientSide()) return true;
-        aBaseMetaTileEntity.openGUI(aPlayer);
-        return true;
+		if (aBaseMetaTileEntity.isClientSide()) return true;
+		aBaseMetaTileEntity.openGUI(aPlayer);
+		return true;
     }
 
     @Override
@@ -162,7 +150,7 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
     public AENetworkProxy getProxy() {
         if (gridProxy == null) {
             if (getBaseMetaTileEntity() instanceof IGridProxyable) {
-                gridProxy = new AENetworkProxy((IGridProxyable)getBaseMetaTileEntity(), "proxy", ItemList.Hatch_Output_Bus_ME.get(1), true);
+                gridProxy = new AENetworkProxy((IGridProxyable)getBaseMetaTileEntity(), "proxy", ItemList.Hatch_Output_ME.get(1), true);
                 gridProxy.onReady();
                 gridProxy.setFlags(GridFlags.REQUIRE_CHANNEL);
             }
