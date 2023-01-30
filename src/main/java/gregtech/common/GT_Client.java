@@ -41,85 +41,51 @@ import java.util.*;
 // Referenced classes of package gregtech.common:
 //            GT_Proxy
 
-public class GT_Client extends GT_Proxy
-        implements Runnable {
-
-    private static List ROTATABLE_VANILLA_BLOCKS;
-
-    static {
-        ROTATABLE_VANILLA_BLOCKS = Arrays.asList(new Block[]{
-                Blocks.piston, Blocks.sticky_piston, Blocks.furnace, Blocks.lit_furnace, Blocks.dropper, Blocks.dispenser, Blocks.chest, Blocks.trapped_chest, Blocks.ender_chest, Blocks.hopper,
-                Blocks.pumpkin, Blocks.lit_pumpkin
-        });
-    }
-
-    private final HashSet mCapeList = new HashSet();
+public class GT_Client extends GT_Proxy implements Runnable {
+    
+    private static final List<Block> ROTATABLE_VANILLA_BLOCKS = Arrays.asList(Blocks.piston, Blocks.sticky_piston, Blocks.furnace, Blocks.lit_furnace, Blocks.dropper, Blocks.dispenser, Blocks.chest, Blocks.trapped_chest, Blocks.ender_chest, Blocks.hopper, Blocks.pumpkin, Blocks.lit_pumpkin);
+    
+    private final HashSet<String> mCapeList = new HashSet<>();
     private final GT_CapeRenderer mCapeRenderer;
-    private final List mPosR;
-    private final List mPosG;
-    private final List mPosB;
-    private final List mPosA = Arrays.asList(new Object[0]);
-    private final List mNegR;
-    private final List mNegG;
-    private final List mNegB;
-    private final List mNegA = Arrays.asList(new Object[0]);
-    private final List mMoltenPosR;
-    private final List mMoltenPosG;
-    private final List mMoltenPosB;
-    private final List mMoltenPosA = Arrays.asList(new Object[0]);
-    private final List mMoltenNegR;
-    private final List mMoltenNegG;
-    private final List mMoltenNegB;
-    private final List mMoltenNegA = Arrays.asList(new Object[0]);
+    private final List<Materials> mPosR;
+    private final List<Materials> mPosG;
+    private final List<Materials> mPosB;
+    private final List<Materials> mPosA = Collections.emptyList();
+    private final List<Materials> mNegR;
+    private final List<Materials> mNegG;
+    private final List<Materials> mNegB;
+    private final List<Materials> mNegA = Collections.emptyList();
+    private final List<Materials> mMoltenPosR;
+    private final List<Materials> mMoltenPosG;
+    private final List<Materials> mMoltenPosB;
+    private final List<Materials> mMoltenPosA = Collections.emptyList();
+    private final List<Materials> mMoltenNegR;
+    private final List<Materials> mMoltenNegG;
+    private final List<Materials> mMoltenNegB;
+    private final List<Materials> mMoltenNegA = Collections.emptyList();
     private long mAnimationTick;
-    /**This is the place to def the value used below**/
+    /**
+     * This is the place to def the value used below
+     **/
     private long afterSomeTime;
     private boolean mAnimationDirection;
-    private boolean isFirstClientPlayerTick;
-    private String mMessage;
+    
     public GT_Client() {
-    	mCapeRenderer = new GT_CapeRenderer(mCapeList);
-        mAnimationTick = 0L;
+        mCapeRenderer       = new GT_CapeRenderer(mCapeList);
+        mAnimationTick      = 0L;
         mAnimationDirection = false;
-        isFirstClientPlayerTick = true;
-        mMessage = "";
-        mPosR = Arrays.asList(new Materials[]{
-                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-                Materials.Sunnarium, Materials.Glowstone,
-        });
-        mPosG = Arrays.asList(new Materials[]{
-                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-                Materials.Sunnarium, Materials.Glowstone,
-        });
-        mPosB = Arrays.asList(new Materials[]{
-                /**Materials.ChargedCertusQuartz, **/Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-        });
-        mNegR = Arrays.asList(new Materials[]{
-                Materials.NetherStar
-        });
-        mNegG = Arrays.asList(new Materials[]{
-                Materials.NetherStar
-        });
-        mNegB = Arrays.asList(new Materials[]{
-                Materials.NetherStar
-        });
-        mMoltenPosR = Arrays.asList(new Materials[]{
-                Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-                Materials.Sunnarium, Materials.Glowstone
-        });
-        mMoltenPosG = Arrays.asList(new Materials[]{
-                Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-                Materials.Sunnarium, Materials.Glowstone
-        });
-        mMoltenPosB = Arrays.asList(new Materials[]{
-                Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria,
-        });
-        mMoltenNegR = Arrays.asList(new Materials[]{
-        });
-        mMoltenNegG = Arrays.asList(new Materials[]{
-        });
-        mMoltenNegB = Arrays.asList(new Materials[]{
-        });
+        mPosR               = Arrays.asList(Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria, Materials.Sunnarium, Materials.Glowstone);
+        mPosG               = Arrays.asList(Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria, Materials.Sunnarium, Materials.Glowstone);
+        mPosB               = Arrays.asList(Materials.Enderium, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria);
+        mNegR               = Collections.singletonList(Materials.NetherStar);
+        mNegG               = Collections.singletonList(Materials.NetherStar);
+        mNegB               = Collections.singletonList(Materials.NetherStar);
+        mMoltenPosR         = Arrays.asList(Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria, Materials.Sunnarium, Materials.Glowstone);
+        mMoltenPosG         = Arrays.asList(Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria, Materials.Sunnarium, Materials.Glowstone);
+        mMoltenPosB         = Arrays.asList(Materials.Enderium, Materials.NetherStar, Materials.Uranium235, Materials.Plutonium241, Materials.NaquadahEnriched, Materials.Naquadria);
+        mMoltenNegR         = Collections.emptyList();
+        mMoltenNegG         = Collections.emptyList();
+        mMoltenNegB         = Collections.emptyList();
     }
 
     private static boolean checkedForChicken = false;
@@ -260,7 +226,7 @@ public class GT_Client extends GT_Proxy
 
     public void onPreLoad() {
         super.onPreLoad();
-        String arr$[] = {
+        String[] arr$ = {
                 "renadi", "hanakocz", "MysteryDump", "Flaver4", "x_Fame", "Peluche321", "Goshen_Ithilien", "manf", "Bimgo", "leagris",
                 "IAmMinecrafter02", "Cerous", "Devilin_Pixy", "Bkarlsson87", "BadAlchemy", "CaballoCraft", "melanclock", "Resursator", "demanzke", "AndrewAmmerlaan",
                 "Deathlycraft", "Jirajha", "Axlegear", "kei_kouma", "Dracion", "dungi", "Dorfschwein", "Zero Tw0", "mattiagraz85", "sebastiank30",
@@ -275,9 +241,7 @@ public class GT_Client extends GT_Proxy
                 "25FiveDetail", "AntiCivilBoy", "michaelbrady", "xXxIceFirexXx", "Speedynutty68", "GarretSidzaka", "HallowCharm977", "mastermind1919", "The_Hypersonic", "diamondguy2798",
                 "zF4ll3nPr3d4t0r", "CrafterOfMines57", "XxELIT3xSNIP3RxX", "SuterusuKusanagi", "xavier0014", "adamros", "alexbegt"
         };
-        int len$ = arr$.length;
-        for (int i$ = 0; i$ < len$; i$++) {
-            String tName = arr$[i$];
+        for (String tName : arr$) {
             mCapeList.add(tName.toLowerCase());
         }
         (new Thread(this)).start();
@@ -305,41 +269,17 @@ public class GT_Client extends GT_Proxy
                     i++;
                 } while (true);
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
-
-
-//        super.onPostLoad();
-//
-//            for (int i = 1; i < GregTech_API.METATILEENTITIES.length; i++) {
-//              try {
-//                for (; i < GregTech_API.METATILEENTITIES.length; i++) if (GregTech_API.METATILEENTITIES[i] != null) GregTech_API.METATILEENTITIES[i].getStackForm(1L).getTooltip(null, true);
-//              } catch (Throwable e) {
-//                e.printStackTrace(GT_Log.err);
-//              }
-//            }
     }
 
     public void run() {
         try {
             GT_Log.out.println("GT_Mod: Downloading Cape List.");
-            @SuppressWarnings("resource")
             Scanner tScanner = new Scanner(new URL("http://gregtech.overminddl1.com/com/gregoriust/gregtech/supporterlist.txt").openStream());
             while (tScanner.hasNextLine()) {
                 String tName = tScanner.nextLine();
-                if (!this.mCapeList.contains(tName.toLowerCase())) {
-                    this.mCapeList.add(tName.toLowerCase());
-                }
+                this.mCapeList.add(tName.toLowerCase());
             }
-        } catch (Throwable e) {
-        }
-        /**try {
-            GT_Log.out.println("GT_Mod: Downloading News.");
-            @SuppressWarnings("resource")
-            Scanner tScanner = new Scanner(new URL("http://files.minecraftforge.net/maven/com/gregoriust/gregtech/message.txt").openStream());
-            while (tScanner.hasNextLine()) {
-                this.mMessage = (this.mMessage + tScanner.nextLine() + " ");
-            }
-        } catch (Throwable e) {
-        }**/
+        } catch (Throwable ignored) {}
     }
     
     @SubscribeEvent
@@ -355,47 +295,26 @@ public class GT_Client extends GT_Proxy
                 afterSomeTime=0;
                 StatFileWriter sfw= Minecraft.getMinecraft().thePlayer.getStatFileWriter();
                 try {
-                    for(GT_Recipe recipe:GT_Recipe.GT_Recipe_Map.sAssemblylineVisualRecipes.mRecipeList){
-                        recipe.mHidden=!sfw.hasAchievementUnlocked(GT_Mod.achievements.getAchievement(recipe.getOutput(0).getUnlocalizedName()));
+                    for (GT_Recipe recipe : GT_Recipe.GT_Recipe_Map.sAssemblylineVisualRecipes.mRecipeList) {
+                        recipe.mHidden = !sfw.hasAchievementUnlocked(GT_Mod.achievements.getAchievement(recipe.getOutput(0).getUnlocalizedName()));
                     }
-                }catch (Exception e){}
+                } catch (Exception ignored) {
+                }
             }
-            ArrayList<GT_PlayedSound> tList = new ArrayList();
+            ArrayList<GT_PlayedSound> tList = new ArrayList<>();
             for (Map.Entry<GT_PlayedSound, Integer> tEntry : GT_Utility.sPlayedSoundMap.entrySet()) {
-                if (tEntry.getValue().intValue() < 0) {//Integer -> Integer -> int? >_<, fix
+                if (tEntry.getValue() < 0) {//Integer -> Integer -> int? >_<, fix
                     tList.add(tEntry.getKey());
                 } else {
-                    tEntry.setValue(Integer.valueOf(tEntry.getValue().intValue() - 1));
+                    tEntry.setValue(tEntry.getValue() - 1);
                 }
             }
             GT_PlayedSound tKey;
-            for (Iterator i$ = tList.iterator(); i$.hasNext(); GT_Utility.sPlayedSoundMap.remove(tKey)) {
-                tKey = (GT_PlayedSound) i$.next();
+    
+            for (Iterator<GT_PlayedSound> i$ = tList.iterator(); i$.hasNext(); GT_Utility.sPlayedSoundMap.remove(tKey)) {
+                tKey = i$.next();
             }
-            if(GregTech_API.mServerStarted == false)GregTech_API.mServerStarted = true;
-            /*if ((this.isFirstClientPlayerTick) && (aEvent.player == GT_Values.GT.getThePlayer())) {
-                this.isFirstClientPlayerTick = false;
-                GT_FluidStack.fixAllThoseFuckingFluidIDs();
-                if ((this.mMessage.length() > 5) && (GregTech_API.sSpecialFile.get(ConfigCategories.news, this.mMessage, true))) {
-                    aEvent.player.addChatComponentMessage(new ChatComponentText(this.mMessage));
-                }
-                try {
-                    int tVersion = Integer.parseInt(((String) Class.forName("ic2.core.IC2").getField("VERSION").get(null)).substring(4, 7));
-                    if (GT_Values.D1) {
-                        GT_Log.out.println("Industrialcraft Version: " + tVersion);
-                    }
-                    if (tVersion < 624) {
-                        aEvent.player.addChatComponentMessage(new ChatComponentText("GregTech: Please update your IndustrialCraft here:"));
-                        aEvent.player.addChatComponentMessage(new ChatComponentText("ic2api.player.to:8080/job/IC2_experimental/" + (GT_Mod.MAX_IC2 < Integer.MAX_VALUE ? GT_Mod.MAX_IC2 : 624) + "/"));
-                    } else if (tVersion > GT_Mod.MAX_IC2) {
-                        aEvent.player.addChatComponentMessage(new ChatComponentText("GregTech: Please downgrade your IndustrialCraft here:"));
-                        aEvent.player.addChatComponentMessage(new ChatComponentText("ic2api.player.to:8080/job/IC2_experimental/" + GT_Mod.MAX_IC2 + "/"));
-                    }
-                } catch (Throwable e) {
-                    aEvent.player.addChatComponentMessage(new ChatComponentText("GregTech: Please get the recommended Version of IndustrialCraft here:"));
-                    aEvent.player.addChatComponentMessage(new ChatComponentText("ic2api.player.to:8080/job/IC2_experimental/" + (GT_Mod.MAX_IC2 < Integer.MAX_VALUE ? GT_Mod.MAX_IC2 : 624) + "/"));
-                }
-            }*/
+            if (!GregTech_API.mServerStarted) GregTech_API.mServerStarted = true;
         }
     }
 
@@ -446,108 +365,81 @@ public class GT_Client extends GT_Proxy
     public void receiveRenderEvent(net.minecraftforge.client.event.RenderPlayerEvent.Pre aEvent) {
         if (GT_Utility.getFullInvisibility(aEvent.entityPlayer)) {
             aEvent.setCanceled(true);
-            return;
-        } else {
-            return;
         }
     }
 
     @SubscribeEvent
     public void onClientTickEvent(cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent aEvent) {
         if (aEvent.phase == cpw.mods.fml.common.gameevent.TickEvent.Phase.END) {
-            if(changeDetected>0)changeDetected--;
-            int newHideValue=shouldHeldItemHideThings();
-            if(newHideValue!=hideValue){
-                hideValue=newHideValue;
-                changeDetected=5;
+            if (changeDetected > 0) changeDetected--;
+            final int newHideValue = shouldHeldItemHideThings();
+            if (newHideValue != hideValue) {
+                hideValue = newHideValue;
+                changeDetected = 5;
             }
             mAnimationTick++;
-            if (mAnimationTick % 50L == 0L)
-                {mAnimationDirection = !mAnimationDirection;}
-            int tDirection = mAnimationDirection ? 1 : -1;
-            for (Iterator i$ = mPosR.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[0] += tDirection;
+            if (mAnimationTick % 50L == 0L) {
+                mAnimationDirection = !mAnimationDirection;
             }
-
-            for (Iterator i$ = mPosG.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[1] += tDirection;
+            final int tDirection = mAnimationDirection ? 1 : -1;
+            for (Materials tMaterial : mPosR) {
+                tMaterial.mRGBa[0] = getSafeRGBValue(tMaterial.mRGBa[0], tDirection);
             }
-
-            for (Iterator i$ = mPosB.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[2] += tDirection;
+            for (Materials tMaterial : mPosG) {
+                tMaterial.mRGBa[1] = getSafeRGBValue(tMaterial.mRGBa[1], tDirection);
             }
-
-            for (Iterator i$ = mPosA.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[3] += tDirection;
+            for (Materials tMaterial : mPosB) {
+                tMaterial.mRGBa[2] = getSafeRGBValue(tMaterial.mRGBa[2], tDirection);
             }
-
-            for (Iterator i$ = mNegR.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[0] -= tDirection;
+            for (Materials tMaterial : mPosA) {
+                tMaterial.mRGBa[3] = getSafeRGBValue(tMaterial.mRGBa[3], tDirection);
             }
-
-            for (Iterator i$ = mNegG.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[1] -= tDirection;
+            for (Materials tMaterial : mNegR) {
+                tMaterial.mRGBa[0] = getSafeRGBValue(tMaterial.mRGBa[0], -tDirection);
             }
-
-            for (Iterator i$ = mNegB.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[2] -= tDirection;
+            for (Materials tMaterial : mNegG) {
+                tMaterial.mRGBa[1] = getSafeRGBValue(tMaterial.mRGBa[1], -tDirection);
             }
-
-            for (Iterator i$ = mNegA.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mRGBa[3] -= tDirection;
+            for (Materials tMaterial : mNegB) {
+                tMaterial.mRGBa[2] = getSafeRGBValue(tMaterial.mRGBa[2], -tDirection);
             }
-
-            for (Iterator i$ = mMoltenPosR.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[0] += tDirection;
+            for (Materials tMaterial : mNegA) {
+                tMaterial.mRGBa[3] = getSafeRGBValue(tMaterial.mRGBa[3], -tDirection);
             }
-
-            for (Iterator i$ = mMoltenPosG.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[1] += tDirection;
+            for (Materials tMaterial : mMoltenPosR) {
+                tMaterial.mMoltenRGBa[0] = getSafeRGBValue(tMaterial.mMoltenRGBa[0], tDirection);
             }
-
-            for (Iterator i$ = mMoltenPosB.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[2] += tDirection;
+            for (Materials tMaterial : mMoltenPosG) {
+                tMaterial.mMoltenRGBa[1] = getSafeRGBValue(tMaterial.mMoltenRGBa[1], tDirection);
             }
-
-            for (Iterator i$ = mMoltenPosA.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[3] += tDirection;
+            for (Materials tMaterial : mMoltenPosB) {
+                tMaterial.mMoltenRGBa[2] = getSafeRGBValue(tMaterial.mMoltenRGBa[2], tDirection);
             }
-
-            for (Iterator i$ = mMoltenNegR.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[0] -= tDirection;
+            for (Materials tMaterial : mMoltenPosA) {
+                tMaterial.mMoltenRGBa[3] = getSafeRGBValue(tMaterial.mMoltenRGBa[3], tDirection);
             }
-
-            for (Iterator i$ = mMoltenNegG.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[1] -= tDirection;
+            for (Materials tMaterial : mMoltenNegR) {
+                tMaterial.mMoltenRGBa[0] = getSafeRGBValue(tMaterial.mMoltenRGBa[0], -tDirection);
             }
-
-            for (Iterator i$ = mMoltenNegB.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[2] -= tDirection;
+            for (Materials tMaterial : mMoltenNegG) {
+                tMaterial.mMoltenRGBa[1] = getSafeRGBValue(tMaterial.mMoltenRGBa[1], -tDirection);
             }
-
-            for (Iterator i$ = mMoltenNegA.iterator(); i$.hasNext(); ) {
-                Materials tMaterial = (Materials) i$.next();
-                tMaterial.mMoltenRGBa[3] -= tDirection;
+            for (Materials tMaterial : mMoltenNegB) {
+                tMaterial.mMoltenRGBa[2] = getSafeRGBValue(tMaterial.mMoltenRGBa[2], -tDirection);
             }
-
+            for (Materials tMaterial : mMoltenNegA) {
+                tMaterial.mMoltenRGBa[3] = getSafeRGBValue(tMaterial.mMoltenRGBa[3], -tDirection);
+            }
         }
     }
-
+    
+    public short getSafeRGBValue(short aRBG, int aDelta) {
+        int tmp = aRBG + aDelta;
+        if (tmp > 255) tmp = 255;
+        if (tmp < 0) tmp = 0;
+        return (short) tmp;
+    }
+    
     public void doSonictronSound(ItemStack aStack, World aWorld, double aX, double aY, double aZ) {
         if (GT_Utility.isStackInvalid(aStack))
             return;
@@ -555,10 +447,9 @@ public class GT_Client extends GT_Proxy
         int i = 0;
         int j = mSoundItems.size();
         do {
-            if (i >= j)
-                break;
-            if (GT_Utility.areStacksEqual((ItemStack) mSoundItems.get(i), aStack)) {
-                tString = (String) mSoundNames.get(i);
+            if (i >= j) break;
+            if (GT_Utility.areStacksEqual(mSoundItems.get(i), aStack)) {
+                tString = mSoundNames.get(i);
                 break;
             }
             i++;
@@ -571,59 +462,58 @@ public class GT_Client extends GT_Proxy
         if (tString.startsWith("streaming."))
             switch (aStack.stackSize) {
                 case 1: // '\001'
-                    tString = (new StringBuilder()).append(tString).append("13").toString();
+                    tString = tString + "13";
                     break;
 
                 case 2: // '\002'
-                    tString = (new StringBuilder()).append(tString).append("cat").toString();
+                    tString = tString + "cat";
                     break;
 
                 case 3: // '\003'
-                    tString = (new StringBuilder()).append(tString).append("blocks").toString();
+                    tString = tString + "blocks";
                     break;
 
                 case 4: // '\004'
-                    tString = (new StringBuilder()).append(tString).append("chirp").toString();
+                    tString = tString + "chirp";
                     break;
 
                 case 5: // '\005'
-                    tString = (new StringBuilder()).append(tString).append("far").toString();
+                    tString = tString + "far";
                     break;
 
                 case 6: // '\006'
-                    tString = (new StringBuilder()).append(tString).append("mall").toString();
+                    tString = tString + "mall";
                     break;
 
                 case 7: // '\007'
-                    tString = (new StringBuilder()).append(tString).append("mellohi").toString();
+                    tString = tString + "mellohi";
                     break;
 
                 case 8: // '\b'
-                    tString = (new StringBuilder()).append(tString).append("stal").toString();
+                    tString = tString + "stal";
                     break;
 
                 case 9: // '\t'
-                    tString = (new StringBuilder()).append(tString).append("strad").toString();
+                    tString = tString + "strad";
                     break;
 
                 case 10: // '\n'
-                    tString = (new StringBuilder()).append(tString).append("ward").toString();
+                    tString = tString + "ward";
                     break;
 
                 case 11: // '\013'
-                    tString = (new StringBuilder()).append(tString).append("11").toString();
+                    tString = tString + "11";
                     break;
 
                 case 12: // '\f'
-                    tString = (new StringBuilder()).append(tString).append("wait").toString();
+                    tString = tString + "wait";
                     break;
 
                 default:
-                    tString = (new StringBuilder()).append(tString).append("wherearewenow").toString();
+                    tString = tString + "wherearewenow";
                     break;
             }
-        if (tString.startsWith("streaming."))
-            aWorld.playRecord(tString.substring(10, tString.length()), (int) aX, (int) aY, (int) aZ);
+        if (tString.startsWith("streaming.")) aWorld.playRecord(tString.substring(10), (int) aX, (int) aY, (int) aZ);
         else
             aWorld.playSound(aX, aY, aZ, tString, 3F, tString.startsWith("note.") ? (float) Math.pow(2D, (double) (aStack.stackSize - 13) / 12D) : 1.0F, false);
     }
