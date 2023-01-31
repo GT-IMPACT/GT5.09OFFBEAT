@@ -69,15 +69,4 @@ public class ItemPropolis extends Item {
 	public String getItemStackDisplayName(ItemStack stack) {
 		return PropolisType.values()[stack.getItemDamage()].getName();
 	}
-	public void initPropolisRecipes() {
-		ItemStack tPropolis;
-
-		tPropolis = getStackForType(PropolisType.Zoko);
-		//addRecipe(tDrop, aOutput, aOutput2, aChance, aEUt);
-	}
-
-	public void addRecipe(ItemStack tDrop, FluidStack aOutput, ItemStack aOutput2, int aChance, int aEUt) {
-		GT_Values.RA.addFluidExtractionRecipe(tDrop, aOutput2, aOutput, aChance, 40, aEUt);
-	}
-
 }

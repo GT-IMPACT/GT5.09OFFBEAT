@@ -90,35 +90,4 @@ public class ItemDrop extends Item {
 	public String getItemStackDisplayName(ItemStack stack) {
 		return DropType.values()[stack.getItemDamage()].getName();
 	}
-	public void initDropsRecipes() {
-		ItemStack tDrop;
-
-		tDrop = getStackForType(DropType.OIL);
-		addProcessLV(tDrop, Materials.OilHeavy.getFluid(100L), GT_ModHandler.getModItem("Forestry", "propolis", 1L, 0), 3000, 8);
-		RecipeManagers.squeezerManager.addRecipe(40, new ItemStack[]{tDrop}, Materials.OilHeavy.getFluid(100L), GT_ModHandler.getModItem("Forestry", "propolis", 1L, 0), 30);
-		tDrop = getStackForType(DropType.COOLANT);
-		addProcessLV(tDrop, new FluidStack(FluidRegistry.getFluid("ic2coolant"), 100), GT_ModHandler.getModItem("MagicBees", "propolis", 1L, 0), 3000, 8);
-		RecipeManagers.squeezerManager.addRecipe(40, new ItemStack[]{tDrop}, new FluidStack(FluidRegistry.getFluid("ic2coolant"), 100), GT_ModHandler.getModItem("MagicBees", "propolis", 1L, 0), 30);
-		tDrop = getStackForType(DropType.HOT_COOLANT);
-		addProcessLV(tDrop, new FluidStack(FluidRegistry.getFluid("ic2hotcoolant"), 100), GT_ModHandler.getModItem("MagicBees", "propolis", 1L, 2), 3000, 8);
-		RecipeManagers.squeezerManager.addRecipe(40, new ItemStack[]{tDrop}, new FluidStack(FluidRegistry.getFluid("ic2hotcoolant"), 100), GT_ModHandler.getModItem("MagicBees", "propolis", 1L, 2), 30);
-		tDrop = getStackForType(DropType.LAPIS);
-		addProcessLV(tDrop,new FluidStack(FluidRegistry.getFluid("ic2coolant"), 200), GT_ModHandler.getModItem("MagicBees", "propolis", 1L, 3), 5000, 1200,2);
-		RecipeManagers.squeezerManager.addRecipe(400, new ItemStack[]{tDrop}, new FluidStack(FluidRegistry.getFluid("ic2coolant"), 100), GT_ModHandler.getModItem("MagicBees", "propolis", 1L, 3), 30);
-		tDrop = getStackForType(DropType.OXYGEN);
-		addProcessLV(tDrop, Materials.Oxygen.getGas(100L), GT_ModHandler.getModItem("ExtraBees", "propolis", 1L, 2), 250, 1200,8);
-		RecipeManagers.squeezerManager.addRecipe(400, new ItemStack[]{tDrop}, new FluidStack(FluidRegistry.getFluid("ic2coolant"), 100), GT_ModHandler.getModItem("ExtraBees", "propolis", 1L, 2), 30);
-
-	}
-
-	public void addProcessLV(ItemStack tDrop, FluidStack aOutput, ItemStack aOutput2, int aChance, int aEUt) {
-		GT_Values.RA.addFluidExtractionRecipe(tDrop, aOutput2, aOutput, aChance, 32, aEUt);
-	}
-	public void addProcessLV(ItemStack tDrop, FluidStack aOutput, ItemStack aOutput2, int aChance, int aDuration, int aEUt) {
-		GT_Values.RA.addFluidExtractionRecipe(tDrop, aOutput2, aOutput, aChance, aDuration, aEUt);
-	}
-	public void addProcessMV(ItemStack tDrop, FluidStack aOutput, ItemStack aOutput2, int aChance, int aEUt) {
-		GT_Values.RA.addFluidExtractionRecipe(tDrop, aOutput2, aOutput, aChance, 64, aEUt);
-	}
-
 }

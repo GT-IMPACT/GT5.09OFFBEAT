@@ -42,15 +42,11 @@ public class GT_Bees {
         if (Loader.isModLoaded("Forestry") && GT_Mod.gregtechproxy.mGTBees) {
         	GT_AlleleHelper.initialisation();
             propolis = new ItemPropolis();
-            propolis.initPropolisRecipes();
             pollen = new ItemPollen();
             drop = new ItemDrop();
-            drop.initDropsRecipes();
             combs = new ItemComb();
-            combs.initCombsRecipes();
-            GT_BeeDefinition.initBees();          
+            GT_BeeDefinition.initBees();
         }
-
     }
     
     public static class DimensionMutationCondition implements IMutationCondition {
