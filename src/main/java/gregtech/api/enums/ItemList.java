@@ -739,21 +739,103 @@ public enum ItemList implements IItemContainer {
 	Machine_LV_AirGenerator, Machine_MV_AirGenerator, Machine_HV_AirGenerator, Machine_EV_AirGenerator, Machine_IV_AirGenerator, Machine_LuV_AirGenerator, Machine_ZPM_AirGenerator, Machine_UV_AirGenerator,
 	
 	WetTransformer_LV_ULV, WetTransformer_MV_LV, WetTransformer_HV_MV, WetTransformer_EV_HV, WetTransformer_IV_EV, WetTransformer_LuV_IV, WetTransformer_ZPM_LuV, WetTransformer_UV_ZPM, WetTransformer_UHV_UV, WetTransformer_UEV_UHV, WetTransformer_UIV_UEV, WetTransformer_UMV_UIV, WetTransformer_UXV_UMV, WetTransformer_OPV_UXV, WetTransformer_MAXV_OPV,
-	Transformer_HA_LV_ULV, Transformer_HA_MV_LV, Transformer_HA_HV_MV, Transformer_HA_EV_HV, Transformer_HA_IV_EV, Transformer_HA_LuV_IV, Transformer_HA_ZPM_LuV, Transformer_HA_UV_ZPM, Transformer_HA_UHV_UV, Transformer_HA_UEV_UHV, Transformer_HA_UIV_UEV, Transformer_HA_UMV_UIV, Transformer_HA_UXV_UMV, Transformer_HA_OPV_UXV, Transformer_HA_MAXV_OPV,
-	Transformer_Ultra_HV_MV, Transformer_Ultra_EV_HV, Transformer_Ultra_IV_EV, Transformer_Ultra_LuV_IV, Transformer_Ultra_ZPM_LuV, Transformer_Ultra_UV_ZPM, Transformer_Ultra_UHV_UV, Transformer_Ultra_UEV_UHV, Transformer_Ultra_UIV_UEV, Transformer_Ultra_UMV_UIV, Transformer_Ultra_UXV_UMV, Transformer_Ultra_OPV_UXV, Transformer_Ultra_MAXV_OPV,
-	Machine_DigitalTransformer_EV, Machine_DigitalTransformer_IV, Machine_DigitalTransformer_LuV, Machine_DigitalTransformer_ZPM, Machine_DigitalTransformer_UV, Machine_DigitalTransformer_UHV, Machine_DigitalTransformer_UEV,
-	Machine_LV_WireAssembler, Machine_MV_WireAssembler, Machine_HV_WireAssembler, Machine_EV_WireAssembler, Machine_IV_WireAssembler, Machine_LuV_WireAssembler, Machine_ZPM_WireAssembler, Machine_UV_WireAssembler, Machine_UHV_WireAssembler, Machine_UEV_WireAssembler, Machine_UIV_WireAssembler, Machine_UMV_WireAssembler, Machine_UXV_WireAssembler, Machine_OPV_WireAssembler,
- 
-	AdsorptionFilter, AdsorptionFilterCasing, AdsorptionFilterDirty, Machine_Multi_AirFilter, Casing_AirFilter, Casing_AirFilter_Vent, Casing_HSLA, Casing_CokeOvenBrick,
-	VOLUMETRIC_FLASK;
+    Transformer_HA_LV_ULV, Transformer_HA_MV_LV, Transformer_HA_HV_MV, Transformer_HA_EV_HV, Transformer_HA_IV_EV, Transformer_HA_LuV_IV, Transformer_HA_ZPM_LuV, Transformer_HA_UV_ZPM, Transformer_HA_UHV_UV, Transformer_HA_UEV_UHV, Transformer_HA_UIV_UEV, Transformer_HA_UMV_UIV, Transformer_HA_UXV_UMV, Transformer_HA_OPV_UXV, Transformer_HA_MAXV_OPV,
+    Transformer_Ultra_HV_MV, Transformer_Ultra_EV_HV, Transformer_Ultra_IV_EV, Transformer_Ultra_LuV_IV, Transformer_Ultra_ZPM_LuV, Transformer_Ultra_UV_ZPM, Transformer_Ultra_UHV_UV, Transformer_Ultra_UEV_UHV, Transformer_Ultra_UIV_UEV, Transformer_Ultra_UMV_UIV, Transformer_Ultra_UXV_UMV, Transformer_Ultra_OPV_UXV, Transformer_Ultra_MAXV_OPV,
+    Machine_DigitalTransformer_EV, Machine_DigitalTransformer_IV, Machine_DigitalTransformer_LuV, Machine_DigitalTransformer_ZPM, Machine_DigitalTransformer_UV, Machine_DigitalTransformer_UHV, Machine_DigitalTransformer_UEV,
+    Machine_LV_WireAssembler, Machine_MV_WireAssembler, Machine_HV_WireAssembler, Machine_EV_WireAssembler, Machine_IV_WireAssembler, Machine_LuV_WireAssembler, Machine_ZPM_WireAssembler, Machine_UV_WireAssembler, Machine_UHV_WireAssembler, Machine_UEV_WireAssembler, Machine_UIV_WireAssembler, Machine_UMV_WireAssembler, Machine_UXV_WireAssembler, Machine_OPV_WireAssembler,
     
-
+    AdsorptionFilter, AdsorptionFilterCasing, AdsorptionFilterDirty, Machine_Multi_AirFilter, Casing_AirFilter, Casing_AirFilter_Vent, Casing_HSLA, Casing_CokeOvenBrick,
+    VOLUMETRIC_FLASK;
+    
+    
     public static final ItemList[]
-            DYE_ONLY_ITEMS = {Color_00, Color_01, Color_02, Color_03, Color_04, Color_05, Color_06, Color_07, Color_08, Color_09, Color_10, Color_11, Color_12, Color_13, Color_14, Color_15}, SPRAY_CAN_DYES = {Spray_Color_00, Spray_Color_01, Spray_Color_02, Spray_Color_03, Spray_Color_04, Spray_Color_05, Spray_Color_06, Spray_Color_07, Spray_Color_08, Spray_Color_09, Spray_Color_10, Spray_Color_11, Spray_Color_12, Spray_Color_13, Spray_Color_14, Spray_Color_15}, SPRAY_CAN_DYES_USED = {Spray_Color_Used_00, Spray_Color_Used_01, Spray_Color_Used_02, Spray_Color_Used_03, Spray_Color_Used_04, Spray_Color_Used_05, Spray_Color_Used_06, Spray_Color_Used_07, Spray_Color_Used_08, Spray_Color_Used_09, Spray_Color_Used_10, Spray_Color_Used_11, Spray_Color_Used_12, Spray_Color_Used_13, Spray_Color_Used_14, Spray_Color_Used_15}, TRANSFORMERS = {Transformer_LV_ULV, Transformer_MV_LV, Transformer_HV_MV, Transformer_EV_HV, Transformer_IV_EV, Transformer_LuV_IV, Transformer_ZPM_LuV, Transformer_UV_ZPM, Transformer_MAX_UV}, MACHINE_HULLS = {Hull_ULV, Hull_LV, Hull_MV, Hull_HV, Hull_EV, Hull_IV, Hull_LuV, Hull_ZPM, Hull_UV, Hull_MAX}, HATCHES_DYNAMO = {Hatch_Dynamo_ULV, Hatch_Dynamo_LV, Hatch_Dynamo_MV, Hatch_Dynamo_HV, Hatch_Dynamo_EV, Hatch_Dynamo_IV, Hatch_Dynamo_LuV, Hatch_Dynamo_ZPM, Hatch_Dynamo_UV, Hatch_Dynamo_MAX}, HATCHES_ENERGY = {Hatch_Energy_ULV, Hatch_Energy_LV, Hatch_Energy_MV, Hatch_Energy_HV, Hatch_Energy_EV, Hatch_Energy_IV, Hatch_Energy_LuV, Hatch_Energy_ZPM, Hatch_Energy_UV, Hatch_Energy_MAX}, HATCHES_INPUT = {Hatch_Input_ULV, Hatch_Input_LV, Hatch_Input_MV, Hatch_Input_HV, Hatch_Input_EV, Hatch_Input_IV, Hatch_Input_LuV, Hatch_Input_ZPM, Hatch_Input_UV, Hatch_Input_MAX}, HATCHES_INPUT_BUS = {Hatch_Input_Bus_ULV, Hatch_Input_Bus_LV, Hatch_Input_Bus_MV, Hatch_Input_Bus_HV, Hatch_Input_Bus_EV, Hatch_Input_Bus_IV, Hatch_Input_Bus_LuV, Hatch_Input_Bus_ZPM, Hatch_Input_Bus_UV, Hatch_Input_Bus_MAX}, HATCHES_OUTPUT = {Hatch_Output_ULV, Hatch_Output_LV, Hatch_Output_MV, Hatch_Output_HV, Hatch_Output_EV, Hatch_Output_IV, Hatch_Output_LuV, Hatch_Output_ZPM, Hatch_Output_UV, Hatch_Output_MAX}, HATCHES_OUTPUT_BUS = {Hatch_Output_Bus_ULV, Hatch_Output_Bus_LV, Hatch_Output_Bus_MV, Hatch_Output_Bus_HV, Hatch_Output_Bus_EV, Hatch_Output_Bus_IV, Hatch_Output_Bus_LuV, Hatch_Output_Bus_ZPM, Hatch_Output_Bus_UV, Hatch_Output_Bus_MAX}, HATCHES_MUFFLER = {Hatch_Muffler_LV, Hatch_Muffler_LV, Hatch_Muffler_MV, Hatch_Muffler_HV, Hatch_Muffler_EV, Hatch_Muffler_IV, Hatch_Muffler_LuV, Hatch_Muffler_ZPM, Hatch_Muffler_UV, Hatch_Muffler_MAX};
-    public static Fluid sOilExtraHeavy, sEpichlorhydrin, sDrillingFluid, sNitricAcid, sBlueVitriol, sNickelSulfate, sToluene, sNitrationMixture, sRocketFuel, sHydricSulfur, sIndiumConcentrate, sLeadZincSolution, sIron3Chloride, sHerbicide;
+            DYE_ONLY_ITEMS = {
+                    Color_00, Color_01, Color_02, Color_03,
+                    Color_04, Color_05, Color_06, Color_07,
+                    Color_08, Color_09, Color_10, Color_11,
+                    Color_12, Color_13, Color_14, Color_15
+            },
+            SPRAY_CAN_DYES = {
+                    Spray_Color_00, Spray_Color_01, Spray_Color_02, Spray_Color_03,
+                    Spray_Color_04, Spray_Color_05, Spray_Color_06, Spray_Color_07,
+                    Spray_Color_08, Spray_Color_09, Spray_Color_10, Spray_Color_11,
+                    Spray_Color_12, Spray_Color_13, Spray_Color_14, Spray_Color_15
+            },
+            SPRAY_CAN_DYES_USED = {
+                    Spray_Color_Used_00, Spray_Color_Used_01, Spray_Color_Used_02, Spray_Color_Used_03,
+                    Spray_Color_Used_04, Spray_Color_Used_05, Spray_Color_Used_06, Spray_Color_Used_07,
+                    Spray_Color_Used_08, Spray_Color_Used_09, Spray_Color_Used_10, Spray_Color_Used_11,
+                    Spray_Color_Used_12, Spray_Color_Used_13, Spray_Color_Used_14, Spray_Color_Used_15
+            },
+            TRANSFORMERS = {
+                    Transformer_LV_ULV, Transformer_MV_LV, Transformer_HV_MV,
+                    Transformer_EV_HV, Transformer_IV_EV, Transformer_LuV_IV,
+                    Transformer_ZPM_LuV, Transformer_UV_ZPM, Transformer_MAX_UV
+            },
+            MACHINE_HULLS = {
+                    Hull_ULV, Hull_LV, Hull_MV,
+                    Hull_HV, Hull_EV, Hull_IV,
+                    Hull_LuV, Hull_ZPM, Hull_UV, Hull_MAX
+            },
+            CASINGS = {
+                    Casing_ULV, Casing_LV, Casing_MV,
+                    Casing_HV, Casing_EV, Casing_IV,
+                    Casing_LuV, Casing_ZPM, Casing_UV, Casing_MAX
+            },
+            HATCHES_DYNAMO = {
+                    Hatch_Dynamo_ULV, Hatch_Dynamo_LV, Hatch_Dynamo_MV,
+                    Hatch_Dynamo_HV, Hatch_Dynamo_EV, Hatch_Dynamo_IV,
+                    Hatch_Dynamo_LuV, Hatch_Dynamo_ZPM, Hatch_Dynamo_UV, Hatch_Dynamo_MAX
+            },
+            HATCHES_ENERGY = {
+                    Hatch_Energy_ULV, Hatch_Energy_LV, Hatch_Energy_MV,
+                    Hatch_Energy_HV, Hatch_Energy_EV, Hatch_Energy_IV,
+                    Hatch_Energy_LuV, Hatch_Energy_ZPM, Hatch_Energy_UV, Hatch_Energy_MAX
+            },
+            HATCHES_INPUT = {
+                    Hatch_Input_ULV, Hatch_Input_LV, Hatch_Input_MV,
+                    Hatch_Input_HV, Hatch_Input_EV, Hatch_Input_IV,
+                    Hatch_Input_LuV, Hatch_Input_ZPM, Hatch_Input_UV,
+                    Hatch_Input_MAX
+            },
+            HATCHES_INPUT_BUS = {
+                    Hatch_Input_Bus_ULV, Hatch_Input_Bus_LV, Hatch_Input_Bus_MV,
+                    Hatch_Input_Bus_HV, Hatch_Input_Bus_EV, Hatch_Input_Bus_IV,
+                    Hatch_Input_Bus_LuV, Hatch_Input_Bus_ZPM, Hatch_Input_Bus_UV, Hatch_Input_Bus_MAX
+            },
+            HATCHES_OUTPUT = {
+                    Hatch_Output_ULV, Hatch_Output_LV, Hatch_Output_MV,
+                    Hatch_Output_HV, Hatch_Output_EV, Hatch_Output_IV,
+                    Hatch_Output_LuV, Hatch_Output_ZPM, Hatch_Output_UV, Hatch_Output_MAX
+            },
+            HATCHES_OUTPUT_BUS = {
+                    Hatch_Output_Bus_ULV, Hatch_Output_Bus_LV, Hatch_Output_Bus_MV,
+                    Hatch_Output_Bus_HV, Hatch_Output_Bus_EV, Hatch_Output_Bus_IV,
+                    Hatch_Output_Bus_LuV, Hatch_Output_Bus_ZPM, Hatch_Output_Bus_UV, Hatch_Output_Bus_MAX
+            },
+            HATCHES_MUFFLER = {
+                    Hatch_Muffler_LV, Hatch_Muffler_LV, Hatch_Muffler_MV,
+                    Hatch_Muffler_HV, Hatch_Muffler_EV, Hatch_Muffler_IV,
+                    Hatch_Muffler_LuV, Hatch_Muffler_ZPM, Hatch_Muffler_UV, Hatch_Muffler_MAX
+            };
+    public static Fluid
+            sOilExtraHeavy,
+            sEpichlorhydrin,
+            sDrillingFluid,
+            sNitricAcid,
+            sBlueVitriol,
+            sNickelSulfate,
+            sToluene,
+            sNitrationMixture,
+            sRocketFuel,
+            sHydricSulfur,
+            sIndiumConcentrate,
+            sLeadZincSolution,
+            sIron3Chloride,
+            sHerbicide;
     private ItemStack mStack;
     private boolean mHasNotBeenSet = true;
-
+    
     @Override
     public IItemContainer set(Item aItem) {
         mHasNotBeenSet = false;

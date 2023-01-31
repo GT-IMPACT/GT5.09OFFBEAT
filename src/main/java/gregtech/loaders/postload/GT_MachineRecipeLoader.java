@@ -101,10 +101,10 @@ public class GT_MachineRecipeLoader implements Runnable {
         ItemStack[][] flInputs2 = new ItemStack[10][3];
 
         for (int i = 0; i < 10; i++) {
-            aInputs[i] = new ItemStack[]{ItemList.MACHINE_HULLS[i].get(1), chests[i].copy(), GT_Utility.getIntegratedCircuit(1)};
-            aInputs2[i] = new ItemStack[]{ItemList.MACHINE_HULLS[i].get(1), chests[i].copy(), GT_Utility.getIntegratedCircuit(2)};
-            flInputs[i] = new ItemStack[]{ItemList.MACHINE_HULLS[i].get(1), tanks[i].copy(), GT_Utility.getIntegratedCircuit(1)};
-            flInputs2[i] = new ItemStack[]{ItemList.MACHINE_HULLS[i].get(1), tanks[i].copy(), GT_Utility.getIntegratedCircuit(2)};
+            aInputs[i] = new ItemStack[]{ItemList.CASINGS[i].get(1), chests[i].copy(), GT_Utility.getIntegratedCircuit(1)};
+            aInputs2[i] = new ItemStack[]{ItemList.CASINGS[i].get(1), chests[i].copy(), GT_Utility.getIntegratedCircuit(2)};
+            flInputs[i] = new ItemStack[]{ItemList.CASINGS[i].get(1), tanks[i].copy(), GT_Utility.getIntegratedCircuit(1)};
+            flInputs2[i] = new ItemStack[]{ItemList.CASINGS[i].get(1), tanks[i].copy(), GT_Utility.getIntegratedCircuit(2)};
         }
 
         for (int aTier = 0; aTier < 10; aTier++) {
