@@ -483,7 +483,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addFluidExtractionRecipe(new ItemStack(Items.fish, 1, 1), GT_Values.NI, Materials.FishOil.getFluid(60), 10000, 16, 4);
         GT_Values.RA.addFluidExtractionRecipe(new ItemStack(Items.fish, 1, 2), GT_Values.NI, Materials.FishOil.getFluid(70), 10000, 16, 4);
         GT_Values.RA.addFluidExtractionRecipe(new ItemStack(Items.fish, 1, 3), GT_Values.NI, Materials.FishOil.getFluid(30), 10000, 16, 4);
-        GT_Values.RA.addFluidExtractionRecipe(new ItemStack(Items.coal, 1, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Ash, 1L), Materials.WoodTar.getFluid(100L), 1000, 128, 4);
+        GT_Values.RA.addFluidExtractionRecipe(new ItemStack(Items.coal, 1, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Ash, 1L), Materials.WoodTar.getFluid(100L), 1000, 30, 16);
         GT_Values.RA.addFluidExtractionRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Wood, 1L), ItemList.IC2_Plantball.get(1L), Materials.Creosote.getFluid(5L), 100, 16, 4);
         GT_Values.RA.addFluidExtractionRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.HydratedCoal, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Coal, 1L), Materials.Water.getFluid(100L), 10000, 32, 4);
         GT_Values.RA.addFluidExtractionRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Monazite, 1L), GT_Values.NI, Materials.Helium.getGas(200L), 10000, 64, 60);
@@ -2623,7 +2623,7 @@ public class GT_MachineRecipeLoader implements Runnable {
                 new FluidStack[]{Materials.AceticAcid.getFluid(100), Materials.Water.getFluid(500), Materials.Ethanol.getFluid(10), Materials.Methanol.getFluid(300), Materials.Acetone.getFluid(50), Materials.MethylAcetate.getFluid(10)},
                 GT_Values.NI, 40, 250);
         GT_Values.RA.addUniversalDistillationRecipe(Materials.WoodTar.getFluid(1000),
-                new FluidStack[]{Materials.Creosote.getFluid(300), Materials.Phenol.getFluid(75), Materials.Benzene.getFluid(350), Materials.Toluene.getFluid(75), Materials.Dimethylbenzene.getFluid(200)},
+                new FluidStack[]{Materials.Creosote.getFluid(250), Materials.Phenol.getFluid(100), Materials.Benzene.getFluid(400), Materials.Toluene.getFluid(100), Materials.Dimethylbenzene.getFluid(150)},
                 GT_Values.NI, 40, 250);
 
         GT_Values.RA.addChemicalRecipe(Materials.Ethylene.getCells(1), Materials.AceticAcid.getCells(1), Materials.Oxygen.getGas(1000), Materials.VinylAcetate.getFluid(1000), Materials.Water.getCells(1), Materials.Empty.getCells(1), 180);
@@ -3216,7 +3216,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addChemicalRecipe(Materials.NitrationMixture.getCells(1), GT_Utility.getIntegratedCircuit(11), Materials.Chlorobenzene.getFluid(1000), Materials.Nitrochlorobenzene.getFluid(1000), Materials.DilutedSulfuricAcid.getCells(1), 100, 480);
 
         //Dimethylbenzene
-        GT_Values.RA.addDistilleryRecipe(5, Materials.WoodTar.getFluid(200), Materials.Dimethylbenzene.getFluid(40), 100, 120, false);
+        GT_Values.RA.addDistilleryRecipe(5, Materials.WoodTar.getFluid(200), Materials.Dimethylbenzene.getFluid(30), 100, 120, false);
         GT_Values.RA.addDistilleryRecipe(5, Materials.CharcoalByproducts.getGas(200), Materials.Dimethylbenzene.getFluid(20), 100, 120, false);
 
         GT_Values.RA.addChemicalRecipe(Materials.Methane.getCells(1), GT_Utility.getIntegratedCircuit(11), Materials.Benzene.getFluid(1000), GT_Values.NF, Materials.Dimethylbenzene.getCells(1), 4000, 120);
