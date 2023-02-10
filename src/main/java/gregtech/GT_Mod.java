@@ -74,9 +74,6 @@ dependencies =  " required-after:IC2;" +
         " after:BuildCraft|Energy;" +
         " after:BuildCraft|Core;" +
         " after:BuildCraft|Builders;" +
-        " after:GalacticraftCore;" +
-        " after:GalacticraftMars;" +
-        " after:GalacticraftPlanets;" +
         " after:UndergroundBiomes;" +
         " after:TConstruct;" +
         " after:Translocator;")
@@ -155,11 +152,9 @@ public class GT_Mod implements IGT_Mod {
         GregTech_API.mIC2Classic = Loader.isModLoaded("IC2-Classic-Spmod");
         GregTech_API.mTranslocator = Loader.isModLoaded("Translocator");
         GregTech_API.mTConstruct = Loader.isModLoaded("TConstruct");
-        GregTech_API.mGalacticraft = Loader.isModLoaded("GalacticraftCore");
         GregTech_API.mAE2 = Loader.isModLoaded(MOD_ID_AE);
         GT_Log.out.println("GT_Mod: Are you there Translocator? " + GregTech_API.mTranslocator);
         GT_Log.out.println("GT_Mod: Are you there TConstruct? " + GregTech_API.mTConstruct);
-        GT_Log.out.println("GT_Mod: Are you there GalacticraftCore? " + GregTech_API.mGalacticraft);
         GT_Log.mLogFile = new File(aEvent.getModConfigurationDirectory().getParentFile(), "logs/GregTech.log");
         if (!GT_Log.mLogFile.exists()) {
             try {
@@ -318,8 +313,8 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.mAddGTRecipesToIC2Machines = tMainConfig.get("general", "AddGTRecipesToIC2Machines", true).getBoolean(true);
         gregtechproxy.mUndergroundOil.getConfig(tMainConfig, "undergroundfluid");
         gregtechproxy.mEnableCleanroom = tMainConfig.get("general", "EnableCleanroom", true).getBoolean(true);
-        gregtechproxy.mLowGravProcessing = Loader.isModLoaded(GT_Values.MOD_ID_GC_CORE) && tMainConfig.get("general", "LowGravProcessing", true).getBoolean(true);
-        gregtechproxy.mLowGravProcessingCircuits = Loader.isModLoaded(GT_Values.MOD_ID_GC_CORE) && tMainConfig.get("general", "LowGravProcessingCircuits", false).getBoolean(false);
+        gregtechproxy.mLowGravProcessing = tMainConfig.get("general", "LowGravProcessing", true).getBoolean(true);
+        gregtechproxy.mLowGravProcessingCircuits = tMainConfig.get("general", "LowGravProcessingCircuits", false).getBoolean(false);
         gregtechproxy.mComponentAssembler = tMainConfig.get("general","ComponentAssembler",false).getBoolean(false);
         
         Calendar now = Calendar.getInstance();

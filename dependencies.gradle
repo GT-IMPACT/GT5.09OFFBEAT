@@ -1,5 +1,5 @@
 // Add your dependencies here
 
 dependencies {
-    provided fileTree(dir: 'libs/', include:'*.jar')
+    implementation fileTree(dir: 'libs/', include:'*.jar')
 }

@@ -198,7 +198,6 @@ public class GregTech_API {
     public static boolean mIC2Classic = false;
     public static boolean mTranslocator = false;
     public static boolean mTConstruct = false;
-    public static boolean mGalacticraft = false;
     public static boolean mAE2 = false;
 
     /**

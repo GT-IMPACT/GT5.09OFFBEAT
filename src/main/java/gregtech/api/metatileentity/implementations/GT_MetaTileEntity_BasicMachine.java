@@ -1,6 +1,5 @@
 package gregtech.api.metatileentity.implementations;
 
-import com.impact.register.SSBodies;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
@@ -833,7 +832,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
                 DimensionManager.getProvider(dimId).getClass().getName().endsWith("SS") ||
                 DimensionManager.getProvider(dimId).getClass().getName().contains("SpaceStation") ||
                 DimensionManager.getProvider(dimId).getClass().getName().contains("Moon") ||
-                dimId == SSBodies.dimensionIDOrbitEarth;
+                dimId == -2057;
     }
     public static boolean isValidForPlanetTier1(GT_Recipe tRecipe, int dimId){
         return
