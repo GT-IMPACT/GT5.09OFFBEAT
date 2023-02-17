@@ -39,7 +39,7 @@ public class GT_MetaGenerated_Item_03
 //        ItemList.Circuit_Board_Fiberglass.set(addItem(tLastID = 4, "Fiberglass Circuit Board", "An advanced Board"));
 //        ItemList.Circuit_Board_Multifiberglass.set(addItem(tLastID = 5, "Multilayer Fiberglass Circuit Board", "A elite Board"));
         ItemList.Circuit_Board_Wetware.set(addItem(tLastID = 6, "Wetware Lifesupport Circuit Board", "The Board that keeps life"));
-        ItemList.Circuit_Board_Plastic.set(addItem(tLastID = 7, "Plastic Circuit Board", "A Good Board"));
+        ItemList.Circuit_Board_Plastic.set(addItem(tLastID = 7, "Polymer Circuit Board", "A Good Board"));
         ItemList.Circuit_Board_Bio.set(addItem(tLastID = 8, "Bio Circuit Board", "Bio genetic mutated Board"));
         ItemList.Circuit_Board_Crystal.set(addItem(tLastID = 9, "Crystal Circuit Board", "Crystal Board on Oriharukon base"));
         
