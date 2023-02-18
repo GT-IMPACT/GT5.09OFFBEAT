@@ -639,9 +639,9 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sBasicline = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.basicline", "3D Printer 4x4", null, RES_PATH_GUI + "Basicline", 1, 1, 1, 0, 1, E, 1, E, true, false);
         public static final GT_Recipe_Map sAdvanecedline = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.advancedline", "Advanced Line", null, RES_PATH_GUI + "Advancedline", 44, 3344, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sSawMillVisual = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill", "Saw Mill", null, RES_PATH_GUI + "Sawmill", 1, 1, 1, 0, 1, E, 1, E, true, false);
-            public static final GT_Recipe_Map sSawMill0 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill", "Saw Mill", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
-            public static final GT_Recipe_Map sSawMill1 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill", "Saw Mill", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
-            public static final GT_Recipe_Map sSawMill2 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill", "Saw Mill", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
+            public static final GT_Recipe_Map sSawMill0 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill0", "Saw Mill (Planks & Sawdust)", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
+            public static final GT_Recipe_Map sSawMill1 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill1", "Saw Mill (Wood Pulp & Sawdust)", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
+            public static final GT_Recipe_Map sSawMill2 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill2", "Saw Mill (Only Sawdust)", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
         public static final GT_Recipe_Map sPyrolyseBasicVisual = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.pyrolysebasic", "Pyrolyse Recipes", null, RES_PATH_GUI + "PyrolyseBasic", 1, 1, 1, 0, 1, E, 1, E, true, false);
             public static final GT_Recipe_Map sPyrolyseBasic = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.pyrolysebasic", "Pyrolyse Recipes", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
 
