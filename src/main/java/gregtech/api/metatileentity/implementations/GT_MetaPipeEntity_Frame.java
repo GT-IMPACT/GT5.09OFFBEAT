@@ -10,8 +10,13 @@ import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_ModHandler.RecipeBits;
 import gregtech.api.util.GT_OreDictUnificator;
+import ic2.core.IC2;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 
 import static gregtech.api.enums.GT_Values.RA;
 
@@ -98,4 +103,25 @@ public class GT_MetaPipeEntity_Frame extends MetaPipeEntity {
 
     @Override
     public void disconnect(byte aSide) {/* Do nothing*/}
+    
+    @Override
+    public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider) {
+        if (collider instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) collider;
+            player.fallDistance = 0.0F;
+            if (player.motionY < -0.15) {
+                player.motionY = -0.15;
+            }
+        
+            if (IC2.keyboard.isForwardKeyDown(player) && player.motionY < 0.2) {
+                player.motionY = 0.2;
+            }
+        }
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int x, int y, int z) {
+        double border = 0.0625;
+        return AxisAlignedBB.getBoundingBox((double) x + border, y, (double) z + border, (double) (x + 1) - border, y + 1, (double) (z + 1) - border);
+    }
 }
