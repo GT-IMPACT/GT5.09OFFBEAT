@@ -55,6 +55,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     public String mGUIName = "", mNEIName = "";
     public GT_MetaTileEntity_MultiBlockBase mCleanroom;
     public boolean fluidChange = false;
+    public boolean isIgnoreInput = false;
     /**
      * Contains the Recipe which has been previously used, or null if there was no previous Recipe, which could have been buffered
      */
@@ -399,6 +400,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         aNBT.setBoolean("mItemTransfer", mItemTransfer);
         aNBT.setBoolean("mHasBeenUpdated", mHasBeenUpdated);
         aNBT.setBoolean("mAllowInputFromOutputSide", mAllowInputFromOutputSide);
+        aNBT.setBoolean("isIgnoreInput", isIgnoreInput);
         aNBT.setInteger("mEUt", mEUt);
         aNBT.setInteger("mMainFacing", mMainFacing);
         aNBT.setInteger("mProgresstime", mProgresstime);
@@ -418,6 +420,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         mItemTransfer = aNBT.getBoolean("mItemTransfer");
         mHasBeenUpdated = aNBT.getBoolean("mHasBeenUpdated");
         mAllowInputFromOutputSide = aNBT.getBoolean("mAllowInputFromOutputSide");
+        isIgnoreInput = aNBT.getBoolean("isIgnoreInput");
         mEUt = aNBT.getInteger("mEUt");
         mMainFacing = aNBT.getInteger("mMainFacing");
         mProgresstime = aNBT.getInteger("mProgresstime");
@@ -780,8 +783,13 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     @Override
     public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if (aSide == getBaseMetaTileEntity().getFrontFacing() || aSide == mMainFacing) {
-            mAllowInputFromOutputSide = !mAllowInputFromOutputSide;
-            GT_Utility.sendChatToPlayer(aPlayer, mAllowInputFromOutputSide ? trans("095","Input from Output Side allowed") : trans("096","Input from Output Side forbidden"));
+           if (aPlayer.isSneaking()) {
+               isIgnoreInput = !isIgnoreInput;
+               GT_Utility.sendChatToPlayer(aPlayer, isIgnoreInput ? trans("1000","Enabled ignore put items") : trans("1001","Disabled ignore input items"));
+           } else {
+               mAllowInputFromOutputSide = !mAllowInputFromOutputSide;
+               GT_Utility.sendChatToPlayer(aPlayer, mAllowInputFromOutputSide ? trans("095","Input from Output Side allowed") : trans("096","Input from Output Side forbidden"));
+           }
         }
     }
 
