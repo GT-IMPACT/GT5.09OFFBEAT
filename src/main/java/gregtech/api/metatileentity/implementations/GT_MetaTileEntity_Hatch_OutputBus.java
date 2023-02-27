@@ -13,6 +13,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import static gregtech.api.util.GT_Utility.moveMultipleItemStacks;
+
 public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
     public GT_MetaTileEntity_Hatch_OutputBus(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, getSlots(aTier), new String[]{"Item Output for Multiblocks",
@@ -118,7 +120,7 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
      * @return true if stack is fully accepted. false is stack is partially accepted or nothing is accepted
      */
     public boolean storeAll(ItemStack aStack) {
-        for (int i = 0, mInventoryLength = mInventory.length; i < mInventoryLength; i++) {
+        for (int i = 0, mInventoryLength = mInventory.length; i < mInventoryLength && aStack.stackSize > 0; i++) {
             ItemStack tSlot = mInventory[i];
             if (GT_Utility.isStackInvalid(tSlot)) {
                 if (aStack.stackSize <= getInventoryStackLimit()) {
@@ -161,10 +163,12 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
         if (aBaseMetaTileEntity.isServerSide() && aBaseMetaTileEntity.isAllowedToWork() && (aTick&0x7)==0) {
             IInventory tTileEntity =aBaseMetaTileEntity.getIInventoryAtSide(aBaseMetaTileEntity.getFrontFacing());
             if(tTileEntity!=null){
-                for (ItemStack aMInventory : mInventory)
-                    GT_Utility.moveOneItemStack(aBaseMetaTileEntity, tTileEntity,
-                            aBaseMetaTileEntity.getFrontFacing(), aBaseMetaTileEntity.getBackFacing(),
-                            null, false, (byte) 64, (byte) 1, (byte) 64, (byte) 1);
+                moveMultipleItemStacks(aBaseMetaTileEntity,tTileEntity,aBaseMetaTileEntity.getFrontFacing(),aBaseMetaTileEntity.getBackFacing(),null,false,(byte)64,(byte)1,(byte)64,(byte)1,mInventory.length);
+                for (int i = 0; i < mInventory.length; i++)
+                    if (mInventory[i] != null && mInventory[i].stackSize <= 0) mInventory[i] = null;
+//                GT_Utility.moveOneItemStack(aBaseMetaTileEntity, tTileEntity,
+//                        aBaseMetaTileEntity.getFrontFacing(), aBaseMetaTileEntity.getBackFacing(),
+//                        null, false, (byte) 64, (byte) 1, (byte)( 64 * aBaseMetaTileEntity.getSizeInventory()), (byte) 1);
             }
         }
     }
