@@ -29,6 +29,9 @@ import net.minecraft.util.MathHelper;
 import java.util.Collection;
 import java.util.List;
 
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_CASINGS;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_CONVEYOR;
+
 public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
     private final static String aTextStick = " S ";
     private final static String aTextFeather = "F  ";
@@ -512,7 +515,13 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
 
         ItemList.FluidFilter.set(addItem(tLastID = 635, "Fluid Filter", "Set with Fluid Container to only accept one Fluid Type"));
         GregTech_API.registerCover(ItemList.FluidFilter.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[1][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_SHUTTER)), new GT_Cover_Fluidfilter());
-
+    
+        ItemList.ItemFilter_Export.set(addItem(270,"Item Filter Cover (Export)", "Right click with an item to set filter (Only supports Export Mode)"));
+        GregTech_API.registerCover(ItemList.ItemFilter_Export.get(1L), TextureFactory.of(MACHINE_CASINGS[5][0], TextureFactory.of(OVERLAY_CONVEYOR)), new GT_Cover_ItemFilter(true));
+        ItemList.ItemFilter_Import.set(addItem(271,"Item Filter Cover (Import)", "Right click with an item to set filter (Only supports Import Mode)"));
+        GregTech_API.registerCover(ItemList.ItemFilter_Import.get(1L), TextureFactory.of(MACHINE_CASINGS[5][0], TextureFactory.of(OVERLAY_CONVEYOR)), new GT_Cover_ItemFilter(false));
+    
+    
         /**ItemList.Rotor_LV.set(addItem(tLastID = 620, "Tin Rotor", "", new Object[] { OrePrefixes.rotor.get(Materials.Tin), new TC_Aspects.TC_AspectStack(TC_Aspects.METALLUM, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.MOTUS, 1L) }));
          ItemList.Rotor_MV.set(addItem(tLastID = 621, "Bronze Rotor", "", new Object[] { OrePrefixes.rotor.get(Materials.Bronze), new TC_Aspects.TC_AspectStack(TC_Aspects.METALLUM, 2L), new TC_Aspects.TC_AspectStack(TC_Aspects.MOTUS, 2L) }));
          ItemList.Rotor_HV.set(addItem(tLastID = 622, "Steel Rotor", "", new Object[] { OrePrefixes.rotor.get(Materials.Steel), new TC_Aspects.TC_AspectStack(TC_Aspects.METALLUM, 4L), new TC_Aspects.TC_AspectStack(TC_Aspects.MOTUS, 4L) }));
@@ -774,7 +783,16 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Cover_NeedsMaintainance.set(addItem(tLastID = 748, "Needs Maintenance Cover", "Attach to Multiblock Controller. Emits Redstone Signal if needs Maintenance"));
         GregTech_API.registerCover(ItemList.Cover_NeedsMaintainance.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[2][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_ACTIVITYDETECTOR)), new GT_Cover_NeedMaintainance());
         GT_Values.RA.addAssemblerRecipe(ItemList.Emitter_MV.get(1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Aluminium, 1L), ItemList.Cover_NeedsMaintainance.get(1L), 600, 24);
-
+    
+        GT_ModHandler.addCraftingRecipe(ItemList.ItemFilter_Export.get(1L), new Object[]{"SPS", "dIC", "SPS", 'P', OrePrefixes.plateDouble.get(Materials.StainlessSteel), 'S', OrePrefixes.screw.get(Materials.StainlessSteel), 'I', ItemList.Component_Filter, 'C', ItemList.Conveyor_Module_HV});
+        GT_ModHandler.addCraftingRecipe(ItemList.ItemFilter_Import.get(1L), new Object[]{"SPS", "CId", "SPS", 'P', OrePrefixes.plateDouble.get(Materials.StainlessSteel), 'S', OrePrefixes.screw.get(Materials.StainlessSteel), 'I', ItemList.Component_Filter, 'C', ItemList.Conveyor_Module_HV});
+        GT_ModHandler.addShapelessCraftingRecipe(ItemList.ItemFilter_Export.get(1L), new Object[]{ItemList.ItemFilter_Import.get(1L)});
+        GT_ModHandler.addShapelessCraftingRecipe(ItemList.ItemFilter_Import.get(1L), new Object[]{ItemList.ItemFilter_Export.get(1L)});
+    
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.StainlessSteel, 2L), ItemList.Component_Filter.get(1L), ItemList.Conveyor_Module_HV.get(1L), GT_Utility.getIntegratedCircuit(1)}, Materials.SolderingAlloy.getMolten(72L), ItemList.ItemFilter_Export.get(1L), 100, 30);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.StainlessSteel, 2L), ItemList.Component_Filter.get(1L), ItemList.Conveyor_Module_HV.get(1L), GT_Utility.getIntegratedCircuit(2)}, Materials.SolderingAlloy.getMolten(72L), ItemList.ItemFilter_Import.get(1L), 100, 30);
+    
+    
         ItemList.Energy_Module.set(addItem(tLastID = 736, "Energy Module", "Reusable battery", OrePrefixes.battery.get(Materials.Ultimate)));
         setElectricStats(32000 + tLastID, 10000000000L, GT_Values.V[7], 7L, -3L, true);
 
