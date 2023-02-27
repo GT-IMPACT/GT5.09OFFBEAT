@@ -13,14 +13,14 @@ import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
+import gregtech.api.interfaces.IHasFluidDisplayItem;
 import gregtech.api.interfaces.tileentity.ICoverable;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.ITurnable;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
 import gregtech.api.objects.GT_ItemStack;
-import gregtech.api.util.GT_Log;
-import gregtech.api.util.GT_PlayedSound;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.*;
+import gregtech.common.net.MessageUpdateFluidDisplayItem;
 import gregtech.common.render.*;
 import ic2.api.tile.IWrenchable;
 import net.minecraft.block.Block;
@@ -30,6 +30,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.oredict.OreDictionary;
@@ -69,7 +70,11 @@ public class GT_Client extends GT_Proxy implements Runnable {
      **/
     private long afterSomeTime;
     private boolean mAnimationDirection;
-    
+    private int mLastUpdatedBlockX;
+    private int mLastUpdatedBlockY;
+    private int mLastUpdatedBlockZ;
+    private boolean isFirstClientPlayerTick;
+    private String mMessage;
     public GT_Client() {
         mCapeRenderer       = new GT_CapeRenderer(mCapeList);
         mAnimationTick      = 0L;
@@ -314,7 +319,25 @@ public class GT_Client extends GT_Proxy implements Runnable {
             for (Iterator<GT_PlayedSound> i$ = tList.iterator(); i$.hasNext(); GT_Utility.sPlayedSoundMap.remove(tKey)) {
                 tKey = i$.next();
             }
-            if (!GregTech_API.mServerStarted) GregTech_API.mServerStarted = true;
+            if(!GregTech_API.mServerStarted) GregTech_API.mServerStarted = true;
+            if (GT_Values.updateFluidDisplayItems) {
+                MovingObjectPosition trace = Minecraft.getMinecraft().objectMouseOver;
+                if (trace != null && trace.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK &&
+                        (mLastUpdatedBlockX != trace.blockX &&
+                        mLastUpdatedBlockY != trace.blockY &&
+                        mLastUpdatedBlockZ != trace.blockZ || afterSomeTime % 10 == 0)) {
+                    mLastUpdatedBlockX = trace.blockX;
+                    mLastUpdatedBlockY = trace.blockY;
+                    mLastUpdatedBlockZ = trace.blockZ;
+                    TileEntity tileEntity = aEvent.player.worldObj.getTileEntity(trace.blockX, trace.blockY, trace.blockZ);
+                    if (tileEntity instanceof IGregTechTileEntity) {
+                        IGregTechTileEntity gtTile = (IGregTechTileEntity) tileEntity;
+                        if (gtTile.getMetaTileEntity() instanceof IHasFluidDisplayItem) {
+                            GT_Values.NW.sendToServer(new MessageUpdateFluidDisplayItem(trace.blockX, trace.blockY, trace.blockZ, gtTile.getWorld().provider.dimensionId));
+                        }
+                    }
+                }
+            }
         }
     }
 

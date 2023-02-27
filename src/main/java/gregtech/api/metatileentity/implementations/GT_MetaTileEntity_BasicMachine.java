@@ -372,9 +372,9 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         	if(aBaseMetaTileEntity.getAirAtSide(i)){
         		aBaseMetaTileEntity.openGUI(aPlayer);
         		return true;
-        	}        	
+        	}
         }
-        GT_Utility.sendChatToPlayer(aPlayer,"No free Side!");        
+        GT_Utility.sendChatToPlayer(aPlayer,"No free Side!");
         return true;
     }
 
@@ -563,7 +563,11 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
             mHasBeenUpdated = true;
             getBaseMetaTileEntity().setFrontFacing(getBaseMetaTileEntity().getBackFacing());
         }
+    }
 
+    @Override
+    public void updateFluidDisplayItem() {
+        super.updateFluidDisplayItem();
         if (displaysInputFluid()) {
             int tDisplayStackSlot = OTHER_SLOT_COUNT + mInputSlotCount + mOutputItems.length;
             if (getFillableStack() == null) {
@@ -976,7 +980,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
                 {
 					if (debugCleanroom) {
 						GT_Log.out.println(
-							"BasicMachine: Voiding output due to efficiency failure. mEfficiency = " + 
+							"BasicMachine: Voiding output due to efficiency failure. mEfficiency = " +
 							mCleanroom.mEfficiency
 						);
 					}

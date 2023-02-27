@@ -190,4 +190,6 @@ public class GT_Values {
      * This will set the percentage how much Glass Casing is Allowed in Cleanroom Walls.
      */
     public static float cleanroomGlass = 35.0f;
+    
+    public static boolean updateFluidDisplayItems = true;
 }
