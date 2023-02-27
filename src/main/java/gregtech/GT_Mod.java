@@ -638,10 +638,10 @@ public class GT_Mod implements IGT_Mod {
         new GT_MinableRegistrator().run();
         new GT_MachineRecipeLoader().run();
         new GT_ScrapboxDropLoader().run();
-        new GT_CropLoader().run();
+//        new GT_CropLoader().run();
         new GT_Worldgenloader().run();
         new GT_CoverLoader().run();
-        LoadArmorComponents.init();
+//        LoadArmorComponents.init();
 
         GT_RecipeRegistrator.registerUsagesForMaterials(new ItemStack(Blocks.planks, 1), null, false);
         GT_RecipeRegistrator.registerUsagesForMaterials(new ItemStack(Blocks.cobblestone, 1), null, false);
