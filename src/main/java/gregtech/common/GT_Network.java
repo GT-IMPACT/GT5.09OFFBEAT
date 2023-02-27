@@ -49,6 +49,7 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
                 new GT_Packet_OutputHatch(),
                 new MessageUpdateFluidDisplayItem(),
                 new GT_Packet_ClientPreference(),
+                new GT_Packet_WirelessRedstoneCover(),
         };
     }
 
