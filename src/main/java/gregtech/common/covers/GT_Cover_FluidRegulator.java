@@ -8,7 +8,6 @@ import gregtech.api.gui.widgets.GT_GuiIntegerTextBox;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.net.GT_Packet_TileEntityCover;
 import gregtech.api.util.GT_CoverBehavior;
-import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,23 +16,63 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
+/**
+ * Cover variable
+ * <pre>
+ * 1111 1111 1111 1111 1111 1111 1111 1111
+ *  |- interval-| |- flow rate 2 compl. -|
+ * ^ export?
+ * </pre>
+ * Concat export and flow rate 2 compl. together to get actual flow rate.
+ * A positive actual flow rate is export, and vice versa.
+ * <p>
+ * Interval is an unsigned 11 bit integer minus 1, so the range is 1~2048.
+ * The stored bits will be flipped bitwise if speed is negative.
+ * This way, `0` means 1tick interval, while `-1` means 1 tick interval as well, preserving the legacy behavior.
+ */
 public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
+	private static final int SPEED_LENGTH = 20;
+	private static final int TICK_RATE_LENGTH = Integer.SIZE - SPEED_LENGTH - 1;
+	private static final int TICK_RATE_MIN = 1;
+	private static final int TICK_RATE_MAX = (-1 >>> (Integer.SIZE - TICK_RATE_LENGTH)) + TICK_RATE_MIN;
+	private static final int TICK_RATE_BITMASK = (TICK_RATE_MAX - TICK_RATE_MIN) << SPEED_LENGTH;
 
 	public final int mTransferRate;
-	public final boolean isSteam;
+	private boolean allowFluid = false;
 
 	public GT_Cover_FluidRegulator(int aTransferRate) {
-		this.isSteam = false;
+		if (aTransferRate > (-1 >>> (Integer.SIZE - SPEED_LENGTH)))
+			throw new IllegalArgumentException("aTransferRate too big: " + aTransferRate);
 		this.mTransferRate = aTransferRate;
 	}
 
-	public GT_Cover_FluidRegulator(int aTransferRate, boolean isSteam) {
-		this.isSteam = isSteam;
-		this.mTransferRate = aTransferRate;
+	private static int getSpeed(int aCoverVariable) {
+		// positive or 0 -> interval bits need to be set to zero
+		// negative -> interval bits need to be set to one
+		return aCoverVariable >= 0 ? aCoverVariable & ~TICK_RATE_BITMASK : aCoverVariable | TICK_RATE_BITMASK;
 	}
-	public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
-							 long aTimer) {
-		if (aCoverVariable == 0) {
+
+	private static int getTickRate(int aCoverVariable) {
+		// range: TICK_RATE_MIN ~ TICK_RATE_MAX
+		return ((Math.abs(aCoverVariable) & TICK_RATE_BITMASK) >>> SPEED_LENGTH) + TICK_RATE_MIN;
+	}
+
+	private static int generateNewCoverVariable(int aFlowRate, int aTickRate) {
+		int tToStoreRaw = aTickRate - TICK_RATE_MIN;
+		int tToStore = aFlowRate >= 0 ? tToStoreRaw : ~tToStoreRaw;
+		return aFlowRate & ~TICK_RATE_BITMASK | (tToStore << SPEED_LENGTH);
+	}
+
+	@Override
+	public boolean isRedstoneSensitive(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity, long aTimer) {
+		return false;
+	}
+
+	@Override
+    public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
+                             long aTimer) {
+		int tSpeed = getSpeed(aCoverVariable);
+		if (tSpeed == 0) {
 			return aCoverVariable;
 		}
 		if ((aTileEntity instanceof IFluidHandler)) {
@@ -41,123 +80,121 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 			IFluidHandler tTank2;
 			ForgeDirection directionFrom;
 			ForgeDirection directionTo;
-			if (aCoverVariable > 0) {
+			if (tSpeed > 0) {
 				tTank2 = aTileEntity.getITankContainerAtSide(aSide);
 				tTank1 = (IFluidHandler) aTileEntity;
-				directionFrom = ForgeDirection.UNKNOWN;
+				directionFrom = ForgeDirection.getOrientation(aSide);
 				directionTo = ForgeDirection.getOrientation(aSide).getOpposite();
 			} else {
 				tTank1 = aTileEntity.getITankContainerAtSide(aSide);
 				tTank2 = (IFluidHandler) aTileEntity;
 				directionFrom = ForgeDirection.getOrientation(aSide).getOpposite();
-				directionTo = ForgeDirection.UNKNOWN;
+				directionTo = ForgeDirection.getOrientation(aSide);
 			}
 			if (tTank1 != null && tTank2 != null) {
-				FluidStack tLiquid = tTank1.drain(directionFrom, Math.abs(aCoverVariable), false);
+				allowFluid = true;
+				FluidStack tLiquid = tTank1.drain(directionFrom, Math.abs(tSpeed), false);
 				if (tLiquid != null) {
 					tLiquid = tLiquid.copy();
 					tLiquid.amount = tTank2.fill(directionTo, tLiquid, false);
-					if (tLiquid.amount > 0 && canTransferFluid(tLiquid)) {
-						if (aTileEntity.getUniversalEnergyCapacity() >= Math.min(1, tLiquid.amount / 10)) {
-							if (aTileEntity.isUniversalEnergyStored(Math.min(1, tLiquid.amount / 10))) {
-								aTileEntity.decreaseStoredEnergyUnits(Math.min(1, tLiquid.amount / 10), true);
-								tTank2.fill(directionTo, tTank1.drain(directionFrom, tLiquid.amount, true), true);
-							}
-						} else {
-							tTank2.fill(directionTo, tTank1.drain(directionFrom, tLiquid.amount, true), true);
-						}
+					if (tLiquid.amount > 0) {
+						tTank2.fill(directionTo, tTank1.drain(directionFrom, tLiquid.amount, true), true);
 					}
 				}
+				allowFluid = false;
 			}
 		}
 		return aCoverVariable;
 	}
 
-	protected boolean canTransferFluid(FluidStack fluid) {
-		if (!isSteam) {
-			return true;
+	private int adjustSpeed(EntityPlayer aPlayer, int aCoverVariable, int scale) {
+		int tSpeed = getSpeed(aCoverVariable);
+		tSpeed += scale;
+		int tTickRate = getTickRate(aCoverVariable);
+		if (Math.abs(tSpeed) > mTransferRate * tTickRate) {
+			tSpeed = mTransferRate * tTickRate * (tSpeed > 0 ? 1 : -1);
+			GT_Utility.sendChatToPlayer(aPlayer, trans("219", "Pump speed limit reached!"));
+		}
+		if (tTickRate == 1) {
+			GT_Utility.sendChatToPlayer(aPlayer,
+					trans("048", "Pump speed: ") + tSpeed + trans("049", "L/tick ") + tSpeed * 20 + trans("050", "L/sec"));
 		} else {
-			String fluidName = fluid.getFluid().getUnlocalizedName(fluid);
-			return GT_ModHandler.isSteam(fluid) || fluidName.equals("fluid.steam") || fluidName.equals("ic2.fluidSteam")
-					|| fluidName.equals("fluid.mfr.steam.still.name") || fluidName.equals("ic2.fluidSuperheatedSteam");
+			GT_Utility.sendChatToPlayer(aPlayer,
+					String.format(trans("207", "Pump speed: %dL every %d ticks, %.2f L/sec on average"), tSpeed, tTickRate, tSpeed * 20d / tTickRate));
+		}
+		return generateNewCoverVariable(tSpeed, tTickRate);
+	}
+
+	@Override
+    public int onCoverScrewdriverclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
+                                       EntityPlayer aPlayer, float aX, float aY, float aZ) {
+		if (GT_Utility.getClickedFacingCoords(aSide, aX, aY, aZ)[0] >= 0.5F) {
+			return adjustSpeed(aPlayer, aCoverVariable, aPlayer.isSneaking() ? 256 : 16);
+		} else {
+			return adjustSpeed(aPlayer, aCoverVariable, aPlayer.isSneaking() ? -256 : -16);
 		}
 	}
 
-	public int onCoverScrewdriverclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
-									   EntityPlayer aPlayer, float aX, float aY, float aZ) {
+	@Override
+    public boolean onCoverRightclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
+                                     EntityPlayer aPlayer, float aX, float aY, float aZ) {
 		if (GT_Utility.getClickedFacingCoords(aSide, aX, aY, aZ)[0] >= 0.5F) {
-			aCoverVariable += aPlayer.isSneaking() ? 256 : 16;
+			aCoverVariable = adjustSpeed(aPlayer, aCoverVariable, 1);
 		} else {
-			aCoverVariable -= aPlayer.isSneaking() ? 256 : 16;
+			aCoverVariable = adjustSpeed(aPlayer, aCoverVariable, -1);
 		}
-		if (aCoverVariable > mTransferRate) {
-			aCoverVariable = mTransferRate;
-		}
-		if (aCoverVariable < (0 - mTransferRate)) {
-			aCoverVariable = (0 - mTransferRate);
-		}
-		GT_Utility.sendChatToPlayer(aPlayer,
-				trans("048", "Pump speed: ") + aCoverVariable + trans("049", "L/tick ") + aCoverVariable * 20 + trans("050", "L/sec"));
-		return aCoverVariable;
-	}
-
-	public boolean onCoverRightclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
-									 EntityPlayer aPlayer, float aX, float aY, float aZ) {
-		if (GT_Utility.getClickedFacingCoords(aSide, aX, aY, aZ)[0] >= 0.5F) {
-			aCoverVariable++;
-		} else {
-			aCoverVariable--;
-		}
-		if (aCoverVariable > mTransferRate) {
-			aCoverVariable = mTransferRate;
-		}
-		if (aCoverVariable < (0 - mTransferRate)) {
-			aCoverVariable = (0 - mTransferRate);
-		}
-		GT_Utility.sendChatToPlayer(aPlayer,
-				trans("048", "Pump speed: ") + aCoverVariable + trans("049", "L/tick ") + aCoverVariable * 20 + trans("050", "L/sec"));
 		aTileEntity.setCoverDataAtSide(aSide, aCoverVariable);
 		return true;
 	}
 
-	public boolean letsRedstoneGoIn(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
+	@Override
+    public boolean letsRedstoneGoIn(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
 		return true;
 	}
 
-	public boolean letsRedstoneGoOut(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
+	@Override
+    public boolean letsRedstoneGoOut(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
 		return true;
 	}
 
-	public boolean letsEnergyIn(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
+	@Override
+    public boolean letsEnergyIn(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
 		return true;
 	}
 
-	public boolean letsEnergyOut(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
+	@Override
+    public boolean letsEnergyOut(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
 		return true;
 	}
 
-	public boolean letsItemsIn(byte aSide, int aCoverID, int aCoverVariable, int aSlot, ICoverable aTileEntity) {
+	@Override
+    public boolean letsItemsIn(byte aSide, int aCoverID, int aCoverVariable, int aSlot, ICoverable aTileEntity) {
 		return true;
 	}
 
-	public boolean letsItemsOut(byte aSide, int aCoverID, int aCoverVariable, int aSlot, ICoverable aTileEntity) {
+	@Override
+    public boolean letsItemsOut(byte aSide, int aCoverID, int aCoverVariable, int aSlot, ICoverable aTileEntity) {
 		return true;
 	}
 
-	public boolean letsFluidIn(byte aSide, int aCoverID, int aCoverVariable, Fluid aFluid, ICoverable aTileEntity) {
-		return false;
+	@Override
+    public boolean letsFluidIn(byte aSide, int aCoverID, int aCoverVariable, Fluid aFluid, ICoverable aTileEntity) {
+		return allowFluid;
 	}
 
-	public boolean letsFluidOut(byte aSide, int aCoverID, int aCoverVariable, Fluid aFluid, ICoverable aTileEntity) {
-		return false;
+	@Override
+    public boolean letsFluidOut(byte aSide, int aCoverID, int aCoverVariable, Fluid aFluid, ICoverable aTileEntity) {
+		return allowFluid;
 	}
 
-	public boolean alwaysLookConnected(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
+	@Override
+    public boolean alwaysLookConnected(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
 		return true;
 	}
 
-	public int getTickRate(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
-		return 1;
+	@Override
+    public int getTickRate(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
+		return getTickRate(aCoverVariable);
 	}
 
 	/**
@@ -180,13 +217,16 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 		private GT_GuiIntegerTextBox tBox, lBox;
 		private int coverVariable;
 
-		private final static int startX = 10;
-		private final static int startY = 25;
-		private final static int spaceX = 18;
-		private final static int spaceY = 18;
+		private static final int startX = 10;
+		private static final int startY = 25;
+		private static final int spaceX = 18;
+		private static final int spaceY = 18;
 
 		private int speed;
 		private boolean export;
+		private int tickRate;
+
+		private boolean warn = false;
 
 		public GUI(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
 			super(aTileEntity, 176, 107, GT_Utility.intToStack(aCoverID));
@@ -194,26 +234,32 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 			this.coverID = aCoverID;
 			this.coverVariable = aCoverVariable;
 
-			this.speed = Math.abs(coverVariable);
-			this.export = coverVariable >= 0;
-			new GT_GuiIconButton(this, 0,startX + spaceX*0,startY+spaceY*0, GT_GuiIcon.EXPORT).setTooltipText(trans("006","Export"));
-			new GT_GuiIconButton(this, 1,startX + spaceX*1,startY+spaceY*0, GT_GuiIcon.IMPORT).setTooltipText(trans("007","Import"));
+			int speed = getSpeed(coverVariable);
+			this.speed = Math.abs(speed);
+			this.export = speed >= 0;
+			this.tickRate = getTickRate(coverVariable);
+			new GT_GuiIconButton(this, 0, startX + spaceX * 0, startY + spaceY * 0, GT_GuiIcon.EXPORT).setTooltipText(trans("006", "Export"));
+			new GT_GuiIconButton(this, 1, startX + spaceX * 1, startY + spaceY * 0, GT_GuiIcon.IMPORT).setTooltipText(trans("007", "Import"));
 
-			tBox = new GT_GuiIntegerTextBox(this, 2,startX + spaceX*0,startY+spaceY*1 + 2, spaceX*4-3,12);
-			tBox.setText(String.valueOf(speed));
+			tBox = new GT_GuiIntegerTextBox(this, 2, startX + spaceX * 0, startY + spaceY * 1 + 2, spaceX * 4 - 3, 12);
+			tBox.setText(String.valueOf(this.speed));
 			tBox.setMaxStringLength(10);
 
-			lBox = new GT_GuiIntegerTextBox(this, 3,startX + spaceX*0,startY+spaceY*2 + 2, spaceX*4-3,12);
-			lBox.setText(String.valueOf(speed*20L));
-			lBox.setMaxStringLength(10);
+			lBox = new GT_GuiIntegerTextBox(this, 3, startX + spaceX * 0, startY + spaceY * 2 + 2, spaceX * 4 - 3, 12);
+			lBox.setText(String.valueOf(this.tickRate));
+			lBox.setMaxStringLength(4);
 		}
 
 		@Override
 		public void drawExtras(int mouseX, int mouseY, float parTicks) {
 			super.drawExtras(mouseX, mouseY, parTicks);
-			this.getFontRenderer().drawString(trans("229","Import/Export" ),  startX + spaceX*4, 4+startY+spaceY*0, 0xFF555555);
-			this.getFontRenderer().drawString(trans("049", "L/tick "),  startX + spaceX*4, 4+startY+spaceY*1, 0xFF555555);
-			this.getFontRenderer().drawString(trans("050", "L/sec"),   startX + spaceX*4, 4+startY+spaceY*2, 0xFF555555);
+			this.getFontRenderer().drawString(trans("229", "Import/Export"), startX + spaceX * 4, 4 + startY + spaceY * 0, 0xFF555555);
+			this.getFontRenderer().drawString(trans("200", " L"), startX + spaceX * 4, 4 + startY + spaceY * 1, 0xFF555555);
+			this.getFontRenderer().drawString(trans("209", " ticks"), startX + spaceX * 4, 4 + startY + spaceY * 2, 0xFF555555);
+			if (warn)
+				this.getFontRenderer().drawString(String.format(trans("210", "Average: %.2f L/sec"), speed * 20d / tickRate), startX + spaceX * 0, 4 + startY + spaceY * 3, 0xffff0000);
+			else
+				this.getFontRenderer().drawString(String.format(trans("210", "Average: %.2f L/sec"), speed * 20d / tickRate), startX + spaceX * 0, 4 + startY + spaceY * 3, 0xFF555555);
 		}
 
 		@Override
@@ -222,7 +268,8 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 			tBox.setFocused(true);
 		}
 
-		public void buttonClicked(GuiButton btn){
+		@Override
+        public void buttonClicked(GuiButton btn){
 			if (getClickable(btn.id)){
 				coverVariable = getNewCoverVariable(btn.id);
 				GT_Values.NW.sendToServer(new GT_Packet_TileEntityCover(side, coverID, coverVariable, tile));
@@ -265,18 +312,27 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 				return;
 			}
 
-			if (box.id == 3)
-				i = i / 20;
-
-			if (i > mTransferRate)
-				i = mTransferRate;
-			else if (i <= 0)
-				i = 0;
-
-			speed = (int) i;
-
-			tBox.setText(String.valueOf(speed));
-			lBox.setText(String.valueOf(speed*20));
+			warn = false;
+			if (box.id == 2) {
+				if (i > (long) mTransferRate * tickRate) {
+					i = (long) mTransferRate * tickRate;
+					warn = true;
+				} else if (i < 0) {
+					i = 0;
+				}
+				speed = (int) i;
+			} else if (box.id == 3) {
+				if (i > TICK_RATE_MAX) {
+					i = tickRate;
+				} else if (speed > mTransferRate * i) {
+					i = Math.min(TICK_RATE_MAX, (speed + mTransferRate - 1) / mTransferRate);
+					warn = true;
+				} else if (i < TICK_RATE_MIN) {
+					i = 1;
+				}
+				tickRate = (int) i;
+			}
+			box.setText(String.valueOf(i));
 
 			coverVariable = getNewCoverVariable(2);
 			GT_Values.NW.sendToServer(new GT_Packet_TileEntityCover(side, coverID, coverVariable, tile));
@@ -284,7 +340,10 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 
 		@Override
 		public void resetTextBox(GT_GuiIntegerTextBox box) {
-			box.setText(String.valueOf(speed));
+			if (box.id == 2)
+				box.setText(String.valueOf(speed));
+			else if (box.id == 3)
+				box.setText(String.valueOf(tickRate));
 		}
 
 		private void updateButtons(){
@@ -299,15 +358,12 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 			switch (id) {
 				case 0:
 					export = true;
-					return speed;
+					return generateNewCoverVariable(speed, tickRate);
 				case 1:
 					export = false;
-					return -speed;
+					return generateNewCoverVariable(-speed, tickRate);
 				case 2:
-					if (export)
-						return speed;
-					else
-						return -speed;
+					return generateNewCoverVariable(export ? speed : -speed, tickRate);
 			}
 			return coverVariable;
 		}

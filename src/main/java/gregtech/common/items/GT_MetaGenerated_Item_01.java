@@ -581,11 +581,11 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Steam_Valve_EV.set(addItem(tLastID = 663, "EV Steam Regulator", "Configuable up to 1.310.720 L/sec (as Cover)"));
         ItemList.Steam_Valve_IV.set(addItem(tLastID = 664, "IV Steam Regulator", "Configuable up to 5.242.880 L/sec (as Cover)"));
 
-        GregTech_API.registerCover(ItemList.Steam_Valve_LV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[1][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(1024, true));
-        GregTech_API.registerCover(ItemList.Steam_Valve_MV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[2][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(4096, true));
-        GregTech_API.registerCover(ItemList.Steam_Valve_HV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[3][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(16384, true));
-        GregTech_API.registerCover(ItemList.Steam_Valve_EV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[4][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(65536, true));
-        GregTech_API.registerCover(ItemList.Steam_Valve_IV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[5][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(262144, true));
+        GregTech_API.registerCover(ItemList.Steam_Valve_LV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[1][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(1024));
+        GregTech_API.registerCover(ItemList.Steam_Valve_MV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[2][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(4096));
+        GregTech_API.registerCover(ItemList.Steam_Valve_HV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[3][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(16384));
+        GregTech_API.registerCover(ItemList.Steam_Valve_EV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[4][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(65536));
+        GregTech_API.registerCover(ItemList.Steam_Valve_IV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[5][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)), new GT_Cover_FluidRegulator(262144));
 
         GregTech_API.registerCover(ItemList.Robot_Arm_LV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[1][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_ARM)), new GT_Cover_Arm(400));
         GregTech_API.registerCover(ItemList.Robot_Arm_MV.get(1L), new GT_MultiTexture(Textures.BlockIcons.MACHINE_CASINGS[2][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_ARM)), new GT_Cover_Arm(100));
