@@ -9,6 +9,7 @@ import codechicken.lib.vec.Rotation;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
@@ -18,6 +19,7 @@ import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.ITurnable;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
+import gregtech.api.net.GT_Packet_ClientPreference;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.*;
 import gregtech.common.net.MessageUpdateFluidDisplayItem;
@@ -25,6 +27,7 @@ import gregtech.common.render.*;
 import ic2.api.tile.IWrenchable;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -33,6 +36,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 
@@ -75,6 +79,8 @@ public class GT_Client extends GT_Proxy implements Runnable {
     private int mLastUpdatedBlockZ;
     private boolean isFirstClientPlayerTick;
     private String mMessage;
+    private GT_ClientPreference mPreference;
+    private boolean mFirstTick = false;
     public GT_Client() {
         mCapeRenderer       = new GT_CapeRenderer(mCapeList);
         mAnimationTick      = 0L;
@@ -250,6 +256,8 @@ public class GT_Client extends GT_Proxy implements Runnable {
             mCapeList.add(tName.toLowerCase());
         }
         (new Thread(this)).start();
+        
+        mPreference = new GT_ClientPreference(GregTech_API.sClientDataFile);
     }
 
     public void onLoad() {
@@ -286,7 +294,13 @@ public class GT_Client extends GT_Proxy implements Runnable {
             }
         } catch (Throwable ignored) {}
     }
-    
+
+    @Override
+    @SubscribeEvent
+    public void onClientConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent aEvent) {
+        mFirstTick = true;
+    }
+
     @SubscribeEvent
     public void receiveRenderSpecialsEvent(net.minecraftforge.client.event.RenderPlayerEvent.Specials.Pre aEvent) {
         mCapeRenderer.receiveRenderSpecialsEvent(aEvent);
@@ -295,6 +309,10 @@ public class GT_Client extends GT_Proxy implements Runnable {
     @SubscribeEvent
     public void onPlayerTickEventClient(TickEvent.PlayerTickEvent aEvent) {
         if ((aEvent.side.isClient()) && (aEvent.phase == TickEvent.Phase.END) && (!aEvent.player.isDead)) {
+            if (mFirstTick) {
+                mFirstTick = false;
+                GT_Values.NW.sendToServer(new GT_Packet_ClientPreference(mPreference));
+            }
             afterSomeTime++;
             if(afterSomeTime>=100L){
                 afterSomeTime=0;

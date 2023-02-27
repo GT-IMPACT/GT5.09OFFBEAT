@@ -31,7 +31,6 @@ import static gregtech.GT_Mod.GT_FML_LOGGER;
 @ChannelHandler.Sharable
 @SuppressWarnings("deprecation")
 public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet> implements IGT_NetworkHandler {
-
     private final EnumMap<Side, FMLEmbeddedChannel> mChannel;
     private final GT_Packet[] mSubChannels;
 
@@ -48,7 +47,8 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
                 new GT_Packet_TileEntityCoverGUI(),
                 new GT_Packet_Block_Event_Four_Int(),
                 new GT_Packet_OutputHatch(),
-                new MessageUpdateFluidDisplayItem()
+                new MessageUpdateFluidDisplayItem(),
+                new GT_Packet_ClientPreference(),
         };
     }
 
@@ -64,7 +64,9 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
     protected void decode(ChannelHandlerContext aContext, FMLProxyPacket aPacket, List<Object> aOutput)
             throws Exception {
         ByteArrayDataInput aData = ByteStreams.newDataInput(aPacket.payload().array());
-        aOutput.add(this.mSubChannels[aData.readByte()].decode(aData));
+        GT_Packet tPacket = this.mSubChannels[aData.readByte()].decode(aData);
+        tPacket.setINetHandler(aPacket.handler());
+        aOutput.add(tPacket);
     }
 
     @Override
