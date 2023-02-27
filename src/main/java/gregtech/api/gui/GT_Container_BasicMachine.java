@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,13 +13,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidTank;
 
-import java.util.Iterator;
-
-import static gregtech.api.enums.GT_Values.NI;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.OTHER_SLOT_COUNT;
 
 /**
@@ -183,7 +178,6 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
         addSlotToContainer(new Slot(mTileEntity, 1, 80, 63));
         addSlotToContainer(new Slot(mTileEntity, 3, 125, 63));
         addSlotToContainer(new GT_Slot_Render(mTileEntity, tStartIndex++, 53, 63));
-
     }
 
     @Override
@@ -195,180 +189,41 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
             case 0:
                 if (aShifthold == 0) {
                     if (mTileEntity.getMetaTileEntity() == null) return null;
-                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer;
+                    machine.mFluidTransfer = !machine.mFluidTransfer;
                 }
                 if (aShifthold == 1) {
-                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange;
-                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1 = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid;
-                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2 = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut;
-                    if (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange) {
-                        ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2;
-                        ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1;
-                        ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange = false;
-                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1 == null ? null : EnumChatFormatting.RED + GT_LanguageManager.getTranslation(((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1.getUnlocalizedName()) + EnumChatFormatting.RESET +  " on Output Slot"));
-                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2 == null ? null : EnumChatFormatting.GREEN + GT_LanguageManager.getTranslation(((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2.getUnlocalizedName()) + EnumChatFormatting.RESET + " on Input Slot"));
+                    machine.fluidChange = !machine.fluidChange;
+                    machine.mFluid1 = machine.mFluid;
+                    machine.mFluid2 = machine.mFluidOut;
+                    if (machine.fluidChange) {
+                        machine.mFluid = machine.mFluid2;
+                        machine.mFluidOut = machine.mFluid1;
+                        machine.fluidChange = false;
+                        GT_Utility.sendChatToPlayer(aPlayer, machine.mFluid1 == null ? null : EnumChatFormatting.RED + GT_LanguageManager.getTranslation(machine.mFluid1.getUnlocalizedName()) + EnumChatFormatting.RESET +  " on Output Slot");
+                        GT_Utility.sendChatToPlayer(aPlayer, machine.mFluid2 == null ? null : EnumChatFormatting.GREEN + GT_LanguageManager.getTranslation(machine.mFluid2.getUnlocalizedName()) + EnumChatFormatting.RESET + " on Input Slot");
                     }
-
+        
                     if (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid == null && ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut == null)
                         GT_Utility.sendChatToPlayer(aPlayer, "No fluids");
                 }
                 return null;
             case 1:
                 if (mTileEntity.getMetaTileEntity() == null) return null;
-                ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer;
+                machine.mItemTransfer = !machine.mItemTransfer;
                 return null;
-            case 2:
-                if (aMouseclick > 1)
-                    if (machine.getDrainableStack().amount == 0) {
-                        return null;
-                    }
-                tResultStack = pickupFluid(machine.getDrainableStack(), aPlayer, aMouseclick == 0);
-                if (machine.getDrainableStack() != null && machine.getDrainableStack().amount == 0) {
-                    machine.setDrainableStack(null);
-                }
-                return tResultStack;
-
             default:
-                if (aSlotIndex == OTHER_SLOT_COUNT + 1 + machine.mInputSlotCount + machine.mOutputItems.length) {
-                    if (aMouseclick > 1) {
-                        return null;
+                if (aSlotIndex == OTHER_SLOT_COUNT + 1 + machine.mInputSlotCount + machine.mOutputItems.length && aMouseclick < 2) {
+                    if (mTileEntity.isClientSide()) {
+                        // see parent class slotClick for an explanation on why doing this
+                        GT_MetaTileEntity_BasicTank tTank = (GT_MetaTileEntity_BasicTank) mTileEntity.getMetaTileEntity();
+                        tTank.setFillableStack(GT_Utility.getFluidFromDisplayStack(tTank.getStackInSlot(2)));
                     }
-                    // input fluid slot
-                    ItemStack tStackHeld = aPlayer.inventory.getItemStack();
-                    ItemStack tStackSizedOne = GT_Utility.copyAmount(1, tStackHeld);
-                    if (tStackSizedOne == null || tStackHeld.stackSize == 0) {
-                        return null;
-                    }
-                    FluidStack tInputFluid = machine.getFillableStack();
-                    FluidStack tFluidHeld = GT_Utility.getFluidForFilledItem(tStackSizedOne, true);
-                    if (tInputFluid == null) {
-                        if (tFluidHeld == null)
-                            // both null -> no op
-                            return null;
-                        return fillFluid(machine, aPlayer, tFluidHeld, aMouseclick == 0);
-                    } else {
-                        if (tFluidHeld != null) {
-                            // both nonnull. actually both pickup and fill is reasonable, but I'll go with fill here
-                            return fillFluid(machine, aPlayer, tFluidHeld, aMouseclick == 0);
-                        } else {
-                            tResultStack = pickupFluid(tInputFluid, aPlayer, aMouseclick == 0);
-                            if (tInputFluid.amount == 0) {
-                                machine.setFillableStack(null);
-                            }
-                            return tResultStack;
-                        }
-                    }
+                    GT_MetaTileEntity_BasicTank tTank = (GT_MetaTileEntity_BasicTank) mTileEntity.getMetaTileEntity();
+                    IFluidAccess tFillableAccess = IFluidAccess.from(tTank, true);
+                    return handleFluidSlotClick(tFillableAccess, aPlayer, aMouseclick == 0, true, true);
                 } else {
                     return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
                 }
-        }
-    }
-
-    private ItemStack pickupFluid(FluidStack aTankStack, EntityPlayer aPlayer, boolean aProcessFullStack) {
-        if (aTankStack == null) return null;
-        ItemStack tStackHeld = aPlayer.inventory.getItemStack();
-        ItemStack tStackSizedOne = GT_Utility.copyAmount(1, tStackHeld);
-        if (tStackSizedOne == null || tStackHeld.stackSize == 0) {
-            return null;
-        }
-        int tOriginalFluidAmount = aTankStack.amount;
-        ItemStack tFilled = GT_Utility.fillFluidContainer(aTankStack, tStackSizedOne, true, false);
-        if (tFilled == null && tStackSizedOne.getItem() instanceof IFluidContainerItem) {
-            IFluidContainerItem tContainerItem = (IFluidContainerItem) tStackSizedOne.getItem();
-            int tFilledAmount = tContainerItem.fill(tStackSizedOne, aTankStack, true);
-            if (tFilledAmount > 0) {
-                tFilled = tStackSizedOne;
-                aTankStack.amount -= tFilledAmount;
-            }
-        }
-        if (tFilled != null) {
-            if (aProcessFullStack) {
-                int tFilledAmount = tOriginalFluidAmount - aTankStack.amount;
-                /*
-                 work out how many more items we can fill
-                 one cell is already used, so account for that
-                 the round down behavior will left over a fraction of a cell worth of fluid
-                 the user then get to decide what to do with it
-                 it will not be too fancy if it spills out partially filled cells
-                */
-                int tAdditionalParallel = Math.min(tStackHeld.stackSize - 1, aTankStack.amount / tFilledAmount);
-                aTankStack.amount -= tFilledAmount * tAdditionalParallel;
-                tFilled.stackSize += tAdditionalParallel;
-            }
-            replaceCursorItemStack(aPlayer, tFilled);
-        }
-        return tFilled;
-    }
-
-    private ItemStack fillFluid(GT_MetaTileEntity_BasicMachine aMachine, EntityPlayer aPlayer, FluidStack aFluidHeld, boolean aProcessFullStack) {
-        // we are not using aMachine.fill() here any more, so we need to check for fluid type here ourselves
-        if (aMachine.getFillableStack() != null && !aMachine.getFillableStack().isFluidEqual(aFluidHeld)) {
-            return null;
-        }
-        ItemStack tStackHeld = aPlayer.inventory.getItemStack();
-        ItemStack tStackSizedOne = GT_Utility.copyAmount(1, tStackHeld);
-        if (tStackSizedOne == null)
-            return null;
-
-        int tFreeSpace = aMachine.getCapacity() - (aMachine.getFillableStack() != null ? aMachine.getFillableStack().amount : 0);
-        if (tFreeSpace <= 0) {
-            return null;
-            // no space left
-        }
-        // find out how much fluid can be taken
-        // some cells cannot be partially filled
-        ItemStack tStackEmptied = null;
-        int tAmountTaken = 0;
-        if (tFreeSpace >= aFluidHeld.amount) {
-            // fully accepted - try take it from item now
-            // IFluidContainerItem is intentionally not checked here. it will be checked later
-            tStackEmptied = GT_Utility.getContainerForFilledItem(tStackSizedOne, false);
-            tAmountTaken = aFluidHeld.amount;
-        }
-        if (tStackEmptied == null && tStackSizedOne.getItem() instanceof IFluidContainerItem) {
-            // either partially accepted, or is IFluidContainerItem
-            IFluidContainerItem container = (IFluidContainerItem) tStackSizedOne.getItem();
-            FluidStack tDrained = container.drain(tStackSizedOne, tFreeSpace, true);
-            if (tDrained != null && tDrained.amount > 0) {
-                // something is actually drained - change the cell and drop it to player
-                tStackEmptied = tStackSizedOne;
-                tAmountTaken = tDrained.amount;
-            }
-        }
-        if (tStackEmptied == null)
-            // somehow the cell refuse to give out that amount of fluid, no op then
-            return null;
-        // find out how many fill can we do
-        // same round down behavior as above
-        // however here the fluid stack is not changed at all, so the exact code will slightly differ
-        int tParallel = aProcessFullStack ? Math.min(tFreeSpace / tAmountTaken, tStackHeld.stackSize) : 1;
-        if (aMachine.getFillableStack() == null) {
-            FluidStack tNewFillableStack = aFluidHeld.copy();
-            tNewFillableStack.amount = tAmountTaken * tParallel;
-            aMachine.setFillableStack(tNewFillableStack);
-        } else {
-            aMachine.getFillableStack().amount += tAmountTaken * tParallel;
-        }
-        tStackEmptied.stackSize = tParallel;
-        replaceCursorItemStack(aPlayer, tStackEmptied);
-        return tStackEmptied;
-    }
-
-    private void replaceCursorItemStack(EntityPlayer aPlayer, ItemStack tStackResult) {
-        int tStackResultMaxStackSize = tStackResult.getMaxStackSize();
-        while (tStackResult.stackSize > tStackResultMaxStackSize) {
-            aPlayer.inventory.getItemStack().stackSize -= tStackResultMaxStackSize;
-            GT_Utility.addItemToPlayerInventory(aPlayer, tStackResult.splitStack(tStackResultMaxStackSize));
-        }
-        if (aPlayer.inventory.getItemStack().stackSize == tStackResult.stackSize) {
-            // every cell is mutated. it could just stay on the cursor.
-            aPlayer.inventory.setItemStack(tStackResult);
-        } else {
-            // some cells not mutated. The mutated cells must go into the inventory
-            // or drop into the world if there isn't enough space.
-            ItemStack tStackHeld = aPlayer.inventory.getItemStack();
-            tStackHeld.stackSize -= tStackResult.stackSize;
-            GT_Utility.addItemToPlayerInventory(aPlayer, tStackResult);
         }
     }
 
@@ -381,9 +236,8 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
         mItemTransfer = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer;
         mStuttering = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mStuttering;
 
-        Iterator var2 = this.crafters.iterator();
-        while (var2.hasNext()) {
-            ICrafting var1 = (ICrafting) var2.next();
+        for (Object crafter : this.crafters) {
+            ICrafting var1 = (ICrafting) crafter;
             var1.sendProgressBarUpdate(this, 102, mFluidTransfer ? 1 : 0);
             var1.sendProgressBarUpdate(this, 103, mItemTransfer ? 1 : 0);
             var1.sendProgressBarUpdate(this, 104, mStuttering ? 1 : 0);
@@ -431,5 +285,4 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
     public int getShiftClickSlotCount() {
         return ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mInputSlotCount;
     }
-
 }
