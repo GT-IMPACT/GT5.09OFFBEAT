@@ -1737,6 +1737,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
+    public void markInventoryBeenModified() {
+        mInventoryChanged = true;
+    }
+
+    @Override
     public void setGenericRedstoneOutput(boolean aOnOff) {
         mRedstone = aOnOff;
     }
