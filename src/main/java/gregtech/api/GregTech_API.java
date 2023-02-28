@@ -52,14 +52,16 @@ import static gregtech.api.enums.GT_Values.*;
  *
  * @author Gregorius Techneticies
  */
+@SuppressWarnings("ALL")
 public class GregTech_API {
+
     @Deprecated
     public static final long MATERIAL_UNIT = M, FLUID_MATERIAL_UNIT = L;
     /**
      * Fixes the HashMap Mappings for ItemStacks once the Server started
      */
-    public static final Collection<Map<GT_ItemStack, ?>> sItemStackMappings = new ArrayList<Map<GT_ItemStack, ?>>();
-    public static final Collection<Map<Fluid, ?>> sFluidMappings = new ArrayList<Map<Fluid, ?>>();
+    public static final Collection<Map<GT_ItemStack, ?>> sItemStackMappings = new ArrayList<>();
+    public static final Collection<Map<Fluid, ?>> sFluidMappings = new ArrayList<>();
     /**
      * The MetaTileEntity-ID-List-Length
      */
@@ -101,11 +103,11 @@ public class GregTech_API {
     /**
      * The Icon List for Covers
      */
-    public static final Map<GT_ItemStack, ITexture> sCovers = new ConcurrentHashMap<GT_ItemStack, ITexture>();
+    public static final Map<GT_ItemStack, ITexture> sCovers = new ConcurrentHashMap<>();
     /**
      * The List of Cover Behaviors for the Covers
      */
-    public static final Map<GT_ItemStack, GT_CoverBehavior> sCoverBehaviors = new ConcurrentHashMap<GT_ItemStack, GT_CoverBehavior>();
+    public static final Map<GT_ItemStack, GT_CoverBehavior_New<?>> sCoverBehaviors = new ConcurrentHashMap<>();
     /**
      * The List of Circuit Behaviors for the Redstone Circuit Block
      */
@@ -259,6 +261,7 @@ public class GregTech_API {
 
     /**
      * You want OreDict-Unification for YOUR Mod/Addon, when GregTech is installed? This Function is especially for YOU.
+     * Call this Function after the load-Phase, as I register the the most of the Unification at that Phase (Redpowers Storageblocks are registered at postload).
      * A recommended use of this Function is inside your Recipe-System itself (if you have one), as the unification then makes 100% sure, that every added non-unificated Output gets automatically unificated.
      * <p/>
      * I will personally make sure, that only common prefixes of Ores get registered at the Unificator, as of now there are:
@@ -492,12 +495,21 @@ public class GregTech_API {
     }
 
     public static void registerCover(ItemStack aStack, ITexture aCover, GT_CoverBehavior aBehavior) {
+        registerCover(aStack, aCover, (GT_CoverBehavior_New<?>) aBehavior);
+    }
+
+    public static void registerCover(ItemStack aStack, ITexture aCover, GT_CoverBehavior_New<?> aBehavior) {
         if (!sCovers.containsKey(new GT_ItemStack(aStack)))
             sCovers.put(new GT_ItemStack(aStack), aCover == null || !aCover.isValidTexture() ? Textures.BlockIcons.ERROR_RENDERING[0] : aCover);
-        if (aBehavior != null) sCoverBehaviors.put(new GT_ItemStack(aStack), aBehavior);
+        if (aBehavior != null)
+            sCoverBehaviors.put(new GT_ItemStack(aStack), aBehavior);
     }
 
     public static void registerCoverBehavior(ItemStack aStack, GT_CoverBehavior aBehavior) {
+        registerCoverBehavior(aStack, (GT_CoverBehavior_New<?>) aBehavior);
+    }
+
+    public static void registerCoverBehavior(ItemStack aStack, GT_CoverBehavior_New<?> aBehavior) {
         sCoverBehaviors.put(new GT_ItemStack(aStack), aBehavior == null ? sDefaultBehavior : aBehavior);
     }
 
@@ -507,25 +519,62 @@ public class GregTech_API {
      * @param aBehavior can be null
      */
     public static void registerCover(Collection<ItemStack> aStackList, ITexture aCover, GT_CoverBehavior aBehavior) {
-        if (aCover.isValidTexture()) for (ItemStack tStack : aStackList) registerCover(tStack, aCover, aBehavior);
+        registerCover(aStackList, aCover, aBehavior);
+    }
+
+    /**
+     * Registers multiple Cover Items. I use that for the OreDict Functionality.
+     *
+     * @param aBehavior can be null
+     */
+    public static void registerCover(Collection<ItemStack> aStackList, ITexture aCover, GT_CoverBehavior_New<?> aBehavior) {
+        if (aCover.isValidTexture())
+            aStackList.forEach(tStack -> GregTech_API.registerCover(tStack, aCover, aBehavior));
     }
 
     /**
      * returns a Cover behavior, guaranteed to not return null after preload
      */
+    @Deprecated
     public static GT_CoverBehavior getCoverBehavior(ItemStack aStack) {
-        if (aStack == null || aStack.getItem() == null) return sNoBehavior;
-        GT_CoverBehavior rCover = sCoverBehaviors.get(new GT_ItemStack(aStack));
-        if (rCover == null) return sDefaultBehavior;
+        if (aStack == null || aStack.getItem() == null)
+            return sNoBehavior;
+        GT_CoverBehavior_New<?> rCover = sCoverBehaviors.get(new GT_ItemStack(aStack));
+        if (!(rCover instanceof GT_CoverBehavior) || rCover == null)
+            return sDefaultBehavior;
+        return (GT_CoverBehavior) rCover;
+    }
+
+    /**
+     * returns a Cover behavior, guaranteed to not return null after preload
+     * @return
+     */
+    public static GT_CoverBehavior_New<?> getCoverBehaviorNew(ItemStack aStack) {
+        if (aStack == null || aStack.getItem() == null)
+            return sNoBehavior;
+        GT_CoverBehavior_New<?> rCover = sCoverBehaviors.get(new GT_ItemStack(aStack));
+        if (rCover == null)
+            return sDefaultBehavior;
         return rCover;
     }
 
     /**
      * returns a Cover behavior, guaranteed to not return null
      */
+    @Deprecated
     public static GT_CoverBehavior getCoverBehavior(int aStack) {
-        if (aStack == 0) return sNoBehavior;
+        if (aStack == 0)
+            return sNoBehavior;
         return getCoverBehavior(GT_Utility.intToStack(aStack));
+    }
+
+    /**
+     * returns a Cover behavior, guaranteed to not return null
+     */
+    public static GT_CoverBehavior_New<?> getCoverBehaviorNew(int aStack) {
+        if (aStack == 0)
+            return sNoBehavior;
+        return getCoverBehaviorNew(GT_Utility.intToStack(aStack));
     }
 
     /**
@@ -654,4 +703,5 @@ public class GregTech_API {
     public static void setItemIconRegister(IIconRegister aIconRegister) {
         GregTech_API.sItemIcons = aIconRegister;
     }
+
 }

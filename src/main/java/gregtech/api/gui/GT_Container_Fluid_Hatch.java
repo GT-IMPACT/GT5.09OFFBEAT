@@ -12,6 +12,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+@Deprecated
 public class GT_Container_Fluid_Hatch extends GT_ContainerMetaTile_Machine {
 	
 	public int mContent = 0, mIDFluid = -1;
@@ -30,53 +31,53 @@ public class GT_Container_Fluid_Hatch extends GT_ContainerMetaTile_Machine {
 	
 	@Override
 	public ItemStack slotClick(int aSlotIndex, int aMouseclick, int aShifthold, EntityPlayer aPlayer) {
-		GT_MetaTileEntity_Hatch_Output output = (GT_MetaTileEntity_Hatch_Output) mTileEntity.getMetaTileEntity();
-		if (aSlotIndex == 3) {
-			ItemStack tStackHeld = aPlayer.inventory.getItemStack();
-			if (tStackHeld != null) {
-				FluidStack tFluidHeld = GT_Utility.getFluidForFilledItem(tStackHeld, true);
-				if (tFluidHeld != null && !tFluidHeld.getUnlocalizedName().equals(output.getLockedFluidName())) {
-					output.setLockedFluidName(tFluidHeld.getUnlocalizedName());
-					output.lockedFluid = new FluidStack(tFluidHeld, 0);
-					GT_Utility.sendChatToPlayer(aPlayer, String.format(trans("151.4", "Sucessfully locked Fluid to %s"), tFluidHeld.getLocalizedName()));
-					output.mMode = 9;
-				}
-			} else {
-				output.mMode = 0;
-				output.setLockedFluid(null);
-				GT_Utility.sendChatToPlayer(aPlayer, "Clear locked Fluid");
-			}
-			output.doDisplayThings();
-		}
+//		GT_MetaTileEntity_Hatch_Output output = (GT_MetaTileEntity_Hatch_Output) mTileEntity.getMetaTileEntity();
+//		if (aSlotIndex == 3) {
+//			ItemStack tStackHeld = aPlayer.inventory.getItemStack();
+//			if (tStackHeld != null) {
+//				FluidStack tFluidHeld = GT_Utility.getFluidForFilledItem(tStackHeld, true);
+//				if (tFluidHeld != null && !tFluidHeld.getUnlocalizedName().equals(output.getLockedFluidName())) {
+//					output.setLockedFluidName(tFluidHeld.getUnlocalizedName());
+//					output.lockedFluid = new FluidStack(tFluidHeld, 0);
+//					GT_Utility.sendChatToPlayer(aPlayer, String.format(trans("151.4", "Sucessfully locked Fluid to %s"), tFluidHeld.getLocalizedName()));
+//					output.mMode = 9;
+//				}
+//			} else {
+//				output.mMode = 0;
+//				output.setLockedFluid(null);
+//				GT_Utility.sendChatToPlayer(aPlayer, "Clear locked Fluid");
+//			}
+//			output.doDisplayThings();
+//		}
 		return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
 	}
 	
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		if (mTileEntity.isClientSide() || mTileEntity.getMetaTileEntity() == null) return;
-		GT_MetaTileEntity_Hatch_Output output = (GT_MetaTileEntity_Hatch_Output) mTileEntity.getMetaTileEntity();
-		
-		
-		if (output.mFluid != null) {
-			mContent = output.mFluid.amount;
-		} else {
-			mContent = 0;
-		}
-		
-		if (output.lockedFluid != null) {
-			mIDFluid = output.lockedFluid.getFluidID();
-		} else {
-			mIDFluid = -1;
-		}
-		
-		for (Object crafter : this.crafters) {
-			ICrafting var1 = (ICrafting) crafter;
-			var1.sendProgressBarUpdate(this, 100, mContent & 65535);
-			var1.sendProgressBarUpdate(this, 101, mContent >>> 16);
-			var1.sendProgressBarUpdate(this, 102, mIDFluid & 65535);
-			var1.sendProgressBarUpdate(this, 103, mIDFluid >>> 16);
-		}
+//		if (mTileEntity.isClientSide() || mTileEntity.getMetaTileEntity() == null) return;
+//		GT_MetaTileEntity_Hatch_Output output = (GT_MetaTileEntity_Hatch_Output) mTileEntity.getMetaTileEntity();
+//
+//
+//		if (output.mFluid != null) {
+//			mContent = output.mFluid.amount;
+//		} else {
+//			mContent = 0;
+//		}
+//
+//		if (output.lockedFluid != null) {
+//			mIDFluid = output.lockedFluid.getFluidID();
+//		} else {
+//			mIDFluid = -1;
+//		}
+//
+//		for (Object crafter : this.crafters) {
+//			ICrafting var1 = (ICrafting) crafter;
+//			var1.sendProgressBarUpdate(this, 100, mContent & 65535);
+//			var1.sendProgressBarUpdate(this, 101, mContent >>> 16);
+//			var1.sendProgressBarUpdate(this, 102, mIDFluid & 65535);
+//			var1.sendProgressBarUpdate(this, 103, mIDFluid >>> 16);
+//		}
 	}
 	
 	@Override

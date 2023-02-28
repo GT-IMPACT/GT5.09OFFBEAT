@@ -71,6 +71,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import space.impact.api.multiblocks.alignment.IAlignment;
 import space.impact.api.multiblocks.alignment.IAlignmentProvider;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -1608,6 +1609,12 @@ public class GT_Utility {
         for (Object tStack : aStacks) if (isStackValid(tStack)) return ((ItemStack) tStack).copy();
         return null;
     }
+    
+    @Nullable
+    public static ItemStack copyOrNull(@Nullable ItemStack stack) {
+        if (isStackValid(stack)) return stack.copy();
+        return null;
+    }
 
     public static ItemStack copyAmount(long aAmount, Object... aStacks) {
         ItemStack rStack = copy(aStacks);
@@ -2027,7 +2034,7 @@ public class GT_Utility {
             try {
                 if (tTileEntity instanceof ICoverable) {
                     rEUAmount += 300;
-                    String tString = ((ICoverable) tTileEntity).getCoverBehaviorAtSide((byte) aSide).getDescription((byte) aSide, ((ICoverable) tTileEntity).getCoverIDAtSide((byte) aSide), ((ICoverable) tTileEntity).getCoverDataAtSide((byte) aSide), (ICoverable) tTileEntity);
+                    String tString = ((ICoverable) tTileEntity).getCoverBehaviorAtSideNew((byte) aSide).getDescription((byte) aSide, ((ICoverable) tTileEntity).getCoverIDAtSide((byte) aSide), ((ICoverable) tTileEntity).getCoverDataAtSideNew((byte) aSide), (ICoverable) tTileEntity);
                     if (tString != null && !tString.equals(E)) tList.add(tString);
                 }
             } catch (Throwable e) {

@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import static gregtech.api.util.GT_Utility.trans;
 
+@Deprecated
 public class GT_Packet_OutputHatch extends GT_Packet {
 	private Fluid fluid;
 	private int dim, playerID;
@@ -54,20 +55,20 @@ public class GT_Packet_OutputHatch extends GT_Packet {
 	
 	@Override
 	public void process(IBlockAccess w) {
-		World world = DimensionManager.getWorld(dim);
-		if (world != null) {
-			EntityPlayerMP playerMP = (EntityPlayerMP) world.getEntityByID(playerID);
-			if (playerMP.openContainer instanceof GT_Container_Fluid_Hatch) {
-				GT_Container_Fluid_Hatch cont = (GT_Container_Fluid_Hatch) playerMP.openContainer;
-				if (cont.mTileEntity != null && cont.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Output) {
-					GT_MetaTileEntity_Hatch_Output hatch_output = (GT_MetaTileEntity_Hatch_Output) cont.mTileEntity.getMetaTileEntity();
-					hatch_output.mMode = 8;
-					hatch_output.setLockedFluid(fluid);
-					hatch_output.doDisplayThings();
-					GT_Utility.sendChatToPlayer(playerMP, String.format(trans("151.4", "Sucessfully locked Fluid to %s"), fluid.getLocalizedName()));
-				}
-			}
-		}
+//		World world = DimensionManager.getWorld(dim);
+//		if (world != null) {
+//			EntityPlayerMP playerMP = (EntityPlayerMP) world.getEntityByID(playerID);
+//			if (playerMP.openContainer instanceof GT_Container_Fluid_Hatch) {
+//				GT_Container_Fluid_Hatch cont = (GT_Container_Fluid_Hatch) playerMP.openContainer;
+//				if (cont.mTileEntity != null && cont.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Output) {
+//					GT_MetaTileEntity_Hatch_Output hatch_output = (GT_MetaTileEntity_Hatch_Output) cont.mTileEntity.getMetaTileEntity();
+//					hatch_output.mMode = 8;
+//					hatch_output.setLockedFluid(fluid);
+//					hatch_output.doDisplayThings();
+//					GT_Utility.sendChatToPlayer(playerMP, String.format(trans("151.4", "Sucessfully locked Fluid to %s"), fluid.getLocalizedName()));
+//				}
+//			}
+//		}
 	}
 	
 	@Override

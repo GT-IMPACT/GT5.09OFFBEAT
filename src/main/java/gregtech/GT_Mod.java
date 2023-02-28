@@ -79,7 +79,7 @@ dependencies =  " required-after:IC2;" +
         " after:Translocator;")
 
 public class GT_Mod implements IGT_Mod {
-    public static final int VERSION = 509, SUBVERSION = 34;
+    public static final int VERSION = 509, SUBVERSION = 39;
     public static final int TOTAL_VERSION = calculateTotalGTVersion(VERSION, SUBVERSION);
     public static final int REQUIRED_IC2 = 624;
     @Mod.Instance("gregtech")

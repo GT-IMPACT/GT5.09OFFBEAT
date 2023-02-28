@@ -302,7 +302,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
         return aIndex == getInputSlot();
     }
     
-    protected void onEmptyingContainerWhenEmpty(){
+    public void onEmptyingContainerWhenEmpty(){
     	//Do nothing
     }
 }

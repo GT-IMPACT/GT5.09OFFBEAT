@@ -1,49 +1,77 @@
 package gregtech.api.interfaces.tileentity;
 
 import gregtech.api.util.GT_CoverBehavior;
+import gregtech.api.util.GT_CoverBehavior_New;
+import gregtech.api.util.ISerializableObject;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 public interface ICoverable extends IRedstoneTileEntity, IHasInventory, IBasicEnergyContainer {
-    public boolean canPlaceCoverIDAtSide(byte aSide, int aID);
+    boolean canPlaceCoverIDAtSide(byte aSide, int aID);
 
-    public boolean canPlaceCoverItemAtSide(byte aSide, ItemStack aCover);
+    boolean canPlaceCoverItemAtSide(byte aSide, ItemStack aCover);
 
-    public boolean dropCover(byte aSide, byte aDroppedSide, boolean aForced);
+    boolean dropCover(byte aSide, byte aDroppedSide, boolean aForced);
 
-    public void setCoverDataAtSide(byte aSide, int aData);
+    @Deprecated
+    void setCoverDataAtSide(byte aSide, int aData);
 
-    public void setCoverIDAtSide(byte aSide, int aID);
+    default void setCoverDataAtSide(byte aSide, ISerializableObject aData) {
+        if (aData instanceof ISerializableObject.LegacyCoverData)
+            setCoverDataAtSide(aSide, ((ISerializableObject.LegacyCoverData) aData).get());
+    }
 
-    public void setCoverItemAtSide(byte aSide, ItemStack aCover);
+    void setCoverIDAtSide(byte aSide, int aID);
 
-    public int getCoverDataAtSide(byte aSide);
+    void setCoverItemAtSide(byte aSide, ItemStack aCover);
 
-    public int getCoverIDAtSide(byte aSide);
+    @Deprecated
+    int getCoverDataAtSide(byte aSide);
 
-    public ItemStack getCoverItemAtSide(byte aSide);
+    default ISerializableObject getCoverDataAtSideNew(byte aSide) {
+        return new ISerializableObject.LegacyCoverData(getCoverDataAtSide(aSide));
+    }
 
-    public GT_CoverBehavior getCoverBehaviorAtSide(byte aSide);
+    int getCoverIDAtSide(byte aSide);
+
+    ItemStack getCoverItemAtSide(byte aSide);
+
+    @Deprecated
+    GT_CoverBehavior getCoverBehaviorAtSide(byte aSide);
+
+    default GT_CoverBehavior_New<?> getCoverBehaviorAtSideNew(byte aSide) {
+        return getCoverBehaviorAtSide(aSide);
+    }
 
     /**
      * For use by the regular MetaTileEntities. Returns the Cover Manipulated input Redstone.
      * Don't use this if you are a Cover Behavior. Only for MetaTileEntities.
      */
-    public byte getInternalInputRedstoneSignal(byte aSide);
+    byte getInternalInputRedstoneSignal(byte aSide);
 
     /**
      * For use by the regular MetaTileEntities. This makes it not conflict with Cover based Redstone Signals.
      * Don't use this if you are a Cover Behavior. Only for MetaTileEntities.
      */
-    public void setInternalOutputRedstoneSignal(byte aSide, byte aStrength);
+    void setInternalOutputRedstoneSignal(byte aSide, byte aStrength);
 
     /**
      * Causes a general Cover Texture update.
      * Sends 6 Integers to Client + causes @issueTextureUpdate()
      */
-    public void issueCoverUpdate(byte aSide);
+    void issueCoverUpdate(byte aSide);
 
     /**
      * Receiving a packet with cover data.
      */
     void receiveCoverData(byte coverSide, int coverID, int coverData);
+
+    /**
+     * Receiving a packet with cover data.
+     * @param aPlayer the player who made the change
+     */
+    default void receiveCoverData(byte aCoverSide, int aCoverID, ISerializableObject aCoverData, EntityPlayerMP aPlayer) {
+        if (aCoverData instanceof ISerializableObject.LegacyCoverData)
+            receiveCoverData(aCoverSide, aCoverID, ((ISerializableObject.LegacyCoverData) aCoverData).get());
+    }
 }

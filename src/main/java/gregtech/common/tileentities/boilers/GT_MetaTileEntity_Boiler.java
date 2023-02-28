@@ -144,7 +144,7 @@ public abstract class GT_MetaTileEntity_Boiler
     }
 
     public boolean allowCoverOnSide(byte aSide, GT_ItemStack aCover) {
-        return GregTech_API.getCoverBehavior(aCover.toStack()).isSimpleCover();
+        return GregTech_API.getCoverBehaviorNew(aCover.toStack()).isSimpleCover();
     }
 
     public void saveNBTData(NBTTagCompound aNBT) {
