@@ -2034,7 +2034,7 @@ public class GT_Utility {
             try {
                 if (tTileEntity instanceof ICoverable) {
                     rEUAmount += 300;
-                    String tString = ((ICoverable) tTileEntity).getCoverBehaviorAtSideNew((byte) aSide).getDescription((byte) aSide, ((ICoverable) tTileEntity).getCoverIDAtSide((byte) aSide), ((ICoverable) tTileEntity).getCoverDataAtSideNew((byte) aSide), (ICoverable) tTileEntity);
+                    String tString = ((ICoverable) tTileEntity).getCoverBehaviorAtSideNew((byte) aSide).getDescription((byte) aSide, ((ICoverable) tTileEntity).getCoverIDAtSide((byte) aSide), ((ICoverable) tTileEntity).getComplexCoverDataAtSide((byte) aSide), (ICoverable) tTileEntity);
                     if (tString != null && !tString.equals(E)) tList.add(tString);
                 }
             } catch (Throwable e) {
