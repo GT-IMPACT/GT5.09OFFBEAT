@@ -10,11 +10,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-
-import java.util.Iterator;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
@@ -24,6 +21,7 @@ import java.util.Iterator;
 public class GT_Container_BasicTank extends GT_ContainerMetaTile_Machine {
 
     public int mContent = 0;
+    private int oContent = 0;
 
     public GT_Container_BasicTank(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
         super(aInventoryPlayer, aTileEntity);
@@ -224,12 +222,15 @@ public class GT_Container_BasicTank extends GT_ContainerMetaTile_Machine {
             mContent = ((GT_MetaTileEntity_BasicTank) mTileEntity.getMetaTileEntity()).mFluid.amount;
         else
             mContent = 0;
-        Iterator var2 = this.crafters.iterator();
-        while (var2.hasNext()) {
-            ICrafting var1 = (ICrafting) var2.next();
-            var1.sendProgressBarUpdate(this, 100, mContent & 65535);
-            var1.sendProgressBarUpdate(this, 101, mContent >>> 16);
+        for (Object crafter : this.crafters) {
+            ICrafting var1 = (ICrafting) crafter;
+            if (mTimer % 500 == 0 || oContent != mContent) {
+                var1.sendProgressBarUpdate(this, 100, mContent & 65535);
+                var1.sendProgressBarUpdate(this, 101, mContent >>> 16);
+            }
         }
+
+        oContent = mContent;
     }
 
     @Override
