@@ -64,7 +64,7 @@ import java.util.regex.Pattern;
 import static gregtech.api.enums.GT_Values.MOD_ID_AE;
 import static gregtech.api.enums.GT_Values.MOD_ID_FR;
 
-@Mod(modid = "gregtech", name = "GregTech", version = "MC1710", useMetadata = false, 
+@Mod(modid = "gregtech", name = "GregTech", version = "MC1710", useMetadata = false,
 dependencies =  " required-after:IC2;" +
         " after:Forestry;" +
         " after:appliedenergistics2;" +
@@ -390,10 +390,11 @@ public class GT_Mod implements IGT_Mod {
         GT_Log.out.println("GT_Mod: Generating Lang-File");
         GT_LanguageManager.sEnglishFile = new Configuration(new File(aEvent.getModConfigurationDirectory().getParentFile(), "GregTech.lang"));
         GT_LanguageManager.sEnglishFile.load();
-        for (Materials aMaterial : Materials.values()) {
-        	if (aMaterial != null)
-        		aMaterial.mLocalizedName = GT_LanguageManager.addStringLocalization("Material." + aMaterial.mName.toLowerCase(), aMaterial.mDefaultLocalName);
+        if (GT_LanguageManager.sEnglishFile.get("EnableLangFile", "UseThisFileAsLanguageFile", false).getBoolean(false)) {
+            GT_LanguageManager.sLanguage = GT_LanguageManager.sEnglishFile.get("EnableLangFile", "Language", "en_US").getString();
         }
+
+        Materials.getMaterialsMap().values().parallelStream().filter(Objects::nonNull).forEach(aMaterial -> aMaterial.mLocalizedName = GT_LanguageManager.addStringLocalization("Material." + aMaterial.mName.toLowerCase(), aMaterial.mDefaultLocalName));
 
         GT_Log.out.println("GT_Mod: Removing all original Scrapbox Drops.");
         try {
@@ -528,13 +529,13 @@ public class GT_Mod implements IGT_Mod {
         	int[] outputChances = new int[]{(int) (2400 * ashOutputMultiplier), (int) (2100 * ashOutputMultiplier),
         			(int) (1200 * ashOutputMultiplier), (int) (500 * ashOutputMultiplier),
         			(int) (500 * ashOutputMultiplier), (int) (250 * ashOutputMultiplier)};
-            GT_Values.RA.addCentrifugeRecipe(Materials.Ash.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF, 
+            GT_Values.RA.addCentrifugeRecipe(Materials.Ash.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF,
             		Materials.Quicklime.getDust(2),           Materials.Potash.getDust(1), Materials.Magnesia.getDust(1),
             		Materials.PhosphorousPentoxide.getDust(1), Materials.SodaAsh.getDust(1), Materials.BandedIron.getDust(1),
             		outputChances, 240, 30);
         } else {
-        	GT_Values.RA.addCentrifugeRecipe(Materials.Ash.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF, 
-        			Materials.Carbon.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, 
+        	GT_Values.RA.addCentrifugeRecipe(Materials.Ash.getDust(1), GT_Values.NI, GT_Values.NF, GT_Values.NF,
+        			Materials.Carbon.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI,
         			new int[]{(int) (10000 * ashOutputMultiplier), 0, 0, 0, 0, 0}, 40, 16);
         }
         if (gregtechproxy.mSortToTheEnd) {
