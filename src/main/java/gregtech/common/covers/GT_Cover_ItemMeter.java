@@ -9,10 +9,10 @@ import gregtech.api.gui.widgets.GT_GuiIntegerTextBox;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_OutputBus_ME;
 import gregtech.api.net.GT_Packet_TileEntityCover;
 import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
-import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_OutputBus_ME;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_DigitalChestBase;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -193,6 +193,7 @@ public class GT_Cover_ItemMeter extends GT_CoverBehavior {
 
             //only shows if opened gui of block sadly, should've used container.
             intSlotIcon = new GT_GuiFakeItemButton(this, startX + spaceX * 8-4, startY + spaceY * 1, GT_GuiIcon.SLOT_GRAY);
+            intSlotIcon.setMimicSlot(true);
 
             if (tile instanceof TileEntity && !super.tile.isDead())
                 maxSlot = Math.min(tile.getSizeInventory() - 1, SLOT_MASK-1);

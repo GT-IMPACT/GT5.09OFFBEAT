@@ -36,6 +36,14 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
     public GT_MetaTileEntity_Hatch_OutputBus(String aName, int aTier, int inventorySize, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, inventorySize, aDescription, aTextures);
     }
+    
+    public GT_MetaTileEntity_Hatch_OutputBus(int aID, String aName, String aNameRegional, int aTier, String[] aDescription) {
+        super(aID, aName, aNameRegional, aTier, getSlots(aTier), aDescription);
+    }
+    
+    public GT_MetaTileEntity_Hatch_OutputBus(int aID, String aName, String aNameRegional, int aTier, String[] aDescription, int inventorySize) {
+        super(aID, aName, aNameRegional, aTier, inventorySize, aDescription);
+    }
 
     @Override
     public ITexture[] getTexturesActive(ITexture aBaseTexture) {

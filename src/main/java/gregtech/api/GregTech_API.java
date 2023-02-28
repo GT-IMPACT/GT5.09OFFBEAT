@@ -32,6 +32,7 @@ import gregtech.common.items.ItemDebug;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
@@ -40,13 +41,16 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import static gregtech.api.enums.GT_Values.B;
 import static gregtech.api.enums.GT_Values.L;
@@ -69,7 +73,6 @@ import static gregtech.api.enums.GT_Values.MOD_ID_IC2;
  *
  * @author Gregorius Techneticies
  */
-@SuppressWarnings("ALL")
 public class GregTech_API {
 
     @Deprecated
@@ -165,6 +168,7 @@ public class GregTech_API {
             sElectroHazmatList = new GT_HashSet<>();
     private static final List<ItemStack> sRealConfigurationList = new ArrayList<>();
     private static final List<ItemStack> sConfigurationList = Collections.unmodifiableList(sRealConfigurationList);
+    public static final GT_HashSet<GT_ItemStack> sCircuitProgrammerList = new GT_HashSet<>();
     /**
      * The List of Dimensions, which are Whitelisted for the Teleporter. This list should not contain other Planets.
      * Mystcraft Dimensions and other Dimensional Things should be allowed.

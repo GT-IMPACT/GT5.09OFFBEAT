@@ -21,7 +21,7 @@ public class GT_GuiTooltipManager {
     private final List<GT_GuiTooltip> tips = new ArrayList<>();
 
     public void addToolTip(GT_GuiTooltip tip) {
-        if (!tips.contains(tip)) tips.add(tip);
+        if (tip != null && !tips.contains(tip)) tips.add(tip);
     }
 
     public boolean removeToolTip(GT_GuiTooltip tip) {
@@ -37,11 +37,10 @@ public class GT_GuiTooltipManager {
         lastMouseX = mouseX;
         lastMouseY = mouseY;
 
-        if (mouseStopped > DELAY)
-            mouseX -= render.getGuiLeft();
+        mouseX -= render.getGuiLeft();
         mouseY -= render.getGuiTop();
         for (GT_GuiTooltip tip : tips) {
-            if(tip.enabled && tip.bounds.contains(mouseX, mouseY)){
+            if (tip.enabled && (!tip.isDelayed() || mouseStopped > DELAY) && tip.getBounds().contains(mouseX, mouseY)) {
                 tip.updateText();
                 drawTooltip(tip, mouseX, mouseY, render);
                 break;

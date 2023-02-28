@@ -51,6 +51,8 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
                 new GT_Packet_ClientPreference(),
                 new GT_Packet_WirelessRedstoneCover(),
                 new GT_Packet_TileEntityCoverNew(),
+                new GT_Packet_SetConfigurationCircuit(),
+                new GT_Packet_UpdateItem(),
         };
     }
 

@@ -1,6 +1,10 @@
 package gregtech.api.util;
 
 import cofh.api.transport.IItemDuct;
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.FMLCommonHandler;
 import gregtech.api.GregTech_API;
@@ -80,8 +84,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.UUID;
 
 import static gregtech.GT_Mod.GT_FML_LOGGER;
 import static gregtech.api.enums.GT_Values.*;
@@ -1726,7 +1728,7 @@ public class GT_Utility {
      */
     public static <X, Y extends Comparable> LinkedHashMap<X, Y> sortMapByValuesAcending(Map<X, Y> aMap) {
         List<Map.Entry<X, Y>> tEntrySet = new LinkedList<Map.Entry<X, Y>>(aMap.entrySet());
-        Collections.sort(tEntrySet, new Comparator<Map.Entry<X, Y>>() {
+        Collections.sort(tEntrySet, new Comparator<Entry<X, Y>>() {
             @Override
             public int compare(Entry<X, Y> aValue1, Entry<X, Y> aValue2) {
                 return aValue1.getValue().compareTo(aValue2.getValue());
@@ -2330,7 +2332,18 @@ public class GT_Utility {
         return false;
     }
 
-    public static class ItemNBT {
+	public static int findMatchingStackInList(List<ItemStack> aStacks, ItemStack aStack) {
+        if (isStackInvalid(aStack))
+            return -1;
+        for (int i = 0, aStacksSize = aStacks.size(); i < aStacksSize; i++) {
+            ItemStack tStack = aStacks.get(i);
+            if (areStacksEqual(aStack, tStack))
+                return i;
+        }
+        return -1;
+    }
+
+	public static class ItemNBT {
         public static void setNBT(ItemStack aStack, NBTTagCompound aNBT) {
             if (aNBT == null) {
                 aStack.setTagCompound(null);
@@ -2725,4 +2738,11 @@ public class GT_Utility {
         }
     }
 
+    public static long getNonnullElementCount(Object[] tArray) {
+        return Arrays.stream(tArray).filter(Objects::nonNull).count();
+    }
+
+    public static int clamp(int val, int lo, int hi) {
+        return val > hi ? hi : val < lo ? lo : val;
+    }
 }
