@@ -69,7 +69,7 @@ public class ProcessingToolHead implements gregtech.api.interfaces.IOreRecipeReg
                                 'B', ItemList.Battery_RE_LV_Lithium.get(1L)
                         });
                 GT_ModHandler.addCraftingRecipe(
-                        GT_MetaGenerated_Tool_01.INSTANCE.getToolWithStats(GT_MetaGenerated_Tool_01.BUZZSAW, 1, aMaterial, Materials.StainlessSteel, new long[]{3200000L, 32L, 1L, -1L}),
+                        GT_MetaGenerated_Tool_01.INSTANCE.getToolWithStats(GT_MetaGenerated_Tool_01.BUZZSAW, 1, aMaterial, Materials.StainlessSteel, new long[]{400000L, 32L, 1L, -1L}),
                         GT_ModHandler.RecipeBits.DISMANTLEABLE | GT_ModHandler.RecipeBits.DO_NOT_CHECK_FOR_COLLISIONS | GT_ModHandler.RecipeBits.BUFFERED,
                         new Object[]{
                                 "PBM", "dXG", "SGP",
@@ -354,7 +354,7 @@ public class ProcessingToolHead implements gregtech.api.interfaces.IOreRecipeReg
                                 'B', ItemList.Battery_RE_LV_Lithium.get(1L)
                 });
                 GT_ModHandler.addCraftingRecipe(
-                        GT_MetaGenerated_Tool_01.INSTANCE.getToolWithStats(GT_MetaGenerated_Tool_01.WRENCH_LV, 1, aMaterial, Materials.StainlessSteel, new long[]{3200000L, 32L, 1L, -1L}),
+                        GT_MetaGenerated_Tool_01.INSTANCE.getToolWithStats(GT_MetaGenerated_Tool_01.WRENCH_LV, 1, aMaterial, Materials.StainlessSteel, new long[]{400000L, 32L, 1L, -1L}),
                         GT_ModHandler.RecipeBits.DISMANTLEABLE | GT_ModHandler.RecipeBits.DO_NOT_CHECK_FOR_COLLISIONS | GT_ModHandler.RecipeBits.BUFFERED,
                         new Object[]{
                                 "SXd", "GMG", "PBP",
@@ -378,7 +378,7 @@ public class ProcessingToolHead implements gregtech.api.interfaces.IOreRecipeReg
                                 'B', ItemList.Battery_RE_LV_Lithium.get(1)
                         });
                 GT_ModHandler.addCraftingRecipe(
-                        GT_MetaGenerated_Tool_01.INSTANCE.getToolWithStats(GT_MetaGenerated_Tool_01.SCREWDRIVER_LV, 1, aMaterial, Materials.StainlessSteel, new long[]{3200000L, 32L, 1L, -1L}),
+                        GT_MetaGenerated_Tool_01.INSTANCE.getToolWithStats(GT_MetaGenerated_Tool_01.SCREWDRIVER_LV, 1, aMaterial, Materials.StainlessSteel, new long[]{400000L, 32L, 1L, -1L}),
                         GT_ModHandler.RecipeBits.DISMANTLEABLE | GT_ModHandler.RecipeBits.DO_NOT_CHECK_FOR_COLLISIONS | GT_ModHandler.RecipeBits.BUFFERED,
                         new Object[]{
                                 "PdX", "MGS", "GBP",
