@@ -73,16 +73,16 @@ public class GT_UO_DimensionList {
         SetConfigValues("Europa", "Europa", "distilled_water", "ic2distilledwater", 400, 3500, 20, 5);
 		SetConfigValues("Callisto", "Callisto", "oxygen", "oxygen", 80, 200, 40, 5);
         SetConfigValues("Callisto", "Callisto", "oil", "oil", 180, 800, 50, 1);
-        SetConfigValues("Callisto", "Callisto", "liquid_air", "liquidair", 10, 300, 10, 1);
+        SetConfigValues("Callisto", "Callisto", "liquid_air", "liquidair", 100, 400, 10, 1);
 		SetConfigValues("Ganymede", "Ganymede", "gas_natural_gas", "gas_natural_gas", 100, 800, 70, 1);
         SetConfigValues("Ganymede", "Ganymede", "helium", "helium", 0, 100, 30, 2);
-        SetConfigValues("Ceres", "Ceres", "nitrogen", "nitrogen", 180, 300, 70, 3);
-        SetConfigValues("Ceres", "Ceres", "fluorine", "fluorine", 0, 50, 30, 1);
+        SetConfigValues("Ceres", "Ceres", "nitrogen", "nitrogen", 180, 300, 90, 3);
+        SetConfigValues("Ceres", "Ceres", "fluorine", "fluorine", 0, 100, 10, 1);
         // T4
         SetConfigValues("Mercury", "Mercury", "helium-3", "helium-3", 250, 600, 100, 2);
-        SetConfigValues("Venus", "Venus", "argon", "argon", 0, 50, 20, 1);
+        SetConfigValues("Venus", "Venus", "argon", "argon", 0, 100, 10, 1);
         SetConfigValues("Venus", "Venus", "molten_lead", "molten.lead", 100, 600, 60, 5);
-        SetConfigValues("Venus", "Venus", "sulfuricacid", "sulfuricacid", 0, 300, 20, 4);
+        SetConfigValues("Venus", "Venus", "sulfuricacid", "sulfuricacid", 0, 300, 30, 4);
         SetConfigValues("Venus", "Venus", "carbon_dioxide", "carbondioxide", 0, 1500, 10, 3);
 		SetConfigValues("Io", "Io", "lava", "lava", 600, 2000, 80, 2);
         SetConfigValues("Io", "Io", "carbon_dioxide", "carbondioxide", 200, 750, 20, 3);
@@ -107,9 +107,11 @@ public class GT_UO_DimensionList {
         SetConfigValues("Pluto", "Pluto", "fluorine", "fluorine", 200, 600, 10, 1);
         SetConfigValues("Haumea", "Haumea", "nitrogen", "nitrogen", 400, 800, 80, 1);
         SetConfigValues("Haumea", "Haumea", "radon", "radon", 100, 400, 20, 3);
-        SetConfigValues("Makemake", "Makemake", "oxygen", "oxygen", 400, 800, 60, 1);
+        SetConfigValues("Makemake", "Makemake", "oxygen", "oxygen", 400, 800, 50, 1);
 		SetConfigValues("Makemake", "Makemake", "helium", "helium", 200, 600, 30, 1);
         SetConfigValues("Makemake", "Makemake", "molten_naquadahenriched", "molten.naquadahenriched", 50, 200, 10, 5);
+        SetConfigValues("Makemake", "Makemake", "argon", "argon", 100, 400, 10, 3);
+
         // T8
         SetConfigValues("BarnardC", "BarnardC", "liquid_extra_heavy_oil", "liquid_extra_heavy_oil", 400, 800, 70, 1);
         SetConfigValues("BarnardC", "BarnardC", "fluorine", "fluorine", 50, 100, 30, 3);
