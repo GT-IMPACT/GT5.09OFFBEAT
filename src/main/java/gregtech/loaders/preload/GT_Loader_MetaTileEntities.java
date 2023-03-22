@@ -395,7 +395,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         });
         ItemList.Hatch_Maintenance.set(new GT_MetaTileEntity_Hatch_Maintenance(90, "hatch.maintenance", "Maintenance Hatch", 1).getStackForm(1L));
 
-        GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Maintenance.get(1L), bitsd, new Object[]{"dwx", "hMc", "fsr", 'M', ItemList.Hull_LV});
+        GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Maintenance.get(1L), bitsd, new Object[]{"dwx", "hMc", "fsr", 'M', ItemList.Casing_LV});
 
         ItemList.Hatch_AutoMaintenance.set(new GT_MetaTileEntity_Hatch_Maintenance(111, "hatch.maintenance.auto", "Auto Maintenance Hatch", 5, true).getStackForm(1L));
 
