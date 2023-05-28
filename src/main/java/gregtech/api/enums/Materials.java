@@ -113,6 +113,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
             SiliconTetrachloride, AmmoniumSulfate, AmmoniumPersulfate,
     
             Nicrofer,
+            MixDirtOil,
 
     EndStatic;
 
@@ -875,7 +876,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
 
         AmmoniumSulfate = new MaterialBuilder(753, TextureSet.SET_FLUID, "Ammonium Sulfate").addCell().addFluid().setRGB(240, 240, 240).setColor(Dyes.dyeWhite).constructMaterial();
         AmmoniumPersulfate = new MaterialBuilder(754, TextureSet.SET_FLUID, "Ammonium Persulfate").addCell().addFluid().setRGB(235, 235, 235).setColor(Dyes.dyeWhite).constructMaterial();
-
+        
+        MixDirtOil = new MaterialBuilder(550, SET_FLUID, "Mix Dirt Oil").addCell().addFluid().setRGB(61, 54, 47).addFluid().constructMaterial();
 
         //Materials which are renamed automatically
         Palygorskite = new Materials(FullersEarth, false);
