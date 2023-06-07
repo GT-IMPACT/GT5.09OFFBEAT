@@ -1335,7 +1335,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
                 DamascusSteel, Iron, Invar, Steel, Kovar, IronMagnetic, SteelMagnetic, Nickel, CobaltBrass, Cobalt, Cupronickel, Copper, RedAlloy, AnnealedCopper, Brass, HastelloyN, Zinc, Potin, Gallium, IndiumGalliumPhosphide, EuropiumoxideMagnetic,
                 GalliumArsenide, Lafium, Arsenic, Bronze,  RadoxPolymer, ChromiumDioxide, TinAlloy, BismuthBronze, Molybdenum, Orichalcum,  ElectricalSteel, ConductiveIron, EnergeticAlloy, DarkIron, Sunnarium, Phoenixite, Soularium,
                 Endium, PulsatingIron, RedstoneAlloy, Duranium, DarkSteel, Ledox, MeteoricIron, Silver, BlueAlloy, Indium, Tin, Antimony, Caesium, Lanthanum, Cerium, Neodymium, SolderingAlloy, NeodymiumMagnetic, Electrum, RoseGold, Tantalum, BatteryAlloy,
-                Gold, Lead, Bismuth, Thorium, Uranium235, Uranium, Plutonium, Plutonium241, Platinum, Americum, Tritanium);
+                Gold, Lead, Bismuth, Thorium, Uranium235, Uranium, Plutonium, Plutonium241, Platinum, Americum, Tritanium, Graphene);
 
         Wood.add(SubTag.WOOD, SubTag.FLAMMABLE, SubTag.NO_SMELTING, SubTag.NO_SMASHING);
         WoodSealed.add(SubTag.WOOD, SubTag.FLAMMABLE, SubTag.NO_SMELTING, SubTag.NO_SMASHING, SubTag.NO_WORKING);
