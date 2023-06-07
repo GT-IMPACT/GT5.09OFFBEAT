@@ -2168,19 +2168,19 @@ public class GT_Loader_MetaTileEntities implements Runnable {
                 12207, "ultratransformer.tier.09", "UHV Ultra Transformer", 9,
                 "UEV -> UHV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Transformer_Ultra_UIV_UEV.set(new GT_MetaTileEntity_Ultra_Transformer(
-                12208, "ultratransformer.tier.10", "UEV Ultimate Voltage Ultra Transformer", 10,
+                12208, "ultratransformer.tier.10", "UEV Ultra Transformer", 10,
                 "UIV -> UEV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Transformer_Ultra_UMV_UIV.set(new GT_MetaTileEntity_Ultra_Transformer(
-                12209, "ultratransformer.tier.11", "UIV Voltage Ultra Transformer", 11,
+                12209, "ultratransformer.tier.11", "UIV Ultra Transformer", 11,
                 "UMV -> UIV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Transformer_Ultra_UXV_UMV.set(new GT_MetaTileEntity_Ultra_Transformer(
-                12210, "ultratransformer.tier.12", "UMV Voltage Ultra Transformer", 12,
+                12210, "ultratransformer.tier.12", "UMV Ultra Transformer", 12,
                 "UXV -> UMV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Transformer_Ultra_OPV_UXV.set(new GT_MetaTileEntity_Ultra_Transformer(
-                12211, "ultratransformer.tier.13", "UXV Voltage Ultra Transformer", 13,
+                12211, "ultratransformer.tier.13", "UXV Ultra Transformer", 13,
                 "OPV -> UXV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Transformer_Ultra_MAXV_OPV.set(new GT_MetaTileEntity_Ultra_Transformer(
-                12212, "ultratransformer.tier.14", "OpV Voltage Ultra Transformer", 14,
+                12212, "ultratransformer.tier.14", "OpV Ultra Transformer", 14,
                 "MAX -> OPV (Use Soft Mallet to invert)").getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_Ultra_HV_MV.get(1L),
