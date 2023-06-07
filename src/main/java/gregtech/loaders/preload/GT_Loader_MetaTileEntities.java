@@ -2168,7 +2168,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
                 12207, "ultratransformer.tier.09", "UHV Ultra Transformer", 9,
                 "UEV -> UHV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Transformer_Ultra_UIV_UEV.set(new GT_MetaTileEntity_Ultra_Transformer(
-                12208, "ultratransformer.tier.10", "EV Ultimate Voltage Ultra Transformer", 10,
+                12208, "ultratransformer.tier.10", "UEV Ultimate Voltage Ultra Transformer", 10,
                 "UIV -> UEV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Transformer_Ultra_UMV_UIV.set(new GT_MetaTileEntity_Ultra_Transformer(
                 12209, "ultratransformer.tier.11", "UIV Voltage Ultra Transformer", 11,
