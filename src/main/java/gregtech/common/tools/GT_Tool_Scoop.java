@@ -1,13 +1,10 @@
 package gregtech.common.tools;
 
-import cpw.mods.fml.common.Loader;
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.common.items.behaviors.Behaviour_None;
-import gregtech.common.items.behaviors.Behaviour_Scoop;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -113,12 +110,7 @@ public class GT_Tool_Scoop
 
     @Override
     public void onStatsAddedToTool(GT_MetaGenerated_Tool aItem, int aID) {
-        if(Loader.isModLoaded(GT_Values.MOD_ID_FR)){
-            aItem.addItemBehavior(aID, new Behaviour_Scoop(200));
-        }else{
-            aItem.addItemBehavior(aID, new Behaviour_None());
-        }
-
+        aItem.addItemBehavior(aID, new Behaviour_None());
     }
 
     @Override

@@ -177,43 +177,6 @@ public class GT_MetaTileEntity_Transformer extends GT_MetaTileEntity_TieredMachi
             igt.injectEnergyUnits((byte) 6, Math.min(tEU, maxEUInput()), 1);
         }
     }
-    
-    /**
-     * Enderio energy container
-     */
-    private void energyPowerContainer(IGregTechTileEntity igt, TileEntity te) {
-        IPowerContainer powerCont = (IPowerContainer) te;
-    
-        if (powerCont.getEnergyStored() > 0) {
-        
-            int storedRF = powerCont.getEnergyStored();
-            int extractRF = GT_Utility.safeInt(maxEUInput() * 100L / GregTech_API.mRFtoEU);
-            long tEU = 0;
-        
-            if (te instanceof TileCapBank) {
-            
-                ICapBankNetwork network = ((TileCapBank) te).getNetwork();
-            
-                if (network != null && network.getEnergyStoredL() > 0) {
-                
-                    long eCompare = Math.min(network.getEnergyStoredL(), storedRF - extractRF);
-                    long eBoundCompare = Math.min(eCompare, network.getMaxOutput());
-                
-                    tEU = Math.min(eBoundCompare * GregTech_API.mRFtoEU / 100L, maxEUInput());
-                    network.addEnergy(GT_Utility.safeInt(-(tEU * 100 / GregTech_API.mRFtoEU)));
-                }
-            } else {
-                if (storedRF > extractRF) {
-                    powerCont.setEnergyStored(storedRF - extractRF);
-                    tEU = maxEUInput();
-                } else {
-                    powerCont.setEnergyStored(0);
-                    tEU = storedRF * (long) GregTech_API.mRFtoEU / 100L;
-                }
-            }
-            igt.injectEnergyUnits((byte) 6, Math.min(tEU, maxEUInput()), 1);
-        }
-    }
 
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
@@ -224,19 +187,10 @@ public class GT_MetaTileEntity_Transformer extends GT_MetaTileEntity_TieredMachi
     
                 if (aBaseMetaTileEntity.inputEnergyFrom(i)) {
                     TileEntity tileEntity = aBaseMetaTileEntity.getTileEntityAtSide(i);
-                    
                     if (tileEntity instanceof IEnergyProvider) {
-                        
                         energyProvider(aBaseMetaTileEntity, tileEntity, i);
-                        
                     } else if (tileEntity instanceof IEnergyStorage) {
-                        
                         energyStorage(aBaseMetaTileEntity, tileEntity);
-                        
-                    } else if (GregTech_API.meIOLoaded && tileEntity instanceof IPowerContainer) {
-                        
-                        energyPowerContainer(aBaseMetaTileEntity, tileEntity);
-                        
                     }
                 }
             }

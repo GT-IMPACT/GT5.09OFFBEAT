@@ -20,7 +20,6 @@ import gregtech.common.GT_Proxy;
 import gregtech.common.GT_RecipeAdder;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import gregtech.common.items.ItemDebug;
-import gregtech.common.items.armor.components.LoadArmorComponents;
 import gregtech.common.items.behaviors.Behaviour_DataOrb;
 import gregtech.common.tileentities.machines.basic.GT_MetaTileEntity_Massfabricator;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_DigitalChestBase;
@@ -29,7 +28,6 @@ import gregtech.loaders.load.GT_FuelLoader;
 import gregtech.loaders.load.GT_ItemIterator;
 import gregtech.loaders.load.GT_SonictronLoader;
 import gregtech.loaders.misc.GT_Achievements;
-import gregtech.loaders.misc.GT_Bees;
 import gregtech.loaders.misc.GT_CoverLoader;
 import gregtech.loaders.postload.*;
 import gregtech.loaders.preload.*;
@@ -47,7 +45,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -62,9 +59,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static gregtech.api.enums.GT_Values.MOD_ID_AE;
-import static gregtech.api.enums.GT_Values.MOD_ID_FR;
+import static space.impact.gregtech.BuildConfigKt.*;
 
-@Mod(modid = "gregtech", name = "GregTech", version = "MC1710", useMetadata = false, 
+@Mod(modid = MODID, name = MODNAME, version = VERSION, useMetadata = false,
 dependencies =  " required-after:IC2;" +
         " after:Forestry;" +
         " after:appliedenergistics2;" +
@@ -588,9 +585,6 @@ public class GT_Mod implements IGT_Mod {
                 tRunnable.run();
             }
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
-
-        if (Loader.isModLoaded(MOD_ID_FR))
-            new GT_Bees();
 		
 		//Disable Low Grav regardless of config if Cleanroom is disabled.
 		if (!gregtechproxy.mEnableCleanroom){
@@ -702,10 +696,6 @@ public class GT_Mod implements IGT_Mod {
             }
         }
         
-        if (Loader.isModLoaded(MOD_ID_FR)) {
-            GT_Forestry_Compat.transferCentrifugeRecipes();
-            GT_Forestry_Compat.transferSqueezerRecipes();
-        }
         if (GregTech_API.mAE2) {
             GT_MetaTileEntity_DigitalChestBase.registerAEIntegration();
         }
@@ -810,9 +800,6 @@ public class GT_Mod implements IGT_Mod {
             }
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
         GT_Log.out.println("GT_Mod: Adding Fake Recipes for NEI");
-        
-        if (Loader.isModLoaded(MOD_ID_FR))
-            GT_Forestry_Compat.populateFakeNeiRecipes();
         
         if (ItemList.IC2_Crop_Seeds.get(1L) != null) {
             GT_Recipe.GT_Recipe_Map.sScannerFakeRecipes.addFakeRecipe(false, new ItemStack[]{ItemList.IC2_Crop_Seeds.getWildcard(1L)}, new ItemStack[]{ItemList.IC2_Crop_Seeds.getWithName(1L, "Scanned Seeds")}, null, null, null, 160, 8, 0);

@@ -1,7 +1,5 @@
 package gregtech.common.covers;
 
-import com.impact.mods.gregtech.tileentities.multi.storage.GTMTE_LapPowerStation;
-import cpw.mods.fml.common.Loader;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.gui.GT_GUICover;
 import gregtech.api.gui.widgets.GT_GuiIcon;
@@ -9,6 +7,7 @@ import gregtech.api.gui.widgets.GT_GuiIconCheckButton;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.interfaces.tileentity.IProvideEnergyCover;
 import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicBatteryBuffer;
 import gregtech.api.net.GT_Packet_TileEntityCover;
@@ -35,17 +34,11 @@ public class GT_Cover_EUMeter
             if (aTileEntity instanceof IGregTechTileEntity) {
                 IGregTechTileEntity tTileEntity = (IGregTechTileEntity) aTileEntity;
                 IMetaTileEntity mTileEntity = tTileEntity.getMetaTileEntity();
-                if (Loader.isModLoaded("impact")) {
-                    if (mTileEntity instanceof GTMTE_LapPowerStation) {
-                        GTMTE_LapPowerStation buffer = (GTMTE_LapPowerStation) mTileEntity;
-                        long tStored = buffer.stored;
-                        tScale = (buffer.capacity / 15);
-                        if (tScale > 0L) {
-                            aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (int) (tStored / tScale) : (byte) (int) (15L - tStored / tScale));
-                        } else {
-                            aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
-                        }
-                    }
+                if (mTileEntity instanceof IProvideEnergyCover) {
+                    IProvideEnergyCover buffer = (IProvideEnergyCover) mTileEntity;
+                    long tStored = buffer.getStored();
+                    tScale = (buffer.getCapacity() / 15);
+                    setOutputRedstoneSignal(aSide, aCoverVariable, aTileEntity, tScale, tStored);
                 }
             }
         } else if (aCoverVariable < 4) {
@@ -105,15 +98,19 @@ public class GT_Cover_EUMeter
                 }
             }
             tScale = tScale / 15L;
-            if (tScale > 0L) {
-                aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (int) (tStored / tScale) : (byte) (int) (15L - tStored / tScale));
-            } else {
-                aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
-            }
+            setOutputRedstoneSignal(aSide, aCoverVariable, aTileEntity, tScale, tStored);
         }
         return aCoverVariable;
     }
-
+    
+    private void setOutputRedstoneSignal(byte aSide, int aCoverVariable, ICoverable aTileEntity, long tScale, long tStored) {
+        if (tScale > 0L) {
+            aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (int) (tStored / tScale) : (byte) (int) (15L - tStored / tScale));
+        } else {
+            aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
+        }
+    }
+    
     public int onCoverScrewdriverclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 12;
         if(aCoverVariable <0){aCoverVariable = 11;}

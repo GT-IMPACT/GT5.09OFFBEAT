@@ -1,7 +1,6 @@
 package gregtech.loaders.oreprocessing;
 
 import cpw.mods.fml.common.Loader;
-import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.util.GT_ModHandler;
@@ -9,10 +8,8 @@ import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import static com.impact.common.item.Core_Items.Core_Items1;
 
 public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistrator {
     public ProcessingLog() {
@@ -58,9 +55,9 @@ public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistra
                     GT_ModHandler.removeRecipe(new ItemStack(aStack.getItem(), 1, i));
                     GT_ModHandler.addCraftingRecipe(GT_Utility.copyAmount(3, tStack), new Object[]{"s", "L", "L", 'L', new ItemStack(aStack.getItem(), 1, i)});
                     if (Loader.isModLoaded("impact")) {
-                        GT_Values.RA.addSawMill(new ItemStack[]{new ItemStack(aStack.getItem(), 8, i)}, new ItemStack[]{GT_Utility.copy(tPlanks), Core_Items1.getRecipe(39, 5)}, null, 10 * 20, 6, 0);
-                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Wood, 15), Core_Items1.getRecipe(39, 5)}, new FluidStack[]{GT_ModHandler.getWater(250)}, 15 * 20, 6, 1);
-                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{Core_Items1.getRecipe(39, 21)}, null, 20 * 20, 6, 2);
+                        GT_Values.RA.addSawMill(new ItemStack[]{new ItemStack(aStack.getItem(), 8, i)}, new ItemStack[]{GT_Utility.copy(tPlanks), GT_ModHandler.getModItem("impact", "item.impact_item.39", 5) }, null, 10 * 20, 6, 0);
+                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Wood, 15), GT_ModHandler.getModItem("impact", "item.impact_item.39", 5)}, new FluidStack[]{GT_ModHandler.getWater(250)}, 15 * 20, 6, 1);
+                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{ GT_ModHandler.getModItem("impact", "item.impact_item.39", 21) }, null, 20 * 20, 6, 2);
                     }
                 }
             }

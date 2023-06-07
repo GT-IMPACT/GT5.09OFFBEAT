@@ -1,6 +1,11 @@
 package gregtech.common.items.behaviors;
 
+import appeng.api.util.AEColor;
 import appeng.block.networking.BlockCableBus;
+import appeng.integration.IntegrationType;
+import appeng.parts.ICableBusContainer;
+import appeng.transformer.annotations.Integration;
+import cpw.mods.fml.common.Optional;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.ItemList;
@@ -21,8 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class Behaviour_Spray_Color
-        extends Behaviour_None {
+public class Behaviour_Spray_Color extends Behaviour_None {
     private final ItemStack mEmpty;
     private final ItemStack mUsed;
     private final ItemStack mFull;
@@ -87,7 +91,7 @@ public class Behaviour_Spray_Color
         }
         return rOutput;
     }
-
+    
     private boolean colorize(World aWorld, int aX, int aY, int aZ, int aSide, EntityPlayer p) {
         Block aBlock = aWorld.getBlock(aX, aY, aZ);
         final ForgeDirection orientation = ForgeDirection.getOrientation(aSide);
@@ -110,12 +114,20 @@ public class Behaviour_Spray_Color
             aWorld.setBlockMetadataWithNotify(aX, aY, aZ, (this.mColor ^ 0xFFFFFFFF) & 0xF, 3);
             return true;
         }
-        if (aBlock instanceof BlockCableBus) {
-            int clr = p.isSneaking() ? 16 : 15 - this.mColor;
-            ((BlockCableBus) aBlock).recolourBlock(aWorld, aX, aY, aZ, orientation, clr, p);
+        if (reColorAeCable(aBlock, p, orientation)) {
             return true;
         }
         return aBlock.recolourBlock(aWorld, aX, aY, aZ, ForgeDirection.getOrientation(aSide), (this.mColor ^ 0xFFFFFFFF) & 0xF);
+    }
+    
+    @Optional.Method(modid = "appliedenergistics2")
+    private boolean reColorAeCable(Block aBlock, EntityPlayer p, ForgeDirection side) {
+        if (aBlock instanceof ICableBusContainer) {
+            int clr = p.isSneaking() ? 16 : 15 - this.mColor;
+            ((ICableBusContainer) aBlock).recolourBlock(side, AEColor.values()[clr], p);
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -1,15 +1,10 @@
 package gregtech.common.tileentities.machines.basic;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import forestry.api.genetics.AlleleManager;
-import forestry.api.genetics.IIndividual;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
-import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
-import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
@@ -18,7 +13,6 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachin
 import gregtech.api.objects.ItemData;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Assemblyline_Server;
-import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe;
@@ -83,35 +77,6 @@ public class GT_MetaTileEntity_Scanner
         if (getOutputAt(0) != null) {
             this.mOutputBlocked += 1;
         } else if ((GT_Utility.isStackValid(aStack)) && (aStack.stackSize > 0)) {
-            if ((getFillableStack() != null) && (getFillableStack().containsFluid(Materials.Honey.getFluid(100L)))) {
-                try {
-                    Object tIndividual = AlleleManager.alleleRegistry.getIndividual(aStack);
-                    if (tIndividual != null) {
-                        if (((IIndividual) tIndividual).analyze()) {
-                            getFillableStack().amount -= 100;
-                            this.mOutputItems[0] = GT_Utility.copy(new Object[]{aStack});
-                            aStack.stackSize = 0;
-                            NBTTagCompound tNBT = new NBTTagCompound();
-                            ((IIndividual) tIndividual).writeToNBT(tNBT);
-                            this.mOutputItems[0].setTagCompound(tNBT);
-                            calculateOverclockedNess(2, 500);
-                            //In case recipe is too OP for that machine
-                            if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
-                                return FOUND_RECIPE_BUT_DID_NOT_MEET_REQUIREMENTS;
-                            return 2;
-                        }
-                        this.mOutputItems[0] = GT_Utility.copy(new Object[]{aStack});
-                        aStack.stackSize = 0;
-                        this.mMaxProgresstime = 1;
-                        this.mEUt = 1;
-                        return 2;
-                    }
-                } catch (Throwable e) {
-                    if (GT_Values.D1) {
-                        e.printStackTrace(GT_Log.err);
-                    }
-                }
-            }
             if (ItemList.IC2_Crop_Seeds.isStackEqual(aStack, true, true)) {
                 NBTTagCompound tNBT = aStack.getTagCompound();
                 if (tNBT == null) {
