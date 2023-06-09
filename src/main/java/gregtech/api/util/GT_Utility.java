@@ -90,6 +90,7 @@ import static gregtech.common.GT_UndergroundOil.undergroundOilReadInformation;
  * <p/>
  * Just a few Utility Functions I use.
  */
+@SuppressWarnings({"rawtypes","unchecked", "unused", "deprecated"})
 public class GT_Utility {
     /**
      * Forge screwed the Fluid Registry up again, so I make my own, which is also much more efficient than the stupid Stuff over there.
@@ -97,6 +98,7 @@ public class GT_Utility {
     private static final List<FluidContainerData> sFluidContainerList = new ArrayList<FluidContainerData>();
     private static final Map<GT_ItemStack, FluidContainerData> sFilledContainerToData = new /*Concurrent*/HashMap<GT_ItemStack, FluidContainerData>();
     private static final Map<GT_ItemStack, Map<Fluid, FluidContainerData>> sEmptyContainerToFluidToData = new /*Concurrent*/HashMap<GT_ItemStack, Map<Fluid, FluidContainerData>>();
+    private static final Map<Fluid, List<ItemStack>> sFluidToContainers = new HashMap<>();
     public static volatile int VERSION = 509;
     public static boolean TE_CHECK = false, BC_CHECK = false, CHECK_ALL = true, RF_CHECK = false;
     public static Map<GT_PlayedSound, Integer> sPlayedSoundMap = new /*Concurrent*/HashMap<GT_PlayedSound, Integer>();
@@ -788,14 +790,22 @@ public class GT_Utility {
     public static void reInit() {
         sFilledContainerToData.clear();
         sEmptyContainerToFluidToData.clear();
+        sFluidToContainers.clear();
         for (FluidContainerData tData : sFluidContainerList) {
             sFilledContainerToData.put(new GT_ItemStack(tData.filledContainer), tData);
             Map<Fluid, FluidContainerData> tFluidToContainer = sEmptyContainerToFluidToData.get(new GT_ItemStack(tData.emptyContainer));
+            List<ItemStack> tContainers = sFluidToContainers.get(tData.fluid.getFluid());
             if (tFluidToContainer == null) {
                 sEmptyContainerToFluidToData.put(new GT_ItemStack(tData.emptyContainer), tFluidToContainer = new /*Concurrent*/HashMap<Fluid, FluidContainerData>());
                 GregTech_API.sFluidMappings.add(tFluidToContainer);
             }
             tFluidToContainer.put(tData.fluid.getFluid(), tData);
+            if (tContainers == null) {
+                tContainers = new ArrayList<>();
+                tContainers.add(tData.filledContainer);
+                sFluidToContainers.put(tData.fluid.getFluid(), tContainers);
+            }
+            else tContainers.add(tData.filledContainer);
         }
     }
 
@@ -803,11 +813,27 @@ public class GT_Utility {
         sFluidContainerList.add(aData);
         sFilledContainerToData.put(new GT_ItemStack(aData.filledContainer), aData);
         Map<Fluid, FluidContainerData> tFluidToContainer = sEmptyContainerToFluidToData.get(new GT_ItemStack(aData.emptyContainer));
+        List<ItemStack> tContainers = sFluidToContainers.get(aData.fluid.getFluid());
         if (tFluidToContainer == null) {
             sEmptyContainerToFluidToData.put(new GT_ItemStack(aData.emptyContainer), tFluidToContainer = new /*Concurrent*/HashMap<Fluid, FluidContainerData>());
             GregTech_API.sFluidMappings.add(tFluidToContainer);
         }
         tFluidToContainer.put(aData.fluid.getFluid(), aData);
+        if (tContainers == null) {
+            tContainers = new ArrayList<>();
+            tContainers.add(aData.filledContainer);
+            sFluidToContainers.put(aData.fluid.getFluid(), tContainers);
+        }
+        else tContainers.add(aData.filledContainer);
+    }
+    
+    public static List<ItemStack> getContainersFromFluid(FluidStack tFluidStack) {
+        if (tFluidStack != null) {
+            List<ItemStack> tContainers = sFluidToContainers.get(tFluidStack.getFluid());
+            if (tContainers == null) return new ArrayList<>();
+            return tContainers;
+        }
+        return new ArrayList<>();
     }
 
     public static ItemStack fillFluidContainer(FluidStack aFluid, ItemStack aStack, boolean aRemoveFluidDirectly, boolean aCheckIFluidContainerItems) {
