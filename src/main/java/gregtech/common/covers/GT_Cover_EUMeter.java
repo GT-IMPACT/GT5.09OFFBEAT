@@ -37,7 +37,7 @@ public class GT_Cover_EUMeter
                 if (mTileEntity instanceof IProvideEnergyCover) {
                     IProvideEnergyCover buffer = (IProvideEnergyCover) mTileEntity;
                     long tStored = buffer.getStored();
-                    tScale = (buffer.getCapacity() / 15);
+                    tScale = (buffer.getMaxCapacity() / 15);
                     setOutputRedstoneSignal(aSide, aCoverVariable, aTileEntity, tScale, tStored);
                 }
             }
