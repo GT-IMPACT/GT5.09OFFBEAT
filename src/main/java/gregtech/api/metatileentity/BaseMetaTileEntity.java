@@ -8,6 +8,9 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
+import com.gtnewhorizons.modularui.api.screen.ITileWithModularUI;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
@@ -65,6 +68,7 @@ import space.impact.api.multiblocks.alignment.enumerable.ExtendedFacing;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static gregtech.GT_Mod.GT_FML_LOGGER;
 import static gregtech.api.enums.GT_Values.NW;
@@ -79,7 +83,14 @@ import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
 @Optional.InterfaceList(value = {
         @Optional.Interface(iface = "appeng.api.networking.security.IActionHost", modid = "appliedenergistics2", striprefs = true),
         @Optional.Interface(iface = "appeng.me.helpers.IGridProxyable", modid = "appliedenergistics2", striprefs = true)})
-public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileEntity, IActionHost, IGridProxyable, IAlignmentProvider, IConstructableProvider {
+public class BaseMetaTileEntity
+        extends BaseTileEntity
+        implements IGregTechTileEntity,
+        ITileWithModularUI,
+        IActionHost,
+        IGridProxyable,
+        IAlignmentProvider,
+        IConstructableProvider {
     private final GT_CoverBehavior[] mCoverBehaviors = new GT_CoverBehavior[]{GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior, GregTech_API.sNoBehavior};
     protected MetaTileEntity mMetaTileEntity;
     protected long mStoredEnergy = 0, mStoredSteam = 0;
@@ -2374,6 +2385,25 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     public IConstructable getConstructable() {
         return getMetaTileEntity() instanceof IConstructable ? (IConstructable) getMetaTileEntity() : null;
+    }
+    
+    protected Supplier<Boolean> getValidator() {
+        return () -> !this.isDead();
+    }
+    
+    public boolean useModularUI() {
+        return false;
+    }
+    
+    public ModularWindow createModularUI(UIBuildContext buildContext) {
+         return null;
+    }
+    
+    @Override
+    public ModularWindow createWindow(UIBuildContext buildContext) {
+        if (!useModularUI()) return null;
+        buildContext.setValidator(getValidator());
+        return createModularUI(buildContext);
     }
     
     private class BasicAlignment implements IAlignment {

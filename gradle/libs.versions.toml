@@ -9,6 +9,7 @@ forge-gradle = { module = "com.anatawa12.forge:ForgeGradle", version = "1.2-1.1.
 gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-gitversion = { module = "com.palantir.gradle.gitversion:gradle-git-version", version = "3.0.0" }
 gradle-buildconfig = { module = "com.github.gmazzo:gradle-buildconfig-plugin", version = "3.1.0" }
+unimixins = { module = "io.github.legacymoddingmc:unimixins", version = "0.1.7.1" }
 
 [plugins]
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }

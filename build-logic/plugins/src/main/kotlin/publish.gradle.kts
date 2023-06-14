@@ -51,11 +51,7 @@ configure<PublishingExtension> {
             pom.withXml {
                 removeRuntimeDependencies(asNode())
             }
-            val devJar by tasks.registering(Jar::class) {
-                from(sourceSets["main"].output)
-                archiveClassifier.set("dev")
-            }
-            artifact(devJar.get())
+            artifact(tasks["devJar"])
             groupId = "space.impact"
             artifactId = modId
             version = identifiedVersion

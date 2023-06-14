@@ -1,5 +1,6 @@
 package gregtech.api.interfaces.metatileentity;
 
+import com.gtnewhorizons.modularui.api.forge.ItemStackHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.interfaces.ITexture;
@@ -431,5 +432,13 @@ public interface IMetaTileEntity extends ISidedInventory, IFluidTank, IFluidHand
     @Override
     default boolean isMachineBlockUpdateRecursive(){
         return true;
+    }
+    
+    default boolean useModularUI() {
+        return false;
+    }
+    
+    default ItemStackHandler getInventoryHandler() {
+        return null;
     }
 }

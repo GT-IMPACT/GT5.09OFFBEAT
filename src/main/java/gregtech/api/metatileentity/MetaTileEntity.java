@@ -2,6 +2,7 @@ package gregtech.api.metatileentity;
 
 import appeng.api.util.AECableType;
 import appeng.me.helpers.AENetworkProxy;
+import com.gtnewhorizons.modularui.api.forge.ItemStackHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -61,6 +62,17 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
      * The Inventory of the MetaTileEntity. Amount of Slots can be larger than 256. HAYO!
      */
     public final ItemStack[] mInventory;
+    
+    /**
+     * Inventory wrapper for ModularUI
+     */
+    public final ItemStackHandler inventoryHandler;
+    
+    @Override
+    public ItemStackHandler getInventoryHandler() {
+        return inventoryHandler;
+    }
+    
     public boolean doTickProfilingInThisTick = true;
 
     /**
@@ -95,6 +107,7 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
         getBaseMetaTileEntity().setMetaTileID((short) aID);
         GT_LanguageManager.addStringLocalization("gt.blockmachines." + mName + ".name", aRegionalName);
         mInventory = new ItemStack[aInvSlotCount];
+        inventoryHandler = new ItemStackHandler(mInventory);
     }
 
     /**
@@ -102,6 +115,7 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
      */
     public MetaTileEntity(String aName, int aInvSlotCount) {
         mInventory = new ItemStack[aInvSlotCount];
+        inventoryHandler = new ItemStackHandler(mInventory);
         mName = aName;
     }
 
