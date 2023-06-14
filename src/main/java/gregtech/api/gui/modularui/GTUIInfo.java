@@ -16,8 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import java.util.function.Function;
 
-class GTUIInfo {
-    
+public class GTUIInfo {
     public static final Function<ContainerConstructor, UIInfo<?, ?>> GTTileEntityUIFactory =
             containerConstructor -> UIBuilder.of()
                     .container((player, world, x, y, z) -> {
