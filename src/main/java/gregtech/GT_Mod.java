@@ -106,7 +106,6 @@ import gregtech.loaders.postload.GT_MinableRegistrator;
 import gregtech.loaders.postload.GT_PostLoad;
 import gregtech.loaders.postload.GT_RecyclerBlacklistLoader;
 import gregtech.loaders.postload.GT_ScrapboxDropLoader;
-import gregtech.loaders.postload.GT_Worldgenloader;
 import gregtech.loaders.preload.GT_Loader_CircuitBehaviors;
 import gregtech.loaders.preload.GT_Loader_ItemData;
 import gregtech.loaders.preload.GT_Loader_Item_Block_And_Fluid;
@@ -403,7 +402,7 @@ public class GT_Mod implements IGT_Mod {
         new GT_MachineRecipeLoader().run();
         new GT_ScrapboxDropLoader().run();
         new GT_CropLoader().run();
-        new GT_Worldgenloader().run();
+//        new GT_Worldgenloader().run();
         new GT_CoverLoader().run();
 
         GT_RecipeRegistrator.registerUsagesForMaterials(
