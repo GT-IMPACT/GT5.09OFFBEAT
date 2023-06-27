@@ -10,6 +10,7 @@ import static gregtech.api.enums.Mods.Thaumcraft;
 import static gregtech.api.util.GT_Recipe.GT_Recipe_Map.sAssemblerRecipes;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 
+import gregtech.api.util.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -28,11 +29,6 @@ import gregtech.api.enums.SoundResource;
 import gregtech.api.enums.TierEU;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_GT_Recipe;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_GT_Recipe.SpecialEffects;
-import gregtech.api.util.GT_Log;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
 import gregtech.loaders.postload.GT_PCBFactoryMaterialLoader;
 import gregtech.loaders.postload.GT_ProcessingArrayRecipeLoader;
 import ic2.core.Ic2Items;
@@ -56,12 +52,12 @@ public class GT_Loader_MetaTileEntities_Recipes implements Runnable {
     private static void run1() {
         Materials LuVMat2 = BartWorks.isModLoaded() ? Materials.get("Rhodium-PlatedPalladium") : Materials.Chrome;
 
-        GT_ModHandler.addCraftingRecipe(
-            ItemList.Casing_Pipe_Polytetrafluoroethylene.get(1L),
-            bits,
-            new Object[] { "PIP", "IFI", "PIP", 'P', OrePrefixes.plate.get(Materials.Polytetrafluoroethylene), 'F',
-                OrePrefixes.frameGt.get(Materials.Polytetrafluoroethylene), 'I',
-                OrePrefixes.pipeMedium.get(Materials.Polytetrafluoroethylene) });
+        GT_Values.RA.craftingBuilder()
+            .addShape("PIP", "IFI", "PIP")
+            .addInput('P', OrePrefixes.plate.get(Materials.Polytetrafluoroethylene))
+            .addInput( 'F', OrePrefixes.frameGt.get(Materials.Polytetrafluoroethylene))
+            .addInput('I', OrePrefixes.pipeSmall.get(Materials.Polytetrafluoroethylene))
+            .addResult(ItemList.Casing_Pipe_Polytetrafluoroethylene.get(1L));
 
         GT_ModHandler.addCraftingRecipe(
             ItemList.Casing_Pipe_Polybenzimidazole.get(1L),
@@ -69,11 +65,12 @@ public class GT_Loader_MetaTileEntities_Recipes implements Runnable {
             new Object[] { "PIP", "IFI", "PIP", 'P', OrePrefixes.plate.get(Materials.Polybenzimidazole), 'F',
                 OrePrefixes.frameGt.get(Materials.Polybenzimidazole), 'I',
                 OrePrefixes.pipeMedium.get(Materials.Polybenzimidazole) });
-        GT_ModHandler.addCraftingRecipe(
-            ItemList.Casing_ULV.get(1L),
-            bits,
-            new Object[] { aTextPlate, aTextPlateWrench, aTextPlate, 'P',
-                OrePrefixes.plate.get(Materials.WroughtIron) });
+
+        GT_Values.RA.craftingBuilder()
+            .addShape(aTextPlate, aTextPlateWrench, aTextPlate)
+            .addInput('P', OrePrefixes.plate.get(Materials.WroughtIron))
+            .addResult(ItemList.Casing_ULV.get(1L));
+
         GT_ModHandler.addCraftingRecipe(
             ItemList.Casing_LV.get(1L),
             bits,

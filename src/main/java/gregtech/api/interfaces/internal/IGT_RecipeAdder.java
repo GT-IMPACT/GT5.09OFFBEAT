@@ -1,5 +1,6 @@
 package gregtech.api.interfaces.internal;
 
+import gregtech.api.util.GT_RecipeBuilderCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -1092,4 +1093,6 @@ public interface IGT_RecipeAdder {
         int aCells);
 
     GT_RecipeBuilder stdBuilder();
+
+    GT_RecipeBuilderCrafting craftingBuilder();
 }

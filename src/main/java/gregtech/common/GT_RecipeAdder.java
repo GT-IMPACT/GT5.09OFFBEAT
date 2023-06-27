@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import gregtech.api.util.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -26,13 +27,7 @@ import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.interfaces.internal.IGT_RecipeAdder;
 import gregtech.api.objects.ItemData;
-import gregtech.api.util.GT_AssemblyLineUtils;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_AssemblyLine;
-import gregtech.api.util.GT_RecipeBuilder;
-import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_IntegratedCircuit_Item;
 import ic2.core.init.MainConfig;
 import ic2.core.util.ConfigUtil;
@@ -3308,5 +3303,10 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
     @Override
     public GT_RecipeBuilder stdBuilder() {
         return GT_RecipeBuilder.builder();
+    }
+
+    @Override
+    public GT_RecipeBuilderCrafting craftingBuilder() {
+        return GT_RecipeBuilderCrafting.create();
     }
 }
