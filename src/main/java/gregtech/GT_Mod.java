@@ -106,7 +106,6 @@ import gregtech.loaders.postload.GT_MinableRegistrator;
 import gregtech.loaders.postload.GT_PostLoad;
 import gregtech.loaders.postload.GT_RecyclerBlacklistLoader;
 import gregtech.loaders.postload.GT_ScrapboxDropLoader;
-import gregtech.loaders.postload.GT_Worldgenloader;
 import gregtech.loaders.preload.GT_Loader_CircuitBehaviors;
 import gregtech.loaders.preload.GT_Loader_ItemData;
 import gregtech.loaders.preload.GT_Loader_Item_Block_And_Fluid;
@@ -268,10 +267,6 @@ public class GT_Mod implements IGT_Mod {
                 .getParentFile());
         GT_PreLoad.adjustScrap();
 
-        EntityRegistry.registerModEntity(GT_Entity_Arrow.class, "GT_Entity_Arrow", 1, GT_Values.GT, 160, 1, true);
-        EntityRegistry
-            .registerModEntity(GT_Entity_Arrow_Potion.class, "GT_Entity_Arrow_Potion", 2, GT_Values.GT, 160, 1, true);
-
         GT_PreLoad.runMineTweakerCompat();
 
         new GT_Loader_OreProcessing().run();
@@ -279,7 +274,7 @@ public class GT_Mod implements IGT_Mod {
         new GT_Loader_ItemData().run();
         new GT_Loader_Item_Block_And_Fluid().run();
         new GT_Loader_MetaTileEntities().run();
-        new GT_Loader_MultiTileEntities().run();
+//        new GT_Loader_MultiTileEntities().run();
 
         new GT_Loader_CircuitBehaviors().run();
         new GT_CoverBehaviorLoader().run();
@@ -288,7 +283,6 @@ public class GT_Mod implements IGT_Mod {
 
         GT_PreLoad.sortToTheEnd();
         GregTech_API.sPreloadFinished = true;
-        GT_Log.out.println("GT_Mod: Preload-Phase finished!");
         GT_Log.ore.println("GT_Mod: Preload-Phase finished!");
 
         for (Runnable tRunnable : GregTech_API.sAfterGTPreload) {
@@ -394,16 +388,16 @@ public class GT_Mod implements IGT_Mod {
             gregtechproxy.registerUnificationEntries();
             new GT_FuelLoader().run();
         }
-        new GT_BookAndLootLoader().run();
+//        new GT_BookAndLootLoader().run();
         new GT_ItemMaxStacksizeLoader().run();
         new GT_BlockResistanceLoader().run();
-        new GT_RecyclerBlacklistLoader().run();
-        new GT_MinableRegistrator().run();
-        new GT_FakeRecipeLoader().run();
-        new GT_MachineRecipeLoader().run();
-        new GT_ScrapboxDropLoader().run();
-        new GT_CropLoader().run();
-        new GT_Worldgenloader().run();
+//        new GT_RecyclerBlacklistLoader().run();
+//        new GT_MinableRegistrator().run();
+//        new GT_FakeRecipeLoader().run();
+//        new GT_MachineRecipeLoader().run();
+//        new GT_ScrapboxDropLoader().run();
+//        new GT_CropLoader().run();
+//        new GT_Worldgenloader().run();
         new GT_CoverLoader().run();
 
         GT_RecipeRegistrator.registerUsagesForMaterials(
