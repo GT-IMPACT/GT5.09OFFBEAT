@@ -33,7 +33,7 @@ public class GT_FluidDisplayItem extends GT_Generic_Item {
     private static final Map<Fluid, String> sFluidTooltips = new HashMap<>();
 
     public static void addChemicalFormula(Fluid fluid, String formula) {
-        if (sFluidTooltips.containsKey(fluid)) {
+        if (!sFluidTooltips.containsKey(fluid)) {
             sFluidTooltips.put(fluid, formula);
         }
     }
