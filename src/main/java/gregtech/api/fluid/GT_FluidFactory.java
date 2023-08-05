@@ -1,5 +1,6 @@
 package gregtech.api.fluid;
 
+import gregtech.api.enums.IFluidState;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -53,7 +54,7 @@ public class GT_FluidFactory {
      * @return the registered {@link Fluid}
      */
     public static Fluid of(final String fluidName, final String localizedName, final Materials material,
-        final FluidState state, final int temperature) {
+                           final IFluidState state, final int temperature) {
         return builder(fluidName).withLocalizedName(localizedName)
             .withStateAndTemperature(state, temperature)
             .buildAndRegister()
@@ -70,7 +71,7 @@ public class GT_FluidFactory {
      * @param temperature   The fluid temperature in Kelvin
      * @return the registered {@link Fluid}
      */
-    public static Fluid of(final String fluidName, final String localizedName, final FluidState state,
+    public static Fluid of(final String fluidName, final String localizedName, final IFluidState state,
         final int temperature) {
         return builder(fluidName).withLocalizedName(localizedName)
             .withStateAndTemperature(state, temperature)

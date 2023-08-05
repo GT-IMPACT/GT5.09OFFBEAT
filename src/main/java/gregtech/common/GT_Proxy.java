@@ -56,6 +56,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
+import gregtech.api.enums.*;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -119,19 +120,7 @@ import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.ConfigCategories;
-import gregtech.api.enums.Dyes;
-import gregtech.api.enums.FluidState;
-import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.ItemList;
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.OreDictNames;
-import gregtech.api.enums.OrePrefixes;
-import gregtech.api.enums.SoundResource;
-import gregtech.api.enums.SubTag;
 import gregtech.api.enums.TC_Aspects.TC_AspectStack;
-import gregtech.api.enums.TierEU;
-import gregtech.api.enums.ToolDictNames;
 import gregtech.api.fluid.GT_FluidFactory;
 import gregtech.api.interfaces.IBlockOnWalkOver;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
@@ -2645,8 +2634,8 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler, IG
 
     /**
      * @deprecated use {@link GT_FluidFactory#builder}
-     * @see GT_FluidFactory#of(String, String, Materials, FluidState, int)
-     * @see GT_FluidFactory#of(String, String, FluidState, int)
+     * @see GT_FluidFactory#of(String, String, Materials, IFluidState, int)
+     * @see GT_FluidFactory#of(String, String, IFluidState, int)
      */
     @Deprecated
     public Fluid addFluid(String aName, String aLocalized, Materials aMaterial, int aState, int aTemperatureK) {

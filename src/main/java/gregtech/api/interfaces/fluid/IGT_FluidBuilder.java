@@ -2,6 +2,7 @@ package gregtech.api.interfaces.fluid;
 
 import javax.annotation.Nonnull;
 
+import gregtech.api.enums.IFluidState;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -32,7 +33,7 @@ public interface IGT_FluidBuilder {
      * @return {@link IGT_FluidBuilder} self for call chaining
      */
     @SuppressWarnings("UnusedReturnValue") // Last call in chain, may not use this returned value
-    IGT_FluidBuilder withStateAndTemperature(final FluidState fluidState, final int temperature);
+    IGT_FluidBuilder withStateAndTemperature(final IFluidState fluidState, final int temperature);
 
     /**
      * @param stillIconResourceLocation the {@link ResourceLocation} of the still fluid icon

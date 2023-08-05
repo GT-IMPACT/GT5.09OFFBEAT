@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 
+import gregtech.api.enums.IFluidState;
 import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +25,7 @@ public class GT_FluidBuilder implements IGT_FluidBuilder {
     ResourceLocation stillIconResourceLocation = null, flowingIconResourceLocation = null;
     short[] colorRGBA = Dyes._NULL.getRGBA();
     Block fluidBlock = null;
-    FluidState fluidState;
+    IFluidState fluidState;
     int temperature;
     IIcon stillIcon;
     IIcon flowingIcon;
@@ -56,7 +57,7 @@ public class GT_FluidBuilder implements IGT_FluidBuilder {
      * @inheritDoc
      */
     @Override
-    public IGT_FluidBuilder withStateAndTemperature(final FluidState fluidState, final int temperature) {
+    public IGT_FluidBuilder withStateAndTemperature(final IFluidState fluidState, final int temperature) {
         this.fluidState = fluidState;
         this.temperature = temperature;
         return this;

@@ -1881,7 +1881,7 @@ public class GT_Utility {
                 .isGaseous(aFluid));
         tNBT.setBoolean("mHideStackSize", aHideStackSize);
         try {
-            tNBT.setString("mFluidMaterialName", FLUID_MAP.get(aFluid.getFluid()).mName);
+            tNBT.setString("mFluidMaterialName", FLUID_MAP.get(aFluid.getFluid()).getName());
         } catch (Exception ignored) {}
         rStack.setTagCompound(tNBT);
         return rStack;

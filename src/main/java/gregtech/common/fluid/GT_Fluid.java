@@ -1,9 +1,11 @@
 package gregtech.common.fluid;
 
+import static gregtech.api.enums.FluidState.*;
 import static gregtech.api.util.GT_Recipe.GT_Recipe_Map.sFluidCannerRecipes;
 
 import javax.annotation.Nonnull;
 
+import gregtech.api.enums.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -26,7 +28,7 @@ public class GT_Fluid extends Fluid implements IGT_Fluid, IGT_RegisteredFluid, R
     private final ResourceLocation stillIconResourceLocation;
     private final ResourceLocation flowingIconResourceLocation;
     private final short[] colorRGBA;
-    private final FluidState fluidState;
+    private final IFluidState fluidState;
     private final Fluid iconsFrom;
     private Fluid registeredFluid;
 
@@ -52,31 +54,23 @@ public class GT_Fluid extends Fluid implements IGT_Fluid, IGT_RegisteredFluid, R
      * Adjusts this {@link Fluid}'s settings based on this {@link IGT_Fluid}'s state
      */
     protected void configureFromStateTemperature() {
-        switch (fluidState) {
-            case SLURRY:
-                setGaseous(false).setViscosity(10000);
-                break;
-            case GAS:
-                setGaseous(true).setDensity(-100)
-                    .setViscosity(200);
-                break;
-            case PLASMA:
-                setGaseous(true).setDensity(55536)
-                    .setViscosity(10)
-                    .setLuminosity(15);
-                break;
-            case MOLTEN:
-                final int luminosity;
-                if (temperature >= 3500) {
-                    luminosity = 15;
-                } else {
-                    luminosity = temperature < 1000 ? 0 : 14 * (temperature - 1000) / 2500 + 1;
-                }
-                setLuminosity(luminosity);
-            case LIQUID:
-            default:
-                setGaseous(false).setViscosity(1000);
-                break;
+        if (fluidState.equals(SLURRY)) {
+            setGaseous(false).setViscosity(10000);
+        } else if (fluidState.equals(GAS)) {
+            setGaseous(true).setDensity(-100).setViscosity(200);
+        } else if (fluidState.equals(PLASMA)) {
+            setGaseous(true).setDensity(55536).setViscosity(10).setLuminosity(15);
+        } else if (fluidState.equals(MOLTEN)) {
+            final int luminosity;
+            if (temperature >= 3500) {
+                luminosity = 15;
+            } else {
+                luminosity = temperature < 1000 ? 0 : 14 * (temperature - 1000) / 2500 + 1;
+            }
+            setLuminosity(luminosity);
+            setGaseous(false).setViscosity(1000);
+        } else {
+            setGaseous(false).setViscosity(1000);
         }
     }
 
@@ -158,12 +152,16 @@ public class GT_Fluid extends Fluid implements IGT_Fluid, IGT_RegisteredFluid, R
     @Override
     public IGT_RegisteredFluid configureMaterials(final Materials material) {
         if (material != null) {
-            switch (fluidState) {
-                case SLURRY -> material.mSolid = registeredFluid;
-                case GAS -> material.mGas = registeredFluid;
-                case PLASMA -> material.mPlasma = registeredFluid;
-                case MOLTEN -> material.mStandardMoltenFluid = registeredFluid;
-                default -> material.mFluid = registeredFluid;
+            if (fluidState.equals(SLURRY)) {
+                material.mSolid = registeredFluid;
+            } else if (fluidState.equals(GAS)) {
+                material.mGas = registeredFluid;
+            } else if (fluidState.equals(PLASMA)) {
+                material.mPlasma = registeredFluid;
+            } else if (fluidState.equals(MOLTEN)) {
+                material.mStandardMoltenFluid = registeredFluid;
+            } else {
+                material.mFluid = registeredFluid;
             }
             Materials.FLUID_MAP.put(registeredFluid, material);
         }

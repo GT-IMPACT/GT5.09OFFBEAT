@@ -1,17 +1,35 @@
 package gregtech.api.enums;
 
-public enum FluidState {
+import java.util.Arrays;
 
-    GAS,
-    LIQUID,
-    MOLTEN,
-    PLASMA,
-    SLURRY;
+public enum FluidState implements IFluidState {
 
-    public static final FluidState[] VALID_STATES = new FluidState[] { SLURRY, LIQUID, GAS, PLASMA, MOLTEN };
+    GAS(2),
+    LIQUID(1),
+    MOLTEN(4),
+    PLASMA(3),
+    SLURRY(0);
 
-    public static FluidState fromValue(int stateValue) {
-        return stateValue >= 0 && stateValue < FluidState.VALID_STATES.length ? FluidState.VALID_STATES[stateValue]
-            : FluidState.LIQUID;
+    int value;
+
+    FluidState(int value) {
+        this.value = value;
+    }
+
+    public static IFluidState[] VALID_STATES = new IFluidState[]{SLURRY, LIQUID, GAS, PLASMA, MOLTEN};
+
+    public static IFluidState fromValue(int stateValue) {
+        return Arrays.stream(VALID_STATES).filter(state -> state.getValue() == stateValue).findFirst().orElse(LIQUID);
+    }
+
+    @Override
+    public String getState() {
+        return name();
+    }
+
+    @Override
+    public int getValue() {
+        return ordinal();
     }
 }
+
