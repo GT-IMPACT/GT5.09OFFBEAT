@@ -32,6 +32,12 @@ public class GT_FluidDisplayItem extends GT_Generic_Item {
 
     private static final Map<Fluid, String> sFluidTooltips = new HashMap<>();
 
+    public static void addChemicalFormula(Fluid fluid, String formula) {
+        if (sFluidTooltips.containsKey(fluid)) {
+            sFluidTooltips.put(fluid, formula);
+        }
+    }
+
     public GT_FluidDisplayItem() {
         super("GregTech_FluidDisplay", "Fluid Display", null);
         ItemList.Display_Fluid.set(this);
