@@ -65,17 +65,22 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
 
     public abstract ITexture[] getTexturesInactive(ITexture aBaseTexture);
 
+    public ITexture getBaseTexture(int aTier, int colorIndex) {
+        return Textures.BlockIcons.MACHINE_CASINGS[aTier][colorIndex];
+    }
+
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection aFacing,
         int colorIndex, boolean aActive, boolean redstoneLevel) {
         int texturePointer = (byte) (actualTexture & 0x7F); // just to be sure, from my testing the 8th bit cannot be
                                                             // set clientside
+        ITexture base = getBaseTexture(mTier, colorIndex + 1);
         int textureIndex = texturePointer | (mTexturePage << 7); // Shift seven since one page is 128 textures!
         try {
             if (side != aFacing) {
                 if (textureIndex > 0)
                     return new ITexture[] { Textures.BlockIcons.casingTexturePages[mTexturePage][texturePointer] };
-                else return new ITexture[] { Textures.BlockIcons.MACHINE_CASINGS[mTier][colorIndex + 1] };
+                else return new ITexture[] { base };
             } else {
                 if (textureIndex > 0) {
                     if (aActive)
@@ -83,12 +88,12 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
                     else return getTexturesInactive(
                         Textures.BlockIcons.casingTexturePages[mTexturePage][texturePointer]);
                 } else {
-                    if (aActive) return getTexturesActive(Textures.BlockIcons.MACHINE_CASINGS[mTier][colorIndex + 1]);
-                    else return getTexturesInactive(Textures.BlockIcons.MACHINE_CASINGS[mTier][colorIndex + 1]);
+                    if (aActive) return getTexturesActive(base);
+                    else return getTexturesInactive(base);
                 }
             }
         } catch (NullPointerException npe) {
-            return new ITexture[] { Textures.BlockIcons.MACHINE_CASINGS[0][0] };
+            return new ITexture[] { getBaseTexture(0, 0) };
         }
     }
 
