@@ -127,9 +127,6 @@ public class GT_MetaTileEntity_MultiblockCentrifuge extends GT_MetaTileEntity_Mu
 				cashedRecipe = recipe;
 				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;
-				
-				this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-				this.mEfficiencyIncrease = 10000;
 				calculateOverclockedNessMulti(recipe.mEUt, recipe.mDuration, 1, voltage);
 				//In case recipe is too OP for that machine
 				if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
