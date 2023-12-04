@@ -93,7 +93,7 @@ public class ProcessingCell
                 if (aMaterial == Materials.Empty) {
                     GT_ModHandler.removeRecipeByOutput(aStack);
                 } else {
-                    GT_Values.RA.addFuel(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_Utility.getFluidForFilledItem(aStack, true) == null ? GT_Utility.getContainerItem(aStack, true) : null, (int) Math.max(1024L, 1024L * aMaterial.getMass()), 4);
+                    GT_Values.RA.addFuel(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_Utility.getFluidForFilledItem(aStack, true) == null ? GT_Utility.getContainerItem(aStack, true) : null, (int) Math.max(1024L, 1024L * aMaterial.getMass()), 5);
                 }
                 break;
 		default:

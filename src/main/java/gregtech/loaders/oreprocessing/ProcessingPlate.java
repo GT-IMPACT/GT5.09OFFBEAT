@@ -46,7 +46,7 @@ public class ProcessingPlate implements IOreRecipeRegistrator {
 				
 				if (aMaterial.mStandardMoltenFluid != null) {
 					if (!(aMaterial == Materials.AnnealedCopper || aMaterial == Materials.WroughtIron)) {
-						RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Plate.get(0L), aMaterial.getMolten(144L), GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 1L), 32, 8);
+						RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Plate.get(0L), aMaterial.getMolten(144L), GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 1L), 32, 6);
 					}
 				}
 				ItemStack tStack = null;
@@ -138,7 +138,7 @@ public class ProcessingPlate implements IOreRecipeRegistrator {
 					}
 					RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 2L), GT_Utility.copyAmount(1L, aStack), (int) Math.max(aMaterialMass * 2L, 1L), 96);
 				} else {
-					RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 2L), ItemList.Circuit_Integrated.getWithDamage(0L, 2L), Materials.Glue.getFluid(10L), GT_Utility.copyAmount(1L, aStack), 64, 8);
+					RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 2L), ItemList.Circuit_Integrated.getWithDamage(0L, 2L), Materials.Glue.getFluid(10L), GT_Utility.copyAmount(1L, aStack), 64, 6);
 				}
 				break;
 			case plateTriple:
@@ -152,7 +152,7 @@ public class ProcessingPlate implements IOreRecipeRegistrator {
 					}
 					RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 3L), GT_Utility.copyAmount(1L, aStack), (int) Math.max(aMaterialMass * 3L, 1L), 96);
 				} else {
-					RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 3L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L), Materials.Glue.getFluid(20L), GT_Utility.copyAmount(1L, aStack), 96, 8);
+					RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 3L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L), Materials.Glue.getFluid(20L), GT_Utility.copyAmount(1L, aStack), 96, 6);
 				}
 				RA.addImplosionRecipe(GT_Utility.copyAmount(1L, aStack), 2, GT_OreDictUnificator.get(OrePrefixes.compressed, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 1L), new int[]{10000, 1000});//added
 				break;
@@ -168,7 +168,7 @@ public class ProcessingPlate implements IOreRecipeRegistrator {
 					}
 					RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 4L), GT_Utility.copyAmount(1L, aStack), (int) Math.max(aMaterialMass * 4L, 1L), 96);
 				} else {
-					RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 4L), ItemList.Circuit_Integrated.getWithDamage(0L, 4L), Materials.Glue.getFluid(30L), GT_Utility.copyAmount(1L, aStack), 128, 8);
+					RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 4L), ItemList.Circuit_Integrated.getWithDamage(0L, 4L), Materials.Glue.getFluid(30L), GT_Utility.copyAmount(1L, aStack), 128, 6);
 				}
 				break;
 			case plateQuintuple:
@@ -181,7 +181,7 @@ public class ProcessingPlate implements IOreRecipeRegistrator {
 					}
 					RA.addBenderRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 5L), GT_Utility.copyAmount(1L, aStack), (int) Math.max(aMaterialMass * 5L, 1L), 96);
 				} else {
-					RA.addAssemblerRecipe(gregtech.api.util.GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 5L), ItemList.Circuit_Integrated.getWithDamage(0L, 5L), Materials.Glue.getFluid(40L), GT_Utility.copyAmount(1L, aStack), 160, 8);
+					RA.addAssemblerRecipe(gregtech.api.util.GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 5L), ItemList.Circuit_Integrated.getWithDamage(0L, 5L), Materials.Glue.getFluid(40L), GT_Utility.copyAmount(1L, aStack), 160, 6);
 				}
 				break;
 			case plateDense:
@@ -194,7 +194,7 @@ public class ProcessingPlate implements IOreRecipeRegistrator {
 			case itemCasing:
 				GT_ModHandler.removeRecipeByOutput(aStack);
 				if (aMaterial.mStandardMoltenFluid != null) {
-					RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Casing.get(0L), aMaterial.getMolten(72L), GT_OreDictUnificator.get(OrePrefixes.itemCasing, aMaterial, 1L), 16, 8);
+					RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Casing.get(0L), aMaterial.getMolten(72L), GT_OreDictUnificator.get(OrePrefixes.itemCasing, aMaterial, 1L), 16, 6);
 				}
 				if ((aMaterial.mUnificatable) && (aMaterial.mMaterialInto == aMaterial)) {
 					if (!aNoSmashing && GregTech_API.sRecipeFile.get(ConfigCategories.Tools.hammerplating, aMaterial.toString(), true)) {

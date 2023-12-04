@@ -22,7 +22,7 @@ public class ProcessingStoneVarious implements gregtech.api.interfaces.IOreRecip
     @Override
     public void registerOre(OrePrefixes aPrefix, gregtech.api.enums.Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
         if (aPrefix == OrePrefixes.stoneSmooth) {
-            GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 1L), new ItemStack(Blocks.stone_button, 1), 100, 4);
+            GT_Values.RA.addAssemblerRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Circuit_Integrated.getWithDamage(0L, 1L), new ItemStack(Blocks.stone_button, 1), 100, 3);
         }
     }
 }

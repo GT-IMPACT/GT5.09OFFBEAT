@@ -27,21 +27,21 @@ public class ProcessingCrop implements gregtech.api.interfaces.IOreRecipeRegistr
         } else if (aOreDictName.equals("cropCoffee")) {
             GT_ModHandler.addPulverisationRecipe(aStack, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Coffee, 1L));
         } else if (aOreDictName.equals("cropPotato")) {
-            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Raw_PotatoChips.get(1L), 64, 4);
-            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Stripes.get(0L), ItemList.Food_Raw_Fries.get(1L), 64, 4);
+            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Raw_PotatoChips.get(1L), 64, 3);
+            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Stripes.get(0L), ItemList.Food_Raw_Fries.get(1L), 64, 3);
             GT_Values.RA.addBrewingRecipe(aStack, FluidRegistry.WATER, FluidRegistry.getFluid("potion.potatojuice"), true);
             GT_Values.RA.addBrewingRecipe(aStack, GT_ModHandler.getDistilledWater(1L).getFluid(), FluidRegistry.getFluid("potion.potatojuice"), true);
         } else if (aOreDictName.equals("cropLemon")) {
-            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Lemon.get(4L), 64, 4);
+            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Lemon.get(4L), 64, 3);
             GT_Values.RA.addBrewingRecipe(aStack, FluidRegistry.WATER, FluidRegistry.getFluid("potion.lemonjuice"), false);
             GT_Values.RA.addBrewingRecipe(aStack, GT_ModHandler.getDistilledWater(1L).getFluid(), FluidRegistry.getFluid("potion.lemonjuice"), false);
             GT_Values.RA.addBrewingRecipe(aStack, FluidRegistry.getFluid("potion.vodka"), FluidRegistry.getFluid("potion.leninade"), true);
         } else if (aOreDictName.equals("cropTomato")) {
-            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Tomato.get(4L), 64, 4);
+            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Tomato.get(4L), 64, 3);
         } else if (aOreDictName.equals("cropCucumber")) {
-            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Cucumber.get(4L), 64, 4);
+            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Cucumber.get(4L), 64, 3);
         } else if (aOreDictName.equals("cropOnion")) {
-            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Onion.get(4L), 64, 4);
+            GT_Values.RA.addSlicerRecipe(aStack, ItemList.Shape_Slicer_Flat.get(0L), ItemList.Food_Sliced_Onion.get(4L), 64, 3);
         }
     }
 }

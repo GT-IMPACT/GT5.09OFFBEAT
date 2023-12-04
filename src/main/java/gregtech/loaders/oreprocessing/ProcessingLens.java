@@ -18,11 +18,11 @@ public class ProcessingLens implements gregtech.api.interfaces.IOreRecipeRegistr
 		switch (aMaterial.mName) {
 			case "Diamond":
 				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), new int[]{10000, 2500}, 1200, 30);
-				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), 2400, 16);
+				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), 2400, 12);
 				break;
 			case "Glass":
 				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), new int[]{10000, 2500}, 1200, 30);
-				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), 2400, 16);
+				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), 2400, 12);
 				break;
 			default:
 				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), new int[]{10000, 2500}, 1200, 120);
