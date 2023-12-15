@@ -4,7 +4,6 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
@@ -19,7 +18,24 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
     public static Fluid mLockedFluid;
 
     public GT_MetaTileEntity_Hatch_Input(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 3, new String[]{"Fluid Input for Multiblocks", "Capacity: " + GT_Utility.formatNumbers((2L << aTier + 2) * 1000L) + "L"});
+        this(aID, aName, aNameRegional, aTier, new String[] { "Fluid Input for Multiblocks", "Capacity: " + GT_Utility.formatNumbers(8000L * (1L << aTier)) + "L" });
+    }
+
+    public GT_MetaTileEntity_Hatch_Input(int aID, String aName, String aNameRegional, int aTier, String[] aDescription) {
+        this(aID, 3, aName, aNameRegional, aTier, aDescription);
+    }
+
+    public GT_MetaTileEntity_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier) {
+        this(aID, aSlot, aName, aNameRegional, aTier, new String[] { "Fluid Input for Multiblocks", });
+        mDescriptionArray[1] = "Capacity: " + GT_Utility.formatNumbers(getCapacityPerTank(aTier, aSlot)) + "L";
+    }
+
+    public GT_MetaTileEntity_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, String[] aDescription) {
+        super(aID, aName, aNameRegional, aTier, aSlot, aDescription);
+    }
+
+    public GT_MetaTileEntity_Hatch_Input(int aID, String aName, String aNameRegional, int aTier, int allSlotCount, String[] strings) {
+        super(aID, aName, aNameRegional, aTier, allSlotCount, strings);
     }
 
     public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
@@ -28,6 +44,15 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, 3, aDescription, aTextures);
+    }
+
+    public GT_MetaTileEntity_Hatch_Input(String aName, int aSlots, int aTier, String[] aDescription,
+                                         ITexture[][][] aTextures) {
+        super(aName, aTier, aSlots, aDescription, aTextures);
+    }
+
+    public int getCapacityPerTank(int aTier, int aSlot) {
+        return (int) (8000L * (1L << aTier) / aSlot);
     }
 
     @Override

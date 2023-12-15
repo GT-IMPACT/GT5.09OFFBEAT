@@ -3,8 +3,8 @@ package gregtech.api.enums;
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
-import gregtech.api.util.GT_Utility;
 import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -364,6 +364,8 @@ public class Textures {
         OVERLAY_SIDE_SCANNER_ACTIVE_GLOW,
         OVERLAY_TOP_CLEANROOM_ACTIVE_GLOW,
         OVERLAY_TOP_CLEANROOM_GLOW,
+
+        OVERLAY_INPUT_HATCH_2x2,
         
         ;
 

@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -795,19 +796,23 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             addOutput(outputFluidStack);
         }
     }
-    
+
     public boolean depleteInput(FluidStack aLiquid) {
+        return depleteInput(aLiquid, false);
+    }
+
+    public boolean depleteInput(FluidStack aLiquid, boolean simulate) {
         if (aLiquid == null) return false;
         for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch)) {
-                FluidStack tLiquid = tHatch.getFluid();
-                if (tLiquid != null && tLiquid.isFluidEqual(aLiquid)) {
-                    tLiquid = tHatch.drain(aLiquid.amount, false);
-                    if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
-                        tLiquid = tHatch.drain(aLiquid.amount, true);
-                        return tLiquid != null && tLiquid.amount >= aLiquid.amount;
+                FluidStack tLiquid = tHatch.drain(ForgeDirection.UNKNOWN, aLiquid, false);
+                if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
+                    if (simulate) {
+                        return true;
                     }
+                    tLiquid = tHatch.drain(ForgeDirection.UNKNOWN, aLiquid, true);
+                    return tLiquid != null && tLiquid.amount >= aLiquid.amount;
                 }
             }
         }
@@ -815,29 +820,27 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         for (GTMTE_BusHatch_Input tHatch : mInputBusHatches) {
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch)) {
-                FluidStack tLiquid = tHatch.getFluid();
-                if (tLiquid != null && tLiquid.isFluidEqual(aLiquid)) {
-                    tLiquid = tHatch.drain(aLiquid.amount, false);
-                    if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
-                        tLiquid = tHatch.drain(aLiquid.amount, true);
-                        return tLiquid != null && tLiquid.amount >= aLiquid.amount;
+                FluidStack tLiquid = tHatch.drain(ForgeDirection.UNKNOWN, aLiquid, false);
+                if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
+                    if (simulate) {
+                        return true;
                     }
+                    tLiquid = tHatch.drain(ForgeDirection.UNKNOWN, aLiquid, true);
+                    return tLiquid != null && tLiquid.amount >= aLiquid.amount;
                 }
             }
         }
         
-        for (GTMTE_Multi_Hatch_Input tHatchs : mQuadrInputHatches) {
-            tHatchs.mRecipeMap = getRecipeMap();
-            if (isValidMetaTileEntity(tHatchs)) {
-                for (int i = 0; i < tHatchs.mFluids.length; i++) {
-                    FluidStack tLiquid = tHatchs.mFluids[i];
-                    if (tLiquid != null && tLiquid.isFluidEqual(aLiquid)) {
-                        tLiquid = tHatchs.drain(aLiquid.amount, false);
-                        if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
-                            tLiquid = tHatchs.drain(aLiquid.amount, true);
-                            return tLiquid != null && tLiquid.amount >= aLiquid.amount;
-                        }
+        for (GTMTE_Multi_Hatch_Input tHatch : mQuadrInputHatches) {
+            tHatch.mRecipeMap = getRecipeMap();
+            if (isValidMetaTileEntity(tHatch)) {
+                FluidStack tLiquid = tHatch.drain(ForgeDirection.UNKNOWN, aLiquid, false);
+                if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
+                    if (simulate) {
+                        return true;
                     }
+                    tLiquid = tHatch.drain(ForgeDirection.UNKNOWN, aLiquid, true);
+                    return tLiquid != null && tLiquid.amount >= aLiquid.amount;
                 }
             }
         }
@@ -948,9 +951,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         for (GTMTE_Multi_Hatch_Input tHatchs : mQuadrInputHatches) {
             tHatchs.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatchs)) {
-                for (int i = 0; i < tHatchs.mFluids.length; i++)
-                    if (tHatchs.mFluids[i] != null)
-                        rList.add(tHatchs.mFluids[i]);
+                for (FluidStack tFluid : tHatchs.getStoredFluid()) {
+                    if (tFluid != null) rList.add(tFluid);
+                }
             }
         }
         
