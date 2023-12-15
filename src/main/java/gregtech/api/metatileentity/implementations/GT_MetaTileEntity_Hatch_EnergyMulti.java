@@ -76,7 +76,7 @@ public class GT_MetaTileEntity_Hatch_EnergyMulti extends GT_MetaTileEntity_Hatch
 	}
 	
 	public long maxAmperesIn() {
-		return this.Amp + (this.Amp >> 2);
+		return this.Amp;
 	}
 	
 	public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
