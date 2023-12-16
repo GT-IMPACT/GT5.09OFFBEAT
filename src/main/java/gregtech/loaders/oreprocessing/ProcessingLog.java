@@ -55,9 +55,9 @@ public class ProcessingLog implements gregtech.api.interfaces.IOreRecipeRegistra
                     GT_ModHandler.removeRecipe(new ItemStack(aStack.getItem(), 1, i));
                     GT_ModHandler.addCraftingRecipe(GT_Utility.copyAmount(3, tStack), new Object[]{"s", "L", "L", 'L', new ItemStack(aStack.getItem(), 1, i)});
                     if (Loader.isModLoaded("impact")) {
-                        GT_Values.RA.addSawMill(new ItemStack[]{new ItemStack(aStack.getItem(), 8, i)}, new ItemStack[]{GT_Utility.copy(tPlanks), GT_ModHandler.getModItem("impact", "item.impact_item.39", 5) }, null, 10 * 20, 6, 0);
-                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Wood, 15), GT_ModHandler.getModItem("impact", "item.impact_item.39", 5)}, new FluidStack[]{GT_ModHandler.getWater(250)}, 15 * 20, 6, 1);
-                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{ GT_ModHandler.getModItem("impact", "item.impact_item.39", 21) }, null, 20 * 20, 6, 2);
+                        GT_Values.RA.addSawMill(new ItemStack[]{new ItemStack(aStack.getItem(), 8, i)}, new ItemStack[]{GT_Utility.copy(tPlanks), GT_ModHandler.getModItem("impact", "impact_item", 5, 39) }, null, 10 * 20, 6, 0);
+                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Wood, 15), GT_ModHandler.getModItem("impact", "impact_item", 5, 39)}, new FluidStack[]{GT_ModHandler.getWater(250)}, 15 * 20, 6, 1);
+                        GT_Values.RA.addSawMill(new ItemStack[]{GT_Utility.copyAmount(8, aStack)}, new ItemStack[]{ GT_ModHandler.getModItem("impact", "impact_item", 21, 39) }, null, 20 * 20, 6, 2);
                     }
                 }
             }
