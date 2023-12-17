@@ -210,7 +210,7 @@ public class GT_MetaTileEntity_AssemblyLine
         }
         if(GT_Values.D1)GT_FML_LOGGER.info("Check overclock");
 
-        byte tTier = (byte) Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
+        byte tTier = (byte) Math.max(1, Math.min(15, GT_Utility.getTier(getMaxInputVoltage())));
         this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
         this.mEfficiencyIncrease = 10000;
         if (mEUt <= 16) {
