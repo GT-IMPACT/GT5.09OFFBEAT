@@ -2,16 +2,11 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicHull;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_GT_Recipe;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Recipe;
@@ -192,9 +187,10 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 				}
 			}
 		}
-		if (this.mMaintenanceHatches.size() != 1 || this.mEnergyHatches.size() != 1 || mDoorCount > 4 || mHullCount > 20) {
+		if (!(mMaintenanceHatches.size() == 1 && (this.mEnergyHatches.size() == 1 || this.mEnergyHatchesMulti.size() == 1) && mDoorCount <= 4 && mHullCount <= 20)) {
 			return false;
 		}
+
 		for (int dX = -x + 1; dX <= x - 1; dX++) {
 			for (int dZ = -z + 1; dZ <= z - 1; dZ++) {
 				for (int dY = -1; dY >= y + 1; dY--) {
@@ -296,6 +292,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 	public String[] getInfoData() {
 		int tierHatch = 0;
 		for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) tierHatch = tHatch.mTier;
+		for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesMulti) tierHatch = tHatch.mTier;
 
 		return new String[]{
 				"Progress: " + EnumChatFormatting.GREEN + mProgresstime / 20 + EnumChatFormatting.RESET +" s / " + EnumChatFormatting.YELLOW + mMaxProgresstime / 20 + EnumChatFormatting.RESET +" s",
