@@ -59,9 +59,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static gregtech.api.enums.GT_Values.MOD_ID_AE;
-import static space.impact.gregtech.BuildConfigKt.*;
+import static space.impact.gregtech.BuildConfigKt.MODID;
+import static space.impact.gregtech.BuildConfigKt.MODNAME;
 
-@Mod(modid = MODID, name = MODNAME, version = VERSION, useMetadata = false,
+@Mod(modid = MODID, name = MODNAME, version = "MC1710",  useMetadata = false,
 dependencies =  " required-after:IC2;" +
         " after:Forestry;" +
         " after:appliedenergistics2;" +
