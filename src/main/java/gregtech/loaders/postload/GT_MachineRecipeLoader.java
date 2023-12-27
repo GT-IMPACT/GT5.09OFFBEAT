@@ -2277,7 +2277,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         RA.addAlloySmelterRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Glass, 1), ItemList.Shape_Mold_Ball.get(0), ItemList.Circuit_Parts_Glass_Tube.get(1), 240, 12);
 
         RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Copper, 16), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.GalliumArsenide, 1), Materials.Plastic.getMolten(576), ItemList.Circuit_Parts_Diode.get(16), 800, 30);
-        RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Copper, 16), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.GalliumArsenide, 1), Materials.Glass.getMolten(1124), ItemList.Circuit_Parts_Diode.get(8), 800, 30);
+        RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Copper, 16), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.GalliumArsenide, 1), Materials.Glass.getMolten(1152), ItemList.Circuit_Parts_Diode.get(8), 800, 30);
         RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.AnnealedCopper, 16), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.GalliumArsenide, 1), Materials.Plastic.getMolten(576), ItemList.Circuit_Parts_Diode.get(16), 200, 120);
 
         RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Copper, 4), ItemList.Circuit_Silicon_Wafer.get(1), Materials.Plastic.getMolten(144), ItemList.Circuit_Parts_Diode.get(2), 800, 30);
