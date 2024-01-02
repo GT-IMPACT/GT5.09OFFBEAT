@@ -2032,10 +2032,10 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         RA.addAssemblylineRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt01, Materials.SuperconductorLuV, 1), 144000, new Object[]{
                 ItemList.Casing_Coil_Superconductor.get(1),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Ultimate, 4L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Master, 8L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Elite, 16L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 32L),
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 4},
+                new Object[]{OrePrefixes.circuit.get(Materials.Master), 8},
+                new Object[]{OrePrefixes.circuit.get(Materials.Elite), 16},
+                new Object[]{OrePrefixes.circuit.get(Materials.Advanced), 32},
                 GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Plutonium241, 4L),
                 GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Osmiridium, 4L),
                 ItemList.Field_Generator_IV.get(2),
@@ -2048,10 +2048,10 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         RA.addAssemblylineRecipe(GT_OreDictUnificator.get(OrePrefixes.block, Materials.Europium, 1), 288000, new Object[]{
                 ItemList.Casing_Fusion_Coil.get(1),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Superconductor, 4L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Ultimate, 8L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Master, 16L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Elite, 32L),
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 4},
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 8},
+                new Object[]{OrePrefixes.circuit.get(Materials.Master), 16},
+                new Object[]{OrePrefixes.circuit.get(Materials.Elite), 32},
                 GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Europium, 4L),
                 ItemList.Field_Generator_LuV.get(2),
                 ItemList.Circuit_Wafer_NPIC.get(48),
@@ -2063,10 +2063,10 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         RA.addAssemblylineRecipe(GT_OreDictUnificator.get(OrePrefixes.block, Materials.Americium, 1), 432000, new Object[]{
                 ItemList.Casing_Fusion_Coil.get(1),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Infinite, 4L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Superconductor, 8L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Ultimate, 16L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Master, 32L),
+                new Object[]{OrePrefixes.circuit.get(Materials.Infinite), 4},
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 8},
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 16},
+                new Object[]{OrePrefixes.circuit.get(Materials.Master), 32},
                 GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Americium, 4L),
                 ItemList.Field_Generator_ZPM.get(2),
                 ItemList.Circuit_Wafer_PPIC.get(64),
@@ -2078,10 +2078,10 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         RA.addAssemblylineRecipe(GT_OreDictUnificator.get(OrePrefixes.block, Materials.Neutronium, 1), 576000, new Object[]{
                 ItemList.Casing_Fusion_Coil2.get(1),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Bio, 4L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Infinite, 8L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Superconductor, 16L),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Ultimate, 32L),
+                new Object[]{OrePrefixes.circuit.get(Materials.Bio), 4},
+                new Object[]{OrePrefixes.circuit.get(Materials.Infinite), 8},
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 16},
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 32},
                 GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Infuscolium, 4L),
                 ItemList.Field_Generator_UV.get(2),
                 ItemList.Circuit_Wafer_QPIC.get(64),
