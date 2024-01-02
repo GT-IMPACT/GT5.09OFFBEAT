@@ -261,13 +261,13 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_Board_Multifiberglass_Elite.set(addItem(tLastID = 104, "Elite Circuit Board", "An elite Circuit Board"));
         ItemList.Circuit_Board_Wetware_Extreme.set(addItem(tLastID = 105, "Extreme Wetware Lifesupport Circuit Board", "The Board that keeps life"));
         ItemList.Circuit_Board_Plastic_Advanced.set(addItem(tLastID = 106, "Plastic Circuit Board", "A good Board"));
-        ItemList.Circuit_Board_Bio_Ultra.set(addItem(tLastID = 107, "Ultra Bio Mutted Circuit Board", "Bio genetic mutated Board"));
-        ItemList.Circuit_Board_Crystal_Extreme.set(addItem(tLastID = 119, "Super Crystal Circuit Board", "Crystal coolant Board"));
-        ItemList.Circuit_Biomainframe.set(addItem(tLastID = 120, "Bio Mainframe", "A Bio Circuit",  new Object[]{OrePrefixes.circuit.get(Materials.Bio), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Board_Bio_Ultra.set(addItem(tLastID = 107, "Ultra Bio Mutated Circuit Board", "Bio genetic mutated Board"));
+        ItemList.Circuit_Board_Crystal_Extreme.set(addItem(tLastID = 119, "Super Crystal Circuit Board", "Crystal mutated Board"));
+        ItemList.Circuit_Biomainframe.set(addItem(tLastID = 120, "Bio Mainframe", "A Bio Circuit (UEV)",  new Object[]{OrePrefixes.circuit.get(Materials.Bio), SubTag.NO_UNIFICATION}));
         
-        ItemList.Circuit_Piko.set(addItem(tLastID = 123, "Piko Circuit", "A Piko Circuit (UMV)",  new Object[]{OrePrefixes.circuit.get(Materials.Piko), SubTag.NO_UNIFICATION}));
-        ItemList.Circuit_Quantum.set(addItem(tLastID = 124, "Quantum Circuit", "A Quantum Circuit (UXV)",  new Object[]{OrePrefixes.circuit.get(Materials.Quantum), SubTag.NO_UNIFICATION}));
-        ItemList.Circuit_Nano.set(addItem(tLastID = 125, "Nano Circuit", "A Nano Circuit (UIV)",  new Object[]{OrePrefixes.circuit.get(Materials.Nano), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Piko.set(addItem(tLastID = 123, "Xeno Mainframe", "A Piko Circuit (UMV)",  new Object[]{OrePrefixes.circuit.get(Materials.Piko), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Quantum.set(addItem(tLastID = 124, "Cosmic Mainframe", "A Quantum Circuit (UXV)",  new Object[]{OrePrefixes.circuit.get(Materials.Quantum), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Nano.set(addItem(tLastID = 125, "Naqua Mainframe", "A Nano Circuit (UIV)",  new Object[]{OrePrefixes.circuit.get(Materials.Nano), SubTag.NO_UNIFICATION}));
         ItemList.Circuit_HighEnergyFlow.set(addItem(tLastID = 126, "High Energy Flow Circuit", "Energy Circuit",  new Object[]{OrePrefixes.circuit.get(Materials.Energy), SubTag.NO_UNIFICATION}));
         
         
@@ -322,8 +322,23 @@ public class GT_MetaGenerated_Item_03
         GregTech_API.registerCover(ItemList.FluidRegulator_LuV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[6][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(32768));
         GregTech_API.registerCover(ItemList.FluidRegulator_ZPM.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[7][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(131072));
         GregTech_API.registerCover(ItemList.FluidRegulator_UV.get(1L), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[8][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_PUMP)}), new GT_Cover_FluidRegulator(524288));
-        
-		
+
+        ItemList.Circuit_Naquaprocessor.set(addItem(tLastID = 168, "Naquaprocessor", "A Superconductor Circuit (UV)",  new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Naquacomputer.set(addItem(tLastID = 169, "Naquaprocessor Assembly", "An Infinite Circuit (UHV)",  new Object[]{OrePrefixes.circuit.get(Materials.Infinite), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Naquasupercomputer.set(addItem(tLastID = 170, "Naqua Supercomputer", "A Bio Circuit (UEV)",  new Object[]{OrePrefixes.circuit.get(Materials.Bio), SubTag.NO_UNIFICATION}));
+
+        ItemList.Circuit_Xenoprocessor.set(addItem(tLastID = 171, "Xenoprocessor", "An Infinite Circuit (UHV)",  new Object[]{OrePrefixes.circuit.get(Materials.Infinite), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Xenocomputer.set(addItem(tLastID = 172, "Xenoprocessor Assembly", "A Bio Circuit (UEV)",  new Object[]{OrePrefixes.circuit.get(Materials.Bio), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Xenosupercomputer.set(addItem(tLastID = 173, "Xeno Supercomputer", "A Nano Circuit (UIV)",  new Object[]{OrePrefixes.circuit.get(Materials.Nano), SubTag.NO_UNIFICATION}));
+
+        ItemList.Circuit_Cosmicprocessor.set(addItem(tLastID = 174, "Cosmic Processor", "A Bio Circuit (UEV)",  new Object[]{OrePrefixes.circuit.get(Materials.Infinite), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Cosmiccomputer.set(addItem(tLastID = 175, "Cosmic Processor Assembly", "A Nano Circuit (UIV)",  new Object[]{OrePrefixes.circuit.get(Materials.Bio), SubTag.NO_UNIFICATION}));
+        ItemList.Circuit_Cosmicsupercomputer.set(addItem(tLastID = 176, "Cosmic Supercomputer", "A Piko Circuit (UMV)",  new Object[]{OrePrefixes.circuit.get(Materials.Nano), SubTag.NO_UNIFICATION}));
+
+        ItemList.NaquaBoardEmpty.set(addItem(tLastID = 177, "Portable Naquadah Reactor (Empty)", "Infinity enegry for high consuption circuits"));
+        ItemList.NaquaBoardFull.set(addItem(tLastID = 178, "Portable Naquadah Reactor (Full)", "Infinity enegry for high consuption circuits"));
+
+
     }
 
     @Override
