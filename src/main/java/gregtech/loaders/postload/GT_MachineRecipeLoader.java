@@ -3714,6 +3714,8 @@ public class GT_MachineRecipeLoader implements Runnable {
         RA.addCutterRecipe(ItemList.Circuit_Wafer_SoC2.get(1), ItemList.Circuit_Chip_SoC2.get(6), null, 900, 1020, true);
         RA.addCutterRecipe(ItemList.Circuit_Wafer_SoC3.get(1), ItemList.Circuit_Chip_SoC3.get(6), null, 900, 1920, true);
         RA.addCutterRecipe(ItemList.Circuit_Wafer_SoC4.get(1), ItemList.Circuit_Chip_SoC4.get(6), null, 900, 4092, true);
+        RA.addCutterRecipe(ItemList.Circuit_Wafer_SoC5.get(1), ItemList.Circuit_Chip_SoC5.get(6), null, 1000, 2000000, true);
+        RA.addCutterRecipe(ItemList.Circuit_Wafer_SoC6.get(1), ItemList.Circuit_Chip_SoC6.get(6), null, 1000, 8000000, true);
         RA.addCutterRecipe(ItemList.Circuit_Wafer_ULPIC.get(1L), ItemList.Circuit_Chip_ULPIC.get(6L), GT_Values.NI, 900, 120, false);
         RA.addCutterRecipe(ItemList.Circuit_Wafer_LPIC.get(1L), ItemList.Circuit_Chip_LPIC.get(4L), GT_Values.NI, 900, 480, false);
         RA.addCutterRecipe(ItemList.Circuit_Wafer_PIC.get(1), ItemList.Circuit_Chip_PIC.get(4), null, 900, 1920, true);

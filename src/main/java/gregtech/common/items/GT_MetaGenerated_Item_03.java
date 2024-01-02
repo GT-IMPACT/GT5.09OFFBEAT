@@ -338,6 +338,12 @@ public class GT_MetaGenerated_Item_03
         ItemList.NaquaBoardEmpty.set(addItem(tLastID = 177, "Portable Naquadah Reactor (Empty)", "Infinity energy for high consuption circuits"));
         ItemList.NaquaBoardFull.set(addItem(tLastID = 178, "Portable Naquadah Reactor (Full)", "Infinity energy for high consuption circuits"));
 
+        ItemList.Circuit_Wafer_SoC5.set(addItem(tLastID = 183, "PSoC Wafer", "Raw Circuit"));
+        ItemList.Circuit_Chip_SoC5.set(addItem(tLastID = 184, "PSoC", "Pico System on a Chip"));
+
+        ItemList.Circuit_Wafer_SoC6.set(addItem(tLastID = 185, "CSoC Wafer", "Raw Circuit"));
+        ItemList.Circuit_Chip_SoC6.set(addItem(tLastID = 186, "CSoC", "Chevron System on a Chip"));
+
 
     }
 
