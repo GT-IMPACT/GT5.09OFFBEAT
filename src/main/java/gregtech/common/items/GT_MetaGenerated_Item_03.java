@@ -73,8 +73,13 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_Parts_CapacitorASMD.set(addItem(tLastID = 27, "Advanced SMD Capacitor", "Advanced Electronic Component"));
         ItemList.Circuit_Parts_InductorSMD.set(addItem(tLastID = 28, "SMD Inductor", "Electronic Component"));
         ItemList.Circuit_Parts_InductorASMD.set(addItem(tLastID = 29, "Advanced SMD Inductor", "Advanced Electronic Component"));
-        
-      
+        ItemList.Circuit_Parts_ResistorXSMD.set(addItem(tLastID = 131, "Xeno SMD Resistor", "Extreme Electronic Component"));
+        ItemList.Circuit_Parts_DiodeXSMD.set(addItem(tLastID = 132, "Xeno SMD Diode", "Extreme Electronic Component"));
+        ItemList.Circuit_Parts_TransistorXSMD.set(addItem(tLastID = 133, "Xeno SMD Transistor", "Extreme Electronic Component"));
+        ItemList.Circuit_Parts_CapacitorXSMD.set(addItem(tLastID = 134, "Xeno SMD Capacitor", "Extreme Electronic Component"));
+        ItemList.Circuit_Parts_InductorXSMD.set(addItem(tLastID = 135, "Xeno SMD Inductor", "Extreme Electronic Component"));
+
+
         /**
          * ICs
          * Lenses made from perfect crystals first instead of plates
