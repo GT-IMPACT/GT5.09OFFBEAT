@@ -335,8 +335,8 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_Cosmiccomputer.set(addItem(tLastID = 175, "Cosmic Processor Assembly", "A Nano Circuit (UIV)",  new Object[]{OrePrefixes.circuit.get(Materials.Bio), SubTag.NO_UNIFICATION}));
         ItemList.Circuit_Cosmicsupercomputer.set(addItem(tLastID = 176, "Cosmic Supercomputer", "A Piko Circuit (UMV)",  new Object[]{OrePrefixes.circuit.get(Materials.Nano), SubTag.NO_UNIFICATION}));
 
-        ItemList.NaquaBoardEmpty.set(addItem(tLastID = 177, "Portable Naquadah Reactor (Empty)", "Infinity enegry for high consuption circuits"));
-        ItemList.NaquaBoardFull.set(addItem(tLastID = 178, "Portable Naquadah Reactor (Full)", "Infinity enegry for high consuption circuits"));
+        ItemList.NaquaBoardEmpty.set(addItem(tLastID = 177, "Portable Naquadah Reactor (Empty)", "Infinity energy for high consuption circuits"));
+        ItemList.NaquaBoardFull.set(addItem(tLastID = 178, "Portable Naquadah Reactor (Full)", "Infinity energy for high consuption circuits"));
 
 
     }
