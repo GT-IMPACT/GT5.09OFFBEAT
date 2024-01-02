@@ -2298,6 +2298,12 @@ public class GT_MachineRecipeLoader implements Runnable {
         RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Silicone, 2), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Tantalum, 2)}, Materials.Plastic.getMolten(144), ItemList.Circuit_Parts_CapacitorSMD.get(32), 240, 480);
         RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.PolyvinylChloride, 4), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Tantalum, 2)}, Materials.Plastic.getMolten(144), ItemList.Circuit_Parts_CapacitorSMD.get(48), 240, 480);
 
+        //SMD Inductor
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Neodymium, 1), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.ConductiveIron, 8)}, Materials.Plastic.getMolten(36), ItemList.Circuit_Parts_InductorSMD.get(24), 320, 480);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Neodymium, 1), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Platinum, 8)}, Materials.Plastic.getMolten(36), ItemList.Circuit_Parts_InductorSMD.get(32), 320, 480);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Neodymium, 1), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Tantalum, 8)}, Materials.Plastic.getMolten(36), ItemList.Circuit_Parts_InductorSMD.get(48), 320, 480);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Neodymium, 1), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Iridium, 8)}, Materials.Plastic.getMolten(36), ItemList.Circuit_Parts_InductorSMD.get(64), 320, 480);
+
         //Lapotron Crystal
         RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Lapotron, 1), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 2), GT_Values.NF, ItemList.LapotronCrystal.get(1), 600, 1020);
 
@@ -3211,10 +3217,11 @@ public class GT_MachineRecipeLoader implements Runnable {
 		RA.addAutoclaveRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.EnderEye, 1L), Materials.SodiumPersulfate.getFluid(100), new ItemStack(Items.ender_eye, 1, 0), 10000, 800, 250);
         
         //ASMD
-        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Graphene, 1), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Platinum, 1)}, Materials.Polybenzimidazole.getMolten(90L), ItemList.Circuit_Parts_ResistorASMD.get(4L), 40, 384);
-        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.NiobiumTitanium, 16), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.IndiumGalliumPhosphide, 1)}, Materials.Polybenzimidazole.getMolten(288L), ItemList.Circuit_Parts_DiodeASMD.get(64L), 600, 480);
-        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.VanadiumGallium, 4), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.HSSG, 32)}, Materials.Polybenzimidazole.getMolten(576L), ItemList.Circuit_Parts_TransistorASMD.get(64L), 640, 480);
-        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Polybenzimidazole, 16), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.HSSS, 8)}, Materials.Polybenzimidazole.getMolten(288L), ItemList.Circuit_Parts_CapacitorASMD.get(64L), 640, 480);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Graphene, 2), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Platinum, 16)}, Materials.Polybenzimidazole.getMolten(288L), ItemList.Circuit_Parts_ResistorASMD.get(32L), 80, 1920);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust, Materials.IndiumGalliumPhosphide, 1), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.NiobiumTitanium, 16)}, Materials.Polybenzimidazole.getMolten(576L), ItemList.Circuit_Parts_DiodeASMD.get(64L), 160, 1920);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.VanadiumGallium, 2), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.HSSG, 16)}, Materials.Polybenzimidazole.getMolten(576L), ItemList.Circuit_Parts_TransistorASMD.get(64L), 160, 1920);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Polybenzimidazole, 4), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.HSSS, 2)}, Materials.Polybenzimidazole.getMolten(576L), ItemList.Circuit_Parts_CapacitorASMD.get(64L), 160, 1920);
+        RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Naquadah, 1), GT_OreDictUnificator.get(OrePrefixes.foil, Materials.HSSE, 32)}, Materials.Polybenzimidazole.getMolten(576L), ItemList.Circuit_Parts_InductorASMD.get(64L), 160, 1920);
 
         //Galacticraft stones
         if (Loader.isModLoaded("GalacticraftCore")) {

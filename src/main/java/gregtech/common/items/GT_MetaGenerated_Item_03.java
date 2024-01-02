@@ -71,6 +71,9 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_Parts_DiodeASMD.set(addItem(tLastID = 25, "Advanced SMD Diode", "Advanced Electronic Component"));
         ItemList.Circuit_Parts_TransistorASMD.set(addItem(tLastID = 26, "Advanced SMD Transistor", "Advanced Electronic Component"));
         ItemList.Circuit_Parts_CapacitorASMD.set(addItem(tLastID = 27, "Advanced SMD Capacitor", "Advanced Electronic Component"));
+        ItemList.Circuit_Parts_InductorSMD.set(addItem(tLastID = 28, "SMD Inductor", "Electronic Component"));
+        ItemList.Circuit_Parts_InductorASMD.set(addItem(tLastID = 29, "Advanced SMD Inductor", "Advanced Electronic Component"));
+        
       
         /**
          * ICs
