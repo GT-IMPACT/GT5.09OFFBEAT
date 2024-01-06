@@ -604,12 +604,40 @@ achievement.gt.metaitem.03.32099.desc=Pickup this item to see the recipe in NEI
 achievement.gt.metaitem.03.32120=Bio Mainframe
 achievement.gt.metaitem.03.32120.desc=Pickup this item to see the recipe in NEI
 
-achievement.gt.metaitem.03.32123=Piko Circuit
+achievement.gt.metaitem.03.32123=Xeno Mainframe
 achievement.gt.metaitem.03.32123.desc=Pickup this item to see the recipe in NEI
-achievement.gt.metaitem.03.32124=Quantum Circuit
+achievement.gt.metaitem.03.32124=Cosmic Mainframe
 achievement.gt.metaitem.03.32124.desc=Pickup this item to see the recipe in NEI
-achievement.gt.metaitem.03.32125=Nano Circuit
+achievement.gt.metaitem.03.32125=Naqua Mainframe
 achievement.gt.metaitem.03.32125.desc=Pickup this item to see the recipe in NEI
+
+achievement.gt.metaitem.03.32168=Naquaprocessor
+achievement.gt.metaitem.03.32168.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32169=Naquaprocessor Assembly
+achievement.gt.metaitem.03.32169.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32170=Naqua Supercomputer
+achievement.gt.metaitem.03.32170.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32171=Xenoprocessor
+achievement.gt.metaitem.03.32171.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32172=Xenoprocessor Assembly
+achievement.gt.metaitem.03.32172.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32173=Xeno Supercomputer
+achievement.gt.metaitem.03.32173.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32174=Cosmic processor
+achievement.gt.metaitem.03.32174.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32175=Cosmic processor Assembly
+achievement.gt.metaitem.03.32175.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32176=Cosmic Supercomputer
+achievement.gt.metaitem.03.32176.desc=Pickup this item to see the recipe in NEI
+
+achievement.gt.metaitem.03.32177=Portable Naquadah Reactor (Empty)
+achievement.gt.metaitem.03.32177.desc=Pickup this item to see the recipe in NEI
+
+achievement.gt.metaitem.03.32081=Barnarda Processing Unit
+achievement.gt.metaitem.03.32081.desc=Pickup this item to see the recipe in NEI
+achievement.gt.metaitem.03.32137=Chevron Processing Unit
+achievement.gt.metaitem.03.32137.desc=Pickup this item to see the recipe in NEI
+
 
 achievement.gt.blockmachines.basicmachine.d_transformer.tier.04=Extreme Digital Transformer
 achievement.gt.blockmachines.basicmachine.d_transformer.tier.04.desc=Pickup this item to see the recipe in NEI
