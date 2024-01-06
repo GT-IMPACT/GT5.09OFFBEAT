@@ -205,7 +205,12 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_Parts_RawCrystalParts.set(addItem(tLastID = 74, "Raw Crystal Chip Parts", "Raw Crystal Processor Parts"));
         ItemList.Circuit_Chip_Biocell.set(addItem(tLastID = 76, "Biocells", "Mutated Raw Intiligence"));
         ItemList.Circuit_Chip_BioCPU.set(addItem(tLastID = 77, "Bio Processing Unit", "Bio CPU"));
-        
+        ItemList.Circuit_Chip_BarnardaCPU.set(addItem(tLastID = 81, "Barnarda Processing Unit", "Barnarda CPU"));
+        ItemList.Circuit_Chip_Barnardacell.set(addItem(tLastID = 136, "Barnarda cells", "Mutated High Intiligence"));
+        ItemList.Circuit_Chip_SGCPU.set(addItem(tLastID = 137, "Chevron Processing Unit", "StarGate CPU"));
+        ItemList.Circuit_Parts_SGController.set(addItem(tLastID = 138, "Engraved StarGate Controller Crystal Chip", "Needed for Cosmic Chip"));
+
+
         ItemList.Circuit_Parts_RawMCrystalChip.set(addItem(tLastID = 116, "Raw Mysterious Crystal Chip", "Raw Mysterious Crystal Processor"));
         ItemList.Circuit_Chip_MCrystalCPU.set(addItem(tLastID = 117, "Mysterious Crystal Processing Unit", "Mysterious Crystal CPU")); //Crystal chip elite part
         ItemList.Circuit_Parts_RawMCrystalParts.set(addItem(tLastID = 118, "Raw Mysterious Crystal Chip Parts", "Raw Mysterious Crystal Processor Parts"));
