@@ -2197,7 +2197,8 @@ public class GT_MachineRecipeLoader implements Runnable {
         //Antimatter
         RA.addAssemblerRecipe(ItemList.Hull_ZPM.get(1), GT_OreDictUnificator.get(OrePrefixes.wireGt01, Materials.Osmium, 16), Materials.Gallium.getMolten(864L), ItemList.Casing_Dyson_Ring.get(1), 350, 30800, true);
 
-        RA.addCentrifugeRecipe(GT_OreDictUnificator.get(OrePrefixes.cell, Materials.UUMatter, 2L), ItemList.Magnetic_Confinement_Pod.get(1L), Materials.Neutronium.getMolten(10L), Materials.Lutetium.getMolten(100L), ItemList.Magnetic_Confinement_Pod_AntiHydrogen.get(1L), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Naquadria, 1L), ItemList.Cell_Empty.get(1L), GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000, 10000, 10000}, 2400, 100000);
+        RA.addMultiblockChemicalRecipe(new ItemStack[]{ItemList.Magnetic_Confinement_Pod.get(1L)}, new FluidStack[]{Materials.Tritanium.getMolten(144), Materials.NaquadriaLiquid.getFluid(1000)}, new FluidStack[]{Materials.Naquadria.getMolten(144)}, new ItemStack[]{ItemList.Magnetic_Confinement_Pod_AntiHydrogen.get(1L)}, 2400, 100000);
+
 
         RA.addCannerRecipe(ItemList.Magnetic_Confinement_Pod.get(1L), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Hydrogen, 1L),
                 ItemList.Magnetic_Confinement_Pod_Hydrogen.get(1L),
@@ -2205,10 +2206,10 @@ public class GT_MachineRecipeLoader implements Runnable {
 
         RA.addAssemblylineRecipe(ItemList.Generator_Plasma_ZPMV.get(1), 576000, new Object[]{
                 ItemList.Casing_Dyson_Ring.get(1),
-                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
-                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
-                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
-                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
+                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 4},
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 8},
+                new Object[]{OrePrefixes.circuit.get(Materials.Master), 16},
+                new Object[]{OrePrefixes.circuit.get(Materials.Elite), 32},
                 GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Osmiridium, 4L),
                 ItemList.Field_Generator_ZPM.get(2),
                 ItemList.Circuit_Wafer_NPIC.get(64),
