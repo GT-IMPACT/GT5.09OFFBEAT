@@ -60,8 +60,8 @@ public class GT_MetaTileEntity_AntimatterReactor extends GT_MetaTileEntity_Multi
                 "40 x Fusion Casing MKII",
                 "6 x Core Chamber Casing",
                 "6 x Intermix Chamber Casing",
-                "2/2 x Input/Output Hatch (All UV)",
-                "1/1 x Input/Output Bus (All UV)",
+                "2/2 x Input/Output Hatch (All ZPM)",
+                "1/1 x Input/Output Bus (All ZPM)",
                 "1 x Dynamo Hatch (UHV)",
                 "2097152 EU/t and 4 L/t plasma (in cooling)"};
     }
@@ -195,25 +195,25 @@ public class GT_MetaTileEntity_AntimatterReactor extends GT_MetaTileEntity_Multi
             }
             if (this.mInputBusses != null) {
                 for (int i = 0; i < this.mInputBusses.size(); i++) {
-                    if (this.mInputBusses.get(i).mTier < 7)
+                    if (this.mInputBusses.get(i).mTier < 6)
                         return false;
                 }
             }
             if (this.mOutputBusses != null) {
                 for (int i = 0; i < this.mOutputBusses.size(); i++) {
-                    if (this.mOutputBusses.get(i).mTier < 7)
+                    if (this.mOutputBusses.get(i).mTier < 6)
                         return false;
                 }
             }
             if (this.mInputHatches != null) {
                 for (int i = 0; i < this.mInputHatches.size(); i++) {
-                    if (this.mInputHatches.get(i).mTier < 7)
+                    if (this.mInputHatches.get(i).mTier < 6)
                         return false;
                 }
             }
             if (this.mOutputHatches != null) {
                 for (int i = 0; i < this.mOutputHatches.size(); i++) {
-                    if (this.mOutputHatches.get(i).mTier < 7)
+                    if (this.mOutputHatches.get(i).mTier < 6)
                         return false;
                 }
             }
