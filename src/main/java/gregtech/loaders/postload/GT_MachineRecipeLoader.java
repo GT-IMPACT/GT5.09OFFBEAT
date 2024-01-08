@@ -2203,19 +2203,19 @@ public class GT_MachineRecipeLoader implements Runnable {
                 ItemList.Magnetic_Confinement_Pod_Hydrogen.get(1L),
                 ItemList.Cell_Empty.get(1L), 200, 480);
 
-        RA.addAssemblylineRecipe(ItemList.Generator_Plasma_UV.get(1), 576000, new Object[]{
+        RA.addAssemblylineRecipe(ItemList.Generator_Plasma_ZPMV.get(1), 576000, new Object[]{
                 ItemList.Casing_Dyson_Ring.get(1),
-                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
-                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
-                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
-                new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1L},
-                GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Tritanium, 4L),
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
+                new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), 1L},
+                GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Osmiridium, 4L),
                 ItemList.Field_Generator_ZPM.get(2),
-                ItemList.Circuit_Wafer_HPIC.get(64),
-                GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.Superconductor, 32),
+                ItemList.Circuit_Wafer_NPIC.get(64),
+                GT_OreDictUnificator.get(OrePrefixes.wireGt04, Materials.SuperconductorZPM, 32),
         }, new FluidStack[]{Materials.Naquadria.getMolten(2592),
                 Materials.SolderingAlloy.getMolten(2880),
-        }, ItemList.Antimatter_Reactor.get(1), 1200, 120000);	    
+        }, ItemList.Antimatter_Reactor.get(1), 1200, 120000);    
         
         // Circuits and Boards
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Circuit_Board_Coated.get(1L), new Object[]{GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Wood, 1), ItemList.IC2_Resin.get(1L), ItemList.IC2_Resin.get(1L)});
