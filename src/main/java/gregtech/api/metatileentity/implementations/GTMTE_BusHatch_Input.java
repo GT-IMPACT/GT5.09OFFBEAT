@@ -25,22 +25,34 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 	public GT_Recipe.GT_Recipe_Map mRecipeMap = null;
 	public boolean disableSort;
 	public boolean restrictFluid;
+	public final int capacity;
 	
+	public GTMTE_BusHatch_Input(int aID, String aName, String aNameRegional, int aTier, int capacity) {
+		super(aID, aName, aNameRegional, aTier, 19, new String[]{
+				"Fluid and Items Input for Multiblocks",
+				String.format("Capacity Fluid: %s L", GT_Utility.formatNumbers(capacity)),
+				"Capacity Items: 16 stacks"
+		});
+		this.capacity = capacity;
+	}
+
 	public GTMTE_BusHatch_Input(int aID, String aName, String aNameRegional, int aTier) {
 		super(aID, aName, aNameRegional, aTier, 19, new String[]{
 				"Fluid and Items Input for Multiblocks",
-				"Capacity Fluid: 32,000 L",
+				String.format("Capacity Fluid: %s L", GT_Utility.formatNumbers(32000)),
 				"Capacity Items: 16 stacks"
 		});
+		this.capacity = 32000;
 	}
 	
-	public GTMTE_BusHatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
+	public GTMTE_BusHatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, int capacity) {
 		super(aName, aTier, 19, aDescription, aTextures);
+		this.capacity = capacity;
 	}
 	
 	@Override
 	public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-		return new GTMTE_BusHatch_Input(mName, mTier, mDescriptionArray, mTextures);
+		return new GTMTE_BusHatch_Input(mName, mTier, mDescriptionArray, mTextures, capacity);
 	}
 	
 	@Override
@@ -225,7 +237,7 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 	
 	@Override
 	public int getCapacity() {
-		return 32000;
+		return capacity;
 	}
 	
 	@Override
