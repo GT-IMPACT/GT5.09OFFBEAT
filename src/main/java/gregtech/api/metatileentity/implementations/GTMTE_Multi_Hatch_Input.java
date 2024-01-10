@@ -18,27 +18,25 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
     private final FluidStackTank[] fluidTanks;
     public final int mCapacityPer;
 
-    public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier) {
+    public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, int capacityPer) {
         super(aID, aSlot, aName, aNameRegional, aTier);
         this.mStoredFluid = new FluidStack[aSlot];
         fluidTanks = new FluidStackTank[aSlot];
-        mCapacityPer = getCapacityPerTank(aTier, aSlot);
+        mCapacityPer = capacityPer;
     }
 
-    public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier,
-                                              String[] aDescription) {
+    public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, String[] aDescription, int capacityPer) {
         super(aID, aSlot, aName, aNameRegional, aTier, aDescription);
         this.mStoredFluid = new FluidStack[aSlot];
         fluidTanks = new FluidStackTank[aSlot];
-        mCapacityPer = getCapacityPerTank(aTier, aSlot);
+        mCapacityPer = capacityPer;
     }
 
-    public GTMTE_Multi_Hatch_Input(String aName, int aSlot, int aTier, String[] aDescription,
-                                              ITexture[][][] aTextures) {
+    public GTMTE_Multi_Hatch_Input(String aName, int aSlot, int aTier, String[] aDescription, ITexture[][][] aTextures, int capacityPer) {
         super(aName, aSlot, aTier, aDescription, aTextures);
         this.mStoredFluid = new FluidStack[aSlot];
         fluidTanks = new FluidStackTank[aSlot];
-        mCapacityPer = getCapacityPerTank(aTier, aSlot);
+        mCapacityPer = capacityPer;
         for (int i = 0; i < aSlot; i++) {
             final int index = i;
             fluidTanks[i] = new FluidStackTank(
@@ -50,7 +48,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GTMTE_Multi_Hatch_Input(mName, getMaxType(), mTier, mDescriptionArray, mTextures);
+        return new GTMTE_Multi_Hatch_Input(mName, getMaxType(), mTier, mDescriptionArray, mTextures, mCapacityPer);
     }
 
     @Override

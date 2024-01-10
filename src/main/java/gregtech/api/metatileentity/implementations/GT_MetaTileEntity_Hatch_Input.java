@@ -53,10 +53,6 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
         super(aName, aTier, aSlots, aDescription, aTextures);
     }
 
-    public int getCapacityPerTank(int aTier, int aSlot) {
-        return (int) (8000L * (1L << aTier) / aSlot);
-    }
-
     @Override
     public ITexture[] getTexturesActive(ITexture aBaseTexture) {
         return new ITexture[]{aBaseTexture, TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_IN)};
