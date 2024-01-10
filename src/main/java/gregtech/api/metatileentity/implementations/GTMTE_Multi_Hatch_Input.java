@@ -6,6 +6,7 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -19,7 +20,10 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
     public final int mCapacityPer;
 
     public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, int capacityPer) {
-        super(aID, aSlot, aName, aNameRegional, aTier);
+        super(aID, aSlot, aName, aNameRegional, aTier, new String[] {
+                "Fluid Multi Input for Multiblocks",
+                "Capacity per slot: " + GT_Utility.formatNumbers(capacityPer) + "L"
+        });
         this.mStoredFluid = new FluidStack[aSlot];
         fluidTanks = new FluidStackTank[aSlot];
         mCapacityPer = capacityPer;
