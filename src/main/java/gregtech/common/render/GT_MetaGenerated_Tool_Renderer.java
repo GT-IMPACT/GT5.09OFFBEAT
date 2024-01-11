@@ -15,9 +15,9 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
+import gregtech.GT_Mod;
 
-public class GT_MetaGenerated_Tool_Renderer
-        implements IItemRenderer {
+public class GT_MetaGenerated_Tool_Renderer implements IItemRenderer {
     public GT_MetaGenerated_Tool_Renderer() {
         for (GT_MetaGenerated_Tool tItem : GT_MetaGenerated_Tool.sInstances.values()) {
             if (tItem != null) {
@@ -129,7 +129,9 @@ public class GT_MetaGenerated_Tool_Renderer
                     }
                 }
             }
-            if ((aType == IItemRenderer.ItemRenderType.INVENTORY) && (GT_MetaGenerated_Tool.getPrimaryMaterial(aStack) != Materials._NULL)) {
+            if ((aType == IItemRenderer.ItemRenderType.INVENTORY) 
+				&& (GT_MetaGenerated_Tool.getPrimaryMaterial(aStack) != Materials._NULL)) {
+                if (GT_Mod.gregtechproxy.mRenderItemDurabilityBar) {					
                 long tDamage = GT_MetaGenerated_Tool.getToolDamage(aStack);
                 long tMaxDamage = GT_MetaGenerated_Tool.getToolMaxDamage(aStack);
                 if (tDamage <= 0L) {
@@ -161,6 +163,8 @@ public class GT_MetaGenerated_Tool_Renderer
                         }
                     }
                 }
+                }
+                if (GT_Mod.gregtechproxy.mRenderItemChargeBar) {
                 Long[] tStats = aItem.getElectricStats(aStack);
                 if ((tStats != null) && (tStats[3].longValue() < 0L)) {
                     long tCharge = aItem.getRealCharge(aStack);
@@ -196,6 +200,7 @@ public class GT_MetaGenerated_Tool_Renderer
                         }
                     }
                 }
+				}
             }
         }
         GL11.glDisable(3042);

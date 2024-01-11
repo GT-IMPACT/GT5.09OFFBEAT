@@ -267,6 +267,8 @@ public class GT_Mod implements IGT_Mod {
         }
         gregtechproxy.mRenderTileAmbientOcclusion = GregTech_API.sClientDataFile.get("render", "TileAmbientOcclusion", true);
         gregtechproxy.mRenderGlowTextures = GregTech_API.sClientDataFile.get("render", "GlowTextures", true);
+        gregtechproxy.mRenderItemDurabilityBar = GregTech_API.sClientDataFile.get("render", "RenderItemDurabilityBar", true);
+        gregtechproxy.mRenderItemChargeBar = GregTech_API.sClientDataFile.get("render", "RenderItemChargeBar", true);	    
         
         gregtechproxy.mMultiBlocksMaxProgressTimeBound = tMainConfig.get(aTextGeneral, "mMultiBlocksMaxProgressTimeBound", 1).getInt(1);
         gregtechproxy.enableMultiBlocksTickBounds = tMainConfig.get(aTextGeneral, "enableMultiBlocksTickBounds", false).getBoolean(false);
