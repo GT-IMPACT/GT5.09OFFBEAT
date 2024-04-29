@@ -5,6 +5,9 @@
 .shelf
 /run/
 /build/
+/*/build/
+/*/*/build/
+runDir
 /eclipse/
 .vscode
 .classpath
