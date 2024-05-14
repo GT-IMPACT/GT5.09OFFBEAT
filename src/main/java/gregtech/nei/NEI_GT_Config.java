@@ -9,7 +9,6 @@ public class NEI_GT_Config
     public static boolean sIsAdded = true;
     public static GT_NEI_AssLineHandler ALH;
     public static GT_NEI_SawMill SAW;
-    public static GT_NEI_Pyro PYRO;
     public static GT_NEI_3DPrinter D3;
 
     @Override
@@ -23,7 +22,6 @@ public class NEI_GT_Config
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             ALH = new GT_NEI_AssLineHandler(GT_Recipe.GT_Recipe_Map.sAssemblylineVisualRecipes);
             SAW = new GT_NEI_SawMill(GT_Recipe.GT_Recipe_Map.sSawMillVisual);
-            PYRO = new GT_NEI_Pyro(GT_Recipe.GT_Recipe_Map.sPyrolyseBasicVisual);
             D3 = new GT_NEI_3DPrinter(GT_Recipe.GT_Recipe_Map.sPrimitiveLine);
             D3 = new GT_NEI_3DPrinter(GT_Recipe.GT_Recipe_Map.sBasicline);
         }

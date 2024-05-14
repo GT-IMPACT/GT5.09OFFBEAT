@@ -186,12 +186,14 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
         return true;
     }
 
+    @Deprecated
+    @Override
     public boolean addPyrolyseBasic(ItemStack[] aInputs, ItemStack[] aOutputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt) {
         if (aEUt <= 0) {
             return false;
         }
-        GT_Recipe.GT_Recipe_Map.sPyrolyseBasicVisual.addFakeRecipe(true, new ItemStack[] {aInputs[0]}, new ItemStack[] {aOutputs[0]}, null, null, aFluidOutputs, aDuration, aEUt, 0);
-        GT_Recipe.GT_Recipe_Map.sPyrolyseBasic.addRecipe(true, new ItemStack[] {aInputs[0]}, new ItemStack[] {aOutputs[0]}, null, null, new FluidStack[] {aFluidOutputs[0]}, aDuration, aEUt, 0);
+//        GT_Recipe.GT_Recipe_Map.sPyrolyseBasicVisual.addFakeRecipe(true, new ItemStack[] {aInputs[0]}, new ItemStack[] {aOutputs[0]}, null, null, aFluidOutputs, aDuration, aEUt, 0);
+//        GT_Recipe.GT_Recipe_Map.sPyrolyseBasic.addRecipe(true, new ItemStack[] {aInputs[0]}, new ItemStack[] {aOutputs[0]}, null, null, new FluidStack[] {aFluidOutputs[0]}, aDuration, aEUt, 0);
         return true;
     }
 

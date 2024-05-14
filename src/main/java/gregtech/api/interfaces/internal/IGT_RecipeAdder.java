@@ -725,6 +725,7 @@ public interface IGT_RecipeAdder {
 
     public boolean addSawMill(ItemStack[] aInput, ItemStack[] aOutputs, FluidStack[] aFluidInputs, int aDuration, int aEUt, int aMode);
 
+    @Deprecated
     public boolean addPyrolyseBasic(ItemStack[] aInputs, ItemStack[] aOutputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt);
 
     public boolean addSpaceResearch0Recipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, ItemStack aInput4, ItemStack aInput5, ItemStack aInput6, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration, int aEUt);

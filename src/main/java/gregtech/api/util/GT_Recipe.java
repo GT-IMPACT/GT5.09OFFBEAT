@@ -642,8 +642,11 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             public static final GT_Recipe_Map sSawMill0 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill0", "Saw Mill (Planks & Sawdust)", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
             public static final GT_Recipe_Map sSawMill1 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill1", "Saw Mill (Wood Pulp & Sawdust)", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
             public static final GT_Recipe_Map sSawMill2 = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.sawmill2", "Saw Mill (Only Sawdust)", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
+
+        @Deprecated
         public static final GT_Recipe_Map sPyrolyseBasicVisual = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.pyrolysebasic", "Pyrolyse Recipes", null, RES_PATH_GUI + "PyrolyseBasic", 1, 1, 1, 0, 1, E, 1, E, true, false);
-            public static final GT_Recipe_Map sPyrolyseBasic = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.pyrolysebasic", "Pyrolyse Recipes", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
+        @Deprecated
+        public static final GT_Recipe_Map sPyrolyseBasic = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.pyrolysebasic", "Pyrolyse Recipes", null, "", 1, 1, 1, 0, 1, E, 1, E, false, false);
 
         public static final GT_Recipe_Map_Fuel sLiquidNqGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.liquidnaquadahgenerator", "Liquid Nq Generator", null, RES_PATH_GUI + "NaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
         public static final GT_Recipe_Map_Fuel sLiquidENqGenerator = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(25), "gt.recipe.liquidenaquadahengenerator", "Liquid Enriched Nq Generator", null, RES_PATH_GUI + "NaquadahGenerator", 1, 1, 0, 0, 1, "Fuel Value: ", 1, " EU for 1 Amp", true, false);
