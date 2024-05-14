@@ -41,7 +41,7 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_Board_Wetware.set(addItem(tLastID = 6, "Wetware Lifesupport Circuit Board", "The Board that keeps life"));
         ItemList.Circuit_Board_Plastic.set(addItem(tLastID = 7, "Polymer Circuit Board", "A Good Board"));
         ItemList.Circuit_Board_Bio.set(addItem(tLastID = 8, "Bio Circuit Board", "Bio genetic mutated Board"));
-        ItemList.Circuit_Board_Crystal.set(addItem(tLastID = 9, "Crystal Circuit Board", "Crystal Board on Oriharukon base"));
+        ItemList.Circuit_Board_Crystal.set(addItem(tLastID = 9, "Xeno Circuit Board", "Xeno Board on Oriharukon base"));
         
         /**
          * electronic components:
@@ -267,7 +267,7 @@ public class GT_MetaGenerated_Item_03
         ItemList.Circuit_Board_Wetware_Extreme.set(addItem(tLastID = 105, "Extreme Wetware Lifesupport Circuit Board", "The Board that keeps life"));
         ItemList.Circuit_Board_Plastic_Advanced.set(addItem(tLastID = 106, "Plastic Circuit Board", "A good Board"));
         ItemList.Circuit_Board_Bio_Ultra.set(addItem(tLastID = 107, "Ultra Bio Mutated Circuit Board", "Bio genetic mutated Board"));
-        ItemList.Circuit_Board_Crystal_Extreme.set(addItem(tLastID = 119, "Super Crystal Circuit Board", "Crystal mutated Board"));
+        ItemList.Circuit_Board_Crystal_Extreme.set(addItem(tLastID = 119, "Super Xeno Circuit Board", "Xeno mutated Board"));
         ItemList.Circuit_Biomainframe.set(addItem(tLastID = 120, "Bio Mainframe", "A Bio Circuit (UEV)",  new Object[]{OrePrefixes.circuit.get(Materials.Bio), SubTag.NO_UNIFICATION}));
         
         ItemList.Circuit_Piko.set(addItem(tLastID = 123, "Xeno Mainframe", "A Piko Circuit (UMV)",  new Object[]{OrePrefixes.circuit.get(Materials.Piko), SubTag.NO_UNIFICATION}));
