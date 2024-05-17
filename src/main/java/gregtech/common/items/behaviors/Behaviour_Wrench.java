@@ -103,7 +103,7 @@ public class Behaviour_Wrench
 
         if (GregTech_API.hasWrenchBlock(aBlock, aMeta) && ((aPlayer.capabilities.isCreativeMode) || (((GT_MetaGenerated_Tool) aItem).doDamage(aStack, this.mCosts)))) {
             GT_Utility.sendSoundToPlayers(aWorld, GregTech_API.sSoundList.get(100), 1.0F, -1.0F, aX, aY, aZ);
-            GregTech_API.runWrenchBlockAction(aBlock, aMeta, aTileEntity, aTargetSide);
+            GregTech_API.runWrenchBlockAction(aPlayer, aBlock, aMeta, aTileEntity, aTargetSide);
             return true;
         }
 

@@ -26,6 +26,7 @@ import kotlin.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -524,9 +525,9 @@ public class GregTech_API {
         return sWrenchBlockList.containsKey(new Pair<>(block, meta));
     }
 
-    public static boolean runWrenchBlockAction(Block block, int meta, TileEntity tile, byte aTargetSide) {
+    public static boolean runWrenchBlockAction(EntityPlayer player, Block block, int meta, TileEntity tile, byte aTargetSide) {
         try {
-            return sWrenchBlockList.get(new Pair<>(block, meta)).doAction(block, meta, tile, aTargetSide);
+            return sWrenchBlockList.get(new Pair<>(block, meta)).doAction(player, block, meta, tile, aTargetSide);
         } catch (Exception e) {
             return false;
         }
