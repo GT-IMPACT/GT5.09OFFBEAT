@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
+import gregtech.api.interfaces.IActionWrench;
 import gregtech.api.interfaces.IDamagableItem;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.internal.IGT_RecipeAdder;
@@ -27,6 +28,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -146,7 +148,7 @@ public class GregTech_API {
      */
     public static final Collection<Integer> sDimensionalList = new HashSet<Integer>();
 
-    public static final ArrayList<Pair<Block, Integer>> sWrenchBlockList = new ArrayList<>();
+    public static final HashMap<Pair<Block, Integer>, IActionWrench> sWrenchBlockList = new HashMap<>();
 
     /**
      * Lists of all the active World generation Features, these are getting Initialized in Postload!
@@ -514,12 +516,20 @@ public class GregTech_API {
         if (aCover.isValidTexture()) for (ItemStack tStack : aStackList) registerCover(tStack, aCover, aBehavior);
     }
 
-    public static void registerWrenchBlock(Block block, int meta) {
-        sWrenchBlockList.add(new Pair<>(block, meta));
+    public static void registerWrenchBlock(Block block, int meta, IActionWrench action) {
+        sWrenchBlockList.put(new Pair<>(block, meta), action);
     }
 
     public static boolean hasWrenchBlock(Block block, int meta) {
-        return sWrenchBlockList.contains(new Pair<>(block, meta));
+        return sWrenchBlockList.containsKey(new Pair<>(block, meta));
+    }
+
+    public static boolean runWrenchBlockAction(Block block, int meta, TileEntity tile, byte aTargetSide) {
+        try {
+            return sWrenchBlockList.get(new Pair<>(block, meta)).doAction(block, meta, tile, aTargetSide);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
