@@ -321,11 +321,11 @@ public class GT_Client extends GT_Proxy implements Runnable {
     @SubscribeEvent
     public void onDrawBlockHighlight(DrawBlockHighlightEvent aEvent) {
         Block aBlock = aEvent.player.worldObj.getBlock(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
+        int aMeta = aEvent.player.worldObj.getBlockMetadata(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
         TileEntity aTileEntity = aEvent.player.worldObj.getTileEntity(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
 
-        if (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWrenchList))
-        {
-            if (aTileEntity instanceof ITurnable || ROTATABLE_VANILLA_BLOCKS.contains(aBlock) || aTileEntity instanceof IWrenchable)
+        if (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWrenchList)) {
+            if (aTileEntity instanceof ITurnable || ROTATABLE_VANILLA_BLOCKS.contains(aBlock) || aTileEntity instanceof IWrenchable || GregTech_API.hasWrenchBlock(aBlock, aMeta))
                 drawGrid(aEvent, false);
             return;
         }

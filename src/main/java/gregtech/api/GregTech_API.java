@@ -21,6 +21,7 @@ import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
 import gregtech.api.world.GT_Worldgen;
 import gregtech.common.items.ItemDebug;
+import kotlin.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -144,6 +145,9 @@ public class GregTech_API {
      * Mystcraft and Twilight Forest are automatically considered a Dimension, without being in this List.
      */
     public static final Collection<Integer> sDimensionalList = new HashSet<Integer>();
+
+    public static final ArrayList<Pair<Block, Integer>> sWrenchBlockList = new ArrayList<>();
+
     /**
      * Lists of all the active World generation Features, these are getting Initialized in Postload!
      */
@@ -508,6 +512,14 @@ public class GregTech_API {
      */
     public static void registerCover(Collection<ItemStack> aStackList, ITexture aCover, GT_CoverBehavior aBehavior) {
         if (aCover.isValidTexture()) for (ItemStack tStack : aStackList) registerCover(tStack, aCover, aBehavior);
+    }
+
+    public static void registerWrenchBlock(Block block, int meta) {
+        sWrenchBlockList.add(new Pair<>(block, meta));
+    }
+
+    public static boolean hasWrenchBlock(Block block, int meta) {
+        return sWrenchBlockList.contains(new Pair<>(block, meta));
     }
 
     /**
