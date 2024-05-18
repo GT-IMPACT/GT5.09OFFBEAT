@@ -136,4 +136,9 @@ public class GT_Tool_Screwdriver
     public IChatComponent getDeathMessage(EntityLivingBase aPlayer, EntityLivingBase aEntity) {
         return new ChatComponentText(EnumChatFormatting.RED + aEntity.getCommandSenderName() + EnumChatFormatting.WHITE + " is screwed! (by " + EnumChatFormatting.GREEN + aPlayer.getCommandSenderName() + EnumChatFormatting.WHITE + ")");
     }
+
+    @Override
+    public boolean isScrewdriver() {
+        return true;
+    }
 }

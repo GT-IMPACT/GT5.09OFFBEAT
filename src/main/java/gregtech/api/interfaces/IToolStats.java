@@ -125,6 +125,13 @@ public interface IToolStats {
     public boolean isMiningTool();
 
     /**
+     * @return If this Tool can be used as an Screwdriver.
+     */
+    default boolean isScrewdriver() {
+        return false;
+    }
+
+    /**
      * aBlock.getHarvestTool(aMetaData) can return the following Values for example.
      * "axe", "pickaxe", "sword", "shovel", "hoe", "grafter", "saw", "wrench", "crowbar", "file", "hammer", "plow", "plunger", "scoop", "screwdriver", "sense", "scythe", "softhammer", "cutter", "plasmatorch"
      *

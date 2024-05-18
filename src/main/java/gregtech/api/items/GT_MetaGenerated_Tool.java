@@ -19,6 +19,7 @@ import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.tools.GT_Tool_Turbine;
 import mods.railcraft.api.core.items.IToolCrowbar;
+import mrtjp.projectred.api.IScrewdriver;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -57,9 +58,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Optional.InterfaceList(value = {
         @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft"),
         @Optional.Interface(iface = "mods.railcraft.api.core.items.IToolCrowbar", modid = "Railcraft"),
-        @Optional.Interface(iface = "crazypants.enderio.api.tool.ITool", modid = "EnderIO")
+        @Optional.Interface(iface = "crazypants.enderio.api.tool.ITool", modid = "EnderIO"),
+        @Optional.Interface(iface = "mrtjp.projectred.api.IScrewdriver", modid = "ProjRed|Core"),
 })
-public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements IDamagableItem, IToolCrowbar, IToolWrench, ITool {
+public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements IDamagableItem, IToolCrowbar, IToolWrench, ITool, IScrewdriver {
     /**
      * All instances of this Item Class are listed here.
      * This gets used to register the Renderer to all Items of this Type, if useStandardMetaItemRenderer() returns true.
@@ -712,5 +714,24 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
     @Override
     public boolean getIsRepairable(ItemStack aStack, ItemStack aMaterial) {
         return false;
+    }
+
+    @Optional.Method(modid = "ProjRed|Core")
+    @Override
+    public boolean canUse(EntityPlayer player, ItemStack stack) {
+        if (player == null) return false;
+        if (player.getCurrentEquippedItem() == null) return false;
+        if (!isItemStackUsable(player.getCurrentEquippedItem())) return false;
+        IToolStats tStats = getToolStats(player.getCurrentEquippedItem());
+        return tStats != null && tStats.isScrewdriver();
+    }
+
+    @Optional.Method(modid = "ProjRed|Core")
+    @Override
+    public void damageScrewdriver(EntityPlayer player, ItemStack stack) {
+        if (player == null) return;
+        if (stack == null) return;
+        IToolStats tStats = getToolStats(stack);
+        if (tStats != null) doDamage(stack, tStats.getToolDamagePerEntityAttack());
     }
 }
