@@ -59,7 +59,7 @@ import java.util.concurrent.ConcurrentHashMap;
         @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft"),
         @Optional.Interface(iface = "mods.railcraft.api.core.items.IToolCrowbar", modid = "Railcraft"),
         @Optional.Interface(iface = "crazypants.enderio.api.tool.ITool", modid = "EnderIO"),
-        @Optional.Interface(iface = "mrtjp.projectred.api.IScrewdriver", modid = "ProjRed|Core"),
+        @Optional.Interface(iface = "mrtjp.projectred.api.IScrewdriver", modid = "ProjRed|Core")
 })
 public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements IDamagableItem, IToolCrowbar, IToolWrench, ITool, IScrewdriver {
     /**
