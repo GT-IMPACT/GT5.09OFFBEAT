@@ -174,10 +174,13 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
                 GT_Pollution.addPollution(tChunk, -mPollutionReduction);
             }
         }
-        if (mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01 &&
-                ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getToolStats(mInventory[1]).getSpeedMultiplier() > 0 &&
-                ((GT_MetaGenerated_Tool) mInventory[1].getItem()).getPrimaryMaterial(mInventory[1]).mToolSpeed > 0) {
-            ((GT_MetaGenerated_Tool) mInventory[1].getItem()).doDamage(mInventory[1], 50L);
+
+        ItemStack stackTool = mInventory[1];
+        if (stackTool != null && stackTool.getItem() instanceof GT_MetaGenerated_Tool_01) {
+            GT_MetaGenerated_Tool tool = (GT_MetaGenerated_Tool_01) stackTool.getItem();
+            if (tool.getToolStats(stackTool).getSpeedMultiplier() > 0 && GT_MetaGenerated_Tool_01.getPrimaryMaterial(stackTool).mToolSpeed > 0) {
+                tool.doDamage(stackTool, 50L);
+            }
         }
         return true;
     }
