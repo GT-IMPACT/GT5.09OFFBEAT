@@ -102,35 +102,69 @@ public class GT_MetaTileEntity_VacuumFreezer
     }
 
     @Override
-    public boolean checkRecipe(ItemStack aStack) {
-        ItemStack[] tInputList = getCompactedInputs();
-        FluidStack[] tFluidList = getCompactedFluids();
+	public boolean checkRecipe(ItemStack aStack) {
+		ArrayList<ItemStack> tInputList = getStoredInputs();
+		int tInputList_sS = tInputList.size();
+		for (int i = 0; i < tInputList_sS - 1; i++) {
+			for (int j = i + 1; j < tInputList_sS; j++) {
+				if (GT_Utility.areStacksEqual(tInputList.get(i), tInputList.get(j))) {
+					if (tInputList.get(i).stackSize >= tInputList.get(j).stackSize) {
+						tInputList.remove(j--);
+						tInputList_sS = tInputList.size();
+					} else {
+						tInputList.remove(i--);
+						tInputList_sS = tInputList.size();
+						break;
+					}
+				}
+			}
+		}
+		tInputList.add(mInventory[1]);
+		ItemStack[] inputs = tInputList.toArray(new ItemStack[0]);
 
-        long tVoltage = getMaxInputVoltage();
-        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-        GT_Recipe tRecipe = getRecipeMap()
-            .findRecipe(getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluidList, tInputList);
-        if (tRecipe != null) {
-            if (!canOutputAll(tRecipe)) return false;
-            if (tRecipe.isRecipeInputEqual(true, tFluidList, tInputList)) {
-                this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-                this.mEfficiencyIncrease = 10000;
+		ArrayList<FluidStack> tFluidList = getStoredFluids();
+		int tFluidList_sS = tFluidList.size();
+		for (int i = 0; i < tFluidList_sS - 1; i++) {
+			for (int j = i + 1; j < tFluidList_sS; j++) {
+				if (GT_Utility.areFluidsEqual(tFluidList.get(i), tFluidList.get(j))) {
+					if (tFluidList.get(i).amount >= tFluidList.get(j).amount) {
+						tFluidList.remove(j--);
+						tFluidList_sS = tFluidList.size();
+					} else {
+						tFluidList.remove(i--);
+						tFluidList_sS = tFluidList.size();
+						break;
+					}
+				}
+			}
+		}
+		FluidStack[] fluids = tFluidList.toArray(new FluidStack[0]);
 
-                calculateOverclockedNessMultiInternal(tRecipe.mEUt, tRecipe.mDuration, 1, tVoltage, false);
-                // In case recipe is too OP for that machine
-                if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1) return false;
-                if (this.mEUt > 0) {
-                    this.mEUt = (-this.mEUt);
-                }
-                this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
-                this.mOutputItems = new ItemStack[] { tRecipe.getOutput(0) };
-                this.mOutputFluids = new FluidStack[] { tRecipe.getFluidOutput(0) };
-                updateSlots();
-                return true;
-            }
-        }
-        return false;
-    }
+		if (inputs.length > 0 || fluids.length > 0) {
+			long voltage = getMaxInputVoltage();
+			byte tier = (byte) Math.max(1, GT_Utility.getTier(voltage));
+			GT_Recipe recipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe, false,
+					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs);
+			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
+				cashedRecipe             = recipe;
+				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+				this.mEfficiencyIncrease = 10000;
+				calculateOverclockedNessMulti(recipe.mEUt, recipe.mDuration, 1, voltage);
+				//In case recipe is too OP for that machine
+				if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
+					return false;
+				if (this.mEUt > 0) {
+					this.mEUt = (-this.mEUt);
+				}
+				this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+                this.mOutputItems = recipe.mOutputs;
+				this.mOutputFluids = recipe.mFluidOutputs;
+				this.updateSlots();
+				return true;
+			}
+		}
+		return false;
+	}
 
     @Override
     protected IStructureElement<GT_MetaTileEntity_CubicMultiBlockBase<?>> getCasingElement() {
