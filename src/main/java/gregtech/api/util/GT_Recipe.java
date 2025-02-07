@@ -1331,6 +1331,11 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         }
 
         @Override
+        public GT_Recipe findRecipe(IHasWorldObjectAndCoords aTileEntity, GT_Recipe aRecipe, boolean aNotUnificated, boolean aDontCheckStackSizes, long aVoltage, FluidStack[] aFluids, ItemStack... aInputs) {
+            return this.findRecipe(aTileEntity, aRecipe, aNotUnificated, aVoltage, aFluids, null, aInputs);
+        }
+
+        @Override
         public boolean containsInput(ItemStack aStack) {
             return GT_ModHandler.getRecyclerOutput(GT_Utility.copyAmount(64, aStack), 0) != null;
         }
