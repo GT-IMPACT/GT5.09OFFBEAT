@@ -1980,31 +1980,31 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 int itemLimit = Math.min(mOutputs.length, OUTPUT_COUNT);
                 int fluidLimit = Math.min(mFluidOutputs.length, FLUID_OUTPUT_COUNT);
                 ArrayList<PositionedStack> outputStacks = new ArrayList<PositionedStack>(itemLimit + fluidLimit);
-                int posY = -2;
-                int count = 0;
+                try {
+                    int posY = -2;
+                    int count = 0;
 
-                for (int i = 0; i < itemLimit; i++) {
-                    outputStacks.add(new FixedPositionedStack(this.mOutputs[i].copy(), 102 + count * 18, posY));
-                    count++;
-                    if (count==3) {
-                        count=0;
-                        posY+=18;
+                    for (int i = 0; i < itemLimit; i++) {
+                        outputStacks.add(new FixedPositionedStack(this.mOutputs[i].copy(), 102 + count * 18, posY));
+                        count++;
+                        if (count == 3) {
+                            count = 0;
+                            posY += 18;
                         }
-                }
+                    }
 
-                for (int i = 0; i < fluidLimit; i++) {
-                    outputStacks.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(this.mFluidOutputs[i], true), 102 + count * 18, posY));
-                    count++;
-                    if (count==3) {
-                        count=0;
-                        posY+=18;
+                    for (int i = 0; i < fluidLimit; i++) {
+                        outputStacks.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(this.mFluidOutputs[i], true), 102 + count * 18, posY));
+                        count++;
+                        if (count == 3) {
+                            count = 0;
+                            posY += 18;
                         }
-                }
+                    }
+                } catch (Exception e) {}
 
                 return outputStacks;
             }
-
-            
         }
     }
     

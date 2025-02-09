@@ -32,6 +32,7 @@ repositories {
 
 dependencies {
     api("space.impact:Impact-API:0.0.4:dev")
+    api("space.impact:VirtualWorld:1.4.1:dev")
     api("com.github.GTNewHorizons:NotEnoughItems:2.3.+:dev") { isChanging = true }
     api("com.github.GTNewHorizons:ModularUI:1.1.10:dev")
     api("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
@@ -48,4 +49,6 @@ dependencies {
     compileOnlyApi("com.github.GTNewHorizons:ForestryMC:4.10.1:dev") { isTransitive = false }
     compileOnlyApi("com.github.GTNewHorizons:ProjectRed:4.11.1-GTNH:dev") { isTransitive = false }
     compileOnlyApi("com.github.GTNewHorizons:Railcraft:9.16.3:dev") { isTransitive = false }
+
+    runtimeOnlyNonPublishable("space.impact:VisualProspecting:1.3.2")
 }
