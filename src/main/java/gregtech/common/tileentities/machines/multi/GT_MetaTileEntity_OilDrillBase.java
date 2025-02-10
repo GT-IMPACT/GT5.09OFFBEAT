@@ -10,10 +10,10 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import space.gtimpact.virtual_world.api.FluidVeinCount;
+import space.gtimpact.virtual_world.api.VirtualAPI;
 
 import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.common.GT_UndergroundOil.DIVIDER;
-import static space.gtimpact.virtual_world.api.ChunkResourceKt.extractFluidFromChunk;
 
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
@@ -111,7 +111,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
 
         Chunk currentChunk = te.getWorld().getChunkFromBlockCoords(te.getXCoord(), te.getZCoord());
 
-        return extractFluidFromChunk(currentChunk, amount);
+        return VirtualAPI.extractFluidFromVein(currentChunk, amount);
     }
 
     private boolean tryFillChunkList() {
