@@ -216,7 +216,17 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean mRenderTileAmbientOcclusion = true;
     /** This enables rendering of glowing textures */
     public boolean mRenderGlowTextures = true;
-    
+
+    /**
+     * This enables the green->red durability for an item's damage value
+     */
+    public boolean mRenderItemDurabilityBar = true;
+
+    /**
+     * This enables the blue charge bar for an electric item's charge
+     */
+    public boolean mRenderItemChargeBar = true;
+
     /** Enable bound for multiblock tick */
     public boolean enableMultiBlocksTickBounds = false;
     /** Min bound for multiblock tick */

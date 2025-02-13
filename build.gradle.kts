@@ -50,5 +50,6 @@ dependencies {
     compileOnlyApi("com.github.GTNewHorizons:ProjectRed:4.11.1-GTNH:dev") { isTransitive = false }
     compileOnlyApi("com.github.GTNewHorizons:Railcraft:9.16.3:dev") { isTransitive = false }
 
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:DuraDisplay:1.3.2:dev")
     runtimeOnlyNonPublishable("space.impact:VisualProspecting:1.3.2")
 }
