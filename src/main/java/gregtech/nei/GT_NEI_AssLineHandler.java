@@ -344,7 +344,7 @@ public class GT_NEI_AssLineHandler
         }
 
         public FixedPositionedStack(Object object, int x, int y, int aChance) {
-            super(object, x, y, true);
+            super(GT_OreDictUnificator.getNonUnifiedStacks(object), x, y, true);
             this.mChance = aChance;
         }
 
@@ -419,7 +419,7 @@ public class GT_NEI_AssLineHandler
         }
 
         public List<PositionedStack> getIngredients() {
-            return getCycledIngredients(GT_NEI_AssLineHandler.this.cycleticks / 10, this.mInputs);
+            return getCycledIngredients(cycleticks / 10, this.mInputs);
         }
 
         public PositionedStack getResult() {

@@ -1,5 +1,6 @@
 package gregtech.common.tileentities.machines.multi;
 
+import com.impact.mods.gregtech.tileentities.hatches.lasers.GTMTE_LaserEnergy_In;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
@@ -11,6 +12,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_DataAccess;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_EnergyMulti;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
@@ -308,7 +310,12 @@ public class GT_MetaTileEntity_AssemblyLine
                 }
                 tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, -2, i);
                 if (!addInputToMachineList(tTileEntity, 16) && addOutputToMachineList(tTileEntity, 16)) {
-                    return r > 0 && (!mEnergyHatches.isEmpty() || !mEnergyHatchesMulti.isEmpty());
+
+                    for (GT_MetaTileEntity_Hatch_EnergyMulti te : mEnergyHatchesMulti) {
+                        if (te instanceof GTMTE_LaserEnergy_In) return false;
+                    }
+
+                    return r > 0 && (!mEnergyHatches.isEmpty() || !mEnergyHatchesMulti.isEmpty()) && (mEnergyHatchesMulti.size() <= 1 && mEnergyHatches.isEmpty() || mEnergyHatchesMulti.isEmpty() && mEnergyHatches.size() <= 8);
                 }
             }
         } else {
@@ -368,7 +375,12 @@ public class GT_MetaTileEntity_AssemblyLine
                 }
                 tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(i, -2, zDir);
                 if (!addInputToMachineList(tTileEntity, 16) && addOutputToMachineList(tTileEntity, 16)) {
-                    return r > 0 && (!mEnergyHatches.isEmpty() || !mEnergyHatchesMulti.isEmpty());
+
+                    for (GT_MetaTileEntity_Hatch_EnergyMulti te : mEnergyHatchesMulti) {
+                        if (te instanceof GTMTE_LaserEnergy_In) return false;
+                    }
+
+                    return r > 0 && (!mEnergyHatches.isEmpty() || !mEnergyHatchesMulti.isEmpty()) && (mEnergyHatchesMulti.size() <= 1 && mEnergyHatches.isEmpty() || mEnergyHatchesMulti.isEmpty() && mEnergyHatches.size() <= 8);
                 }
             }
         }

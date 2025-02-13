@@ -981,7 +981,7 @@ public class GT_NEI_DefaultHandler
 
         @Override
         public List<PositionedStack> getIngredients() {
-            return getCycledIngredients(GT_NEI_DefaultHandler.this.cycleticks / 10, this.mInputs);
+            return getCycledIngredients(cycleticks / 10, mInputs);
         }
 
         @Override
@@ -991,7 +991,7 @@ public class GT_NEI_DefaultHandler
 
         @Override
         public List<PositionedStack> getOtherStacks() {
-            return this.mOutputs;
+            return mOutputs;
         }
     } 
     

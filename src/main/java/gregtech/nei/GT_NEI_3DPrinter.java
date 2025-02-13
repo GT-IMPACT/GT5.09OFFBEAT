@@ -327,23 +327,24 @@ public class GT_NEI_3DPrinter extends TemplateRecipeHandler {
         }
 
         public FixedPositionedStack(Object object, int x, int y, int aChance) {
-            super(object, x, y, true);
+            super(GT_OreDictUnificator.getNonUnifiedStacks(object), x, y, true);
             this.mChance = aChance;
         }
 
+        @Override
         public void generatePermutations() {
             if (this.permutated) {
                 return;
             }
-            ArrayList<ItemStack> tDisplayStacks = new ArrayList<>();
+            ArrayList<ItemStack> tDisplayStacks = new ArrayList();
             for (ItemStack tStack : this.items) {
                 if (GT_Utility.isStackValid(tStack)) {
                     if (tStack.getItemDamage() == 32767) {
                         List<ItemStack> permutations = codechicken.nei.ItemList.itemMap.get(tStack.getItem());
                         if (!permutations.isEmpty()) {
                             ItemStack stack;
-                            for (Iterator<ItemStack> i = permutations.iterator(); i.hasNext(); tDisplayStacks.add(GT_Utility.copyAmount(tStack.stackSize, stack))) {
-                                stack = i.next();
+                            for (Iterator i$ = permutations.iterator(); i$.hasNext(); tDisplayStacks.add(GT_Utility.copyAmount(tStack.stackSize, new Object[]{stack}))) {
+                                stack = (ItemStack) i$.next();
                             }
                         } else {
                             ItemStack base = new ItemStack(tStack.getItem(), tStack.stackSize);
@@ -351,11 +352,11 @@ public class GT_NEI_3DPrinter extends TemplateRecipeHandler {
                             tDisplayStacks.add(base);
                         }
                     } else {
-                        tDisplayStacks.add(GT_Utility.copy(tStack));
+                        tDisplayStacks.add(GT_Utility.copy(new Object[]{tStack}));
                     }
                 }
             }
-            this.items = tDisplayStacks.toArray(new ItemStack[0]);
+            this.items = ((ItemStack[]) tDisplayStacks.toArray(new ItemStack[0]));
             if (this.items.length == 0) {
                 this.items = new ItemStack[]{new ItemStack(Blocks.fire)};
             }
@@ -411,7 +412,7 @@ public class GT_NEI_3DPrinter extends TemplateRecipeHandler {
         }
 
         public List<PositionedStack> getIngredients() {
-            return getCycledIngredients(cycleticks / 10, this.mInputs);
+            return getCycledIngredients(cycleticks / 10, mInputs);
         }
 
         public PositionedStack getResult() {
@@ -419,7 +420,7 @@ public class GT_NEI_3DPrinter extends TemplateRecipeHandler {
         }
 
         public List<PositionedStack> getOtherStacks() {
-            return this.mOutputs;
+            return mOutputs;
         }
     }
 }

@@ -337,7 +337,7 @@ public class GT_NEI_SawMill
         }
 
         public FixedPositionedStack(Object object, int x, int y, int aChance) {
-            super(object, x, y, true);
+            super(GT_OreDictUnificator.getNonUnifiedStacks(object), x, y, true);
             this.mChance = aChance;
         }
 
@@ -406,7 +406,7 @@ public class GT_NEI_SawMill
         }
 
         public List<PositionedStack> getIngredients() {
-            return getCycledIngredients(GT_NEI_SawMill.this.cycleticks / 10, this.mInputs);
+            return getCycledIngredients(cycleticks / 10, mInputs);
         }
 
         public PositionedStack getResult() {
@@ -414,7 +414,7 @@ public class GT_NEI_SawMill
         }
 
         public List<PositionedStack> getOtherStacks() {
-            return this.mOutputs;
+            return mOutputs;
         }
     }
 }
