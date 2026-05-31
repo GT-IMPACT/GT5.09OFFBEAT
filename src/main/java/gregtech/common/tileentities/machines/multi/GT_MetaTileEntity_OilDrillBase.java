@@ -1,19 +1,20 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.util.GT_Utility;
+import static gregtech.api.enums.GT_Values.VN;
+import static gregtech.common.GT_UndergroundOil.DIVIDER;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import space.gtimpact.virtual_world.api.FluidVeinCount;
-import space.gtimpact.virtual_world.api.VirtualAPI;
 
-import static gregtech.api.enums.GT_Values.VN;
-import static gregtech.common.GT_UndergroundOil.DIVIDER;
+import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.util.GT_Utility;
+import space.gtimpact.virtual_world.api.VirtualAPI;
+import space.gtimpact.virtual_world.api.core.WorldPos;
+import space.gtimpact.virtual_world.api.services.mining.fluids.FluidExtractionResult;
 
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
@@ -106,12 +107,13 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
         return true;
     }
 
-    private FluidVeinCount extractFluidFromVirtualUndergroundVein(int amount) {
+    private FluidExtractionResult extractFluidFromVirtualUndergroundVein(int amount) {
         IGregTechTileEntity te = getBaseMetaTileEntity();
-
-        Chunk currentChunk = te.getWorld().getChunkFromBlockCoords(te.getXCoord(), te.getZCoord());
-
-        return VirtualAPI.extractFluidFromVein(currentChunk, amount);
+        return VirtualAPI.INSTANCE.getMining().extractFluidAtBlock(
+                te.getWorld().provider.dimensionId,
+                new WorldPos(te.getXCoord(), te.getZCoord()),
+                amount
+        );
     }
 
     private boolean tryFillChunkList() {
@@ -119,14 +121,16 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
 
         if (mOilId <= 0) {
 
-            FluidVeinCount veinCount = extractFluidFromVirtualUndergroundVein(0);
+            FluidExtractionResult result = extractFluidFromVirtualUndergroundVein(0);
 
-            if (veinCount != null) {
+            if (result != null) {
 
-                tFluid = veinCount.getVein().getFluid();
-                mOilId = tFluid.getFluidID();
+                tFluid = result.getFluid().getFluid();
+                if (tFluid != null) {
+                    mOilId = tFluid.getFluidID();
+                }
 
-                return veinCount.getSize() > 0;
+                return result.getRemainingVolume() > 0;
             }
         }
 
@@ -140,22 +144,22 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
 
         tOil = new FluidStack(FluidRegistry.getFluid(mOilId), 0);
 
-        FluidVeinCount veinCount = extractFluidFromVirtualUndergroundVein(1);
+        FluidExtractionResult result = extractFluidFromVirtualUndergroundVein(1);
 
-        if (veinCount != null) {
+        if (result != null) {
 
             int rateExtract = getRangeInChunks();
-            int veinSize = veinCount.getSize();
+            int veinSize = result.getRemainingVolume();
 
             int fluidExtracted = (int) Math.floor(((double) veinSize) * (double) speed / DIVIDER * ((double) rateExtract * 16 * speed * 1.2F));
 
             if (veinSize > 0) {
-
-                tFluid = new FluidStack(veinCount.getVein().getFluid(), fluidExtracted);
-
-                if (tOil.isFluidEqual(tFluid)) {
-
-                    tOil.amount += tFluid.amount;
+                FluidStack fluid = result.getFluid().getFluid();
+                if (fluid != null) {
+                    tFluid = new FluidStack(fluid, fluidExtracted);
+                    if (tOil.isFluidEqual(tFluid)) {
+                        tOil.amount += tFluid.amount;
+                    }
                 }
             }
         }

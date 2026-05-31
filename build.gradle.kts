@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     api("space.impact:Impact-API:0.0.4:dev")
-    api("space.impact:VirtualWorld:1.4.2:dev")
+    api("space.impact:VirtualWorld:2.0.0b.dirty:dev")
     api("space.impact:Impact-core:1.1.0.24:dev") { isTransitive = false }
     api("com.github.GTNewHorizons:NotEnoughItems:2.3.+:dev") { isChanging = true }
     api("com.github.GTNewHorizons:ModularUI:1.1.10:dev")
