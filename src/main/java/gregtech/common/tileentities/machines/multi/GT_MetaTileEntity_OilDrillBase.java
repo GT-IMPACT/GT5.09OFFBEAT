@@ -151,15 +151,17 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
             int rateExtract = getRangeInChunks();
             int veinSize = result.getRemainingVolume();
 
+            if (veinSize <= 0) {
+                return null;
+            }
+
             int fluidExtracted = (int) Math.floor(Math.max(veinSize, 1000.0) * (double) speed / DIVIDER * ((double) rateExtract * 16 * speed * 1.2F));
 
-            if (veinSize > 0) {
-                FluidStack fluid = result.getFluid().getFluid();
-                if (fluid != null) {
-                    tFluid = new FluidStack(fluid, fluidExtracted);
-                    if (tOil.isFluidEqual(tFluid)) {
-                        tOil.amount += tFluid.amount;
-                    }
+            FluidStack fluid = result.getFluid().getFluid();
+            if (fluid != null) {
+                tFluid = new FluidStack(fluid, fluidExtracted);
+                if (tOil.isFluidEqual(tFluid)) {
+                    tOil.amount += tFluid.amount;
                 }
             }
         }
