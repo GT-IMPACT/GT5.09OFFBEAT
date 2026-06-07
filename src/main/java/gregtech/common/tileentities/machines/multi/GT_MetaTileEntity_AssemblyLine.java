@@ -50,12 +50,13 @@ public class GT_MetaTileEntity_AssemblyLine
                 "Size: 3x(5-16)x4, variable length",
                 "From Bottom to Top, Left to Right",
                 "Layer 1 - Solid Steel Machine Casing, Input Bus (last is Output Bus), Solid Steel Machine Casing",
-                "        - Casings can be replaced by Maint or Input Hatch",
+                "        - Casings can be replaced by Maintenance or Input Hatch",
                 "Layer 2 - Reinforced Glass, Assembling Line Casing, Reinforced Glass",
                 "Layer 3 - Grate Machine Casing, Assembler Machine Casing, Grate Machine Casing",
                 "Layer 4 - Empty, Solid Steel Machine Casing, Empty - Casing can be replaced by Energy Hatch",
                 "Up to 16 repeating slices, First replaces 1 Grate with Assembly Line,",
                 "Last has Output Bus instead of Input Bus",
+                "Up to 8 Basic Energy Hatches or 1 Multi-Ampere Energy Hatch (not Laser!)",
                 "Optional - Replace 1x Grate with Data Access Hatch next to the Controller"};
     }
 
