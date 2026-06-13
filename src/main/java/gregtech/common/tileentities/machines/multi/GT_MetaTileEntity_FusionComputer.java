@@ -36,10 +36,12 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     public GT_MetaTileEntity_FusionComputer(int aID, String aName, String aNameRegional, int tier) {
         super(aID, aName, aNameRegional);
+        enabledMaintenance = false;
     }
 
     public GT_MetaTileEntity_FusionComputer(String aName) {
         super(aName);
+        enabledMaintenance = false;
     }
 
     public abstract int tier();

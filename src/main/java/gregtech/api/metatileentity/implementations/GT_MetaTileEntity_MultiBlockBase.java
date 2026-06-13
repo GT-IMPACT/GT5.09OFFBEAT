@@ -44,6 +44,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public float damageFactorHigh = 0.6f;
     public GT_MetaTileEntity_MultiBlockBase mCleanroom;
     public GT_Recipe cashedRecipe = null;
+    public boolean enabledMaintenance = true;
     
     public ArrayList<GT_MetaTileEntity_Hatch_Input> mInputHatches = new ArrayList<>();
     public ArrayList<GT_MetaTileEntity_Hatch_Output> mOutputHatches = new ArrayList<>();
@@ -271,7 +272,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 if (mMachine) {
                     for (GT_MetaTileEntity_Hatch_Maintenance tHatch : mMaintenanceHatches) {
                         if (isValidMetaTileEntity(tHatch)) {
-                            if (disableMaintenance) {
+                            if (disableMaintenance || !enabledMaintenance) {
                                 mWrench = true;
                                 mScrewdriver = true;
                                 mSoftHammer = true;
@@ -459,6 +460,17 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         }
         if (mRuntime++ > 1000) {
             mRuntime = 0;
+
+            if (!enabledMaintenance) {
+                mWrench = true;
+                mScrewdriver = true;
+                mSoftHammer = true;
+                mHardHammer = true;
+                mSolderingTool = true;
+                mCrowbar = true;
+                return true;
+            }
+
             if (getBaseMetaTileEntity().getRandomNumber(6000) == 0) {
                 switch (getBaseMetaTileEntity().getRandomNumber(6)) {
                     case 0:
