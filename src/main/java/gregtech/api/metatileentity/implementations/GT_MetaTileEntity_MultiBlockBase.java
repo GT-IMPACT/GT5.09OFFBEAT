@@ -60,6 +60,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public ArrayList<GT_MetaTileEntity_Hatch_DynamoMulti> mDynamoHatchesMulti = new ArrayList<>();
 
     protected void setupMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack stack) {
+        updateRepairStatus();
+
         mInputHatches.clear();
         mQuadrInputHatches.clear();
         mInputBusses.clear();
@@ -438,7 +440,18 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         mEfficiencyIncrease = 0;
         getBaseMetaTileEntity().disableWorking();
     }
-    
+
+    public void updateRepairStatus() {
+        if (!enabledMaintenance) {
+            mWrench = true;
+            mScrewdriver = true;
+            mSoftHammer = true;
+            mHardHammer = true;
+            mSolderingTool = true;
+            mCrowbar = true;
+        }
+    }
+
     public int getRepairStatus() {
         return (mWrench ? 1 : 0) + (mScrewdriver ? 1 : 0) + (mSoftHammer ? 1 : 0) + (mHardHammer ? 1 : 0) + (mSolderingTool ? 1 : 0) + (mCrowbar ? 1 : 0);
     }
