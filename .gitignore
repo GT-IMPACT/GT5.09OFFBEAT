@@ -30,3 +30,4 @@ src/main/resources/mixins.*.json
 run/
 runDir/
 .gitattributes
+/.kotlin/
