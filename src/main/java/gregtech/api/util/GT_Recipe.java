@@ -1518,22 +1518,40 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         @Override
         public GT_Recipe findRecipe(IHasWorldObjectAndCoords aTileEntity, GT_Recipe aRecipe, boolean aNotUnificated, long aVoltage, FluidStack[] aFluids, ItemStack aSpecialSlot, ItemStack... aInputs) {
             GT_Recipe rRecipe = super.findRecipe(aTileEntity, aRecipe, aNotUnificated, aVoltage, aFluids, aSpecialSlot, aInputs);
-            if (aInputs == null || aInputs.length < 2 || aInputs[0] == null || aInputs[1] == null || !GregTech_API.sPostloadFinished)
+            if (aInputs == null || aInputs.length < 2 || !GregTech_API.sPostloadFinished)
                 return rRecipe;
+
             if (rRecipe == null) {
-                if (ItemList.Shape_Mold_Name.isStackEqual(aInputs[0], false, true)) {
-                    ItemStack tOutput = GT_Utility.copyAmount(1, aInputs[1]);
-                    tOutput.setStackDisplayName(aInputs[0].getDisplayName());
-                    rRecipe = new GT_Recipe(false, new ItemStack[]{ItemList.Shape_Mold_Name.get(0), GT_Utility.copyAmount(1, aInputs[1])}, new ItemStack[]{tOutput}, null, null, null, null, 128, 8, 0);
-                    rRecipe.mCanBeBuffered = false;
-                    return rRecipe;
+
+                List<ItemStack> resized = new ArrayList<>();
+                for (ItemStack aInput : aInputs) {
+                    if (aInput != null) {
+                        resized.add(aInput);
+                    }
                 }
-                if (ItemList.Shape_Mold_Name.isStackEqual(aInputs[1], false, true)) {
-                    ItemStack tOutput = GT_Utility.copyAmount(1, aInputs[0]);
-                    tOutput.setStackDisplayName(aInputs[1].getDisplayName());
-                    rRecipe = new GT_Recipe(false, new ItemStack[]{ItemList.Shape_Mold_Name.get(0), GT_Utility.copyAmount(1, aInputs[0])}, new ItemStack[]{tOutput}, null, null, null, null, 128, 8, 0);
-                    rRecipe.mCanBeBuffered = false;
-                    return rRecipe;
+
+                if (resized.size() == 2) {
+
+                    ItemStack renameMold = null;
+                    ItemStack renamedOut = null;
+
+                    for (ItemStack aInput : resized) {
+                        if (ItemList.Shape_Mold_Name.isStackEqual(aInput, false, true)) {
+                            renameMold = aInput;
+                        } else {
+                            renamedOut = aInput;
+                        }
+                    }
+
+                    ItemStack tOutput = GT_Utility.copyAmount(1, renamedOut);
+                    if (renameMold != null && tOutput != null) {
+                        if (!Objects.equals(tOutput.getDisplayName(), renameMold.getDisplayName())) {
+                            tOutput.setStackDisplayName(renameMold.getDisplayName());
+                            rRecipe = new GT_Recipe(false, new ItemStack[]{ItemList.Shape_Mold_Name.get(0), GT_Utility.copyAmount(1, renamedOut)}, new ItemStack[]{tOutput}, null, null, null, null, 128, 8, 0);
+                            rRecipe.mCanBeBuffered = false;
+                            return rRecipe;
+                        }
+                    }
                 }
                 return null;
             }
