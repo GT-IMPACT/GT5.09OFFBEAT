@@ -1266,6 +1266,9 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
     }
 
     public boolean addDustWashRecipe(ItemStack aInput, FluidStack aFluidInput, ItemStack aOutput, int aDuration, int aEUt) {
+	    if (aInput == null || aOutput == null) {
+	        return false;
+	    }
 	    GT_Recipe.GT_Recipe_Map.sDustWashRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0);
 	    return true;
     }
