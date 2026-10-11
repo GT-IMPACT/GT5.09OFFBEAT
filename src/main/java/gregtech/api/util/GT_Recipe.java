@@ -2003,7 +2003,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                     int count = 0;
 
                     for (int i = 0; i < itemLimit; i++) {
-                        outputStacks.add(new FixedPositionedStack(this.mOutputs[i].copy(), 102 + count * 18, posY));
+                        outputStacks.add(new FixedPositionedStack(this.mOutputs[i].copy(), 102 + count * 18, posY, getOutputChance(i)));
                         count++;
                         if (count == 3) {
                             count = 0;
@@ -2148,7 +2148,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 int count = 0;
 
                 for (int i = 0; i < itemLimit; i++) {
-                    outputStacks.add(new FixedPositionedStack(this.mOutputs[i].copy(), 102 + count * 18, posY));
+                    outputStacks.add(new FixedPositionedStack(this.mOutputs[i].copy(), 102 + count * 18, posY, getOutputChance(i)));
                     count++;
                     if (count==3) {
                         count=0;
