@@ -108,7 +108,7 @@ public abstract class GT_MetaTileEntity_StorageTank extends GT_MetaTileEntity_Ba
 			
 			if (mVoidFluidPart && mFluid != null && mFluid.amount >= getCapacity()) {
 				mVoidFluidFull = false;
-				mFluid.amount  = getCapacity() - (getCapacity() * 25 / 100);
+				mFluid.amount  = getCapacity() - (int) (getCapacity() * 25L / 100);
 			}
 			
 			if (mVoidFluidFull && mFluid != null) {

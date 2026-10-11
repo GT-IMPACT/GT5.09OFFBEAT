@@ -150,7 +150,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
                             }
                         }
                     } else {
-                        if (tFluid.isFluidEqual(getFillableStack()) && tFluid.amount + getFillableStack().amount <= getCapacity()) {
+                        if (tFluid.isFluidEqual(getFillableStack()) && (long) tFluid.amount + getFillableStack().amount <= getCapacity()) {
                             if (aBaseMetaTileEntity.addStackToSlot(getOutputSlot(), GT_Utility.getContainerItem(mInventory[getInputSlot()], true), 1)) {
                                 getFillableStack().amount += tFluid.amount;
                                 aBaseMetaTileEntity.decrStackSize(getInputSlot(), 1);
@@ -206,7 +206,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
         if (!getFillableStack().isFluidEqual(aFluid))
             return 0;
 
-        int space = getCapacity() - getFillableStack().amount;
+        int space = Math.max(0, getCapacity() - getFillableStack().amount);
         if (aFluid.amount <= space) {
             if (doFill) {
                 getFillableStack().amount += aFluid.amount;
