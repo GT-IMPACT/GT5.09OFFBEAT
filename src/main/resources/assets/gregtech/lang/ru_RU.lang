@@ -1,3 +1,6 @@
+TileEntity_EUp_THROUGHPUT_IN=Пропускная способность (вход):
+TileEntity_EUp_THROUGHPUT_OUT=Пропускная способность (выход):
+
 GT5U.turbine.running.true=Турбина работает
 GT5U.turbine.running.false=Турбина остановлена
 GT5U.turbine.maintenance.false=Обслуживание не требуется

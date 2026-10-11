@@ -75,6 +75,16 @@ public class GT_MetaTileEntity_Hatch_DynamoMulti extends GT_MetaTileEntity_Hatch
 	public long maxAmperesOut() {
 		return this.Amp;
 	}
+
+	@Override
+	public long getRatedOutputVoltage() {
+		return maxEUOutput();
+	}
+
+	@Override
+	public long getRatedOutputThroughput() {
+		return maxEUOutput() * maxAmperesOut();
+	}
 	
 	public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
 		return new GT_MetaTileEntity_Hatch_DynamoMulti(this.mName, this.mTier, this.Amp, this.mDescription, this.mTextures);

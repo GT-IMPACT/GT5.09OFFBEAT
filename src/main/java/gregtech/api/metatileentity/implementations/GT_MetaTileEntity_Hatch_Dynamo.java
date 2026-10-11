@@ -113,6 +113,16 @@ public class GT_MetaTileEntity_Hatch_Dynamo extends GT_MetaTileEntity_Hatch {
     }
 
     @Override
+    public long getRatedOutputVoltage() {
+        return maxEUOutput();
+    }
+
+    @Override
+    public long getRatedOutputThroughput() {
+        return AmpOutput();
+    }
+
+    @Override
     public long maxAmperesOut() {
         return mAmpers;
     }

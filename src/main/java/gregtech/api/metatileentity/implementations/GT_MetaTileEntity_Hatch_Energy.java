@@ -114,6 +114,11 @@ public class GT_MetaTileEntity_Hatch_Energy extends GT_MetaTileEntity_Hatch {
     }
 
     @Override
+    public long getRatedInputThroughput() {
+        return AmpInput();
+    }
+
+    @Override
     public long maxEUStore() {
         return mCapacity == 0 ? 512L + V[mTier + 1] * 8L * mAmpers : mCapacity;
     }

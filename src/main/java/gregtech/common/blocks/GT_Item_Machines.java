@@ -4,6 +4,7 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.metatileentity.IConnectable;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.util.GT_ItsNotMyFaultException;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import java.text.NumberFormat;
@@ -72,18 +74,29 @@ public class GT_Item_Machines
                         aList.add(GT_LanguageManager.addStringLocalization("TileEntity_Fluid_CAPACITY", "Fluid Tank: ", !GregTech_API.sPostloadFinished) + tTileEntity.getMetaTileEntity().getCapacity() + "L");
                 }
                 if (tTileEntity.getEUCapacity() > 0L) {
-                    if (tTileEntity.getInputVoltage() > 0L) {
-                        int currentTier = Math.min(GT_Utility.getTier(tTileEntity.getInputVoltage()), 15);
-                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_IN", "Voltage IN: ", !GregTech_API.sPostloadFinished ) + EnumChatFormatting.GREEN + tTileEntity.getInputVoltage() + " (" + GT_Values.VN[currentTier] + ")" + EnumChatFormatting.GRAY);
+                    IMetaTileEntity tMetaTileEntity = tTileEntity.getMetaTileEntity();
+                    long tInputVoltage = tMetaTileEntity.getRatedInputVoltage();
+                    long tOutputVoltage = tMetaTileEntity.getRatedOutputVoltage();
+                    long tInputThroughput = tMetaTileEntity.getRatedInputThroughput();
+                    long tOutputThroughput = tMetaTileEntity.getRatedOutputThroughput();
+                    if (tInputVoltage > 0L) {
+                        int currentTier = Math.min(GT_Utility.getTier(tInputVoltage), 15);
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_IN", "Voltage IN: ", !GregTech_API.sPostloadFinished ) + GREEN + GT_Utility.formatNumbers(tInputVoltage) + " (" + GT_Values.VN[currentTier] + ")" + GRAY);
+                        if (tInputThroughput > 0L) {
+                            aList.add(StatCollector.translateToLocal("TileEntity_EUp_THROUGHPUT_IN") + " " + GREEN + GT_Utility.formatNumbers(tInputThroughput) + " EU/t" + GRAY);
+                        }
                     }
-                    if (tTileEntity.getOutputVoltage() > 0L) {
-                        int currentTier = Math.min(GT_Utility.getTier(tTileEntity.getOutputVoltage()), 15);
-                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_OUT", "Voltage OUT: ", !GregTech_API.sPostloadFinished) + GREEN + tTileEntity.getOutputVoltage() + " (" + GT_Values.VN[currentTier] + ")" + GRAY);
+                    if (tOutputVoltage > 0L) {
+                        int currentTier = Math.min(GT_Utility.getTier(tOutputVoltage), 15);
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_OUT", "Voltage OUT: ", !GregTech_API.sPostloadFinished) + GREEN + GT_Utility.formatNumbers(tOutputVoltage) + " (" + GT_Values.VN[currentTier] + ")" + GRAY);
+                        if (tOutputThroughput > 0L) {
+                            aList.add(StatCollector.translateToLocal("TileEntity_EUp_THROUGHPUT_OUT") + " " + GREEN + GT_Utility.formatNumbers(tOutputThroughput) + " EU/t" + GRAY);
+                        }
                     }
                     if (tTileEntity.getOutputAmperage() > 1L) {
-                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_AMOUNT", "Amperage: ", !GregTech_API.sPostloadFinished) + YELLOW + tTileEntity.getOutputAmperage() + GRAY);
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_AMOUNT", "Amperage: ", !GregTech_API.sPostloadFinished) + YELLOW + GT_Utility.formatNumbers(tTileEntity.getOutputAmperage()) + GRAY);
                     }
-                    aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_STORE", "Capacity: ", !GregTech_API.sPostloadFinished) + BLUE + tTileEntity.getEUCapacity() + GRAY);
+                    aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_STORE", "Capacity: ", !GregTech_API.sPostloadFinished) + BLUE + GT_Utility.formatNumbers(tTileEntity.getEUCapacity()) + GRAY);
                 }
             }
             NBTTagCompound aNBT = aStack.getTagCompound();

@@ -339,6 +339,26 @@ public interface IMetaTileEntity extends ISidedInventory, IFluidTank, IFluidHand
      */
     String getSpecialVoltageToolTip();
 
+    /** Rated input voltage in EU per packet. */
+    default long getRatedInputVoltage() {
+        return getBaseMetaTileEntity().getInputVoltage();
+    }
+
+    /** Rated output voltage in EU per packet, including transfers outside the cable energy net. */
+    default long getRatedOutputVoltage() {
+        return getBaseMetaTileEntity().getOutputVoltage();
+    }
+
+    /** Rated input throughput in EU/t. Zero means no rated throughput is specified. */
+    default long getRatedInputThroughput() {
+        return 0;
+    }
+
+    /** Rated output throughput in EU/t. Zero means no rated throughput is specified. */
+    default long getRatedOutputThroughput() {
+        return 0;
+    }
+
     /**
      * Icon of the Texture. If this returns null then it falls back to getTextureIndex.
      *

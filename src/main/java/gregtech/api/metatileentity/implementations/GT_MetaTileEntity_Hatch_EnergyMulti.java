@@ -4,6 +4,7 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -78,6 +79,11 @@ public class GT_MetaTileEntity_Hatch_EnergyMulti extends GT_MetaTileEntity_Hatch
 	public long maxAmperesIn() {
 		return this.Amp;
 	}
+
+	@Override
+	public long getRatedInputThroughput() {
+		return maxEUInput() * maxAmperesIn();
+	}
 	
 	public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
 		return new GT_MetaTileEntity_Hatch_EnergyMulti(this.mName, this.mTier, this.Amp, this.mDescription, this.mTextures);
@@ -94,6 +100,6 @@ public class GT_MetaTileEntity_Hatch_EnergyMulti extends GT_MetaTileEntity_Hatch
 	public String[] getDescription() {
 		return new String[]{
 				this.mDescription,
-				"Amperes In" + ": " + EnumChatFormatting.GREEN + this.maxAmperesIn() + " A"};
+				"Amperes In" + ": " + EnumChatFormatting.GREEN + GT_Utility.formatNumbers(this.maxAmperesIn()) + " A"};
 	}
 }

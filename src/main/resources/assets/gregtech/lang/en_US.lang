@@ -1,3 +1,6 @@
+TileEntity_EUp_THROUGHPUT_IN=Throughput IN:
+TileEntity_EUp_THROUGHPUT_OUT=Throughput OUT:
+
 GT5U.turbine.running.true=Turbine running
 GT5U.turbine.running.false=Turbine stopped
 GT5U.turbine.maintenance.false=No Maintainance issues
