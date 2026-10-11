@@ -459,7 +459,26 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     @Override
     public String[] getInfoData() {
-        String tier = tier() == 6 ? EnumChatFormatting.RED + "I" + EnumChatFormatting.RESET : tier() == 7 ? EnumChatFormatting.YELLOW + "II" + EnumChatFormatting.RESET : tier() == 8 ? EnumChatFormatting.GRAY + "III" + EnumChatFormatting.RESET : "IV";
+        String tier = "";
+        switch (tier()) {
+            case 6:
+                tier = EnumChatFormatting.RED + "I" + EnumChatFormatting.RESET;
+                break;
+            case 7:
+                tier = EnumChatFormatting.YELLOW + "II" + EnumChatFormatting.RESET;
+                break;
+            case 8:
+                tier = EnumChatFormatting.GRAY + "III" + EnumChatFormatting.RESET;
+                break;
+            case 9:
+                tier = "IV";
+                break;
+            case 10:
+                tier = "V";
+                break;
+            default:
+                break;
+        }
         float plasmaOut = 0;
         int powerRequired = 0;
         if (this.mLastRecipe != null) {
