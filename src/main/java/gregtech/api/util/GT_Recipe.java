@@ -663,6 +663,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
          * HashMap of Recipes based on their Items
          */
         public final Map<GT_ItemStack, Collection<GT_Recipe>> mRecipeItemMap = new /*Concurrent*/HashMap<GT_ItemStack, Collection<GT_Recipe>>();
+        private final GT_RecipeItemRegistry mRecipeItemRegistry = new GT_RecipeItemRegistry(mRecipeItemMap);
         /**
          * HashMap of Recipes based on their Fluids
          */
@@ -697,7 +698,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
          */
         public void clear() {
             mRecipeList.clear();
-            mRecipeItemMap.clear();
+            mRecipeItemRegistry.clear();
             mRecipeFluidMap.clear();
             mRecipeFluidNameMap.clear();
         }
@@ -894,7 +895,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
 
         public void reInit() {
             Map<GT_ItemStack, Collection<GT_Recipe>> tMap = mRecipeItemMap;
-            if (tMap != null) tMap.clear();
+            mRecipeItemRegistry.clear();
             for (GT_Recipe tRecipe : mRecipeList) {
                 GT_OreDictUnificator.setStackArray(true, tRecipe.mInputs);
                 GT_OreDictUnificator.setStackArray(true, tRecipe.mOutputs);
@@ -906,7 +907,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
          * @return if this Item is a valid Input for any for the Recipes
          */
         public boolean containsInput(ItemStack aStack) {
-            return aStack != null && (mRecipeItemMap.containsKey(new GT_ItemStack(aStack)) || mRecipeItemMap.containsKey(new GT_ItemStack(aStack, true)));
+            return aStack != null && (mRecipeItemRegistry.contains(new GT_ItemStack(aStack)) || mRecipeItemRegistry.contains(new GT_ItemStack(aStack, true)));
         }
 
         /**
@@ -988,11 +989,11 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             if (mUsualInputCount > 0 && aInputs != null) for (ItemStack tStack : aInputs)
                 if (tStack != null) {
                     Collection<GT_Recipe>
-                            tRecipes = mRecipeItemMap.get(new GT_ItemStack(tStack));
+                            tRecipes = mRecipeItemRegistry.get(new GT_ItemStack(tStack));
                     if (tRecipes != null) for (GT_Recipe tRecipe : tRecipes)
                         if (!tRecipe.mFakeRecipe && tRecipe.isRecipeInputEqual(false, aDontCheckStackSizes, aFluids, aInputs))
                             return tRecipe.mEnabled && aVoltage * mAmperage >= tRecipe.mEUt ? tRecipe : null;
-                    tRecipes = mRecipeItemMap.get(new GT_ItemStack(tStack, true));
+                    tRecipes = mRecipeItemRegistry.get(new GT_ItemStack(tStack, true));
                     if (tRecipes != null) for (GT_Recipe tRecipe : tRecipes)
                         if (!tRecipe.mFakeRecipe && tRecipe.isRecipeInputEqual(false, aDontCheckStackSizes, aFluids, aInputs))
                             return tRecipe.mEnabled && aVoltage * mAmperage >= tRecipe.mEUt ? tRecipe : null;
@@ -1013,13 +1014,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         }
 
         protected GT_Recipe addToItemMap(GT_Recipe aRecipe) {
-            for (ItemStack aStack : aRecipe.mInputs)
-                if (aStack != null) {
-                    GT_ItemStack tStack = new GT_ItemStack(aStack);
-                    Collection<GT_Recipe> tList = mRecipeItemMap.get(tStack);
-                    if (tList == null) mRecipeItemMap.put(tStack, tList = new HashSet<GT_Recipe>(1));
-                    tList.add(aRecipe);
-                }
+            mRecipeItemRegistry.register(aRecipe);
             return aRecipe;
         }
     }
