@@ -8,6 +8,7 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
+import gregtech.api.metatileentity.implementations.GTMTE_Multi_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 
 import gregtech.api.render.TextureFactory;
@@ -281,10 +282,16 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
     @Override
     public ArrayList<FluidStack> getStoredFluids() {
         ArrayList<FluidStack> rList = new ArrayList<FluidStack>();
-        for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
+        ArrayList<GT_MetaTileEntity_Hatch_Input> tHatches = new ArrayList<GT_MetaTileEntity_Hatch_Input>(mInputHatches);
+        tHatches.addAll(mQuadrInputHatches);
+        for (GT_MetaTileEntity_Hatch_Input tHatch : tHatches) {
             tHatch.mRecipeMap = getRecipeMap();
-            if (isValidMetaTileEntity(tHatch) && tHatch.getFillableStack() != null) {
-                FluidStack tStack = tHatch.getFillableStack();
+            if (!isValidMetaTileEntity(tHatch)) continue;
+            FluidStack[] tFluids = tHatch instanceof GTMTE_Multi_Hatch_Input
+                    ? ((GTMTE_Multi_Hatch_Input) tHatch).getStoredFluid()
+                    : new FluidStack[]{tHatch.getFillableStack()};
+            for (FluidStack tStack : tFluids) {
+                if (tStack == null) continue;
                 if (tStack.isFluidEqual(GT_ModHandler.getSteam(1000)) || tStack.isFluidEqual(Materials.Hydrogen.getGas(1000))
                         || tStack.isFluidEqual(Materials.Radon.getGas(1000)) || tStack.isFluidEqual(Materials.Fluorine.getGas(1000))
                         || tStack.isFluidEqual(Materials.Zinc.getPlasma(1)) || tStack.isFluidEqual(Materials.Nickel.getPlasma(1))
