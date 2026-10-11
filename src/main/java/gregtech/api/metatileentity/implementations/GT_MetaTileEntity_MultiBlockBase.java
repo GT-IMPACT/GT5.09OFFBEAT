@@ -1021,6 +1021,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
     
     public void updateSlots() {
+        for (GTMTE_Multi_Hatch_Input tHatch : mQuadrInputHatches)
+            if (isValidMetaTileEntity(tHatch)) tHatch.updateSlots();
         for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches)
             if (isValidMetaTileEntity(tHatch)) tHatch.updateSlots();
         for (GT_MetaTileEntity_Hatch_InputBus tHatch : mInputBusses)
