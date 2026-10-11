@@ -83,6 +83,7 @@ public class GT_Tool_Drill_LV
                 || (aBlock.getMaterial() == Material.rock) || (aBlock.getMaterial() == Material.iron) || (aBlock.getMaterial() == Material.anvil)
                 || (aBlock.getMaterial() == Material.sand) || (aBlock.getMaterial() == Material.grass) || (aBlock.getMaterial() == Material.ground)
                 || (aBlock.getMaterial() == Material.snow) || (aBlock.getMaterial() == Material.clay) || (aBlock.getMaterial() == Material.glass)
+                || (aBlock.getMaterial() == Material.ice) || (aBlock.getMaterial() == Material.packedIce)
                 || (aBlock instanceof BlockBreakable);
     }
 
