@@ -180,15 +180,6 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
         if (mStoredFluid[aSlot] == null) mStoredFluid[aSlot] = aFluid.copy();
     }
 
-    private void markFluidDirty() {
-        IGregTechTileEntity tile = getBaseMetaTileEntity();
-        tile.markDirty();
-        // BaseTileEntity.markDirty() does not notify the world about chunk changes.
-        if (tile.isServerSide()) {
-            tile.getWorld().getChunkFromBlockCoords(tile.getXCoord(), tile.getZCoord()).setChunkModified();
-        }
-    }
-
     @Override
     public void updateSlots() {
         super.updateSlots();
@@ -198,8 +189,6 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
             }
         }
         mFluid = getFluid();
-        // Recipes consume the stored stacks directly, including partial amounts.
-        markFluidDirty();
     }
 
     @Override

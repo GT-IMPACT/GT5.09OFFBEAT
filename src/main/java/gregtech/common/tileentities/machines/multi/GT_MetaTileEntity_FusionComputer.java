@@ -294,6 +294,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                 return false;
             }
             if (mRunningOnLoad || tRecipe.isRecipeInputEqual(true, tFluids)) {
+                updateSlots();
                 this.mLastRecipe = tRecipe;
                 this.mEUt = (this.mLastRecipe.mEUt * overclock(this.mLastRecipe.mSpecialValue));
                 this.mMaxProgresstime = this.mLastRecipe.mDuration / overclock(this.mLastRecipe.mSpecialValue);
