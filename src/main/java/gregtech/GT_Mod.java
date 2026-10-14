@@ -701,6 +701,8 @@ public class GT_Mod implements IGT_Mod {
         
         if (GregTech_API.mAE2) {
             GT_MetaTileEntity_DigitalChestBase.registerAEIntegration();
+            appeng.api.AEApi.instance().registries().blockingModeIgnoreItem()
+                    .register(ItemList.Circuit_Integrated.getItem());
         }
         String tName = "";
         if (GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.disabledrecipes, aTextIC2 + (tName = "blastfurnace"), true)) {
