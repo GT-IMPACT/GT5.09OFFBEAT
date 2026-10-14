@@ -1337,8 +1337,8 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
                 Endium, PulsatingIron, RedstoneAlloy, Duranium, DarkSteel, Ledox, MeteoricIron, Silver, BlueAlloy, Indium, Tin, Antimony, Caesium, Lanthanum, Cerium, Neodymium, SolderingAlloy, NeodymiumMagnetic, Electrum, RoseGold, Tantalum, BatteryAlloy,
                 Gold, Lead, Bismuth, Thorium, Uranium235, Uranium, Plutonium, Plutonium241, Platinum, Americum, Tritanium, Graphene);
 
-        Wood.add(SubTag.WOOD, SubTag.FLAMMABLE, SubTag.NO_SMELTING, SubTag.NO_SMASHING);
-        WoodSealed.add(SubTag.WOOD, SubTag.FLAMMABLE, SubTag.NO_SMELTING, SubTag.NO_SMASHING, SubTag.NO_WORKING);
+        Wood.add(SubTag.WOOD, SubTag.FLAMMABLE, SubTag.NO_SMELTING, SubTag.NO_SMASHING, SubTag.NO_FREEZING);
+        WoodSealed.add(SubTag.WOOD, SubTag.FLAMMABLE, SubTag.NO_SMELTING, SubTag.NO_SMASHING, SubTag.NO_WORKING, SubTag.NO_FREEZING);
         Steeleaf.add(SubTag.WOOD, SubTag.FLAMMABLE, SubTag.MAGICAL, SubTag.MORTAR_GRINDABLE, SubTag.NO_SMELTING);
 
         MeatRaw.add(SubTag.NO_SMASHING);
