@@ -907,7 +907,11 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
          * @return if this Item is a valid Input for any for the Recipes
          */
         public boolean containsInput(ItemStack aStack) {
-            return aStack != null && (mRecipeItemRegistry.contains(new GT_ItemStack(aStack)) || mRecipeItemRegistry.contains(new GT_ItemStack(aStack, true)));
+            if (aStack == null) return false;
+            if (mRecipeItemRegistry.contains(new GT_ItemStack(aStack)) || mRecipeItemRegistry.contains(new GT_ItemStack(aStack, true))) return true;
+            ItemStack tUnified = GT_OreDictUnificator.get(false, aStack);
+            return !GT_Utility.areStacksEqual(aStack, tUnified, true)
+                    && (mRecipeItemRegistry.contains(new GT_ItemStack(tUnified)) || mRecipeItemRegistry.contains(new GT_ItemStack(tUnified, true)));
         }
 
         /**
@@ -1004,6 +1008,22 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 if (aFluid != null) {
                     Collection<GT_Recipe>
                             tRecipes = mRecipeFluidMap.get(aFluid.getFluid());
+                    if (tRecipes != null) for (GT_Recipe tRecipe : tRecipes)
+                        if (!tRecipe.mFakeRecipe && tRecipe.isRecipeInputEqual(false, aDontCheckStackSizes, aFluids, aInputs))
+                            return tRecipe.mEnabled && aVoltage * mAmperage >= tRecipe.mEUt ? tRecipe : null;
+                }
+
+            // Only after all existing searches fail, try the unified equivalent as
+            // an index key. Validate candidates against the original inputs.
+            if (mUsualInputCount > 0 && aInputs != null) for (ItemStack tStack : aInputs)
+                if (tStack != null) {
+                    ItemStack tUnified = GT_OreDictUnificator.get(false, tStack);
+                    if (GT_Utility.areStacksEqual(tStack, tUnified, true)) continue;
+                    Collection<GT_Recipe> tRecipes = mRecipeItemRegistry.get(new GT_ItemStack(tUnified));
+                    if (tRecipes != null) for (GT_Recipe tRecipe : tRecipes)
+                        if (!tRecipe.mFakeRecipe && tRecipe.isRecipeInputEqual(false, aDontCheckStackSizes, aFluids, aInputs))
+                            return tRecipe.mEnabled && aVoltage * mAmperage >= tRecipe.mEUt ? tRecipe : null;
+                    tRecipes = mRecipeItemRegistry.get(new GT_ItemStack(tUnified, true));
                     if (tRecipes != null) for (GT_Recipe tRecipe : tRecipes)
                         if (!tRecipe.mFakeRecipe && tRecipe.isRecipeInputEqual(false, aDontCheckStackSizes, aFluids, aInputs))
                             return tRecipe.mEnabled && aVoltage * mAmperage >= tRecipe.mEUt ? tRecipe : null;
