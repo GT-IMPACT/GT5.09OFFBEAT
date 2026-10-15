@@ -9,7 +9,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ProcessingShaping implements gregtech.api.interfaces.IOreRecipeRegistrator {
+    private final Set<Materials> mRingCraftingMaterials = new HashSet<Materials>();
+
     public ProcessingShaping() {
         OrePrefixes.ingot.add(this);
         OrePrefixes.dust.add(this);
@@ -65,8 +70,13 @@ public class ProcessingShaping implements gregtech.api.interfaces.IOreRecipeRegi
                     GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Shape_Extruder_Bolt.get(0L), GT_OreDictUnificator.get(OrePrefixes.bolt, aMaterial.mSmeltInto, tAmount * 8), (int) Math.max(aMaterialMass * 2L * tAmount, tAmount), 8 * tVoltageMultiplier);
                 if (tAmount * 4 <= 64) {
                     GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), ItemList.Shape_Extruder_Ring.get(0L), GT_OreDictUnificator.get(OrePrefixes.ring, aMaterial.mSmeltInto, tAmount * 4), (int) Math.max(aMaterialMass * 2L * tAmount, tAmount), 6 * tVoltageMultiplier);
-                    if ((aMaterial.mUnificatable) && (aMaterial.mMaterialInto == aMaterial) && !aMaterial.contains(SubTag.NO_SMASHING))
-                     GT_ModHandler.addCraftingRecipe(GT_OreDictUnificator.get(OrePrefixes.ring, aMaterial, 1L), GT_Proxy.tBits, new Object[]{"h ", "fX", 'X', OrePrefixes.stick.get(aMaterial)});
+                    if ((aMaterial.mUnificatable) && (aMaterial.mMaterialInto == aMaterial) && !aMaterial.contains(SubTag.NO_SMASHING)) {
+                        // This recipe uses ore-dictionary sticks, not the ingot/dust being processed.
+                        if (!mRingCraftingMaterials.contains(aMaterial)
+                                && GT_ModHandler.addCraftingRecipe(GT_OreDictUnificator.get(OrePrefixes.ring, aMaterial, 1L), GT_Proxy.tBits, new Object[]{"h ", "fX", 'X', OrePrefixes.stick.get(aMaterial)})) {
+                            mRingCraftingMaterials.add(aMaterial);
+                        }
+                    }
                 }
                 //GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(2L, new Object[]{aStack}), ItemList.Shape_Extruder_Sword.get(0L), GT_OreDictUnificator.get(OrePrefixes.toolHeadSword, aMaterial.mSmeltInto, tAmount), (int) Math.max(aMaterialMass * 2L * tAmount, tAmount), 8 * tVoltageMultiplier);
                 //GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(3L, new Object[]{aStack}), ItemList.Shape_Extruder_Pickaxe.get(0L), GT_OreDictUnificator.get(OrePrefixes.toolHeadPickaxe, aMaterial.mSmeltInto, tAmount), (int) Math.max(aMaterialMass * 3L * tAmount, tAmount), 8 * tVoltageMultiplier);
