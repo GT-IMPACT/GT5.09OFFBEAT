@@ -900,6 +900,11 @@ public class GT_Mod implements IGT_Mod {
     }
     
     @Mod.EventHandler
+    public void onLoadComplete(FMLLoadCompleteEvent aEvent) {
+        new GT_CraftingInputLoader().run();
+    }
+
+    @Mod.EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent aEvent){
         gregtechproxy.onServerAboutToStart();
     }
@@ -913,6 +918,8 @@ public class GT_Mod implements IGT_Mod {
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
         gregtechproxy.onServerStarting();
         aEvent.registerServerCommand(new RecipesReload());
+        // Include crafting recipes added by scripts when the server starts.
+        new GT_CraftingInputLoader().run();
         //Check for more IC2 recipes on ServerStart to also catch MineTweaker additions
         GT_ModHandler.addIC2RecipesToGT(GT_ModHandler.getMaceratorRecipeList(), GT_Recipe.GT_Recipe_Map.sMaceratorRecipes, true, true, true);
         GT_ModHandler.addIC2RecipesToGT(GT_ModHandler.getCompressorRecipeList(), GT_Recipe.GT_Recipe_Map.sCompressorRecipes, true, true, true);

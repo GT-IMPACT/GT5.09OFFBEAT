@@ -1,5 +1,6 @@
 package gregtech.api.util;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.Materials;
@@ -214,6 +215,23 @@ public class GT_OreDictUnificator {
         return GT_Utility.areStacksEqual(rStack, unified_tStack, true);
     }
 
+    /** One unified ingot variant and no redundant IC2 materials in recipe displays and transfer. */
+    public static ItemStack getPreferredRecipeInput(ItemStack stack) {
+        ItemData data = getAssociation(stack);
+        boolean ingot = data != null && data.mPrefix != null
+            && data.mPrefix.name().startsWith("ingot") && data.mPrefix.mIsUnificatable;
+        if (!ingot && !isIC2Stack(stack)) return stack;
+        ItemStack unified = get(stack);
+        if (unified == null || GT_Utility.areStacksEqual(stack, unified)) return stack;
+        return ingot || !isIC2Stack(unified) ? unified : stack;
+    }
+
+    private static boolean isIC2Stack(ItemStack stack) {
+        if (GT_Utility.isStackInvalid(stack)) return false;
+        GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+        return id != null && "IC2".equalsIgnoreCase(id.modId);
+    }
+
     public static List<ItemStack> getNonUnifiedStacks(Object obj) {
     	synchronized (sUnificationTable) {
     		if (sUnificationTable.isEmpty() && !sItemStack2DataMap.isEmpty()) {
@@ -240,10 +258,21 @@ public class GT_OreDictUnificator {
                 ((List)obj).toArray(new ItemStack[0]);
     	List<ItemStack> rList = new ArrayList<ItemStack>();
     	for (ItemStack aStack : aStacks) {
+            aStack = getPreferredRecipeInput(aStack);
+            boolean duplicate = false;
+            for (ItemStack existing : rList) {
+                if (ItemStack.areItemStacksEqual(existing, aStack)) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (duplicate) continue;
     		rList.add(aStack);
     		List<ItemStack> tList = sUnificationTable.get(new GT_ItemStack(aStack));
     		if (tList != null) {
     			for (ItemStack tStack : tList) {
+                // Offer the preferred ingot and omit redundant IC2 materials during NEI transfer to AE2.
+                if (getPreferredRecipeInput(tStack) != tStack) continue;
             		ItemStack tStack1 = GT_Utility.copyAmount(aStack.stackSize, tStack);
             		tStack1.setTagCompound(aStack.getTagCompound());
             		rList.add(tStack1);
