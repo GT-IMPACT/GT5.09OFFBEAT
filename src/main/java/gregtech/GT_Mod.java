@@ -1067,6 +1067,7 @@ public class GT_Mod implements IGT_Mod {
 
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent aEvent) {
+        gregtech.api.threads.GT_TickLock.releaseOwnedLock(GT_Proxy.TICK_LOCK);
         try {
             for (Runnable tRunnable : GregTech_API.sBeforeGTServerstop) {
                 tRunnable.run();
@@ -1147,6 +1148,16 @@ public class GT_Mod implements IGT_Mod {
             e.printStackTrace(GT_Log.err);
         }
         //Interrupt IDLE Threads to close down cleanly
+        GT_Runnable_MachineBlockUpdate.shutdownExecutorService();
+    }
+
+    @Mod.EventHandler
+    public void onServerStopped(FMLServerStoppedEvent aEvent) {
+        // Forge can skip ServerStopping after a tick exception. ServerStopped
+        // still runs on that same server thread, before BetterCrashes recovery.
+        int released = gregtech.api.threads.GT_TickLock.releaseOwnedLock(GT_Proxy.TICK_LOCK);
+        if (released > 0) GT_FML_LOGGER.warn("Released {} unfinished server tick lock hold(s) during shutdown", released);
+        // Also join old-world workers when ServerStopping was skipped.
         GT_Runnable_MachineBlockUpdate.shutdownExecutorService();
     }
 

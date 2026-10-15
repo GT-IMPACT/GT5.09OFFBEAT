@@ -37,6 +37,7 @@ repositories {
 }
 
 dependencies {
+    testImplementation("junit:junit:4.13.2")
     // impact
     api("space.impact:ImpactAPI:0.0.4:dev")
     api("space.impact:VirtualWorld:2.0.4:dev")

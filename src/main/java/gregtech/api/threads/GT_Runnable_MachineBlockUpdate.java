@@ -69,6 +69,8 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
     }
     
     public static void shutdownExecutorService() {
+        // ServerStopped is a fallback after crashes, and may follow normal cleanup.
+        if (EXECUTOR_SERVICE == null || EXECUTOR_SERVICE.isTerminated()) return;
         try {
             GT_Mod.GT_FML_LOGGER.info("Shutting down Machine block update executor service");
             EXECUTOR_SERVICE.shutdown(); // Disable new tasks from being submitted
