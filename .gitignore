@@ -31,3 +31,4 @@ run/
 runDir/
 .gitattributes
 /.kotlin/
+/reports
