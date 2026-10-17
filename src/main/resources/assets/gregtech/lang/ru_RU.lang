@@ -592,4 +592,7 @@ for.bees.species.uranium=Уран
 for.bees.species.plutonium=Плутоний
 for.bees.species.naquadah=Наквадах
 
-item.debug_item.name=Педмета не существует
+item.debug_item.name=Предмет не существует
+item.debug_item.description=Отсутствующий предмет рецепта
+item.debug_item.missing=Не найден:
+item.debug_item.amount=Нужное количество:

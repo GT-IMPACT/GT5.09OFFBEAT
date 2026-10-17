@@ -303,6 +303,10 @@ public class GT_ModHandler {
      * Gets an Item from IndustrialCraft, and returns a Replacement Item if not possible
      */
     public static ItemStack getIC2Item(String aItem, long aAmount, ItemStack aReplacement) {
+        return getIC2ItemInternal(aItem, aAmount, null, aReplacement);
+    }
+
+    private static ItemStack getIC2ItemInternal(String aItem, long aAmount, Integer aMeta, ItemStack aReplacement) {
         if (GT_Utility.isStringInvalid(aItem) || !GregTech_API.sPreloadStarted) return null;
         //if (D1) GT_Log.out.println("Requested the Item '" + aItem + "' from the IC2-API");
         if (!sIC2ItemMap.containsKey(aItem)) try {
@@ -310,17 +314,18 @@ public class GT_ModHandler {
             sIC2ItemMap.put(aItem, tStack);
             if (tStack == null && D1) GT_Log.err.println(aItem + " is not found in the IC2 Items!");
         } catch (Throwable e) {/*Do nothing*/}
-        return GT_Utility.copyAmount(aAmount, sIC2ItemMap.get(aItem), aReplacement);
+        ItemStack stack = GT_Utility.copyAmount(aAmount, sIC2ItemMap.get(aItem), aReplacement);
+        if (stack == null && debugRecipes)
+            return ItemDebug.missing("IC2:" + aItem + (aMeta == null ? "" : ":" + aMeta), aAmount);
+        if (stack != null && aMeta != null) Items.feather.setDamage(stack, aMeta);
+        return stack;
     }
 
     /**
      * Gets an Item from IndustrialCraft, but the Damage Value can be specified, and returns a Replacement Item with the same Damage if not possible
      */
     public static ItemStack getIC2Item(String aItem, long aAmount, int aMeta, ItemStack aReplacement) {
-        ItemStack rStack = getIC2Item(aItem, aAmount, aReplacement);
-        if (rStack == null) return null;
-        Items.feather.setDamage(rStack, aMeta);
-        return rStack;
+        return getIC2ItemInternal(aItem, aAmount, aMeta, aReplacement);
     }
 
     /**
@@ -348,41 +353,30 @@ public class GT_ModHandler {
      * Gets an Item from String ModID, and returns a Replacement Item if not possible
      */
     public static ItemStack getModItem(String aModID, String aItem, long aAmount, ItemStack aReplacement) {
+        return getModItemInternal(aModID, aItem, aAmount, null, aReplacement);
+    }
+
+    private static ItemStack getModItemInternal(String aModID, String aItem, long aAmount, Integer aMeta, ItemStack aReplacement) {
         if (GT_Utility.isStringInvalid(aItem) || !GregTech_API.sPreloadStarted) return null;
-        return GT_Utility.copyAmount(aAmount, GameRegistry.findItemStack(aModID, aItem, (int) aAmount), aReplacement);
+        ItemStack stack = GT_Utility.copyAmount(aAmount, GameRegistry.findItemStack(aModID, aItem, (int) aAmount), aReplacement);
+        if (stack == null && debugRecipes)
+            return ItemDebug.missing(aModID + ":" + aItem + (aMeta == null ? "" : ":" + aMeta), aAmount);
+        if (stack != null && aMeta != null) Items.feather.setDamage(stack, aMeta);
+        return stack;
     }
 
     /**
      * Gets an Item from String ModID, but the Damage Value can be specified
      */
     public static ItemStack getModItem(String aModID, String aItem, long aAmount, int aMeta) {
-        ItemStack rStack = getModItem(aModID, aItem, aAmount);
-        if (rStack == null) {
-            if (debugRecipes) {
-                System.err.println("[IMPACT] Failed to find item = Mod Name: " + aModID + " Item Name: " + aItem + " Meta: " + aMeta);
-                return new ItemStack(ItemDebug.getInstance(), 1);
-            }
-            return null;
-        }
-
-        Items.feather.setDamage(rStack, aMeta);
-        return rStack;
+        return getModItemInternal(aModID, aItem, aAmount, aMeta, null);
     }
 
     /**
      * Gets an Item from String ModID, but the Damage Value can be specified, and returns a Replacement Item with the same Damage if not possible
      */
     public static ItemStack getModItem(String aModID, String aItem, long aAmount, int aMeta, ItemStack aReplacement) {
-        ItemStack rStack = getModItem(aModID, aItem, aAmount, aReplacement);
-        if (rStack == null) {
-            if (debugRecipes) {
-                System.err.println("[IMPACT] Failed to find item = Mod Name: " + aModID + " Item Name: " + aItem + " Meta: " + aMeta + " | its Replacement");
-                return new ItemStack(ItemDebug.getInstance(), 1);
-            }
-            return null;
-        }
-            Items.feather.setDamage(rStack, aMeta);
-        return rStack;
+        return getModItemInternal(aModID, aItem, aAmount, aMeta, aReplacement);
     }
 
     /**
@@ -803,8 +797,10 @@ public class GT_ModHandler {
     private static boolean addCraftingRecipe(ItemStack aResult, Enchantment[] aEnchantmentsAdded, int[] aEnchantmentLevelsAdded, boolean aMirrored, boolean aBuffered, boolean aKeepNBT, boolean aDismantleable, boolean aRemovable, boolean aReversible, boolean aRemoveAllOthersWithSameOutput, boolean aRemoveAllOthersWithSameOutputIfTheyHaveSameNBT, boolean aRemoveAllOtherShapedsWithSameOutput, boolean aRemoveAllOtherNativeRecipes, boolean aCheckForCollisions, boolean aOnlyAddIfThereIsAnyRecipeOutputtingThis, boolean aOnlyAddIfResultIsNotNull, Object[] aRecipe) {
         aResult = GT_OreDictUnificator.get(true, aResult);
         if (aOnlyAddIfResultIsNotNull && aResult == null) return false;
+        if (aResult == null && debugRecipes) aResult = ItemDebug.missing("shaped crafting output", 1);
         if (aResult != null && Items.feather.getDamage(aResult) == W) Items.feather.setDamage(aResult, 0);
         if (aRecipe == null || aRecipe.length <= 0) return false;
+        aRecipe = aRecipe.clone();
 
         boolean tThereWasARecipe = false;
 
@@ -906,6 +902,8 @@ public class GT_ModHandler {
             boolean tRemoveRecipe = true;
 
             for (; idx < aRecipe.length; idx += 2) {
+                if (debugRecipes && aRecipe[idx] instanceof Character && aRecipe[idx + 1] == null)
+                    aRecipe[idx + 1] = ItemDebug.missing("shaped crafting ingredient '" + aRecipe[idx] + "' for " + aResult.getDisplayName(), 1);
                 if (aRecipe[idx] == null || aRecipe[idx + 1] == null) {
                     if (D1) {
                         GT_Log.err.println("WARNING: Missing Item for shaped Recipe: " + (aResult == null ? "null" : aResult.getDisplayName()));
@@ -1036,7 +1034,9 @@ public class GT_ModHandler {
      */
     private static boolean addShapelessCraftingRecipe(ItemStack aResult, Enchantment[] aEnchantmentsAdded, int[] aEnchantmentLevelsAdded, boolean aBuffered, boolean aKeepNBT, boolean aDismantleable, boolean aRemovable, Object[] aRecipe) {
         aResult = GT_OreDictUnificator.get(true, aResult);
+        if (aResult == null && debugRecipes) aResult = ItemDebug.missing("shapeless crafting output", 1);
         if (aRecipe == null || aRecipe.length <= 0) return false;
+        aRecipe = aRecipe.clone();
         for (byte i = 0; i < aRecipe.length; i++) {
             if (aRecipe[i] instanceof IItemContainer)
                 aRecipe[i] = ((IItemContainer) aRecipe[i]).get(1);
@@ -1044,6 +1044,12 @@ public class GT_ModHandler {
                 aRecipe[i] = ((Enum) aRecipe[i]).name();
             else if (!(aRecipe[i] == null || aRecipe[i] instanceof ItemStack || aRecipe[i] instanceof String || aRecipe[i] instanceof Character))
                 aRecipe[i] = aRecipe[i].toString();
+        }
+        if (debugRecipes) {
+            for (int slot = 0; slot < aRecipe.length; slot++) {
+                if (aRecipe[slot] == null)
+                    aRecipe[slot] = ItemDebug.missing("shapeless crafting ingredient " + (slot + 1) + " for " + aResult.getDisplayName(), 1);
+            }
         }
         try {
             ItemStack[] tRecipe = new ItemStack[9];

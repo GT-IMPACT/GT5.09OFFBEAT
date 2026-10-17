@@ -23,6 +23,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
 import gregtech.api.objects.ItemData;
 import gregtech.api.threads.GT_Runnable_Sound;
 import gregtech.common.GT_Proxy;
+import gregtech.common.items.ItemDebug;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.RecipeInputOreDict;
@@ -1175,6 +1176,8 @@ public class GT_Utility {
     }
 
     public static boolean isDebugItem(ItemStack aStack) {
+        // Missing-recipe placeholders must never act as IC2's machine debug tool.
+        if (aStack != null && aStack.getItem() == ItemDebug.getInstance()) return false;
         return /*ItemList.Armor_Cheat.isStackEqual(aStack, T, T) || */areStacksEqual(GT_ModHandler.getIC2Item("debug", 1), aStack, true);
     }
 

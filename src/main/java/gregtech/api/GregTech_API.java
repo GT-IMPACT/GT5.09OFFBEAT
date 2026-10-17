@@ -657,7 +657,7 @@ public class GregTech_API {
             return ret;
         }
         System.err.println("Failed to find " + oredictName + " in OreDict");
-        return new ItemStack(ItemDebug.getInstance(), amount);
+        return ItemDebug.missing("OreDictionary:" + oredictName, amount);
     }
     
     /**
