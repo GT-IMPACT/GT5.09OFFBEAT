@@ -95,7 +95,7 @@ public class GregTech_API {
      * 12001 - 12500 are reserved for RedMage17.
      * 12501 - 13000 are reserved for the next one who asks me.
      * 13001 - 31000 are currently free.
-     * 31001 - 32000 are reserved for Alkalus.
+     * 31001 - 32000 are reserved for GregTech.
      * 32001 - 32766 are currently free.
      * <p/>
      * Contact me if you need a free ID-Range, which doesn't conflict with other Addons.

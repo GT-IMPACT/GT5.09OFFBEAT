@@ -116,15 +116,6 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
         return getDrainableStack();
     }
 
-    protected void markFluidDirty() {
-        IGregTechTileEntity tile = getBaseMetaTileEntity();
-        tile.markDirty();
-        // BaseTileEntity.markDirty() does not notify the world about chunk changes.
-        if (tile.isServerSide()) {
-            tile.getWorld().getChunkFromBlockCoords(tile.getXCoord(), tile.getZCoord()).setChunkModified();
-        }
-    }
-
     @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_Container_BasicTank(aPlayerInventory, aBaseMetaTileEntity);
@@ -140,7 +131,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
         if (aBaseMetaTileEntity.isServerSide()) {
             if (isFluidChangingAllowed() && getFillableStack() != null && getFillableStack().amount <= 0) {
                 setFillableStack(null);
-                markFluidDirty();
+                markStorageDirty();
             }
 
             if (displaysItemStack() && getStackDisplaySlot() >= 0 && getStackDisplaySlot() < mInventory.length) {
@@ -161,7 +152,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
                                 setFillableStack(tFluid.copy());
                                 this.onEmptyingContainerWhenEmpty();
                                 aBaseMetaTileEntity.decrStackSize(getInputSlot(), 1);
-                                markFluidDirty();
+                                markStorageDirty();
                             }
                         }
                     } else {
@@ -169,7 +160,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
                             if (aBaseMetaTileEntity.addStackToSlot(getOutputSlot(), GT_Utility.getContainerItem(mInventory[getInputSlot()], true), 1)) {
                                 getFillableStack().amount += tFluid.amount;
                                 aBaseMetaTileEntity.decrStackSize(getInputSlot(), 1);
-                                markFluidDirty();
+                                markStorageDirty();
                             }
                         }
                     }
@@ -183,7 +174,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
                     aBaseMetaTileEntity.decrStackSize(getInputSlot(), 1);
                     if (tFluid != null) getDrainableStack().amount -= tFluid.amount;
                     if (getDrainableStack().amount <= 0 && isFluidChangingAllowed()) setDrainableStack(null);
-                    markFluidDirty();
+                    markStorageDirty();
                 }
             }
         }
@@ -208,14 +199,14 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
             if (aFluid.amount <= getCapacity()) {
                 if (doFill) {
                     setFillableStack(aFluid.copy());
-                    markFluidDirty();
+                    markStorageDirty();
                 }
                 return aFluid.amount;
             }
             if (doFill) {
                 setFillableStack(aFluid.copy());
                 getFillableStack().amount = getCapacity();
-                markFluidDirty();
+                markStorageDirty();
             }
             return getCapacity();
         }
@@ -227,13 +218,13 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
         if (aFluid.amount <= space) {
             if (doFill) {
                 getFillableStack().amount += aFluid.amount;
-                markFluidDirty();
+                markStorageDirty();
             }
             return aFluid.amount;
         }
         if (doFill && space > 0) {
             getFillableStack().amount = getCapacity();
-            markFluidDirty();
+            markStorageDirty();
         }
         return space;
     }
@@ -243,7 +234,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
         if (getDrainableStack() == null || !canTankBeEmptied()) return null;
         if (getDrainableStack().amount <= 0 && isFluidChangingAllowed()) {
             setDrainableStack(null);
-            markFluidDirty();
+            markStorageDirty();
             return null;
         }
 
@@ -253,7 +244,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
 
         if (doDrain) {
             getDrainableStack().amount -= used;
-            markFluidDirty();
+            markStorageDirty();
         }
 
         FluidStack drained = getDrainableStack().copy();
@@ -261,7 +252,7 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
 
         if (getDrainableStack().amount <= 0 && isFluidChangingAllowed()) {
             setDrainableStack(null);
-            markFluidDirty();
+            markStorageDirty();
         }
 
         return drained;

@@ -125,7 +125,7 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
         if (mInventory[getInputSlot()] != null && mInventory[getInputSlot()].stackSize <= 0)
             mInventory[getInputSlot()] = null;
         // Recipes consume fluid stacks directly, including partial amounts.
-        markFluidDirty();
+        markStorageDirty();
     }
 
     @Override

@@ -384,6 +384,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Hatch_Output_Bus_UV.set(new GT_MetaTileEntity_Hatch_OutputBus(88, "hatch.output_bus.tier.08", "UV Output Bus", 8).getStackForm(1L));
         ItemList.Hatch_Output_Bus_MAX.set(new GT_MetaTileEntity_Hatch_OutputBus(89, "hatch.output_bus.tier.09", "UHV Output Bus", 9).getStackForm(1L));
         ItemList.Hatch_Output_Bus_ME.set(new GT_MetaTileEntity_Hatch_OutputBus_ME(14569, "hatch.output_bus.me", "ME Output Bus").getStackForm(1L));
+        ItemList.Hatch_Output_ME.set(new GT_MetaTileEntity_Hatch_Output_ME(31001, "hatch.output.me", "ME Output Hatch").getStackForm(1L));
 
         //ItemList.Hatch_Output_Bus_UEV.set(new GT_MetaTileEntity_Hatch_OutputBus(11515, "hatch.output_bus.tier.10", "Output Bus (UEV)", 10).getStackForm(1L));
 

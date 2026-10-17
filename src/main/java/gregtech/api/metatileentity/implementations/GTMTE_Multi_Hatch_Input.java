@@ -209,7 +209,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
                 FluidStack tFluid = aFluid.copy();
                 tFluid.amount = tFilled;
                 addFluid(tFluid, getFirstEmptySlot());
-                markFluidDirty();
+                markStorageDirty();
             }
             return tFilled;
         }
@@ -220,7 +220,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
                 FluidStack tFluid = aFluid.copy();
                 tFluid.amount = tFilled;
                 addFluid(tFluid, getFluidSlot(tFluid));
-                markFluidDirty();
+                markStorageDirty();
             }
             return tFilled;
         }
@@ -232,18 +232,18 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
         if (getFluid() == null || !canTankBeEmptied()) return null;
         if (getFluid().amount <= 0 && isFluidChangingAllowed()) {
             setFluid(null, getFluidSlot(getFluid()));
-            markFluidDirty();
+            markStorageDirty();
             return null;
         }
         FluidStack tRemove = getFluid().copy();
         tRemove.amount = Math.min(maxDrain, tRemove.amount);
         if (doDrain) {
             getFluid().amount -= tRemove.amount;
-            markFluidDirty();
+            markStorageDirty();
         }
         if (getFluid() == null || getFluid().amount <= 0 && isFluidChangingAllowed()) {
             setFluid(null, getFluidSlot(getFluid()));
-            markFluidDirty();
+            markStorageDirty();
         }
         return tRemove;
     }
@@ -259,18 +259,18 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
         FluidStack tStored = mStoredFluid[getFluidSlot(aFluid)];
         if (tStored.amount <= 0 && isFluidChangingAllowed()) {
             setFluid(null, getFluidSlot(tStored));
-            markFluidDirty();
+            markStorageDirty();
             return null;
         }
         FluidStack tRemove = tStored.copy();
         tRemove.amount = Math.min(aFluid.amount, tRemove.amount);
         if (doDrain) {
             tStored.amount -= tRemove.amount;
-            markFluidDirty();
+            markStorageDirty();
         }
         if (tStored.amount <= 0 && isFluidChangingAllowed()) {
             setFluid(null, getFluidSlot(tStored));
-            markFluidDirty();
+            markStorageDirty();
         }
         return tRemove;
     }
@@ -290,7 +290,7 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
             for (int i = 0; i < getMaxType(); i++) {
                 if (mStoredFluid[i] != null && mStoredFluid[i].amount <= 0) {
                     mStoredFluid[i] = null;
-                    markFluidDirty();
+                    markStorageDirty();
                 }
             }
         }

@@ -835,6 +835,16 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
         //
     }
 
+    /** Marks persistent storage changes on both the tile and its chunk. */
+    protected void markStorageDirty() {
+        IGregTechTileEntity tile = getBaseMetaTileEntity();
+        tile.markDirty();
+        // BaseTileEntity.markDirty() does not notify the world about chunk changes.
+        if (tile.isServerSide()) {
+            tile.getWorld().getChunkFromBlockCoords(tile.getXCoord(), tile.getZCoord()).setChunkModified();
+        }
+    }
+
     @Override
     public boolean isUseableByPlayer(EntityPlayer entityplayer) {
         return false;
