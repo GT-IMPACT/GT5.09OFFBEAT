@@ -68,14 +68,15 @@ public class GT_MetaTileEntity_PotionBrewer
 
     public int checkRecipe() {
         int tCheck = super.checkRecipe();
-        if (tCheck != DID_NOT_FIND_RECIPE) {
-            return tCheck;
+        if (tCheck == DID_NOT_FIND_RECIPE) {
+            return DID_NOT_FIND_RECIPE;
         }
-        calculateOverclockedNess(4,128);
+        calculateOverclockedNess(4, 128);
         //In case recipe is too OP for that machine
-        if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
+        if (this.mMaxProgresstime == Integer.MAX_VALUE - 1 && this.mEUt == Integer.MAX_VALUE - 1) {
             return FOUND_RECIPE_BUT_DID_NOT_MEET_REQUIREMENTS;
-        return 0;
+        }
+        return tCheck;
     }
 
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
