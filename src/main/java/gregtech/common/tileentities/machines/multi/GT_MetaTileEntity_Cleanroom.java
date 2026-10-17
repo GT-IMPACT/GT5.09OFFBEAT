@@ -57,6 +57,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 	public boolean checkRecipe(ItemStack aStack) {
     	int tierHatch = 0;
     	for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) tierHatch = tHatch.mTier;
+    	for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesMulti) tierHatch = tHatch.mTier;
 		mEfficiencyIncrease = 100 * tierHatch;
 		mMaxProgresstime = 100;
 		mEUt = -4;
