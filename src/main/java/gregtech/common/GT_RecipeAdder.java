@@ -548,39 +548,15 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
             return false;
         }
 
-        boolean ret = false;
-
         for (int oreID : OreDictionary.getOreIDs(aOutput1)) {
             if (OreDictionary.getOreName(oreID).contains("circuit")){
                 return this.addAssemblerRecipeNonOD(aInputs, aFluidInput, aOutput1, aDuration, aEUt, aCleanroom);
             }
         }
 
-        for (int i = 0; i < aInputs.length; ++i) {
-            if (!GT_Utility.isStackValid(aInputs[i])) {
-                GT_FML_LOGGER.debug("GT_RecipeAdder: Invalid input for (" + aOutput1.toString() + ")");
-                continue;
-            }
-            for (int oreID : OreDictionary.getOreIDs(aInputs[i])) {
-                String odName = OreDictionary.getOreName(oreID);
-                if (odName.contains("circuit")) {
-                    for (ItemStack tStack : GT_OreDictUnificator.getOres(odName)) {
-                        if (!GT_Utility.isStackValid(tStack))
-                            continue;
-                        aInputs[i] = new ItemStack(tStack.getItem(),aInputs[i].stackSize,tStack.getItemDamage());
-                        GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput1}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -200 : 0);
-                        ret = true;
-                    }
-                }
-            }
-        }
-
-        if (!ret) {
-            GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput1}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -200 : 0);
-            ret = true;
-        }
-
-        return ret;
+        return GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.addRecipeWithCircuitOreDict(
+            true, aInputs, new ItemStack[]{aOutput1}, new FluidStack[]{aFluidInput},
+            aDuration, aEUt, aCleanroom ? -200 : 0) != null;
     }
 
     public boolean addAssemblerRecipeNonOD(ItemStack[] aInputs, FluidStack aFluidInput, ItemStack aOutput1, int aDuration, int aEUt, boolean aCleanroom) {
@@ -622,39 +598,15 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
             return false;
         }
 
-        boolean ret = false;
-
         for (int oreID : OreDictionary.getOreIDs(aOutput1)) {
             if (OreDictionary.getOreName(oreID).contains("circuit")){
                 return this.addAssemblerSpaceRecipeNonOD(aInputs, aFluidInput, aOutput1, aDuration, aEUt, aCleanroom);
             }
         }
 
-        for (int i = 0; i < aInputs.length; ++i) {
-            if (!GT_Utility.isStackValid(aInputs[i])) {
-                //GT_FML_LOGGER.debug("GT_RecipeAdder: Invalid input for (" + aOutput1.toString() + ")");
-                continue;
-            }
-            for (int oreID : OreDictionary.getOreIDs(aInputs[i])) {
-                String odName = OreDictionary.getOreName(oreID);
-                if (odName.contains("circuit")) {
-                    for (ItemStack tStack : GT_OreDictUnificator.getOres(odName)) {
-                        if (!GT_Utility.isStackValid(tStack))
-                            continue;
-                        aInputs[i] = new ItemStack(tStack.getItem(),aInputs[i].stackSize,tStack.getItemDamage());
-                        GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput1}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -100 : 0);
-                        ret = true;
-                    }
-                }
-            }
-        }
-
-        if (!ret) {
-            GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput1}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -100 : 0);
-            ret = true;
-        }
-
-        return ret;
+        return GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.addRecipeWithCircuitOreDict(
+            true, aInputs, new ItemStack[]{aOutput1}, new FluidStack[]{aFluidInput},
+            aDuration, aEUt, aCleanroom ? -100 : 0) != null;
     }
 
     public boolean addAssemblerSpaceRecipeNonOD(ItemStack[] aInputs, FluidStack aFluidInput, ItemStack aOutput1, int aDuration, int aEUt, boolean aCleanroom) {
@@ -1653,35 +1605,15 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
             return false;
         }
 
-        boolean ret = false;
-
         for (int oreID : OreDictionary.getOreIDs(aOutput)) {
             if (OreDictionary.getOreName(oreID).contains("circuit")){
                 return this.addCircuitAssemblerRecipeNonOredicted(aInputs, aFluidInput, aOutput, aDuration, aEUt, aCleanroom);
             }
         }
 
-        for (int i = 0; i < aInputs.length; ++i) {
-            for (int oreID : OreDictionary.getOreIDs(aInputs[i])) {
-                String odName = OreDictionary.getOreName(oreID);
-                if (odName.contains("circuit")) {
-                    for (ItemStack tStack : GT_OreDictUnificator.getOres(odName)) {
-                        if (!GT_Utility.isStackValid(tStack))
-                            continue;
-                        aInputs[i] = new ItemStack(tStack.getItem(),aInputs[i].stackSize,tStack.getItemDamage());
-                        GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -200 : 0);
-                        ret = true;
-                    }
-                }
-            }
-        }
-
-        if (!ret) {
-            GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -200 : 0);
-            ret = true;
-        }
-
-        return ret;
+        return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes.addRecipeWithCircuitOreDict(
+            true, aInputs, new ItemStack[]{aOutput}, new FluidStack[]{aFluidInput},
+            aDuration, aEUt, aCleanroom ? -200 : 0) != null;
     }
     
     public boolean addCircuitAssemblerRecipeNonOredicted(ItemStack[] aInputs, FluidStack aFluidInput, ItemStack aOutput, int aDuration, int aEUt, boolean aCleanroom) {
@@ -1716,35 +1648,15 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
             return false;
         }
 
-        boolean ret = false;
-
         for (int oreID : OreDictionary.getOreIDs(aOutput)) {
             if (OreDictionary.getOreName(oreID).contains("circuit")){
                 return this.addCircuitAssemblerSpaceRecipeNonOredicted(aInputs, aFluidInput, aOutput, aDuration, aEUt, aCleanroom);
             }
         }
 
-        for (int i = 0; i < aInputs.length; ++i) {
-            for (int oreID : OreDictionary.getOreIDs(aInputs[i])) {
-                String odName = OreDictionary.getOreName(oreID);
-                if (odName.contains("circuit")) {
-                    for (ItemStack tStack : GT_OreDictUnificator.getOres(odName)) {
-                        if (!GT_Utility.isStackValid(tStack))
-                            continue;
-                        aInputs[i] = new ItemStack(tStack.getItem(),aInputs[i].stackSize,tStack.getItemDamage());
-                        GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -100 : 0);
-                        ret = true;
-                    }
-                }
-            }
-        }
-
-        if (!ret) {
-            GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, aCleanroom ? -100 : 0);
-            ret = true;
-        }
-
-        return ret;
+        return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes.addRecipeWithCircuitOreDict(
+            true, aInputs, new ItemStack[]{aOutput}, new FluidStack[]{aFluidInput},
+            aDuration, aEUt, aCleanroom ? -100 : 0) != null;
     }
     
     public boolean addCircuitAssemblerSpaceRecipeNonOredicted(ItemStack[] aInputs, FluidStack aFluidInput, ItemStack aOutput, int aDuration, int aEUt, boolean aCleanroom) {
@@ -1880,35 +1792,15 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
             return false;
         }
 
-        boolean ret = false;
-
         for (int oreID : OreDictionary.getOreIDs(aOutput)) {
             if (OreDictionary.getOreName(oreID).contains("circuit")){
                 return this.addComponentAssemblerRecipeNonOredicted(aInputs, aFluidInput, aOutput, aDuration, aEUt);
             }
         }
 
-        for (int i = 0; i < aInputs.length; ++i) {
-            for (int oreID : OreDictionary.getOreIDs(aInputs[i])) {
-                String odName = OreDictionary.getOreName(oreID);
-                if (odName.contains("circuit")) {
-                    for (ItemStack tStack : GT_OreDictUnificator.getOres(odName)) {
-                        if (!GT_Utility.isStackValid(tStack))
-                            continue;
-                        aInputs[i] = new ItemStack(tStack.getItem(),aInputs[i].stackSize,tStack.getItemDamage());
-                        GT_Recipe.GT_Recipe_Map.sComponentAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0);
-                        ret = true;
-                    }
-                }
-            }
-        }
-
-        if (!ret) {
-            GT_Recipe.GT_Recipe_Map.sComponentAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0);
-            ret = true;
-        }
-
-        return ret;
+        return GT_Recipe.GT_Recipe_Map.sComponentAssemblerRecipes.addRecipeWithCircuitOreDict(
+            true, aInputs, new ItemStack[]{aOutput}, new FluidStack[]{aFluidInput},
+            aDuration, aEUt, 0) != null;
     }
     
     public boolean addComponentAssemblerRecipeNonOredicted(ItemStack[] aInputs, FluidStack aFluidInput, ItemStack aOutput, int aDuration, int aEUt) {

@@ -74,6 +74,8 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
      * If this Recipe needs the Output Slots to be completely empty. Needed in case you have randomised Outputs
      */
     public boolean mNeedsEmptyOutput = false;
+    /** Circuit tiers are interchangeable only for recipes registered with ore-dictionary inputs. */
+    private boolean mOreDictCircuitInputs = false;
     /**
      * Used for describing recipes that do not fit the default recipe pattern (for example Large Boiler Fuels)
      */
@@ -94,6 +96,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         mFakeRecipe = aRecipe.mFakeRecipe;
         mEnabled = aRecipe.mEnabled;
         mHidden = aRecipe.mHidden;
+        mOreDictCircuitInputs = aRecipe.mOreDictCircuitInputs;
     }
 
     protected GT_Recipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecialItems, int[] aChances, FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue) {
@@ -303,6 +306,37 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         return GT_Utility.copy(mInputs[aIndex]);
     }
 
+    public Object getInputAlternatives(int aIndex) {
+        ItemStack input = getRepresentativeInput(aIndex);
+        if (!mOreDictCircuitInputs || input == null) return input;
+        ItemData data = GT_OreDictUnificator.getAssociation(input);
+        if (data == null || data.mPrefix != OrePrefixes.circuit || !data.hasValidPrefixMaterialData())
+            return input;
+        ArrayList<ItemStack> alternatives = new ArrayList<>();
+        alternatives.add(input);
+        for (ItemStack alternative : GT_OreDictUnificator.getOres(data.toString())) {
+            if (isCircuitInputEqual(alternative, input) && !GT_Utility.areStacksEqual(alternative, input, true))
+                alternatives.add(GT_Utility.copyAmount(input.stackSize, alternative));
+        }
+        return alternatives.toArray(new ItemStack[0]);
+    }
+
+    boolean isCircuitInputEqual(ItemStack supplied, ItemStack required) {
+        if (!mOreDictCircuitInputs || supplied == null || required == null) return false;
+        ItemData suppliedData = GT_OreDictUnificator.getAssociation(supplied);
+        ItemData requiredData = GT_OreDictUnificator.getAssociation(required);
+        return suppliedData != null && requiredData != null
+            && suppliedData.mPrefix == OrePrefixes.circuit && requiredData.mPrefix == OrePrefixes.circuit
+            && suppliedData.hasValidPrefixMaterialData() && requiredData.hasValidPrefixMaterialData()
+            && suppliedData.mMaterial.mMaterial == requiredData.mMaterial.mMaterial;
+    }
+
+    private boolean isInputStackEqual(ItemStack supplied, ItemStack required) {
+        return isCircuitInputEqual(supplied, required)
+            || GT_Utility.areUnificationsEqual(supplied, required, true)
+            || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, supplied), required, true);
+    }
+
     public ItemStack getOutput(int aIndex) {
         if (aIndex < 0 || aIndex >= mOutputs.length) return null;
         return GT_Utility.copy(mOutputs[aIndex]);
@@ -381,7 +415,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 amt = tStack.stackSize;
                 boolean temp = true;
                 for (ItemStack aStack : aInputs) {
-                    if ((GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), tStack, true))) {
+                    if (isInputStackEqual(aStack, tStack)) {
                     	if (GTppRecipeHelper) {//remove once the fix is out
                             if (GT_Utility.areStacksEqual(aStack, Ic2Items.FluidCell.copy(), true) || GT_Utility.areStacksEqual(aStack, ItemList.Tool_DataStick.get(1L), true) || GT_Utility.areStacksEqual(aStack, ItemList.Tool_DataOrb.get(1L), true)) {
                                 if (!GT_Utility.areStacksEqual(aStack, tStack, false))
@@ -432,7 +466,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                     if (tStack != null) {
                         amt = tStack.stackSize;
                         for (ItemStack aStack : aInputs) {
-                            if ((GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), tStack, true))) {
+                            if (isInputStackEqual(aStack, tStack)) {
                             	if (GTppRecipeHelper) {
                                     if (GT_Utility.areStacksEqual(aStack, Ic2Items.FluidCell.copy(), true) || GT_Utility.areStacksEqual(aStack, ItemList.Tool_DataStick.get(1L), true) || GT_Utility.areStacksEqual(aStack, ItemList.Tool_DataOrb.get(1L), true)) {
                                         if (!GT_Utility.areStacksEqual(aStack, tStack, false))
@@ -837,6 +871,14 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
 
         public GT_Recipe addRecipe(GT_Recipe aRecipe) {
             return addRecipe(aRecipe, true, false, false);
+        }
+
+        public GT_Recipe addRecipeWithCircuitOreDict(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs,
+                FluidStack[] aFluidInputs, int aDuration, int aEUt, int aSpecialValue) {
+            GT_Recipe recipe = new GT_Recipe(aOptimize, aInputs, aOutputs, null, null,
+                aFluidInputs, null, aDuration, aEUt, aSpecialValue);
+            recipe.mOreDictCircuitInputs = true;
+            return addRecipe(recipe);
         }
 
         protected GT_Recipe addRecipe(GT_Recipe aRecipe, boolean aCheckForCollisions, boolean aFakeRecipe, boolean aHidden) {

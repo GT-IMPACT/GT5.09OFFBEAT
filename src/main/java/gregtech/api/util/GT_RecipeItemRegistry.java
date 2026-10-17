@@ -31,6 +31,10 @@ public final class GT_RecipeItemRegistry {
             if (inputData == null) continue;
             // Register known ore equivalents now; postload reInit handles later associations.
             for (ItemStack equivalent : GT_OreDictUnificator.getOres(inputData.toString())) {
+                if (recipe.isCircuitInputEqual(equivalent, input)) {
+                    register(equivalentRecipes, new GT_ItemStack(equivalent), recipe);
+                    continue;
+                }
                 ItemData data = GT_OreDictUnificator.getAssociation(equivalent);
                 if (data == null || !data.mBlackListed || GT_Utility.areStacksEqual(input, equivalent, true)) continue;
                 if (!GT_Utility.areStacksEqual(input, GT_OreDictUnificator.get(false, equivalent), true)) continue;
