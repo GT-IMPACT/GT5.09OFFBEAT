@@ -1,5 +1,6 @@
 package gregtech.common.items;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.items.GT_MetaGenerated_Item_X32;
@@ -207,30 +208,27 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         setBurnValue(32000 + tLastID, 75);
         ItemList.Plank_Citrus.set(addItem(tLastID = 499, "Citrus Plank", aTextCover));
         setBurnValue(32000 + tLastID, 75);
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Larch.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 0)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Teak.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 1)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Acacia_Green.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 2)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Lime.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 3)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Chestnut.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 4)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Wenge.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 5)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Baobab.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 6)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Sequoia.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs1", 1L, 7)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Kapok.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 0)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Ebony.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 1)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Mahagony.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 2)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Balsa.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 3)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Willow.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 4)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Walnut.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 5)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Greenheart.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 6)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Cherry.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs2", 1L, 7)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Mahoe.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 0)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Poplar.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 1)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Palm.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 2)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Papaya.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 3)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Pine.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 4)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Plum.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 5)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Maple.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 6)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Plank_Citrus.get(2L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE, new Object[]{"s ", " P", 'P', GT_ModHandler.getModItem(aTextForestry, "slabs3", 1L, 7)});
+        // Forestry now stores all wood species in one slab item.
+        ItemStack forestrySlab = GameRegistry.findItemStack(aTextForestry, "slabs", 1);
+        if (forestrySlab != null && forestrySlab.getItem() != null) {
+            ItemList[] forestryPlanks = {
+                    ItemList.Plank_Larch, ItemList.Plank_Teak, ItemList.Plank_Acacia_Green, ItemList.Plank_Lime,
+                    ItemList.Plank_Chestnut, ItemList.Plank_Wenge, ItemList.Plank_Baobab, ItemList.Plank_Sequoia,
+                    ItemList.Plank_Kapok, ItemList.Plank_Ebony, ItemList.Plank_Mahagony, ItemList.Plank_Balsa,
+                    ItemList.Plank_Willow, ItemList.Plank_Walnut, ItemList.Plank_Greenheart, ItemList.Plank_Cherry,
+                    ItemList.Plank_Mahoe, ItemList.Plank_Poplar, ItemList.Plank_Palm, ItemList.Plank_Papaya,
+                    ItemList.Plank_Pine, ItemList.Plank_Plum, ItemList.Plank_Maple, ItemList.Plank_Citrus
+            };
+            for (int meta = 0; meta < forestryPlanks.length; meta++) {
+                ItemStack slab = forestrySlab.copy();
+                slab.setItemDamage(meta);
+                ItemStack cover = forestryPlanks[meta].get(2L);
+                if (cover == null || cover.getItem() == null) continue;
+                GT_ModHandler.addCraftingRecipe(cover,
+                        GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.REVERSIBLE,
+                        new Object[]{"s ", " P", 'P', slab});
+            }
+        }
         
 
         ItemList.SFMixture.set(addItem(tLastID = 270, "Super Fuel Binder", "Raw Material"));
