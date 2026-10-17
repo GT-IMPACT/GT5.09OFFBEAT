@@ -260,9 +260,10 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             return (mStartEnergy < 160_000_000 ? 4 : (mStartEnergy < 320_000_000 ? 2 : 1));
         }
         if (this.tierOverclock() == 8) {
-            return (mStartEnergy < 160_000_000) ? 8 : ((mStartEnergy < 320_000_000) ? 4 : (mStartEnergy < 640_000_000) ? 2 : 1);
+            // MK IV and V use perfect overclocks: 4x EU/t and 1/4 duration per step.
+            return (mStartEnergy < 160_000_000) ? 64 : ((mStartEnergy < 320_000_000) ? 16 : (mStartEnergy < 640_000_000) ? 4 : 1);
         }
-        return (mStartEnergy < 160_000_000) ? 16 : ((mStartEnergy < 320_000_000) ? 8 : (mStartEnergy < 640_000_000) ? 4 : (mStartEnergy < 1_280_000_000) ? 2 : 1);
+        return (mStartEnergy < 160_000_000) ? 256 : ((mStartEnergy < 320_000_000) ? 64 : (mStartEnergy < 640_000_000) ? 16 : (mStartEnergy < 1_280_000_000) ? 4 : 1);
     }
 
     @Override
@@ -297,7 +298,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                 updateSlots();
                 this.mLastRecipe = tRecipe;
                 this.mEUt = (this.mLastRecipe.mEUt * overclock(this.mLastRecipe.mSpecialValue));
-                this.mMaxProgresstime = this.mLastRecipe.mDuration / overclock(this.mLastRecipe.mSpecialValue);
+                this.mMaxProgresstime = Math.max(1, this.mLastRecipe.mDuration / overclock(this.mLastRecipe.mSpecialValue));
                 this.mEfficiencyIncrease = 10000;
                 this.mOutputFluids = this.mLastRecipe.mFluidOutputs;
                 turnCasingActive(true);
