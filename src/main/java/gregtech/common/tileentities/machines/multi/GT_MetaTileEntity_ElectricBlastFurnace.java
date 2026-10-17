@@ -7,6 +7,7 @@ import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GTMTE_BusHatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
@@ -101,10 +102,8 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
 
     public boolean checkRecipe(ItemStack aStack) {
 
-        ArrayList<ItemStack> tInputList;
-        ArrayList<FluidStack> tFluidList;
-        ItemStack[] tInputs;
-        FluidStack[] tFluids;
+        ArrayList<ArrayList<ItemStack>> tBusInputs = new ArrayList<>();
+        FluidStack[] tFluids = getStoredFluids().toArray(new FluidStack[]{});
 
         for (GT_MetaTileEntity_Hatch_InputBus tBus : mInputBusses) {
             ArrayList<ItemStack> tBusItems = new ArrayList<ItemStack>();
@@ -115,12 +114,18 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                         tBusItems.add(tBus.getBaseMetaTileEntity().getStackInSlot(i));
                 }
             }
-            tInputList = this.getStoredInputs();
-            tFluidList = this.getStoredFluids();
-            tInputs = tBusItems.toArray(new ItemStack[]{});
-            tFluids = tFluidList.toArray(new FluidStack[]{});
+            tBusInputs.add(tBusItems);
+        }
 
-            if (tInputList.size() > 0) {
+        for (GTMTE_BusHatch_Input tBus : mInputBusHatches) {
+            tBus.mRecipeMap = getRecipeMap();
+            if (!isValidMetaTileEntity(tBus)) continue;
+            tBusInputs.add(GTMTE_BusHatch_Input.getStoredInputs(tBus));
+        }
+
+        for (ArrayList<ItemStack> tBusItems : tBusInputs) {
+            if (!tBusItems.isEmpty()) {
+                ItemStack[] tInputs = tBusItems.toArray(new ItemStack[]{});
                 long tVoltage = getMaxInputVoltage();
                 byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
                 GT_Recipe tRecipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);

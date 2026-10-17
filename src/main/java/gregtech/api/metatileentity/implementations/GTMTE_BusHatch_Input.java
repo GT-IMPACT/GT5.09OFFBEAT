@@ -19,6 +19,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import java.util.ArrayList;
+
 public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 	
 	public static boolean mIgnoreMap = false;
@@ -26,6 +28,18 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 	public boolean disableSort;
 	public boolean restrictFluid;
 	public final int capacity;
+
+	public static ArrayList<ItemStack> getStoredInputs(GTMTE_BusHatch_Input aBus) {
+		ArrayList<ItemStack> inputs = new ArrayList<>();
+		IGregTechTileEntity tile = aBus.getBaseMetaTileEntity();
+		for (int i = tile.getSizeInventory() - 1; i >= 0; i--) {
+			if (!aBus.isValidSlot(i) || i == aBus.getInputSlot() || i == aBus.getOutputSlot()
+					|| i == aBus.getStackDisplaySlot()) continue;
+			ItemStack input = tile.getStackInSlot(i);
+			if (input != null) inputs.add(input);
+		}
+		return inputs;
+	}
 	
 	public GTMTE_BusHatch_Input(int aID, String aName, String aNameRegional, int aTier, int capacity) {
 		super(aID, aName, aNameRegional, aTier, 19, new String[]{

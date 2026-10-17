@@ -997,10 +997,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         for (GTMTE_BusHatch_Input tHatch : mInputBusHatches) {
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch)) {
-                for (int i = 16; i >= 1; i--) {
-                    if (tHatch.getBaseMetaTileEntity().getStackInSlot(i) != null)
-                        rList.add(tHatch.getBaseMetaTileEntity().getStackInSlot(i));
-                }
+                rList.addAll(GTMTE_BusHatch_Input.getStoredInputs(tHatch));
             }
         }
         
