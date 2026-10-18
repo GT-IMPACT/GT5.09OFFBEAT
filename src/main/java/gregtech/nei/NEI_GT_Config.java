@@ -14,7 +14,8 @@ public class NEI_GT_Config
 
     @Override
     public void loadConfig() {
-        // NEI sorts handlers by ascending order; show disassembly after other recipes.
+        // NEI sorts handlers by ascending order; show unpackaging and disassembly after other recipes.
+        NEIClientConfig.handlerOrdering.putIfAbsent(GT_Recipe.GT_Recipe_Map.sUnboxinatorRecipes.mNEIName, Integer.MAX_VALUE);
         NEIClientConfig.handlerOrdering.putIfAbsent(GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.mNEIName, Integer.MAX_VALUE);
         sIsAdded = false;
         for (GT_Recipe.GT_Recipe_Map tMap : GT_Recipe.GT_Recipe_Map.sMappings) {
