@@ -4,9 +4,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public class GT_Container_BusHatch_Input extends GT_ContainerMetaTile_Machine {
 	
@@ -58,6 +60,14 @@ public class GT_Container_BusHatch_Input extends GT_ContainerMetaTile_Machine {
 		}
 	}
 	
+	@Override
+	protected boolean mergeItemStack(ItemStack aStack, int aStartIndex, int aEndIndex, boolean aReverse) {
+		if (aStartIndex == 0 && aEndIndex == 17 && GT_Utility.getFluidForFilledItem(aStack, true) == null) {
+			aStartIndex = 1;
+		}
+		return super.mergeItemStack(aStack, aStartIndex, aEndIndex, aReverse);
+	}
+
 	@Override
 	public int getSlotCount() {
 		return 18;
