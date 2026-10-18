@@ -1,0 +1,548 @@
+[
+  {
+    "name": "Molten Europium",
+    "startupEU": 150000000,
+    "eut": 24576,
+    "ticks": 64,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Molten Sunnarium",
+    "startupEU": 40000000,
+    "eut": 7680,
+    "ticks": 32,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Argon Plasma",
+    "startupEU": 180000000,
+    "eut": 24576,
+    "ticks": 32,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Molten Indium",
+    "startupEU": 380000000,
+    "eut": 24576,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Tin Plasma",
+    "startupEU": 280000000,
+    "eut": 49152,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Osmium",
+    "startupEU": 150000000,
+    "eut": 24578,
+    "ticks": 64,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Molten Uranium 238",
+    "startupEU": 240000000,
+    "eut": 49152,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Duranium",
+    "startupEU": 140000000,
+    "eut": 16384,
+    "ticks": 64,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Boron Plasma",
+    "startupEU": 50000000,
+    "eut": 10240,
+    "ticks": 240,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Enriched Meitnerium Plasma",
+    "startupEU": 1000000000,
+    "eut": 250000,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      0,
+      0,
+      1,
+      4
+    ]
+  },
+  {
+    "name": "Bismuth Plasma",
+    "startupEU": 350000000,
+    "eut": 98304,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Titanium Plasma",
+    "startupEU": 100000000,
+    "eut": 49152,
+    "ticks": 160,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Infuscolium",
+    "startupEU": 400000000,
+    "eut": 49152,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Phoenixite",
+    "startupEU": 1000000000,
+    "eut": 196608,
+    "ticks": 80,
+    "multipliers": [
+      0,
+      0,
+      0,
+      1,
+      4
+    ]
+  },
+  {
+    "name": "Oxygen Plasma",
+    "startupEU": 80000000,
+    "eut": 4096,
+    "ticks": 32,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Molten Iron",
+    "startupEU": 120000000,
+    "eut": 8192,
+    "ticks": 64,
+    "multipliers": [
+      1,
+      2,
+      4,
+      64,
+      64
+    ]
+  },
+  {
+    "name": "Molten Tungsten",
+    "startupEU": 200000000,
+    "eut": 24576,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Helium Plasma",
+    "startupEU": 60000000,
+    "eut": 2048,
+    "ticks": 16,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Molten Naquadria",
+    "startupEU": 400000000,
+    "eut": 49152,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Niobium Plasma",
+    "startupEU": 200000000,
+    "eut": 49152,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Iridium",
+    "startupEU": 300000000,
+    "eut": 32768,
+    "ticks": 32,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Molten Tritanium",
+    "startupEU": 200000000,
+    "eut": 32768,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Radon",
+    "startupEU": 200000000,
+    "eut": 32768,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Molten Chrome",
+    "startupEU": 140000000,
+    "eut": 24576,
+    "ticks": 64,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Zinc Plasma",
+    "startupEU": 180000000,
+    "eut": 49152,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Silver Plasma",
+    "startupEU": 350000000,
+    "eut": 49152,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Nickel Plasma",
+    "startupEU": 480000000,
+    "eut": 32768,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Americium",
+    "startupEU": 200000000,
+    "eut": 49152,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Meitnerium Plasma",
+    "startupEU": 300000000,
+    "eut": 30000,
+    "ticks": 32,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Radon Plasma",
+    "startupEU": 450000000,
+    "eut": 98304,
+    "ticks": 32,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Americium Plasma",
+    "startupEU": 500000000,
+    "eut": 98304,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Neutronium Plasma",
+    "startupEU": 2000000000,
+    "eut": 500000,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  {
+    "name": "Helium Plasma",
+    "startupEU": 40000000,
+    "eut": 4096,
+    "ticks": 16,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Sulfur Plasma",
+    "startupEU": 240000000,
+    "eut": 10240,
+    "ticks": 32,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Iron Plasma",
+    "startupEU": 360000000,
+    "eut": 8192,
+    "ticks": 32,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Neutronium",
+    "startupEU": 600000000,
+    "eut": 98304,
+    "ticks": 60,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Plutonium 239",
+    "startupEU": 480000000,
+    "eut": 49152,
+    "ticks": 128,
+    "multipliers": [
+      0,
+      0,
+      1,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Uranium 238",
+    "startupEU": 240000000,
+    "eut": 49152,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Mercury Plasma",
+    "startupEU": 300000000,
+    "eut": 49152,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      1,
+      2,
+      4,
+      16
+    ]
+  },
+  {
+    "name": "Molten Platinum",
+    "startupEU": 150000000,
+    "eut": 32768,
+    "ticks": 32,
+    "multipliers": [
+      1,
+      2,
+      4,
+      16,
+      16
+    ]
+  },
+  {
+    "name": "Molten Naquadah",
+    "startupEU": 300000000,
+    "eut": 32768,
+    "ticks": 64,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      64
+    ]
+  },
+  {
+    "name": "Nitrogen Plasma",
+    "startupEU": 180000000,
+    "eut": 16384,
+    "ticks": 16,
+    "multipliers": [
+      0,
+      1,
+      2,
+      16,
+      16
+    ]
+  }
+]

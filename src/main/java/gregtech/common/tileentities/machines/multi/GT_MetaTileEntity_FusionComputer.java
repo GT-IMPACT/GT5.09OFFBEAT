@@ -266,6 +266,22 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
         return (mStartEnergy < 160_000_000) ? 256 : ((mStartEnergy < 320_000_000) ? 64 : (mStartEnergy < 640_000_000) ? 16 : (mStartEnergy < 1_280_000_000) ? 4 : 1);
     }
 
+    protected int overclock(int startEnergy, int duration, int eut) {
+        int energyHatches = 0;
+        for (GT_MetaTileEntity_Hatch_Energy hatch : mEnergyHatches) {
+            if (isValidMetaTileEntity(hatch)) energyHatches++;
+        }
+        long energyInput = getEnergyInputPerHatch() * Math.min(16, energyHatches);
+        if (eut <= 0 || eut > energyInput || duration < 1) return 0;
+
+        int multiplier = overclock(startEnergy);
+        int step = tierOverclock() >= 8 ? 4 : 2;
+        while (multiplier > 1 && ((long) eut * multiplier > energyInput || multiplier > duration)) {
+            multiplier /= step;
+        }
+        return multiplier;
+    }
+
     @Override
     public boolean checkRecipe(ItemStack aStack) {
         ArrayList<FluidStack> tFluidList = getStoredFluids();
@@ -289,7 +305,13 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
             GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFusionRecipes.findRecipe(this.getBaseMetaTileEntity(), this.mLastRecipe, false, GT_Values.V[15], tFluids);
 
-            if ((tRecipe == null && !mRunningOnLoad) || (maxEUStore() < tRecipe.mSpecialValue)) {
+            if (tRecipe == null || maxEUStore() < tRecipe.mSpecialValue) {
+                turnCasingActive(false);
+                this.mLastRecipe = null;
+                return false;
+            }
+            int overclock = overclock(tRecipe.mSpecialValue, tRecipe.mDuration, tRecipe.mEUt);
+            if (overclock == 0) {
                 turnCasingActive(false);
                 this.mLastRecipe = null;
                 return false;
@@ -297,8 +319,8 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             if (mRunningOnLoad || tRecipe.isRecipeInputEqual(true, tFluids)) {
                 updateSlots();
                 this.mLastRecipe = tRecipe;
-                this.mEUt = (this.mLastRecipe.mEUt * overclock(this.mLastRecipe.mSpecialValue));
-                this.mMaxProgresstime = Math.max(1, this.mLastRecipe.mDuration / overclock(this.mLastRecipe.mSpecialValue));
+                this.mEUt = this.mLastRecipe.mEUt * overclock;
+                this.mMaxProgresstime = this.mLastRecipe.mDuration / overclock;
                 this.mEfficiencyIncrease = 10000;
                 this.mOutputFluids = this.mLastRecipe.mFluidOutputs;
                 turnCasingActive(true);
@@ -316,6 +338,10 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
     }
 
     public abstract int tierOverclock();
+
+    protected long getEnergyInputPerHatch() {
+        return 2048L * tierOverclock();
+    }
 
     public boolean turnCasingActive(boolean status) {
         if (this.mEnergyHatches != null) {
@@ -351,20 +377,21 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             if (mStartUpCheck < 0) {
                 if (mMachine) {
                     if (this.mEnergyHatches != null) {
+                        long energyInput = getEnergyInputPerHatch();
                         for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches)
                             if (isValidMetaTileEntity(tHatch)) {
-                                if (aBaseMetaTileEntity.getStoredEU() + (2048L * tierOverclock()) < maxEUStore()
-                                        && tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(2048L * tierOverclock(), false)) {
-                                    aBaseMetaTileEntity.increaseStoredEnergyUnits(2048L * tierOverclock(), true);
+                                if (aBaseMetaTileEntity.getStoredEU() + energyInput <= maxEUStore()
+                                        && tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(energyInput, false)) {
+                                    aBaseMetaTileEntity.increaseStoredEnergyUnits(energyInput, true);
                                 }
                             }
                     }
-                    if (this.mEUStore <= 0 && mMaxProgresstime > 0) {
-                        stopMachine();
-                    }
                     if (getRepairStatus() > 0) {
                         if (mMaxProgresstime > 0) {
-                            this.getBaseMetaTileEntity().decreaseStoredEnergyUnits(mEUt, true);
+                            if (aBaseMetaTileEntity.getStoredEU() < mEUt
+                                    || !aBaseMetaTileEntity.decreaseStoredEnergyUnits(mEUt, false)) {
+                                stopMachine();
+                            }
                             if (mMaxProgresstime > 0 && ++mProgresstime >= mMaxProgresstime) {
                                 if (mOutputItems != null)
                                     for (ItemStack tStack : mOutputItems) if (tStack != null) addOutput(tStack);
@@ -414,6 +441,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
             }
             aBaseMetaTileEntity.setErrorDisplayID((aBaseMetaTileEntity.getErrorDisplayID() & ~127) | (mWrench ? 0 : 1) | (mScrewdriver ? 0 : 2) | (mSoftHammer ? 0 : 4) | (mHardHammer ? 0 : 8)
                     | (mSolderingTool ? 0 : 16) | (mCrowbar ? 0 : 32) | (mMachine ? 0 : 64));
+            this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
             aBaseMetaTileEntity.setActive(mMaxProgresstime > 0);
         }
     }

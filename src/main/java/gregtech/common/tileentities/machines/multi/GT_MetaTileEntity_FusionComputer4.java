@@ -68,6 +68,11 @@ public class GT_MetaTileEntity_FusionComputer4 extends GT_MetaTileEntity_FusionC
     }
 
     @Override
+    protected long getEnergyInputPerHatch() {
+        return 32768L;
+    }
+
+    @Override
     public Block getCasing() {
         return GregTech_API.sBlockCasings5;
     }
