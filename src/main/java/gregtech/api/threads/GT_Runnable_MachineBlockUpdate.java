@@ -59,39 +59,44 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
     protected static boolean isEnabled = true;
     
     public static void setMachineUpdateValues(World aWorld, ChunkCoordinates aCoords) {
-        if (isEnabled) {
-            EXECUTOR_SERVICE.submit(new GT_Runnable_MachineBlockUpdate(aWorld, aCoords));
+        submitUpdate(new GT_Runnable_MachineBlockUpdate(aWorld, aCoords));
+    }
+
+    protected static synchronized void submitUpdate(Runnable update) {
+        if (isEnabled && EXECUTOR_SERVICE != null && !EXECUTOR_SERVICE.isShutdown()) {
+            EXECUTOR_SERVICE.submit(update);
         }
     }
     
-    public static void initExecutorService() {
+    public static synchronized void initExecutorService() {
         EXECUTOR_SERVICE = Executors.newFixedThreadPool(Math.max(1, (Runtime.getRuntime().availableProcessors() * 2 / 3)), THREAD_FACTORY);
     }
     
     public static void shutdownExecutorService() {
-        // ServerStopped is a fallback after crashes, and may follow normal cleanup.
-        if (EXECUTOR_SERVICE == null || EXECUTOR_SERVICE.isTerminated()) return;
-        try {
+        final ExecutorService executor;
+        synchronized (GT_Runnable_MachineBlockUpdate.class) {
+            // ServerStopped is a fallback after crashes, and may follow normal cleanup.
+            executor = EXECUTOR_SERVICE;
+            if (executor == null || executor.isTerminated()) return;
             GT_Mod.GT_FML_LOGGER.info("Shutting down Machine block update executor service");
-            EXECUTOR_SERVICE.shutdown(); // Disable new tasks from being submitted
-            // Wait a while for existing tasks to terminate
-            if (!EXECUTOR_SERVICE.awaitTermination(60, TimeUnit.SECONDS)) {
-                EXECUTOR_SERVICE.shutdownNow(); // Cancel currently executing tasks
-                // Wait a while for tasks to respond to being cancelled
-                if (!EXECUTOR_SERVICE.awaitTermination(60, TimeUnit.SECONDS)) {
-                    GT_Mod.GT_FML_LOGGER.error("Well this didn't terminated well... GT_Runnable_MachineBlockUpdate.shutdownExecutorService");
-                }
+            // Old-world updates are no longer useful. Drop queued traversals and
+            // interrupt active ones before waiting, rather than draining the backlog.
+            executor.shutdownNow();
+        }
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                GT_Mod.GT_FML_LOGGER.error("Machine block update workers did not stop within 5 seconds");
             }
         } catch (InterruptedException ie) {
             GT_Mod.GT_FML_LOGGER.error("Well this interruption got interrupted...", ie);
             // (Re-)Cancel if current thread also interrupted
-            EXECUTOR_SERVICE.shutdownNow();
+            executor.shutdownNow();
             // Preserve interrupt status
             Thread.currentThread().interrupt();
         }catch (Exception e){
             GT_Mod.GT_FML_LOGGER.error("Well this didn't terminated well...", e);
             // (Re-)Cancel in case
-            EXECUTOR_SERVICE.shutdownNow();
+            executor.shutdownNow();
         }finally {
             GT_Mod.GT_FML_LOGGER.info("Leaving... GT_Runnable_MachineBlockUpdate.shutdownExecutorService");
         }
@@ -100,14 +105,14 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
     @Override
     public void run() {
         try {
-            while (!tQueue.isEmpty()) {
+            while (!Thread.currentThread().isInterrupted() && !tQueue.isEmpty()) {
                 final ChunkCoordinates aCoords = tQueue.poll();
                 final TileEntity tTileEntity;
                 final boolean isMachineBlock;
                 
                 // This might load a chunk... which might load a TileEntity... which might get added to `loadedTileEntityList`... which might be in the process
                 // of being iterated over during `UpdateEntities()`... which might cause a ConcurrentModificationException.  So, lock that shit.
-                GT_Proxy.TICK_LOCK.lock();
+                GT_Proxy.TICK_LOCK.lockInterruptibly();
                 try {
                     tTileEntity = world.getTileEntity(aCoords.posX, aCoords.posY, aCoords.posZ);
                     isMachineBlock = GregTech_API.isMachineBlock(world.getBlock(aCoords.posX, aCoords.posY, aCoords.posZ), world.getBlockMetadata(aCoords.posX, aCoords.posY, aCoords.posZ));
@@ -137,6 +142,8 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
                     if (visited.add(tCoords = new ChunkCoordinates(aCoords.posX, aCoords.posY, aCoords.posZ - 1))) tQueue.add(tCoords);
                 }
             }
+        } catch (InterruptedException interrupted) {
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             GT_Mod.GT_FML_LOGGER.error(
                     "Well this update was broken... " + mCoords + ", mWorld={" + world.getProviderName() + " @dimId " + world.provider.dimensionId + "}", e);

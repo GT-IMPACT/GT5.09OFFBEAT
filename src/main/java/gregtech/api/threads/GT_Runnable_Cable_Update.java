@@ -16,19 +16,17 @@ public class GT_Runnable_Cable_Update extends GT_Runnable_MachineBlockUpdate {
     }
 
     public static void setCableUpdateValues(World aWorld, ChunkCoordinates aCoords) {
-        if (isEnabled) {
-            EXECUTOR_SERVICE.submit(new GT_Runnable_Cable_Update(aWorld, aCoords));
-        }
+        submitUpdate(new GT_Runnable_Cable_Update(aWorld, aCoords));
     }
 
     @Override
     public void run() {
         try {
-            while (!tQueue.isEmpty()) {
+            while (!Thread.currentThread().isInterrupted() && !tQueue.isEmpty()) {
                 final ChunkCoordinates aCoords = tQueue.poll();
                 final TileEntity tTileEntity;
 
-                GT_Proxy.TICK_LOCK.lock();
+                GT_Proxy.TICK_LOCK.lockInterruptibly();
                 try {
                     //we dont want to go over cables that are in unloaded chunks
                     //keeping the lock just to make sure no CME happens
@@ -61,6 +59,8 @@ public class GT_Runnable_Cable_Update extends GT_Runnable_MachineBlockUpdate {
                     }
                 }
             }
+        } catch (InterruptedException interrupted) {
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             GT_Mod.GT_FML_LOGGER.error(
                     "Well this update was broken... " + mCoords + ", mWorld={" + world.getProviderName() + " @dimId " + world.provider.dimensionId + "}", e);
