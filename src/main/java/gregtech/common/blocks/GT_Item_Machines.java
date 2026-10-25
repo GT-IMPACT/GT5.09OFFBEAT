@@ -1,11 +1,14 @@
 package gregtech.common.blocks;
 
+import appeng.me.helpers.AENetworkProxy;
+import cpw.mods.fml.common.Optional;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.metatileentity.IConnectable;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.util.GT_ItsNotMyFaultException;
 import gregtech.api.util.GT_LanguageManager;
@@ -191,6 +194,9 @@ public class GT_Item_Machines
                 if (aPlayer != null) {
                     tTileEntity.setOwnerName(aPlayer.getDisplayName());
                     tTileEntity.setOwnerUuid(aPlayer.getUniqueID());
+                    if (GregTech_API.mAE2 && tTileEntity.isServerSide()) {
+                        setAEProxyOwner(tTileEntity, aPlayer);
+                    }
                 }
                 tTileEntity.getMetaTileEntity().initDefaultModes(aStack.getTagCompound());
                 final byte aSide = GT_Utility.getOppositeSide(side);
@@ -213,5 +219,13 @@ public class GT_Item_Machines
             this.field_150939_a.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
         }
         return true;
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    private static void setAEProxyOwner(IGregTechTileEntity tile, EntityPlayer player) {
+        if (tile.getMetaTileEntity() instanceof MetaTileEntity) {
+            AENetworkProxy proxy = ((MetaTileEntity) tile.getMetaTileEntity()).getProxy();
+            if (proxy != null) proxy.setOwner(player);
+        }
     }
 }
