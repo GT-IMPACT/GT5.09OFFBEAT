@@ -2,6 +2,10 @@ package gregtech.api.metatileentity;
 
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
+import appeng.api.storage.ICellContainer;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
@@ -22,6 +26,7 @@ import gregtech.api.graphs.GenerateNodeMapPower;
 import gregtech.api.graphs.Node;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.interfaces.metatileentity.IMEOutput;
 import gregtech.api.interfaces.tileentity.IEnergyConnected;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
@@ -82,12 +87,14 @@ import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
  */
 @Optional.InterfaceList(value = {
         @Optional.Interface(iface = "appeng.api.networking.security.IActionHost", modid = "appliedenergistics2", striprefs = true),
-        @Optional.Interface(iface = "appeng.me.helpers.IGridProxyable", modid = "appliedenergistics2", striprefs = true)})
+        @Optional.Interface(iface = "appeng.me.helpers.IGridProxyable", modid = "appliedenergistics2", striprefs = true),
+        @Optional.Interface(iface = "appeng.api.storage.ICellContainer", modid = "appliedenergistics2", striprefs = true)})
 public class BaseMetaTileEntity
         extends BaseTileEntity
         implements IGregTechTileEntity,
         ITileWithModularUI,
         IActionHost,
+        ICellContainer,
         IGridProxyable,
         IAlignmentProvider,
         IConstructableProvider {
@@ -2326,6 +2333,26 @@ public class BaseMetaTileEntity
         AENetworkProxy gp = getProxy();
         return gp != null ? gp.getNode() : null;
      }
+
+    @Override
+    @Optional.Method(modid = "appliedenergistics2")
+    public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
+        return mMetaTileEntity instanceof IMEOutput
+                ? ((IMEOutput) mMetaTileEntity).getMEOutputStorage().getCellArray(channel)
+                : Collections.<IMEInventoryHandler>emptyList();
+    }
+
+    @Override
+    @Optional.Method(modid = "appliedenergistics2")
+    public int getPriority() { return 0; }
+
+    @Override
+    @Optional.Method(modid = "appliedenergistics2")
+    public void saveChanges(IMEInventory inventory) {
+        if (mMetaTileEntity instanceof IMEOutput) {
+            ((IMEOutput) mMetaTileEntity).getMEOutputStorage().saveChanges(inventory);
+        }
+    }
 
     @Override
     @Optional.Method(modid = "appliedenergistics2")

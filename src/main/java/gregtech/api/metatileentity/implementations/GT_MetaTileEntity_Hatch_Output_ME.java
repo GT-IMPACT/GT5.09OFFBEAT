@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -18,16 +19,19 @@ import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.StorageChannel;
 import appeng.api.util.AECableType;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
-import appeng.util.Platform;
 import cpw.mods.fml.common.Optional;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IMEOutput;
+import gregtech.api.gui.GT_Container_MEOutput;
+import gregtech.api.gui.GT_GUIContainer_MEOutput;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
@@ -39,14 +43,27 @@ import gregtech.api.util.GT_Utility;
  *
  * @see <a href="https://github.com/GTNewHorizons/GT5-Unofficial/tree/master/src/main/java/gregtech/common/tileentities/machines/outputme">GTNH ME outputs</a>
  */
-public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_Output {
-    private static final int CACHE_CAPACITY = 128000;
+public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_Output implements IMEOutput {
     private static final String[] DESCRIPTION = { "Fluid Output for Multiblocks", "Stores directly into ME",
-            "Shared fluid buffer: 128,000 L", "Requires an ME channel and power",
-            "Connect ME cable to the front", "Right click to show buffered fluids" };
+            "Default buffer: 128,000 L; insert a fluid storage cell to expand",
+            "Cache Mode stores output in the inserted cell", "Requires an ME channel and power",
+            "Connect ME cable to the front", "Screwdriver toggles Cache Mode" };
     private final List<FluidStack> cachedFluids = new ArrayList<FluidStack>();
     private AENetworkProxy gridProxy;
     private BaseActionSource requestSource;
+    private final GT_MEOutputStorage<IAEFluidStack> storage = new GT_MEOutputStorage<IAEFluidStack>(
+            StorageChannel.FLUIDS, 128000, () -> mInventory[0], this::getProxy, this::getRequest,
+            this::markStorageDirty, this::returnToCache);
+
+    @Override
+    public GT_MEOutputStorage<IAEFluidStack> getMEOutputStorage() { return storage; }
+
+    @Override
+    public long getMEOutputAmount() {
+        long amount = 0;
+        for (FluidStack cached : cachedFluids) amount += cached.amount;
+        return amount;
+    }
 
     public GT_MetaTileEntity_Hatch_Output_ME(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 4);
@@ -78,10 +95,12 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     @Override
     public int fill(FluidStack aFluid, boolean doFill) {
         if (!GregTech_API.mAE2 || aFluid == null || aFluid.getFluid() == null || aFluid.amount <= 0) return 0;
-        int accepted = Math.min(aFluid.amount, Math.max(0, getCapacity() - getFluidAmount()));
+        if (!storage.canAccept(getMEOutputAmount()) || !canStore(aFluid)) return 0;
+        int accepted = aFluid.amount;
         if (!doFill || accepted == 0) return accepted;
+        storage.accepted();
         for (FluidStack cached : cachedFluids) {
-            if (cached.isFluidEqual(aFluid)) {
+            if (cached.isFluidEqual(aFluid) && cached.amount <= Integer.MAX_VALUE - accepted) {
                 cached.amount += accepted;
                 markStorageDirty();
                 return accepted;
@@ -95,13 +114,13 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     }
 
     @Override
-    public int getCapacity() { return CACHE_CAPACITY; }
+    public int getCapacity() { return (int) Math.min(Integer.MAX_VALUE, storage.getCapacity()); }
 
     @Override
     public int getFluidAmount() {
-        int amount = 0;
+        long amount = 0;
         for (FluidStack cached : cachedFluids) amount += cached.amount;
-        return amount;
+        return (int) Math.min(Integer.MAX_VALUE, amount);
     }
 
     @Override
@@ -119,8 +138,10 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         // Do not run the ordinary hatch's adjacent-tank output logic.
-        if (aBaseMetaTileEntity.isServerSide() && aTick % 20 == 0 && GregTech_API.mAE2) {
-            flushCache(aBaseMetaTileEntity);
+        if (aBaseMetaTileEntity.isServerSide() && GregTech_API.mAE2) {
+            storage.tick(aTick);
+            if (aTick % 20 == 0) aBaseMetaTileEntity.setActive(getProxy() != null && getProxy().isActive());
+            if (storage.shouldFlush(cachedFluids.isEmpty())) flushCache(aBaseMetaTileEntity);
         }
     }
 
@@ -129,23 +150,52 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
         AENetworkProxy proxy = getProxy();
         base.setActive(proxy != null && proxy.isActive());
         if (proxy == null || !proxy.isActive() || !base.isAllowedToWork()) return;
-        try {
-            if (requestSource == null) requestSource = new MachineSource((IActionHost) base);
-            Iterator<FluidStack> iterator = cachedFluids.iterator();
-            while (iterator.hasNext()) {
-                FluidStack cached = iterator.next();
-                IAEFluidStack input = AEApi.instance().storage().createFluidStack(cached);
-                IAEFluidStack rest = Platform.poweredInsert(proxy.getEnergy(),
-                        proxy.getStorage().getFluidInventory(), input, requestSource);
-                int remaining = rest == null ? 0 : (int) rest.getStackSize();
-                if (remaining != cached.amount) {
-                    cached.amount = remaining;
-                    if (remaining == 0) iterator.remove();
-                    markStorageDirty();
-                }
+        storage.flushed();
+        Iterator<FluidStack> iterator = cachedFluids.iterator();
+        while (iterator.hasNext()) {
+            FluidStack cached = iterator.next();
+            int remaining = store(cached);
+            if (remaining != cached.amount) {
+                cached.amount = remaining;
+                if (remaining == 0) iterator.remove();
+                markStorageDirty();
             }
+        }
+    }
+
+    /** Returns the amount the network could not accept. */
+    @Optional.Method(modid = "appliedenergistics2")
+    protected int store(FluidStack fluid) {
+        try {
+            AENetworkProxy proxy = getProxy();
+            IAEFluidStack input = AEApi.instance().storage().createFluidStack(fluid);
+            IAEFluidStack rest = storage.insert(input, proxy.getStorage().getFluidInventory());
+            return rest == null ? 0 : (int) rest.getStackSize();
         } catch (GridAccessException ignored) {
-            // Keep all fluids that the network did not accept.
+            return fluid.amount;
+        }
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    private BaseActionSource getRequest() {
+        if (requestSource == null) requestSource = new MachineSource((IActionHost) getBaseMetaTileEntity());
+        return requestSource;
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    protected boolean canStore(FluidStack fluid) {
+        if (mInventory[0] == null) return true;
+        return storage.canStore(AEApi.instance().storage().createFluidStack(fluid));
+    }
+
+    @Optional.Method(modid = "appliedenergistics2")
+    private void returnToCache(IAEFluidStack stack) {
+        long amount = stack.getStackSize();
+        while (amount > 0) {
+            FluidStack fluid = stack.getFluidStack();
+            fluid.amount = (int) Math.min(Integer.MAX_VALUE, amount);
+            cachedFluids.add(fluid);
+            amount -= fluid.amount;
         }
     }
 
@@ -181,10 +231,23 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     @Override
     public void saveNBTData(NBTTagCompound nbt) {
         super.saveNBTData(nbt);
+        saveCache(nbt);
+        if (GregTech_API.mAE2) saveProxy(nbt);
+    }
+
+    @Override
+    public void setItemNBT(NBTTagCompound nbt) {
+        super.setItemNBT(nbt);
+        saveCache(nbt);
+        // The machine block drops valid inventory slots separately.
+        nbt.removeTag("meStorageCell");
+    }
+
+    private void saveCache(NBTTagCompound nbt) {
+        storage.save(nbt);
         NBTTagList list = new NBTTagList();
         for (FluidStack cached : cachedFluids) list.appendTag(cached.writeToNBT(new NBTTagCompound()));
         nbt.setTag("cachedFluids", list);
-        if (GregTech_API.mAE2) saveProxy(nbt);
     }
 
     @Optional.Method(modid = "appliedenergistics2")
@@ -197,6 +260,8 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     public void loadNBTData(NBTTagCompound nbt) {
         super.loadNBTData(nbt);
         cachedFluids.clear();
+        if (nbt.hasKey("meStorageCell")) mInventory[0] = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("meStorageCell"));
+        storage.load(nbt);
         NBTTagList list = nbt.getTagList("cachedFluids", 10);
         for (int i = 0; i < list.tagCount(); i++) {
             FluidStack cached = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
@@ -208,15 +273,23 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     @Optional.Method(modid = "appliedenergistics2")
     private void loadProxy(NBTTagCompound nbt) {
         AENetworkProxy proxy = getProxy();
-        if (proxy != null) proxy.readFromNBT(nbt);
+        if (proxy != null && nbt.hasKey("proxy")) proxy.readFromNBT(nbt);
     }
 
     @Override
     public boolean onRightclick(IGregTechTileEntity base, EntityPlayer player) {
-        if (base.isServerSide()) {
-            for (String line : getInfoData()) GT_Utility.sendChatToPlayer(player, line);
-        }
+        if (base.isServerSide()) base.openGUI(player);
         return true;
+    }
+
+    @Override
+    public Object getServerGUI(int id, InventoryPlayer player, IGregTechTileEntity base) {
+        return new GT_Container_MEOutput(player, base);
+    }
+
+    @Override
+    public Object getClientGUI(int id, InventoryPlayer player, IGregTechTileEntity base) {
+        return new GT_GUIContainer_MEOutput(player, base, "ME Fluid Output");
     }
 
     @Override
@@ -225,7 +298,10 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     @Override
     public String[] getInfoData() {
         List<String> info = new ArrayList<String>();
-        info.add("ME Output Hatch: " + GT_Utility.formatNumbers(getFluidAmount()) + " / 128,000 L");
+        long amount = 0;
+        for (FluidStack cached : cachedFluids) amount += cached.amount;
+        info.add("ME Output Hatch: " + GT_Utility.formatNumbers(amount) + " / "
+                + GT_Utility.formatNumbers(storage.getCapacity()) + " L buffered");
         for (FluidStack cached : cachedFluids) {
             info.add(cached.getLocalizedName() + ": " + GT_Utility.formatNumbers(cached.amount) + " L");
         }
@@ -249,11 +325,20 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
     @Override
     public boolean canTankBeEmptied() { return false; }
     @Override
-    public boolean isValidSlot(int index) { return false; }
+    public boolean isValidSlot(int index) { return index == 0; }
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return GregTech_API.mAE2 && index == 0 && storage.isValidCell(stack);
+    }
     @Override
     public boolean allowPutStack(IGregTechTileEntity base, int index, byte side, ItemStack stack) { return false; }
     @Override
     public boolean allowPullStack(IGregTechTileEntity base, int index, byte side, ItemStack stack) { return false; }
     @Override
-    public void onScrewdriverRightClick(byte side, EntityPlayer player, float x, float y, float z) {}
+    public void onScrewdriverRightClick(byte side, EntityPlayer player, float x, float y, float z) {
+        if (getBaseMetaTileEntity().isServerSide() && GregTech_API.mAE2) {
+            storage.setCacheMode(!storage.isCacheMode());
+            GT_Utility.sendChatToPlayer(player, "Cache Mode: " + (storage.isCacheMode() ? "On" : "Off"));
+        }
+    }
 }

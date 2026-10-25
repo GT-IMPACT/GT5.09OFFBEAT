@@ -38,6 +38,11 @@ repositories {
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
+    // AE stack interfaces reference Minecraft client types even in server-side storage tests.
+    testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.3") {
+        isTransitive = false
+    }
+    testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
     // impact
     api("space.impact:ImpactAPI:0.0.4:dev")
     api("space.impact:VirtualWorld:2.0.4:dev")
