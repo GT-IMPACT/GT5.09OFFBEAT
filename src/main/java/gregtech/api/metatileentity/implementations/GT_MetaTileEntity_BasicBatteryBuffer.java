@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import cpw.mods.fml.common.Optional;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.*;
 import gregtech.api.interfaces.ITexture;
@@ -9,11 +10,19 @@ import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import ic2.api.item.IElectricItem;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 import static gregtech.api.enums.GT_Values.V;
 
@@ -333,5 +342,39 @@ public class GT_MetaTileEntity_BasicBatteryBuffer extends GT_MetaTileEntity_Tier
     @Override
     public boolean isGivingInformation() {
         return true;
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        if (!config.getConfig("gregtech.basicmachine", true)) {
+            return;
+        }
+        NBTTagCompound tag = accessor.getNBTData();
+        tooltip.add(StatCollector.translateToLocal("GT5U.waila.energy.stored") + ": " + EnumChatFormatting.GREEN
+                + GT_Utility.formatNumbers(tag.getLong("nowStorage")) + EnumChatFormatting.RESET + " EU");
+        tooltip.add(StatCollector.translateToLocal("GT5U.waila.energy.capacity") + ": " + EnumChatFormatting.YELLOW
+                + GT_Utility.formatNumbers(tag.getLong("maxStorage")) + EnumChatFormatting.RESET + " EU");
+        tooltip.add(StatCollector.translateToLocal("GT5U.waila.energy.input") + ": " + EnumChatFormatting.GREEN
+                + GT_Utility.formatNumbers(tag.getLong("energyInput")) + EnumChatFormatting.RESET + " EU/t");
+        tooltip.add(StatCollector.translateToLocal("GT5U.waila.energy.output") + ": " + EnumChatFormatting.RED
+                + GT_Utility.formatNumbers(tag.getLong("energyOutput")) + EnumChatFormatting.RESET + " EU/t");
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        if (base != null) {
+            long[] energy = getStoredEnergy();
+            tag.setLong("nowStorage", energy[0] - base.getStoredEU());
+            tag.setLong("maxStorage", energy[1] - base.getEUCapacity());
+            tag.setLong("energyInput", base.getAverageElectricInput());
+            tag.setLong("energyOutput", base.getAverageElectricOutput());
+        }
     }
 }

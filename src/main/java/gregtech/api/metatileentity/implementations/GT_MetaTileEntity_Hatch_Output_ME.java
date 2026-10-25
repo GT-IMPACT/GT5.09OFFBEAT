@@ -14,6 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
+import appeng.api.implementations.IPowerChannelState;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
@@ -43,7 +44,7 @@ import gregtech.api.util.GT_Utility;
  *
  * @see <a href="https://github.com/GTNewHorizons/GT5-Unofficial/tree/master/src/main/java/gregtech/common/tileentities/machines/outputme">GTNH ME outputs</a>
  */
-public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_Output implements IMEOutput {
+public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_Output implements IMEOutput, IPowerChannelState {
     private static final String[] DESCRIPTION = { "Fluid Output for Multiblocks", "Stores directly into ME",
             "Default buffer: 128,000 L; insert a fluid storage cell to expand",
             "Cache Mode stores output in the inserted cell", "Requires an ME channel and power",
@@ -197,6 +198,16 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
             cachedFluids.add(fluid);
             amount -= fluid.amount;
         }
+    }
+
+    @Override
+    public boolean isPowered() {
+        return getProxy() != null && getProxy().isPowered();
+    }
+
+    @Override
+    public boolean isActive() {
+        return getProxy() != null && getProxy().isActive();
     }
 
     @Override

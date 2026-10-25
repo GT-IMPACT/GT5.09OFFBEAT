@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
@@ -9,28 +10,36 @@ import gregtech.api.gui.GT_GUIContainer_BasicMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.objects.GT_ItemStack;
-
 import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GTWaila;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
+import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static gregtech.api.enums.GT_Values.V;
+import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.api.enums.GT_Values.debugCleanroom;
+import static net.minecraft.util.StatCollector.translateToLocal;
+import static net.minecraft.util.StatCollector.translateToLocalFormatted;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
@@ -39,6 +48,109 @@ import static gregtech.api.enums.GT_Values.debugCleanroom;
  * Extend this class to make a simple Machine
  */
 public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_BasicTank {
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        final NBTTagCompound tag = accessor.getNBTData();
+
+        if (!config.getConfig("gregtech.basicmachine", true)) {
+            super.getWailaBody(itemStack, currenttip, accessor, config);
+            return;
+        }
+        if (tag.getBoolean("stutteringSingleBlock")) {
+            currenttip.add(translateToLocal(getWailaStutteringLine(tag)));
+        } else {
+            boolean isActive = tag.getBoolean("isActiveSingleBlock");
+            if (isActive) {
+                int mEUt = tag.getInteger("eut");
+                if (!isSteampowered()) {
+                    if (mEUt > 0) {
+                        currenttip.add(
+                            translateToLocalFormatted(
+                                "GT5U.waila.energy.use_with_amperage",
+                                GT_Utility.formatNumbers(mEUt),
+                                (Math.abs((long) mEUt) + V[(int) getInputTier()] - 1) / V[(int) getInputTier()],
+                                VN[(int) getInputTier()]));
+                    } else if (mEUt < 0) {
+                        currenttip.add(
+                            translateToLocalFormatted(
+                                "GT5U.waila.energy.produce_with_amperage",
+                                GT_Utility.formatNumbers(-mEUt),
+                                (Math.abs((long) mEUt) + V[(int) getOutputTier()] - 1) / V[(int) getOutputTier()],
+                                VN[(int) getOutputTier()]));
+                    }
+                } else {
+                    if (mEUt > 0) {
+                        currenttip.add(
+                            translateToLocalFormatted(
+                                "GT5U.waila.steam.use",
+                                GT_Utility.formatNumbers(mEUt * 40L),
+                                VN[GT_Utility.getTier(mEUt)]));
+                    } else if (mEUt < 0) {
+                        currenttip.add(
+                            translateToLocalFormatted(
+                                "GT5U.waila.steam.use",
+                                GT_Utility.formatNumbers(-mEUt * 40L),
+                                VN[GT_Utility.getTier(-mEUt)]));
+                    }
+                }
+            }
+            currenttip.add(
+                GTWaila.getMachineProgressString(
+                    isActive,
+                    tag.getBoolean("isAllowedToWorkSingleBlock"),
+                    tag.getInteger("maxProgressSingleBlock"),
+                    tag.getInteger("progressSingleBlock")));
+        }
+
+        if (config.getConfig("gregtech.machineFacing", true)) {
+            currenttip.add(
+                translateToLocalFormatted(
+                    "GT5U.waila.machine.facing",
+                    getFacingNameLocalized(tag.getInteger("mainFacingSingleBlock"))));
+
+            currenttip.add(
+                translateToLocalFormatted(
+                    "GT5U.waila.machine.output_facing",
+                    getFacingNameLocalized(tag.getInteger("outputFacingSingleBlock"))));
+        }
+    }
+
+    private static String getWailaStutteringLine(NBTTagCompound tag) {
+        return tag.getBoolean("blockedSteamVentSingleBlock") ? "GT5U.waila.status.obstructed_steam_vent"
+            : "GT5U.waila.status.insufficient_energy";
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y,
+        int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+
+        tag.setInteger("progressSingleBlock", mProgresstime);
+        tag.setInteger("maxProgressSingleBlock", mMaxProgresstime);
+        tag.setInteger("mainFacingSingleBlock", mMainFacing);
+        tag.setBoolean("stutteringSingleBlock", mStuttering);
+
+        final IGregTechTileEntity tileEntity = getBaseMetaTileEntity();
+        if (tileEntity != null) {
+            tag.setBoolean("blockedSteamVentSingleBlock", (tileEntity.getErrorDisplayID() & 64) != 0);
+            tag.setBoolean("isActiveSingleBlock", tileEntity.isActive());
+            tag.setBoolean("isAllowedToWorkSingleBlock", tileEntity.isAllowedToWork());
+            tag.setInteger(
+                "outputFacingSingleBlock",
+                tileEntity.getFrontFacing());
+            if (tileEntity.isActive()) tag.setInteger("eut", mEUt);
+        }
+    }
+
+    private static String getFacingNameLocalized(int side) {
+        String[] directions = {"down", "up", "north", "south", "west", "east"};
+        String direction = side >= 0 && side < directions.length ? directions[side] : "unknown";
+        return translateToLocal("GT5U.waila.facing." + direction);
+    }
+
     /**
      * return values for checkRecipe()
      */

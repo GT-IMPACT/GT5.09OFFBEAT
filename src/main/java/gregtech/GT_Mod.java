@@ -596,6 +596,7 @@ public class GT_Mod implements IGT_Mod {
 		}
 
         gregtechproxy.onLoad();
+        FMLInterModComms.sendMessage("Waila", "register", "gregtech.crossmod.waila.Waila.callbackRegister");
         if (gregtechproxy.mSortToTheEnd) {
             new GT_ItemIterator().run();
             gregtechproxy.registerUnificationEntries();

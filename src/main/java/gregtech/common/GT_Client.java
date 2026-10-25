@@ -7,6 +7,8 @@ package gregtech.common;
 
 import codechicken.lib.vec.Rotation;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import gregtech.GT_Mod;
@@ -20,8 +22,10 @@ import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_PlayedSound;
 import gregtech.api.util.GT_Utility;
+import gregtech.client.renderer.waila.TTRenderGTProgressBar;
 import gregtech.common.render.*;
 import ic2.api.tile.IWrenchable;
+import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -253,8 +257,16 @@ public class GT_Client extends GT_Proxy implements Runnable {
         new GT_FluidDisplayStackRenderer();
     }
 
+    @Optional.Method(modid = "Waila")
+    private void registerWailaRenderers() {
+        ModuleRegistrar.instance().registerTooltipRenderer("waila.gt.progress", new TTRenderGTProgressBar());
+    }
+
     public void onPostLoad() {
         super.onPostLoad();
+        if (Loader.isModLoaded("Waila")) {
+            registerWailaRenderers();
+        }
         try {
             label0:
             for (int i = 1; i < GregTech_API.METATILEENTITIES.length; i++)

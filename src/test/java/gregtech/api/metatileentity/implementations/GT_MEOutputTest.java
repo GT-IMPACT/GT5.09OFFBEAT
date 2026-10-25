@@ -7,6 +7,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.Collections;
 
 import net.minecraft.init.Bootstrap;
@@ -17,6 +18,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -41,6 +43,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.me.helpers.AENetworkProxy;
+import appeng.core.localization.WailaText;
 import appeng.me.helpers.IGridProxyable;
 import appeng.me.cache.SecurityCache;
 import appeng.me.storage.NetworkInventoryHandler;
@@ -55,6 +58,8 @@ import gregtech.api.gui.GT_Container_MEOutput;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -94,6 +99,10 @@ public class GT_MEOutputTest {
         GregTech_API.mAE2 = true;
         checkGuiSync(new Bus());
         checkGuiSync(new Hatch());
+        Bus wailaBus = new Bus();
+        checkWailaConnection(wailaBus, wailaBus.network);
+        Hatch wailaHatch = new Hatch();
+        checkWailaConnection(wailaHatch, wailaHatch.network);
 
         Hatch hatch = new Hatch();
         FluidStack water = new FluidStack(FluidRegistry.WATER, 1000000);
@@ -262,6 +271,46 @@ public class GT_MEOutputTest {
         return count;
     }
 
+    private static void checkWailaConnection(GT_MetaTileEntity_Hatch hatch, Network network) {
+        hatch.idHatch = 7;
+        boolean[][] states = {{true, true}, {false, true}, {false, false}};
+        String[] expected = {
+                WailaText.DeviceOnline.getLocal(EnumChatFormatting.GREEN),
+                WailaText.DeviceMissingChannel.getLocal(EnumChatFormatting.RED),
+                WailaText.DeviceOffline.getLocal(EnumChatFormatting.RED)
+        };
+        for (int i = 0; i < states.length; i++) {
+            network.active = states[i][0];
+            network.power = states[i][1];
+            NBTTagCompound tag = new NBTTagCompound();
+            hatch.getWailaNBTData(null, null, tag, null, 0, 0, 0);
+            assertEquals(network.active, tag.getBoolean("isActive"));
+            assertEquals(network.power, tag.getBoolean("isPowered"));
+            assertFalse(tag.getBoolean("isBooting"));
+            // The client must render the snapshot rather than re-read the local AE proxy.
+            network.active = !network.active;
+            network.power = !network.power;
+            IWailaDataAccessor accessor = (IWailaDataAccessor) Proxy.newProxyInstance(
+                    GT_MEOutputTest.class.getClassLoader(), new Class[]{IWailaDataAccessor.class},
+                    (p, m, a) -> m.getName().equals("getNBTData") ? tag : defaultValue(m.getReturnType()));
+            IWailaConfigHandler config = (IWailaConfigHandler) Proxy.newProxyInstance(
+                    GT_MEOutputTest.class.getClassLoader(), new Class[]{IWailaConfigHandler.class},
+                    (p, m, a) -> true);
+            List<String> tooltip = new ArrayList<>();
+            hatch.getWailaBody(null, tooltip, accessor, config);
+            assertEquals(3, tooltip.size());
+            assertEquals(expected[i], tooltip.get(1));
+            assertTrue(tooltip.get(2).contains("ID: 7"));
+            config = (IWailaConfigHandler) Proxy.newProxyInstance(
+                    GT_MEOutputTest.class.getClassLoader(), new Class[]{IWailaConfigHandler.class},
+                    (p, m, a) -> false);
+            tooltip.clear();
+            hatch.getWailaBody(null, tooltip, accessor, config);
+            assertEquals(expected[i], tooltip.get(0));
+            assertTrue(tooltip.get(1).contains("ID: 7"));
+        }
+    }
+
     private static class Bus extends GT_MetaTileEntity_Hatch_OutputBus_ME {
         final Network network = new Network();
         Bus() {
@@ -291,6 +340,7 @@ public class GT_MEOutputTest {
         long space, inserted;
         Network() { super(null, "proxy", new ItemStack(Items.iron_ingot), true); }
         @Override public boolean isActive() { return active; }
+        @Override public boolean isPowered() { return power; }
         @Override public IGridNode getNode() { return node; }
         @Override public void writeToNBT(NBTTagCompound nbt) {}
         @Override public void readFromNBT(NBTTagCompound nbt) {}

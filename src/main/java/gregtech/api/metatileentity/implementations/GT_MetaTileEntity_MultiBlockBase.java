@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ConfigCategories;
@@ -13,15 +14,21 @@ import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.*;
+import gregtech.api.util.GTWaila;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.common.GT_Pollution;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -1248,5 +1255,41 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
         return false;
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        if (!config.getConfig("gregtech.multiblock", true)) {
+            return;
+        }
+        NBTTagCompound tag = accessor.getNBTData();
+        if (tag.getBoolean("incompleteStructure")) {
+            tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocal("GT5U.waila.multiblock.incomplete_structure")
+                    + EnumChatFormatting.RESET);
+        }
+        boolean needsMaintenance = tag.getBoolean("hasProblems") && tag.getBoolean("hasMaintenance");
+        tooltip.add((needsMaintenance ? EnumChatFormatting.RED + StatCollector.translateToLocal("GT5U.waila.multiblock.maintenance")
+                : EnumChatFormatting.GREEN + StatCollector.translateToLocal("GT5U.waila.multiblock.running"))
+                + EnumChatFormatting.RESET + "  " + StatCollector.translateToLocal("GT5U.waila.multiblock.efficiency")
+                + ": " + tag.getFloat("efficiency") + "%");
+        tooltip.add(GTWaila.getMachineProgressString(tag.getBoolean("isActive"),
+                tag.getBoolean("isAllowedToWork"), tag.getInteger("maxProgress"), tag.getInteger("progress")));
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        tag.setBoolean("hasProblems", getIdealStatus() > getRepairStatus());
+        tag.setBoolean("hasMaintenance", enabledMaintenance);
+        tag.setFloat("efficiency", mEfficiency / 100.0F);
+        tag.setInteger("progress", mProgresstime);
+        tag.setInteger("maxProgress", mMaxProgresstime);
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        tag.setBoolean("incompleteStructure", base != null && (base.getErrorDisplayID() & 64) != 0);
     }
 }

@@ -1,23 +1,34 @@
 package gregtech.common.tileentities.machines.multi;
 
+import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.util.GTWaila;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Pollution;
 import gregtech.common.gui.GT_Container_PrimitiveBlastFurnace;
 import gregtech.common.gui.GT_GUIContainer_PrimitiveBlastFurnace;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.ChunkPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
 
@@ -347,4 +358,32 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
     public abstract byte getTier();
 
     public abstract String getName();
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        if (!config.getConfig("gregtech.multiblock", true)) {
+            return;
+        }
+        NBTTagCompound tag = accessor.getNBTData();
+        if (tag.getBoolean("incompleteStructurePrimitiveBlastFurnace")) {
+            tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocal("GT5U.waila.multiblock.incomplete_structure")
+                    + EnumChatFormatting.RESET);
+        }
+        tooltip.add(GTWaila.getMachineProgressString(tag.getBoolean("isActive"),
+                tag.getBoolean("isAllowedToWork"), tag.getInteger("maxProgressPrimitiveBlastFurnace"),
+                tag.getInteger("progressPrimitiveBlastFurnace")));
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        tag.setInteger("progressPrimitiveBlastFurnace", mProgresstime);
+        tag.setInteger("maxProgressPrimitiveBlastFurnace", mMaxProgresstime);
+        tag.setBoolean("incompleteStructurePrimitiveBlastFurnace", !mMachine);
+    }
 }

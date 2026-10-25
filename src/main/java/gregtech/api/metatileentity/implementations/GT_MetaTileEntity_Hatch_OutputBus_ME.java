@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.AEApi;
+import appeng.api.implementations.IPowerChannelState;
 import gregtech.api.GregTech_API;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.security.BaseActionSource;
@@ -38,7 +39,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 
 
-public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatch_OutputBus implements IMEOutput {
+public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatch_OutputBus implements IMEOutput, IPowerChannelState {
     private BaseActionSource requestSource = null;
     private AENetworkProxy gridProxy = null;
     private final List<ItemStack> cachedItems = new ArrayList<ItemStack>();
@@ -232,6 +233,16 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
             storage.setCacheMode(!storage.isCacheMode());
             GT_Utility.sendChatToPlayer(player, "Cache Mode: " + (storage.isCacheMode() ? "On" : "Off"));
         }
+    }
+
+    @Override
+    public boolean isPowered() {
+        return getProxy() != null && getProxy().isPowered();
+    }
+
+    @Override
+    public boolean isActive() {
+        return getProxy() != null && getProxy().isActive();
     }
 
     @Override

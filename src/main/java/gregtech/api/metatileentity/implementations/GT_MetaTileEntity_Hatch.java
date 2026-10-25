@@ -1,10 +1,20 @@
 package gregtech.api.metatileentity.implementations;
 
+import cpw.mods.fml.common.Optional;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTank {
     @Deprecated //Use texture changing method
@@ -173,4 +183,23 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
     }
 
     //To change to other page -> use the setter method -> updateTexture
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        int id = accessor.getNBTData().getInteger("hatchId");
+        if (id > 0) {
+            tooltip.add(EnumChatFormatting.GOLD + "ID: " + id + EnumChatFormatting.RESET);
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        tag.setInteger("hatchId", idHatch);
+    }
 }

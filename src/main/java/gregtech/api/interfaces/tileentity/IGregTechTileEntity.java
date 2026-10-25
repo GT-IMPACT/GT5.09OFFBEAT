@@ -21,7 +21,7 @@ import java.util.UUID;
  * <p/>
  * It can cause Problems to include this Interface!
  */
-public interface IGregTechTileEntity extends ITexturedTileEntity, IGearEnergyTileEntity, ICoverable, IFluidHandler, ITurnable, IGregTechDeviceInformation, IUpgradableMachine, IDigitalChest, IDescribable, IMachineBlockUpdateable {
+public interface IGregTechTileEntity extends IGregtechWailaProvider, ITexturedTileEntity, IGearEnergyTileEntity, ICoverable, IFluidHandler, ITurnable, IGregTechDeviceInformation, IUpgradableMachine, IDigitalChest, IDescribable, IMachineBlockUpdateable {
     /**
      * gets the Error displayed on the GUI
      */

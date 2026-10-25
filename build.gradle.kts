@@ -59,6 +59,8 @@ dependencies {
     compileOnlyApi("com.github.GTNewHorizons:chisel:2.11.0-GTNH")
 
     // other
+    compileOnlyApi("com.github.GTNewHorizons:waila:1.19.34:dev") { isTransitive = false }
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:waila:1.19.34:dev") { isTransitive = false }
     api("com.github.GTNewHorizons:CodeChickenCore:1.4.22:dev")
     api("com.github.GTNewHorizons:NotEnoughItems:2.8.158-GTNH:dev")
     api("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1082-GTNH:dev")

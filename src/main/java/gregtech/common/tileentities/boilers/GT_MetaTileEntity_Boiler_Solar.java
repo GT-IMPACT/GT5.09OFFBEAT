@@ -1,24 +1,33 @@
 package gregtech.common.tileentities.boilers;
 
+import cpw.mods.fml.common.Optional;
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_Boiler;
 import gregtech.common.gui.GT_GUIContainer_Boiler;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import java.util.List;
 
 
 public class GT_MetaTileEntity_Boiler_Solar
@@ -212,5 +221,27 @@ public class GT_MetaTileEntity_Boiler_Solar
             }
             aBaseMetaTileEntity.setActive(this.mProcessingEnergy > 0);
         }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        if (config.getConfig("gregtech.solar", true)) {
+            NBTTagCompound tag = accessor.getNBTData();
+            tooltip.add(EnumChatFormatting.GOLD + StatCollector.translateToLocal("GT5U.waila.solar.output")
+                    + ": " + EnumChatFormatting.RESET + tag.getInteger("calcificationOutput")
+                    + "/" + tag.getInteger("maxCalcificationOutput") + " L/s");
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        tag.setInteger("calcificationOutput", getCalcificationOutput() * 20 / 25);
+        tag.setInteger("maxCalcificationOutput", getBasicOutput() * 20 / 25);
     }
 }

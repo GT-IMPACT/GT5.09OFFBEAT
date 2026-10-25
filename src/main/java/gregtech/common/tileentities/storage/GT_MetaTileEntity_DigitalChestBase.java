@@ -6,16 +6,23 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
 import gregtech.api.objects.AE2DigitalChestHandler;
-
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_QuantumChest;
 import gregtech.common.gui.GT_GUIContainer_QuantumChest;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
@@ -300,5 +307,36 @@ public abstract class GT_MetaTileEntity_DigitalChestBase extends GT_MetaTileEnti
             out.add(s);
         }
         return out;
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        NBTTagCompound tag = accessor.getNBTData();
+        ItemStack stored = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("chestBaseItem"));
+        if (stored != null) {
+            tooltip.add(EnumChatFormatting.GREEN + stored.getDisplayName());
+            tooltip.add(GT_Utility.formatNumbers(tag.getInteger("chestBaseSizeCurrent")) + " / "
+                    + GT_Utility.formatNumbers(tag.getInteger("chestBaseSizeMax")));
+        } else {
+            tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocal("GT5U.waila.inventory.empty"));
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        tag.setInteger("chestBaseSizeCurrent", getItemCount());
+        tag.setInteger("chestBaseSizeMax", getMaxItemCount());
+        ItemStack stored = getItemStack();
+        if (stored != null) {
+            tag.setTag("chestBaseItem", stored.writeToNBT(new NBTTagCompound()));
+        } else {
+            tag.removeTag("chestBaseItem");
+        }
     }
 }

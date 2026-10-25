@@ -3,6 +3,7 @@ package gregtech.api.metatileentity.implementations;
 import appeng.api.parts.IPartHost;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyStorage;
+import cpw.mods.fml.common.Optional;
 import crazypants.enderio.machine.capbank.TileCapBank;
 import crazypants.enderio.machine.capbank.network.ICapBankNetwork;
 import crazypants.enderio.power.IPowerContainer;
@@ -18,11 +19,19 @@ import ic2.api.energy.tile.IEnergySource;
 import ic2.api.reactor.IReactor;
 import ic2.api.reactor.IReactorChamber;
 import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 import static gregtech.api.enums.GT_Values.V;
 
@@ -239,5 +248,41 @@ public class GT_MetaTileEntity_Transformer extends GT_MetaTileEntity_TieredMachi
     @Override
     public boolean shouldJoinIc2Enet() {
         return true;
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        if (!config.getConfig("gregtech.transformer", true)) {
+            super.getWailaBody(stack, tooltip, accessor, config);
+            return;
+        }
+        NBTTagCompound tag = accessor.getNBTData();
+        boolean stepDown = tag.getBoolean("isAllowedToWork");
+        String mode = stepDown ? EnumChatFormatting.GREEN + StatCollector.translateToLocal("GT5U.waila.transformer.step_down")
+                : EnumChatFormatting.RED + StatCollector.translateToLocal("GT5U.waila.transformer.step_up");
+        tooltip.add(String.format("%s%s %d(%dA) -> %d(%dA)", mode, EnumChatFormatting.RESET,
+                tag.getLong("maxEUInput"), tag.getLong("maxAmperesIn"),
+                tag.getLong("maxEUOutput"), tag.getLong("maxAmperesOut")));
+        if (config.getConfig("gregtech.machineFacing", true)) {
+            boolean input = (accessor.getSide().ordinal() == tag.getInteger("facing")) == stepDown;
+            String label = StatCollector.translateToLocal(input ? "GT5U.waila.energy.input" : "GT5U.waila.energy.output");
+            tooltip.add(String.format("%s%s:%s %d(%dA)",
+                    input ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE, label, EnumChatFormatting.RESET,
+                    tag.getLong(input ? "maxEUInput" : "maxEUOutput"),
+                    tag.getLong(input ? "maxAmperesIn" : "maxAmperesOut")));
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        tag.setLong("maxEUInput", maxEUInput());
+        tag.setLong("maxAmperesIn", maxAmperesIn());
+        tag.setLong("maxEUOutput", maxEUOutput());
+        tag.setLong("maxAmperesOut", maxAmperesOut());
     }
 }

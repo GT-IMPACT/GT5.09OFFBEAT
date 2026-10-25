@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity;
 
+import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
@@ -15,15 +16,19 @@ import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.*;
 import gregtech.common.GT_Client;
 import gregtech.common.covers.GT_Cover_Fluidfilter;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -1502,5 +1507,48 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider) {
         mMetaTileEntity.onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        if (!hasValidMetaTileEntity()) {
+            return null;
+        }
+        ItemStack stack = mMetaTileEntity.getWailaStack(accessor, config);
+        return stack == null ? mMetaTileEntity.getStackForm(1) : stack;
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        if (hasValidMetaTileEntity()) {
+            mMetaTileEntity.getWailaBody(stack, tooltip, accessor, config);
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public boolean hasWailaAdvancedBody(ItemStack stack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        return hasValidMetaTileEntity() && mMetaTileEntity.hasWailaAdvancedBody(stack, accessor, config);
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaAdvancedBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                                     IWailaConfigHandler config) {
+        if (hasValidMetaTileEntity()) {
+            mMetaTileEntity.getWailaAdvancedBody(stack, tooltip, accessor, config);
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        if (hasValidMetaTileEntity()) {
+            mMetaTileEntity.getWailaNBTData(player, tile, tag, world, x, y, z);
+        }
     }
 }

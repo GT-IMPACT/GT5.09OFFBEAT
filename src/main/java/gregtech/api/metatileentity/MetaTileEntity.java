@@ -1,6 +1,8 @@
 package gregtech.api.metatileentity;
 
+import appeng.api.implementations.IPowerChannelState;
 import appeng.api.util.AECableType;
+import appeng.core.localization.WailaText;
 import appeng.me.helpers.AENetworkProxy;
 import com.gtnewhorizons.modularui.api.forge.ItemStackHandler;
 import cpw.mods.fml.common.Optional;
@@ -17,17 +19,21 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Client;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -1007,4 +1013,40 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
 
     @Optional.Method(modid = "appliedenergistics2")
     public void gridChanged() {}
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor,
+                             IWailaConfigHandler config) {
+        NBTTagCompound tag = accessor.getNBTData();
+        if (config.getConfig("gregtech.machineFacing", true) && tag.hasKey("facing")) {
+            int side = tag.getInteger("facing");
+            String[] directions = {"down", "up", "north", "south", "west", "east"};
+            String direction = side >= 0 && side < directions.length ? directions[side] : "unknown";
+            tooltip.add(StatCollector.translateToLocalFormatted("GT5U.waila.machine.facing",
+                    StatCollector.translateToLocal("GT5U.waila.facing." + direction)));
+        }
+        if (GregTech_API.mAE2 && this instanceof IPowerChannelState) {
+            tooltip.add(WailaText.getPowerState(tag.getBoolean("isActive"),
+                    tag.getBoolean("isPowered"), tag.getBoolean("isBooting")));
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag,
+                                World world, int x, int y, int z) {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        if (base != null) {
+            tag.setInteger("facing", base.getFrontFacing());
+            tag.setBoolean("isActive", base.isActive());
+            tag.setBoolean("isAllowedToWork", base.isAllowedToWork());
+        }
+        if (GregTech_API.mAE2 && this instanceof IPowerChannelState) {
+            IPowerChannelState state = (IPowerChannelState) this;
+            tag.setBoolean("isActive", state.isActive());
+            tag.setBoolean("isPowered", state.isPowered());
+            tag.setBoolean("isBooting", state.isBooting());
+        }
+    }
 }
