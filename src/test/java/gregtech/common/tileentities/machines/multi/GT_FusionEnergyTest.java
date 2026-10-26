@@ -136,6 +136,7 @@ public class GT_FusionEnergyTest {
                 assertEquals("MK " + (tier + 1) + ": " + recipe.get("name").getAsString(), expected, actual);
                 if (actual > 0) {
                     assertTrue((long) eut * actual <= 16 * reactor.getEnergyInputPerHatch());
+                    if (actual > 1) assertTrue((long) eut * actual < 16 * reactor.getEnergyInputPerHatch());
                     assertTrue(duration >= actual);
                 }
             }
@@ -145,7 +146,8 @@ public class GT_FusionEnergyTest {
 
     private static void checkOverclockLimits(GT_MetaTileEntity_FusionComputer reactor) {
         prepare(reactor, 16, 0);
-        assertEquals(256, reactor.overclock(40000000, 256, 8192)); // Exactly the input limit.
+        assertEquals(256, reactor.overclock(40000000, 256, 8191));
+        assertEquals(64, reactor.overclock(40000000, 256, 8192)); // Leave headroom at equality.
         assertEquals(64, reactor.overclock(40000000, 256, 8193));
         assertEquals(0, reactor.overclock(40000000, 256, Integer.MAX_VALUE));
         assertEquals(1, reactor.overclock(40000000, 1, 2048));
@@ -157,6 +159,9 @@ public class GT_FusionEnergyTest {
 
         prepare(reactor, 1, 0);
         assertEquals(4, reactor.overclock(40000000, 64, 24576));
+        assertEquals(1, reactor.overclock(40000000, 64, 32768));
+        assertEquals(1, reactor.overclock(40000000, 64, 131072)); // Base recipe still fits exactly.
+        assertEquals(0, reactor.overclock(40000000, 64, 131073));
         reactor.mEnergyHatches.add(new GT_MetaTileEntity_Hatch_Energy("unattached", reactor.tier(), "", null));
         assertEquals(0, reactor.overclock(40000000, 80, 196608));
         prepare(reactor, 0, 0);
@@ -186,8 +191,8 @@ public class GT_FusionEnergyTest {
         recipe.mEUt = 32768;
         reactor.mLastRecipe = recipe;
         assertTrue(reactor.checkRecipe(null));
-        assertEquals(131072, reactor.mEUt);
-        assertEquals(8, reactor.mMaxProgresstime);
+        assertEquals(32768, reactor.mEUt);
+        assertEquals(32, reactor.mMaxProgresstime);
         assertEquals(16, reactor.fluids.get(0).amount);
         assertEquals(32, reactor.fluids.get(1).amount);
     }

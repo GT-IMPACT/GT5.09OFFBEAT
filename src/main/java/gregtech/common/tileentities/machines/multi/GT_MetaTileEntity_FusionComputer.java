@@ -276,7 +276,8 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
         int multiplier = overclock(startEnergy);
         int step = tierOverclock() >= 8 ? 4 : 2;
-        while (multiplier > 1 && ((long) eut * multiplier > energyInput || multiplier > duration)) {
+        // Leave charging headroom when overclocking; an unclocked recipe may use the full input.
+        while (multiplier > 1 && ((long) eut * multiplier >= energyInput || multiplier > duration)) {
             multiplier /= step;
         }
         return multiplier;
