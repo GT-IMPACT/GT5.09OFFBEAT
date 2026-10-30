@@ -106,7 +106,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
 
             private Predicate<ItemStack> missingHatches(T machine) {
                 return stack -> required.entrySet().stream().anyMatch(entry -> entry.getKey().count(machine)
-                        < entry.getValue() && entry.getKey().matches(GTStructureUtility.getMetaTileEntity(stack)));
+                        < entry.getValue() && entry.getKey().matchesForPlacement(GTStructureUtility.getMetaTileEntity(stack)));
             }
 
             private boolean needsHatches(T machine) {
@@ -128,7 +128,9 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
             @Override
             public List<String> getDescription(T machine) {
                 List<String> descriptions = new ArrayList<>();
-                for (IHatchElement element : required.keySet()) descriptions.add(element.getDescription());
+                for (IHatchElement element : required.keySet()) {
+                    descriptions.add(element.getDescription());
+                }
                 List<String> casingDescription = casing.getDescription(machine);
                 if (casingDescription != null) descriptions.addAll(casingDescription);
                 return descriptions;

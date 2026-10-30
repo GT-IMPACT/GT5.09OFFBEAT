@@ -11,6 +11,14 @@ public interface IHatchElement {
 
     boolean matches(IMetaTileEntity tile);
 
+    /**
+     * Candidates that can fulfill this category's minimum during automatic construction.
+     * Override when additional legacy hatch variants are accepted but do not contribute to count().
+     */
+    default boolean matchesForPlacement(IMetaTileEntity tile) {
+        return matches(tile);
+    }
+
     int count(GT_MetaTileEntity_MultiBlockBase machine);
 
     boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int textureIndex);
