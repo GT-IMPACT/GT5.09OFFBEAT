@@ -31,15 +31,10 @@ buildConfig {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13.2")
-    // AE stack interfaces reference Minecraft client types even in server-side storage tests.
-    testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.3") {
-        isTransitive = false
-    }
-    testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
+
     // impact
-    api("space.impact:ImpactAPI:0.0.4:dev")
-    api("space.impact:VirtualWorld:2.0.4:dev")
+    api("space.impact:ImpactStructures:1.0.5:dev")
+    implementation("space.impact:VirtualWorld:2.0.4:dev")
 
     compileOnlyApi("space.impact:impact-core:1.1.0.25-1-gb6211b5.dirty:dev") { isTransitive = false }
     runtimeOnlyNonPublishable("space.impact:VisualProspecting:1.3.2")
@@ -72,6 +67,10 @@ dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:DuraDisplay:1.4.6:dev")
     runtimeOnlyNonPublishable(modUtils.deobfuscate("curse.maven:journeymap-32274:4500659"))
 
+    testImplementation("junit:junit:4.13.2")
+    // AE stack interfaces reference Minecraft client types even in server-side storage tests.
+    testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.3") { isTransitive = false }
+    testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
 }
 
 tasks.test {

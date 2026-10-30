@@ -8,7 +8,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.GT_Mod;
 import gregtech.api.util.LightingHelper;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IconFlipped;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -18,9 +17,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import space.impact.api.multiblocks.alignment.IAlignmentProvider;
-import space.impact.api.multiblocks.alignment.enumerable.ExtendedFacing;
-import space.impact.api.multiblocks.alignment.enumerable.Rotation;
+import space.impact.api.alignment.IAlignmentProvider;
+import space.impact.api.alignment.enumerable.ExtendedFacing;
+import space.impact.api.alignment.enumerable.Rotation;
 
 import static gregtech.api.util.LightingHelper.MAX_BRIGHTNESS;
 

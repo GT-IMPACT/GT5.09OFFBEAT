@@ -69,8 +69,8 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
-import space.impact.api.multiblocks.alignment.IAlignment;
-import space.impact.api.multiblocks.alignment.IAlignmentProvider;
+import space.impact.api.alignment.IAlignment;
+import space.impact.api.alignment.IAlignmentProvider;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
