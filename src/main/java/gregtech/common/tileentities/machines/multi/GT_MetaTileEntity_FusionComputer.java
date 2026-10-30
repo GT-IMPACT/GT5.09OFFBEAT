@@ -1,35 +1,54 @@
 package gregtech.common.tileentities.machines.multi;
 
+import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.api.structure.StructureUtility.transpose;
+
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Map;
+
 import gregtech.GT_Mod;
-import gregtech.api.enums.Dyes;
+import gregtech.api.enums.Casings;
 import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_Container_MultiMachine;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_ItemStack;
-
 import gregtech.api.render.TextureFactory;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.*;
 import gregtech.common.gui.GT_GUIContainer_FusionReactor;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 
-import java.util.ArrayList;
+public abstract class GT_MetaTileEntity_FusionComputer
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_FusionComputer>
+        implements ISurvivalConstructable {
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
-
-public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity_MultiBlockBase {
+    private static final String STRUCTURE_PIECE = "main";
+    // The controller faces the ring center, five blocks ahead, as in the original structure.
+    private static final int OFFSET_X = 7;
+    private static final int OFFSET_Y = 1;
+    private static final int OFFSET_Z = 12;
+    private IStructureDefinition<GT_MetaTileEntity_FusionComputer> structureDefinition;
+    private final Map<FusionHatch, StructureRequirements> requirements = new EnumMap<>(FusionHatch.class);
 
     public GT_Recipe mLastRecipe;
     public int mEUStore;
@@ -65,178 +84,239 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
         return aSide != getBaseMetaTileEntity().getFrontFacing();
     }
-    
+
     static {
-        Textures.BlockIcons.setCasingTextureForId(52,
+        Textures.BlockIcons.setCasingTextureForId(Casings.FUSION_GLASS_YELLOW.getTextureId(),
                 TextureFactory.of(
                         TextureFactory.of(MACHINE_CASING_FUSION_GLASS_YELLOW),
                         TextureFactory.builder().addIcon(MACHINE_CASING_FUSION_GLASS_YELLOW_GLOW).glow().build()
                 ));
     }
 
-    @Override
-    public void saveNBTData(NBTTagCompound aNBT) {
-        super.saveNBTData(aNBT);
+    public abstract ICasing getCasingType();
+
+    public abstract ICasing getFusionCoilType();
+
+    // Keep the block/meta accessors for integrations using the previous API.
+    public Block getCasing() {
+        return getCasingType().getBlock();
     }
 
-    @Override
-    public void loadNBTData(NBTTagCompound aNBT) {
-        super.loadNBTData(aNBT);
+    public int getCasingMeta() {
+        return getCasingType().getMetadata();
     }
 
-    @Override
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        int xCenter = getBaseMetaTileEntity().getXCoord() + ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetX * 5;
-        int yCenter = getBaseMetaTileEntity().getYCoord();
-        int zCenter = getBaseMetaTileEntity().getZCoord() + ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetZ * 5;
-        if (((isAdvancedMachineCasing(xCenter + 5, yCenter, zCenter)) || (xCenter + 5 == getBaseMetaTileEntity().getXCoord()))
-                && ((isAdvancedMachineCasing(xCenter - 5, yCenter, zCenter)) || (xCenter - 5 == getBaseMetaTileEntity().getXCoord()))
-                && ((isAdvancedMachineCasing(xCenter, yCenter, zCenter + 5)) || (zCenter + 5 == getBaseMetaTileEntity().getZCoord()))
-                && ((isAdvancedMachineCasing(xCenter, yCenter, zCenter - 5)) || (zCenter - 5 == getBaseMetaTileEntity().getZCoord())) && (checkCoils(xCenter, yCenter, zCenter))
-                && (checkHulls(xCenter, yCenter, zCenter)) && (checkUpperOrLowerHulls(xCenter, yCenter + 1, zCenter)) && (checkUpperOrLowerHulls(xCenter, yCenter - 1, zCenter))
-                && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter + 3, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter - 3, aBaseMetaTileEntity))
-                && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter + 5, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter - 5, aBaseMetaTileEntity))
-                && (addIfEnergyInjector(xCenter - 4, yCenter, zCenter + 3, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter - 4, yCenter, zCenter - 3, aBaseMetaTileEntity))
-                && (addIfEnergyInjector(xCenter - 4, yCenter, zCenter + 5, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter - 4, yCenter, zCenter - 5, aBaseMetaTileEntity))
-                && (addIfEnergyInjector(xCenter + 3, yCenter, zCenter + 4, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter - 3, yCenter, zCenter + 4, aBaseMetaTileEntity))
-                && (addIfEnergyInjector(xCenter + 5, yCenter, zCenter + 4, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter - 5, yCenter, zCenter + 4, aBaseMetaTileEntity))
-                && (addIfEnergyInjector(xCenter + 3, yCenter, zCenter - 4, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter - 3, yCenter, zCenter - 4, aBaseMetaTileEntity))
-                && (addIfEnergyInjector(xCenter + 5, yCenter, zCenter - 4, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter - 5, yCenter, zCenter - 4, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter + 1, yCenter, zCenter - 5, aBaseMetaTileEntity)) && (addIfExtractor(xCenter + 1, yCenter, zCenter + 5, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter - 1, yCenter, zCenter - 5, aBaseMetaTileEntity)) && (addIfExtractor(xCenter - 1, yCenter, zCenter + 5, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter + 1, yCenter, zCenter - 7, aBaseMetaTileEntity)) && (addIfExtractor(xCenter + 1, yCenter, zCenter + 7, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter - 1, yCenter, zCenter - 7, aBaseMetaTileEntity)) && (addIfExtractor(xCenter - 1, yCenter, zCenter + 7, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter + 5, yCenter, zCenter - 1, aBaseMetaTileEntity)) && (addIfExtractor(xCenter + 5, yCenter, zCenter + 1, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter - 5, yCenter, zCenter - 1, aBaseMetaTileEntity)) && (addIfExtractor(xCenter - 5, yCenter, zCenter + 1, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter + 7, yCenter, zCenter - 1, aBaseMetaTileEntity)) && (addIfExtractor(xCenter + 7, yCenter, zCenter + 1, aBaseMetaTileEntity))
-                && (addIfExtractor(xCenter - 7, yCenter, zCenter - 1, aBaseMetaTileEntity)) && (addIfExtractor(xCenter - 7, yCenter, zCenter + 1, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter + 1, yCenter + 1, zCenter - 6, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 1, yCenter + 1, zCenter + 6, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter - 1, yCenter + 1, zCenter - 6, aBaseMetaTileEntity)) && (addIfInjector(xCenter - 1, yCenter + 1, zCenter + 6, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter - 6, yCenter + 1, zCenter + 1, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 6, yCenter + 1, zCenter + 1, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter - 6, yCenter + 1, zCenter - 1, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 6, yCenter + 1, zCenter - 1, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter + 1, yCenter - 1, zCenter - 6, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 1, yCenter - 1, zCenter + 6, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter - 1, yCenter - 1, zCenter - 6, aBaseMetaTileEntity)) && (addIfInjector(xCenter - 1, yCenter - 1, zCenter + 6, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter - 6, yCenter - 1, zCenter + 1, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 6, yCenter - 1, zCenter + 1, aBaseMetaTileEntity))
-                && (addIfInjector(xCenter - 6, yCenter - 1, zCenter - 1, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 6, yCenter - 1, zCenter - 1, aBaseMetaTileEntity))
-                && (this.mEnergyHatches.size() >= 1) && (this.mOutputHatches.size() >= 1) && (this.mInputHatches.size() >= 2)) {
-            int mEnergyHatches_sS = this.mEnergyHatches.size();
-            for (int i = 0; i < mEnergyHatches_sS; i++) {
-                if (this.mEnergyHatches.get(i).mTier < tier())
-                    return false;
-            }
-            int mOutputHatches_sS = this.mOutputHatches.size();
-            for (int i = 0; i < mOutputHatches_sS; i++) {
-                if (this.mOutputHatches.get(i).mTier < tier())
-                    return false;
-            }
-            int mInputHatches_sS = this.mInputHatches.size();
-            for (int i = 0; i < mInputHatches_sS; i++) {
-                if (this.mInputHatches.get(i).mTier < tier())
-                    return false;
-            }
-            mWrench = true;
-            mScrewdriver = true;
-            mSoftHammer = true;
-            mHardHammer = true;
-            mSolderingTool = true;
-            mCrowbar = true;
-            return true;
+    public Block getFusionCoil() {
+        return getFusionCoilType().getBlock();
+    }
+
+    public int getFusionCoilMeta() {
+        return getFusionCoilType().getMetadata();
+    }
+
+    private enum FusionHatch {
+        ENERGY(HatchElement.Energy, GT_MetaTileEntity_Hatch_Energy.class, "energy", 1, HintColor.YELLOW),
+        INPUT(HatchElement.Input, GT_MetaTileEntity_Hatch_Input.class, "input_hatch", 2, HintColor.BLUE),
+        OUTPUT(HatchElement.Output, GT_MetaTileEntity_Hatch_Output.class, "output_hatch", 1, HintColor.ORANGE);
+
+        final HatchElement category;
+        final Class<? extends GT_MetaTileEntity_Hatch> type;
+        final String translation;
+        final int minimum;
+        final HintColor hintColor;
+
+        FusionHatch(HatchElement category, Class<? extends GT_MetaTileEntity_Hatch> type,
+                    String translation, int minimum, HintColor hintColor) {
+            this.category = category;
+            this.type = type;
+            this.translation = translation;
+            this.minimum = minimum;
+            this.hintColor = hintColor;
         }
-        return false;
     }
 
-    private boolean checkTier(byte tier, ArrayList<GT_MetaTileEntity_Hatch> list) {
-        if (list != null) {
-            int list_sS = list.size();
-            for (int i = 0; i < list_sS; i++) {
-                if (list.get(i).mTier < tier) {
-                    return false;
+    private StructureRequirements requirements(FusionHatch kind) {
+        return requirements.computeIfAbsent(kind, key -> {
+            int minimumTier = tier();
+            IHatchElement hatch = new IHatchElement() {
+                @Override
+                public boolean matches(IMetaTileEntity tile) {
+                    // Retain optional buses and IMPACT hatches accepted by the legacy structure.
+                    return key.category.matches(tile) && (!key.type.isInstance(tile)
+                            || ((GT_MetaTileEntity_Hatch) tile).mTier >= minimumTier);
                 }
+
+                @Override
+                public boolean matchesForPlacement(IMetaTileEntity tile) {
+                    return key.type.isInstance(tile) && ((GT_MetaTileEntity_Hatch) tile).mTier >= minimumTier;
+                }
+
+                @Override
+                public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+                    // Optional legacy variants do not replace the mandatory standard hatches.
+                    switch (key) {
+                        case ENERGY:
+                            return machine.mEnergyHatches.size();
+                        case INPUT:
+                            return machine.mInputHatches.size();
+                        case OUTPUT:
+                            return machine.mOutputHatches.size();
+                        default:
+                            throw new AssertionError(key);
+                    }
+                }
+
+                @Override
+                public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+                    return key.category.add(machine, tile, Casings.FUSION_GLASS.getTextureId());
+                }
+
+                @Override
+                public String getDescription() {
+                    return StatCollector.translateToLocal("gt.tooltip.hatch." + key.translation);
+                }
+            };
+            return StructureRequirements.builder(getCasingType(), 0).atLeast(hatch, key.minimum).build();
+        });
+    }
+
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        if (!checkPiece(STRUCTURE_PIECE, OFFSET_X, OFFSET_Y, OFFSET_Z)) {
+            return false;
+        }
+        for (FusionHatch kind : FusionHatch.values()) {
+            if (!requirements(kind).isSatisfied(this, 0)) {
+                return false;
             }
         }
+        mWrench = true;
+        mScrewdriver = true;
+        mSoftHammer = true;
+        mHardHammer = true;
+        mSolderingTool = true;
+        mCrowbar = true;
         return true;
     }
 
-    private boolean checkCoils(int aX, int aY, int aZ) {
-        return (isFusionCoil(aX + 6, aY, aZ - 1)) && (isFusionCoil(aX + 6, aY, aZ)) && (isFusionCoil(aX + 6, aY, aZ + 1)) && (isFusionCoil(aX + 5, aY, aZ - 3)) && (isFusionCoil(aX + 5, aY, aZ - 2))
-                && (isFusionCoil(aX + 5, aY, aZ + 2)) && (isFusionCoil(aX + 5, aY, aZ + 3)) && (isFusionCoil(aX + 4, aY, aZ - 4)) && (isFusionCoil(aX + 4, aY, aZ + 4))
-                && (isFusionCoil(aX + 3, aY, aZ - 5)) && (isFusionCoil(aX + 3, aY, aZ + 5)) && (isFusionCoil(aX + 2, aY, aZ - 5)) && (isFusionCoil(aX + 2, aY, aZ + 5))
-                && (isFusionCoil(aX + 1, aY, aZ - 6)) && (isFusionCoil(aX + 1, aY, aZ + 6)) && (isFusionCoil(aX, aY, aZ - 6)) && (isFusionCoil(aX, aY, aZ + 6)) && (isFusionCoil(aX - 1, aY, aZ - 6))
-                && (isFusionCoil(aX - 1, aY, aZ + 6)) && (isFusionCoil(aX - 2, aY, aZ - 5)) && (isFusionCoil(aX - 2, aY, aZ + 5)) && (isFusionCoil(aX - 3, aY, aZ - 5))
-                && (isFusionCoil(aX - 3, aY, aZ + 5)) && (isFusionCoil(aX - 4, aY, aZ - 4)) && (isFusionCoil(aX - 4, aY, aZ + 4)) && (isFusionCoil(aX - 5, aY, aZ - 3))
-                && (isFusionCoil(aX - 5, aY, aZ - 2)) && (isFusionCoil(aX - 5, aY, aZ + 2)) && (isFusionCoil(aX - 5, aY, aZ + 3)) && (isFusionCoil(aX - 6, aY, aZ - 1))
-                && (isFusionCoil(aX - 6, aY, aZ)) && (isFusionCoil(aX - 6, aY, aZ + 1));
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, OFFSET_X, OFFSET_Y, OFFSET_Z);
     }
-
-    private boolean checkUpperOrLowerHulls(int aX, int aY, int aZ) {
-        return (isAdvancedMachineCasing(aX + 6, aY, aZ)) && (isAdvancedMachineCasing(aX + 5, aY, aZ - 3)) && (isAdvancedMachineCasing(aX + 5, aY, aZ - 2))
-                && (isAdvancedMachineCasing(aX + 5, aY, aZ + 2)) && (isAdvancedMachineCasing(aX + 5, aY, aZ + 3)) && (isAdvancedMachineCasing(aX + 4, aY, aZ - 4))
-                && (isAdvancedMachineCasing(aX + 4, aY, aZ + 4)) && (isAdvancedMachineCasing(aX + 3, aY, aZ - 5)) && (isAdvancedMachineCasing(aX + 3, aY, aZ + 5))
-                && (isAdvancedMachineCasing(aX + 2, aY, aZ - 5)) && (isAdvancedMachineCasing(aX + 2, aY, aZ + 5)) && (isAdvancedMachineCasing(aX, aY, aZ - 6))
-                && (isAdvancedMachineCasing(aX, aY, aZ + 6)) && (isAdvancedMachineCasing(aX - 2, aY, aZ - 5)) && (isAdvancedMachineCasing(aX - 2, aY, aZ + 5))
-                && (isAdvancedMachineCasing(aX - 3, aY, aZ - 5)) && (isAdvancedMachineCasing(aX - 3, aY, aZ + 5)) && (isAdvancedMachineCasing(aX - 4, aY, aZ - 4))
-                && (isAdvancedMachineCasing(aX - 4, aY, aZ + 4)) && (isAdvancedMachineCasing(aX - 5, aY, aZ - 3)) && (isAdvancedMachineCasing(aX - 5, aY, aZ - 2))
-                && (isAdvancedMachineCasing(aX - 5, aY, aZ + 2)) && (isAdvancedMachineCasing(aX - 5, aY, aZ + 3)) && (isAdvancedMachineCasing(aX - 6, aY, aZ));
-    }
-
-    private boolean checkHulls(int aX, int aY, int aZ) {
-        return (isAdvancedMachineCasing(aX + 6, aY, aZ - 3)) && (isAdvancedMachineCasing(aX + 6, aY, aZ - 2)) && (isAdvancedMachineCasing(aX + 6, aY, aZ + 2))
-                && (isAdvancedMachineCasing(aX + 6, aY, aZ + 3)) && (isAdvancedMachineCasing(aX + 3, aY, aZ - 6)) && (isAdvancedMachineCasing(aX + 3, aY, aZ + 6))
-                && (isAdvancedMachineCasing(aX + 2, aY, aZ - 6)) && (isAdvancedMachineCasing(aX + 2, aY, aZ + 6)) && (isAdvancedMachineCasing(aX - 2, aY, aZ - 6))
-                && (isAdvancedMachineCasing(aX - 2, aY, aZ + 6)) && (isAdvancedMachineCasing(aX - 3, aY, aZ - 6)) && (isAdvancedMachineCasing(aX - 3, aY, aZ + 6))
-                && (isAdvancedMachineCasing(aX - 7, aY, aZ)) && (isAdvancedMachineCasing(aX + 7, aY, aZ)) && (isAdvancedMachineCasing(aX, aY, aZ - 7)) && (isAdvancedMachineCasing(aX, aY, aZ + 7))
-                && (isAdvancedMachineCasing(aX - 6, aY, aZ - 3)) && (isAdvancedMachineCasing(aX - 6, aY, aZ - 2)) && (isAdvancedMachineCasing(aX - 6, aY, aZ + 2))
-                && (isAdvancedMachineCasing(aX - 6, aY, aZ + 3)) && (isAdvancedMachineCasing(aX - 4, aY, aZ - 2)) && (isAdvancedMachineCasing(aX - 4, aY, aZ + 2))
-                && (isAdvancedMachineCasing(aX + 4, aY, aZ - 2)) && (isAdvancedMachineCasing(aX + 4, aY, aZ + 2)) && (isAdvancedMachineCasing(aX - 2, aY, aZ - 4))
-                && (isAdvancedMachineCasing(aX - 2, aY, aZ + 4)) && (isAdvancedMachineCasing(aX + 2, aY, aZ - 4)) && (isAdvancedMachineCasing(aX + 2, aY, aZ + 4));
-    }
-
-    private boolean addIfEnergyInjector(int aX, int aY, int aZ, IGregTechTileEntity aBaseMetaTileEntity) {
-        if (addEnergyInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntity(aX, aY, aZ), 53)) {
-            return true;
-        }
-        return isAdvancedMachineCasing(aX, aY, aZ);
-    }
-
-    private boolean addIfInjector(int aX, int aY, int aZ, IGregTechTileEntity aTileEntity) {
-        if (addInputToMachineList(aTileEntity.getIGregTechTileEntity(aX, aY, aZ), 53)) {
-            return true;
-        }
-        return isAdvancedMachineCasing(aX, aY, aZ);
-    }
-
-    private boolean addIfExtractor(int aX, int aY, int aZ, IGregTechTileEntity aTileEntity) {
-        if (addOutputToMachineList(aTileEntity.getIGregTechTileEntity(aX, aY, aZ), 53)) {
-            return true;
-        }
-        return isAdvancedMachineCasing(aX, aY, aZ);
-    }
-
-    private boolean isAdvancedMachineCasing(int aX, int aY, int aZ) {
-        return (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getCasing()) && (getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getCasingMeta());
-    }
-
-    public abstract Block getCasing();
-
-    public abstract int getCasingMeta();
-
-    private boolean isFusionCoil(int aX, int aY, int aZ) {
-        return (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getFusionCoil() && (getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getFusionCoilMeta()));
-    }
-
-    public abstract Block getFusionCoil();
-
-    public abstract int getFusionCoilMeta();
 
     @Override
-    public abstract String[] getDescription();
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, OFFSET_X, OFFSET_Y, OFFSET_Z, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_FusionComputer> getStructureDefinition() {
+        if (structureDefinition == null) {
+            // Spaces are deliberately unconstrained: the old reactor did not require air outside its ring.
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_FusionComputer>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {
+                                    "               ",
+                                    "      ICI      ",
+                                    "    CC   CC    ",
+                                    "   C       C   ",
+                                    "  C         C  ",
+                                    "  C         C  ",
+                                    " I           I ",
+                                    " C           C ",
+                                    " I           I ",
+                                    "  C         C  ",
+                                    "  C         C  ",
+                                    "   C       C   ",
+                                    "    CC   CC    ",
+                                    "      ICI      ",
+                                    "               "
+                            },
+                            {
+                                    "      OCO      ",
+                                    "    CCKKKCC    ",
+                                    "   EKKOCOKKE   ",
+                                    "  EKEC   CEKE  ",
+                                    " CKE       EKC ",
+                                    " CKC       CKC ",
+                                    "OKO         OKO",
+                                    "CKC         CKC",
+                                    "OKO         OKO",
+                                    " CKC       CKC ",
+                                    " CKE       EKC ",
+                                    "  EKEC   CEKE  ",
+                                    "   EKKO~OKKE   ",
+                                    "    CCKKKCC    ",
+                                    "      OCO      "
+                            },
+                            {
+                                    "               ",
+                                    "      ICI      ",
+                                    "    CC   CC    ",
+                                    "   C       C   ",
+                                    "  C         C  ",
+                                    "  C         C  ",
+                                    " I           I ",
+                                    " C           C ",
+                                    " I           I ",
+                                    "  C         C  ",
+                                    "  C         C  ",
+                                    "   C       C   ",
+                                    "    CC   CC    ",
+                                    "      ICI      ",
+                                    "               "
+                            }
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', getCasingType().asElement())
+                    .addElement('K', getFusionCoilType().asElement())
+                    .addElement('E', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_FusionComputer.class)
+                            .hint(FusionHatch.ENERGY.hintColor)
+                            .buildAndChain(requirements(FusionHatch.ENERGY)))
+                    .addElement('I', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_FusionComputer.class)
+                            .hint(FusionHatch.INPUT.hintColor)
+                            .buildAndChain(requirements(FusionHatch.INPUT)))
+                    .addElement('O', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_FusionComputer.class)
+                            .hint(FusionHatch.OUTPUT.hintColor)
+                            .buildAndChain(requirements(FusionHatch.OUTPUT)))
+                    .build();
+        }
+        return structureDefinition;
+    }
+
+    protected MultiblockTooltipBuilder fusionTooltip(String description, String energyInfo) {
+        int requiredHatches = 0;
+        for (FusionHatch kind : FusionHatch.values()) {
+            for (int minimum : requirements(kind).getHatches().values()) {
+                requiredHatches += minimum;
+            }
+        }
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Fusion Reactor")
+                .addInfo(description)
+                .addInfo(energyInfo)
+                .beginStructureBlock(15, 3, 15, false)
+                .addController("Inner edge of the ring, facing the center, five blocks away")
+                .addCasingInfoRange(getCasingType(), 79, 127 - requiredHatches, false)
+                .addOtherStructurePart(getFusionCoilType(), "Middle layer of the ring", 32)
+                .addRequirements(requirements(FusionHatch.ENERGY), "16 diagonal positions in the middle layer",
+                        FusionHatch.ENERGY.hintColor)
+                .addRequirements(requirements(FusionHatch.INPUT), "16 cardinal positions in the top and bottom layers",
+                        FusionHatch.INPUT.hintColor)
+                .addRequirements(requirements(FusionHatch.OUTPUT), "16 cardinal positions in the middle layer",
+                        FusionHatch.OUTPUT.hintColor)
+                .addStructureInfo("Required hatches must be " + GT_Values.VN[tier()] + " or better.")
+                .addStructureInfo("Buses and special IMPACT hatches do not replace the required standard hatches; no maintenance is needed.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
+    }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) return new ITexture[]{TextureFactory.of(MACHINE_CASING_FUSION_GLASS), getTextureOverlay()};
-        if (aActive) return new ITexture[]{Textures.BlockIcons.getCasingTextureForId(52)};
+        if (aActive) return new ITexture[]{Casings.FUSION_GLASS_YELLOW.getTexture()};
         return new ITexture[]{TextureFactory.of(MACHINE_CASING_FUSION_GLASS)};
     }
-    
+
     /**
      * @return The list of textures overlay
      */
@@ -301,7 +381,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                 }
             }
         }
-        
+
         if (tFluidList.size() > 1) {
             FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
             GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFusionRecipes.findRecipe(this.getBaseMetaTileEntity(), this.mLastRecipe, false, GT_Values.V[15], tFluids);
@@ -347,17 +427,17 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
     public boolean turnCasingActive(boolean status) {
         if (this.mEnergyHatches != null) {
             for (GT_MetaTileEntity_Hatch_Energy hatch : this.mEnergyHatches) {
-                hatch.updateTexture(status ? 52 : 53);
+                hatch.updateTexture(status ? Casings.FUSION_GLASS_YELLOW.getTextureId() : Casings.FUSION_GLASS.getTextureId());
             }
         }
         if (this.mOutputHatches != null) {
             for (GT_MetaTileEntity_Hatch_Output hatch : this.mOutputHatches) {
-                hatch.updateTexture(status ? 52 : 53);
+                hatch.updateTexture(status ? Casings.FUSION_GLASS_YELLOW.getTextureId() : Casings.FUSION_GLASS.getTextureId());
             }
         }
         if (this.mInputHatches != null) {
             for (GT_MetaTileEntity_Hatch_Input hatch : this.mInputHatches) {
-                hatch.updateTexture(status ? 52 : 53);
+                hatch.updateTexture(status ? Casings.FUSION_GLASS_YELLOW.getTextureId() : Casings.FUSION_GLASS.getTextureId());
             }
         }
         return true;
@@ -368,9 +448,12 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
         if (aBaseMetaTileEntity.isServerSide()) {
             if (mEfficiency < 0)
                 mEfficiency = 0;
-            if (mRunningOnLoad && checkMachine(aBaseMetaTileEntity, mInventory[1])) {
-                this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
-                checkRecipe(mInventory[1]);
+            if (mRunningOnLoad) {
+                setupMachine(aBaseMetaTileEntity, mInventory[1]);
+                if (mMachine) {
+                    this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
+                    checkRecipe(mInventory[1]);
+                }
             }
             if (--mUpdate == 0 || --mStartUpCheck == 0) {
                 setupMachine(aBaseMetaTileEntity, mInventory[1]);

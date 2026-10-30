@@ -166,6 +166,7 @@ public class GT_StructureIntegrationTest {
         checkCasings();
         checkTooltips();
         checkSharedRequirements();
+        GT_FusionStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {
@@ -873,7 +874,7 @@ public class GT_StructureIntegrationTest {
         @Override public void playSoundEffect(double x, double y, double z, String sound, float volume, float pitch) {}
     }
 
-    private static class TestPlayer extends EntityPlayer {
+    static class TestPlayer extends EntityPlayer {
         final List<IChatComponent> messages = new ArrayList<>();
         TestPlayer(World world) { super(world, new GameProfile(UUID.randomUUID(), "Builder")); }
         @Override public void addChatMessage(IChatComponent message) { messages.add(message); }
@@ -892,13 +893,16 @@ public class GT_StructureIntegrationTest {
         @Override protected boolean isStructureTooltipRequested() { return secondaryTooltip; }
         @Override public boolean onItemUse(ItemStack stack, EntityPlayer actor, World world, int x, int y, int z,
                                            int side, float hitX, float hitY, float hitZ) {
-            ((TestWorld) world).putTile(x, y, z, new TestTile(world, hatch(stack.getItemDamage() - 32000), ForgeDirection.NORTH));
+            int id = stack.getItemDamage();
+            MetaTileEntity hatch = id < 32100 ? hatch(id - 32000)
+                    : (MetaTileEntity) GregTech_API.METATILEENTITIES[id].newMetaEntity(null);
+            ((TestWorld) world).putTile(x, y, z, new TestTile(world, hatch, ForgeDirection.NORTH));
             stack.stackSize--;
             return true;
         }
     }
 
-    private static class Source implements IItemSource {
+    static class Source implements IItemSource {
         final List<ItemStack> stacks;
         int consumed;
         int queries;
@@ -920,11 +924,13 @@ public class GT_StructureIntegrationTest {
         }
     }
 
-    private static class HintProxy extends CommonProxy {
+    static class HintProxy extends CommonProxy {
         int hints;
         int casingHints;
         int errors;
         final Set<String> errorPositions = new HashSet<>();
+        final Map<String, Block> hintBlocks = new HashMap<>();
+        final Map<String, Integer> hintMetadata = new HashMap<>();
         Block lastBlock;
         int lastMetadata;
         EntityPlayer player;
@@ -937,6 +943,9 @@ public class GT_StructureIntegrationTest {
         }
         @Override public void hintParticle(World world, int x, int y, int z, Block block, int meta) {
             hints++;
+            String position = TestWorld.key(x, y, z);
+            hintBlocks.put(position, block);
+            hintMetadata.put(position, meta);
             lastBlock = block;
             lastMetadata = meta;
             if (block == GregTech_API.sBlockCasings2 && meta == 1) casingHints++;

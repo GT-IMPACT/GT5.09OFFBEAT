@@ -1,13 +1,14 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
-import net.minecraft.block.Block;
 
 import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_FUSION3;
 import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_FUSION3_GLOW;
@@ -38,29 +39,18 @@ public class GT_MetaTileEntity_FusionComputer5 extends GT_MetaTileEntity_FusionC
     }
 
     @Override
-    public int getCasingMeta() {
-        return 10;
+    public ICasing getCasingType() {
+        return Casings.FUSION_MK_IV;
     }
 
     @Override
-    public Block getFusionCoil() {
-        return GregTech_API.sBlockCasings7;
+    public ICasing getFusionCoilType() {
+        return Casings.SUPERCONDUCTOR_FUSION_COIL_MK_II;
     }
 
     @Override
-    public int getFusionCoilMeta() {
-        return 5;
-    }
-
-    public String[] getDescription() {
-        return new String[]{
-                "A WHITE DWARF DOWN ON YOUR BASE", 
-                "Fusion Machine Casings MK IV around Superconductor Fusion Coil Blocks MK II", 
-                "2-16 Input Hatches", 
-                "1-16 Output Hatches", 
-                "1-16 Energy Hatches", 
-                "All Hatches must be UEV or better", 
-                "131072EU/t and 132mio EU Cap per Energy Hatch"};
+    protected MultiblockTooltipBuilder createTooltip() {
+        return fusionTooltip("A WHITE DWARF DOWN ON YOUR BASE", "131072EU/t and 132mio EU Cap per Energy Hatch");
     }
 
     @Override
@@ -71,11 +61,6 @@ public class GT_MetaTileEntity_FusionComputer5 extends GT_MetaTileEntity_FusionC
     @Override
     protected long getEnergyInputPerHatch() {
         return 131072L;
-    }
-
-    @Override
-    public Block getCasing() {
-        return GregTech_API.sBlockCasings5;
     }
 
     @Override

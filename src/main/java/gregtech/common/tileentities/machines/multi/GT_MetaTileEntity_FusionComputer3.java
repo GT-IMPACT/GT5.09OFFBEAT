@@ -1,13 +1,13 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
-import net.minecraft.block.Block;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
@@ -37,39 +37,23 @@ public class GT_MetaTileEntity_FusionComputer3 extends GT_MetaTileEntity_FusionC
     }
 
     @Override
-    public int getCasingMeta() {
-        return 8;
+    public ICasing getCasingType() {
+        return Casings.FUSION_MK_II;
     }
 
     @Override
-    public Block getFusionCoil() {
-        return GregTech_API.sBlockCasings4;
+    public ICasing getFusionCoilType() {
+        return Casings.FUSION_COIL;
     }
 
     @Override
-    public int getFusionCoilMeta() {
-        return 7;
-    }
-
-    public String[] getDescription() {
-        return new String[]{
-        		"A SUN DOWN ON EARTH", 
-        		"Fusion Machine Casings MK II around Fusion Coil Blocks", 
-        		"2-16 Input Hatches", 
-        		"1-16 Output Hatches", 
-        		"1-16 Energy Hatches", 
-        		"All Hatches must be UV or better", 
-        		"8192EU/t and 40mio EU Cap per Energy Hatch"};
+    protected MultiblockTooltipBuilder createTooltip() {
+        return fusionTooltip("A SUN DOWN ON EARTH", "8192EU/t and 40mio EU Cap per Energy Hatch");
     }
 
     @Override
     public int tierOverclock() {
         return 4;
-    }
-
-    @Override
-    public Block getCasing() {
-        return GregTech_API.sBlockCasings4;
     }
 
     @Override

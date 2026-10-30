@@ -1,13 +1,13 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
-import net.minecraft.block.Block;
 
 import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_FUSION1;
 import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_FUSION1_GLOW;
@@ -38,28 +38,18 @@ public class GT_MetaTileEntity_FusionComputer1 extends GT_MetaTileEntity_FusionC
     }
 
     @Override
-    public int getCasingMeta() {
-        return 6;
+    public ICasing getCasingType() {
+        return Casings.MACHINE_LUV;
     }
 
     @Override
-    public Block getFusionCoil() {
-        return GregTech_API.sBlockCasings1;
+    public ICasing getFusionCoilType() {
+        return Casings.SUPERCONDUCTING_COIL;
     }
 
     @Override
-    public int getFusionCoilMeta() {
-        return 15;
-    }
-
-    public String[] getDescription() {
-        return new String[]{
-        		"It's over 9000!!!", 
-        		"LuV Machine Casings around Superconducting Coil Blocks", 
-        		"2-16 Input Hatches", "1-16 Output Hatches", 
-        		"1-16 Energy Hatches", 
-        		"All Hatches must be LuV or better", 
-        		"2048EU/t and 10mio EU Cap per Energy Hatch"};
+    protected MultiblockTooltipBuilder createTooltip() {
+        return fusionTooltip("It's over 9000!!!", "2048EU/t and 10mio EU Cap per Energy Hatch");
     }
     
     @Override
@@ -72,11 +62,6 @@ public class GT_MetaTileEntity_FusionComputer1 extends GT_MetaTileEntity_FusionC
     @Override
     public int tierOverclock() {
         return 1;
-    }
-
-    @Override
-    public Block getCasing() {
-        return GregTech_API.sBlockCasings1;
     }
 
     @Override
