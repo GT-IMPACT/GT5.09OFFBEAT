@@ -218,13 +218,27 @@ public class MultiblockTooltipBuilder {
      * Renders the same minimums used by machine validation and survival hatch selection.
      */
     public MultiblockTooltipBuilder addRequirements(StructureRequirements requirements, String location) {
+        return requirements(requirements, location, null);
+    }
+
+    private MultiblockTooltipBuilder requirements(StructureRequirements requirements, String location, HintColor color) {
         int start = structure.size();
-        addCasingInfoMin(requirements.getCasing(), requirements.getMinimumCasings(), false);
+        if (requirements.getMinimumCasings() > 0) {
+            addCasingInfoMin(requirements.getCasing(), requirements.getMinimumCasings(), false);
+        }
         for (Map.Entry<IHatchElement, Integer> entry : requirements.getHatches().entrySet()) {
             addHatch(entry.getKey(), entry.getValue(), location);
+            if (color != null) {
+                coloredHint(entry.getKey().getDescription(), color);
+            }
         }
         hints.addAll(structure.subList(start, structure.size()));
         return this;
+    }
+
+    /** Adds the hatch group's hologram color to the structure and construction legend. */
+    public MultiblockTooltipBuilder addRequirements(StructureRequirements requirements, String location, HintColor color) {
+        return requirements(requirements, location, Objects.requireNonNull(color));
     }
 
     public MultiblockTooltipBuilder addHatch(IHatchElement hatch, int minimum, String location) {
@@ -235,8 +249,8 @@ public class MultiblockTooltipBuilder {
         return hatch(text("Hatch", name), minimum, location);
     }
 
-    private MultiblockTooltipBuilder hatch(String name, int minimum, String location) {
-        return part(name, tr("minimum", minimum) + "; " + text("Location", location));
+    private MultiblockTooltipBuilder hatch(String name, int minimum, String location, int... dots) {
+        return part(name, tr("minimum", minimum) + "; " + text("Location", location), dots);
     }
 
     public MultiblockTooltipBuilder addOtherStructurePart(String name, String location, int... dots) {
@@ -316,8 +330,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addEnergyHatch(int count, String location, int... dots) {
         String name = tr("hatch.energy");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder addDynamoHatch(String location, int... dots) {
@@ -326,8 +339,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addDynamoHatch(int count, String location, int... dots) {
         String name = tr("hatch.dynamo");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder addMaintenanceHatch(String location, int... dots) {
@@ -336,8 +348,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addMaintenanceHatch(int count, String location, int... dots) {
         String name = tr("hatch.maintenance");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder addMufflerHatch(String location, int... dots) {
@@ -346,8 +357,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addMufflerHatch(int count, String location, int... dots) {
         String name = tr("hatch.muffler");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder addInputBus(String location, int... dots) {
@@ -356,8 +366,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addInputBus(int count, String location, int... dots) {
         String name = tr("hatch.input_bus");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder addInputHatch(String location, int... dots) {
@@ -366,8 +375,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addInputHatch(int count, String location, int... dots) {
         String name = tr("hatch.input_hatch");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder addOutputBus(String location, int... dots) {
@@ -376,8 +384,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addOutputBus(int count, String location, int... dots) {
         String name = tr("hatch.output_bus");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder addOutputHatch(String location, int... dots) {
@@ -386,8 +393,7 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addOutputHatch(int count, String location, int... dots) {
         String name = tr("hatch.output_hatch");
-        hatch(name, count, location);
-        return hintNames(name, dots);
+        return hatch(name, count, location, dots);
     }
 
     public MultiblockTooltipBuilder toolTipFinisher() {
@@ -396,8 +402,11 @@ public class MultiblockTooltipBuilder {
         line(structure, tr("projector"));
         line(hints, tr("projector"));
         for (Map.Entry<HintColor, LinkedHashSet<String>> entry : coloredHints.entrySet()) {
-            line(hints, StatCollector.translateToLocal("impactapi.blockhint." + entry.getKey().getMetadata()
-                    + ".name") + ": " + String.join(", ", entry.getValue()));
+            HintColor color = entry.getKey();
+            String legend = GTStructureUtility.formatHintText(color, "■")
+                    + " - " + String.join(", ", entry.getValue());
+            line(hints, legend);
+            line(structure, legend);
         }
         finished = true;
         return this;
