@@ -804,3 +804,5 @@ tile.gt.blockcasings2.12.name=Бронзовый трубный корпус
 tile.gt.blockcasings2.13.name=Стальной трубный корпус
 tile.gt.blockcasings2.14.name=Титановый трубный корпус
 tile.gt.blockcasings2.15.name=Вольфрамостальной трубный корпус
+
+gt.structure.missing_hatch=Не хватает люка: %s

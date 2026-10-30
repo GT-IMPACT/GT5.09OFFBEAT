@@ -1105,3 +1105,5 @@ tile.gt.blockcasings2.12.name=Bronze Pipe Casing
 tile.gt.blockcasings2.13.name=Steel Pipe Casing
 tile.gt.blockcasings2.14.name=Titanium Pipe Casing
 tile.gt.blockcasings2.15.name=Tungstensteel Pipe Casing
+
+gt.structure.missing_hatch=Missing hatch: %s

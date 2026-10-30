@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -28,6 +29,7 @@ import space.impact.api.util.ItemStackPredicate;
  */
 public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBase> {
     private final Map<IHatchElement, Integer> requirements = new LinkedHashMap<>();
+    private final Set<IHatchElement> optional = new LinkedHashSet<>();
     private int textureIndex = -1;
     private HintColor hintColor;
 
@@ -40,6 +42,58 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         if (index < 0) throw new IllegalArgumentException("Negative casing texture index");
         textureIndex = index;
         return this;
+    }
+
+    /** Accept existing optional hatches without requesting them during automatic construction. */
+    public HatchElementBuilder<T> allow(IHatchElement... elements) {
+        for (IHatchElement element : elements) {
+            optional.add(Objects.requireNonNull(element));
+        }
+        return this;
+    }
+
+    /** A dedicated hatch position: never substitute a casing or obstruct further shell construction. */
+    public IStructureElement<T> build(StructureRequirements requirements) {
+        Objects.requireNonNull(requirements);
+        if (requirements.getMinimumCasings() != 0 || requirements.getHatches().isEmpty() || hintColor == null) {
+            throw new IllegalStateException("Dedicated hatch positions require hatches, a hint color and no casings");
+        }
+        casingIndex(requirements.getCasing());
+        HintColor color = hintColor;
+        return buildElement(new IStructureElement<T>() {
+            @Override
+            public boolean check(T machine, World world, int x, int y, int z) {
+                return false;
+            }
+
+            @Override
+            public boolean couldBeValid(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                return false;
+            }
+
+            @Override
+            public boolean spawnHint(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                return false;
+            }
+
+            @Override
+            public boolean placeBlock(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                return false;
+            }
+
+            @Override
+            public PlaceResult survivalPlaceBlock(T machine, World world, int x, int y, int z,
+                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
+                if (ChannelDataAccessor.hasSubChannel(trigger, GTStructureUtility.HATCH_CHANNEL)) {
+                    for (IHatchElement hatch : requirements.getHatches().keySet()) {
+                        environment.getChatter().accept(new ChatComponentTranslation(
+                                "gt.structure.missing_hatch", GTStructureUtility.formatHintText(color, "■")
+                                + " - " + hatch.getDescription()));
+                    }
+                }
+                return PlaceResult.SKIP;
+            }
+        }, requirements.getHatches());
     }
 
     public HatchElementBuilder<T> casingIndex(ICasing casing) {
@@ -94,11 +148,13 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     private IStructureElement<T> buildElement(IStructureElement<T> casing, Map<IHatchElement, Integer> required) {
         int texture = textureIndex;
         HintColor color = hintColor;
+        Set<IHatchElement> accepted = new LinkedHashSet<>(required.keySet());
+        accepted.addAll(optional);
         return new IStructureElement<T>() {
             private IHatchElement matching(World world, int x, int y, int z) {
                 TileEntity tile = world.getTileEntity(x, y, z);
                 if (!(tile instanceof IGregTechTileEntity)) return null;
-                for (IHatchElement element : required.keySet()) {
+                for (IHatchElement element : accepted) {
                     if (element.matches(((IGregTechTileEntity) tile).getMetaTileEntity())) return element;
                 }
                 return null;
