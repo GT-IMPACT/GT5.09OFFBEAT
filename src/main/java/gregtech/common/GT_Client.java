@@ -11,13 +11,13 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.ITurnable;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TooltipMultiBlockBase;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_PlayedSound;
@@ -28,6 +28,8 @@ import ic2.api.tile.IWrenchable;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -36,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.input.Keyboard;
 
 import java.net.URL;
 import java.util.*;
@@ -248,8 +251,15 @@ public class GT_Client extends GT_Proxy implements Runnable {
         (new Thread(this)).start();
     }
 
+    @Override
+    public boolean isStructureTooltipRequested() {
+        return Keyboard.isCreated() && GuiScreen.isShiftKeyDown();
+    }
+
     public void onLoad() {
         super.onLoad();
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager())
+                .registerReloadListener(manager -> GT_MetaTileEntity_TooltipMultiBlockBase.invalidateTooltipCache());
         new GT_Renderer_Block();
         new GT_MetaGenerated_Item_Renderer();
         new GT_MetaGenerated_Tool_Renderer();

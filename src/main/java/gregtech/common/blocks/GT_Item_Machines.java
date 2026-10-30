@@ -3,6 +3,8 @@ package gregtech.common.blocks;
 import appeng.me.helpers.AENetworkProxy;
 import cpw.mods.fml.common.Optional;
 import gregtech.api.GregTech_API;
+import gregtech.GT_Mod;
+import gregtech.api.interfaces.ISecondaryDescribable;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.metatileentity.IConnectable;
@@ -19,7 +21,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -37,6 +38,10 @@ public class GT_Item_Machines
         setCreativeTab(GregTech_API.TAB_GREGTECH);
     }
 
+    protected boolean isStructureTooltipRequested() {
+        return GT_Mod.gregtechproxy != null && GT_Mod.gregtechproxy.isStructureTooltipRequested();
+    }
+
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean par4) {
         try {
@@ -47,10 +52,20 @@ public class GT_Item_Machines
 
             if (GregTech_API.METATILEENTITIES[tDamage] != null) {
                 IGregTechTileEntity tTileEntity = GregTech_API.METATILEENTITIES[tDamage].getBaseMetaTileEntity();
-                if (tTileEntity.getDescription() != null) {
+                IMetaTileEntity meta = tTileEntity.getMetaTileEntity();
+                ISecondaryDescribable describable = meta instanceof ISecondaryDescribable
+                        ? (ISecondaryDescribable) meta : null;
+                boolean structured = describable != null && describable.hasSecondaryDescription();
+                String[] description = structured ? describable.getCurrentDescription(isStructureTooltipRequested())
+                        : tTileEntity.getDescription();
+                if (description != null) {
                     int i = 0;
-                    for (String tDescription : tTileEntity.getDescription()) {
+                    for (String tDescription : description) {
                         if (GT_Utility.isStringValid(tDescription)) {
+                            if (structured) {
+                                aList.add(tDescription);
+                                continue;
+                            }
                             if (tDescription.contains("%%%")) {
                                 String[] tString = tDescription.split("%%%");
                                 if (tString.length >= 2) {

@@ -1,28 +1,38 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.api.structure.StructureUtility.transpose;
 
-import gregtech.api.render.TextureFactory;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.HatchElement;
+import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.render.TextureFactory;
+import gregtech.api.util.*;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 
 public class GT_MetaTileEntity_VacuumFreezer
-        extends GT_MetaTileEntity_MultiBlockBase {
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_VacuumFreezer>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.FROST_PROOF, 16)
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output).build();
+    private static IStructureDefinition<GT_MetaTileEntity_VacuumFreezer> structureDefinition;
+    private int casingCount;
+
     public GT_MetaTileEntity_VacuumFreezer(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
@@ -35,35 +45,37 @@ public class GT_MetaTileEntity_VacuumFreezer
         return new GT_MetaTileEntity_VacuumFreezer(this.mName);
     }
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Vacuum Freezer",
-                "Super cools hot ingots and cells",
-                "Size(WxHxD): 3x3x3 (Hollow), Controller (Front centered)",
-                "1x Input Bus (Any casing)",
-                "1x Output Bus (Any casing)",
-                "1x Maintenance Hatch (Any casing)",
-                "1x Energy Hatch (Any casing)",
-                "Frost Proof Machine Casings for the rest (16 at least!)"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Vacuum Freezer")
+                .addInfo("Super cools hot ingots and cells")
+                .beginStructureBlock(3, 3, 3, true)
+                .addController("Front face, centered")
+                .addRequirements(SHELL, "Any casing position")
+                .addAir("Center of the structure")
+                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
     }
-    
+
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         ITexture[] rTexture;
         if (aSide == aFacing) {
             if (aActive) {
                 rTexture = new ITexture[]{
-                        casingTexturePages[0][17],
+                        Casings.FROST_PROOF.getTexture(),
                         TextureFactory.of(OVERLAY_FRONT_VACUUM_FREEZER_ACTIVE),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_VACUUM_FREEZER_ACTIVE_GLOW).glow().build()};
             } else {
                 rTexture = new ITexture[]{
-                        casingTexturePages[0][17],
+                        Casings.FROST_PROOF.getTexture(),
                         TextureFactory.of(OVERLAY_FRONT_VACUUM_FREEZER),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_VACUUM_FREEZER_GLOW).glow().build()};
             }
         } else {
-            rTexture = new ITexture[]{casingTexturePages[0][17]};
+            rTexture = new ITexture[]{Casings.FROST_PROOF.getTexture()};
         }
         return rTexture;
     }
@@ -80,9 +92,6 @@ public class GT_MetaTileEntity_VacuumFreezer
         return true;
     }
 
-    public boolean isFacingValid(byte aFacing) {
-        return aFacing > 1;
-    }
 
     public boolean checkRecipe(ItemStack aStack) {
         ArrayList<ItemStack> tInputList = getStoredInputs();
@@ -118,32 +127,37 @@ public class GT_MetaTileEntity_VacuumFreezer
     }
 
 
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-        int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, 0, zDir)) {
-            return false;
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        return checkPiece(STRUCTURE_PIECE, 1, 1, 0) && SHELL.isSatisfied(this, casingCount);
+    }
+
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 1, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 1, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_VacuumFreezer> getStructureDefinition() {
+        if (structureDefinition == null) {
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_VacuumFreezer>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CCC", "CCC"},
+                            {"C~C", "C-C", "CCC"},
+                            {"CCC", "CCC", "CCC"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_VacuumFreezer.class)
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount))
+                    .build();
         }
-        int tAmount = 0;
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                for (int h = -1; h < 2; h++) {
-                    if ((h != 0) || (((xDir + i != 0) || (zDir + j != 0)) && ((i != 0) || (j != 0)))) {
-                        IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, h, zDir + j);
-                        if ((!addMaintenanceToMachineList(tTileEntity, 17)) && (!addInputToMachineList(tTileEntity, 17)) && (!addOutputToMachineList(tTileEntity, 17)) && (!addEnergyInputToMachineList(tTileEntity, 17))) {
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings2) {
-                                return false;
-                            }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 1) {
-                                return false;
-                            }
-                            tAmount++;
-                        }
-                    }
-                }
-            }
-        }
-        return tAmount >= 16;
+        return structureDefinition;
     }
 
     public int getMaxEfficiency(ItemStack aStack) {
