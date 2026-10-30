@@ -86,6 +86,7 @@ import space.impact.api.structure.ISurvivalBuildEnvironment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThrows;
@@ -167,6 +168,7 @@ public class GT_StructureIntegrationTest {
         checkTooltips();
         checkSharedRequirements();
         GT_FusionStructureChecks.run(hatchItem, hintProxy);
+        GT_BoilerStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {
@@ -931,6 +933,7 @@ public class GT_StructureIntegrationTest {
         final Set<String> errorPositions = new HashSet<>();
         final Map<String, Block> hintBlocks = new HashMap<>();
         final Map<String, Integer> hintMetadata = new HashMap<>();
+        final Map<String, HintColor> hintFrames = new HashMap<>();
         Block lastBlock;
         int lastMetadata;
         EntityPlayer player;
@@ -950,6 +953,13 @@ public class GT_StructureIntegrationTest {
             lastMetadata = meta;
             if (block == GregTech_API.sBlockCasings2 && meta == 1) casingHints++;
         }
+        @Override
+        public void hintFrame(World world, int x, int y, int z, HintColor color) {
+            String position = TestWorld.key(x, y, z);
+            assertTrue("A frame decorates an existing block hint", hintBlocks.containsKey(position));
+            assertNull("Only one frame per position", hintFrames.put(position, color));
+        }
+
         @Override public void hintMarker(World world, int x, int y, int z, HintMarkerKind kind) { hints++; }
     }
 }

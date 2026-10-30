@@ -3,26 +3,45 @@ package gregtech.common.tileentities.machines.multi;
 import gregtech.GT_Mod;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.HatchElement;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.interfaces.IHatchElement;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.*;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.StatCollector;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.api.structure.StructureUtility.transpose;
 
 public abstract class GT_MetaTileEntity_LargeBoiler
-        extends GT_MetaTileEntity_MultiBlockBase {
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_LargeBoiler>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor FIREBOX_HINT = HintColor.BLUE;
+    private static final HintColor OUTPUT_HINT = HintColor.ORANGE;
+    private IStructureDefinition<GT_MetaTileEntity_LargeBoiler> structureDefinition;
+    private StructureRequirements fireboxes;
+    private StructureRequirements shell;
+    private int casingCount;
+    private int fireboxCount;
+
     private boolean firstRun = true;
     private int mSuperEfficencyIncrease = 0;
     private int integratedCircuitConfig = 0; //Steam output is reduced by 1000L per config
@@ -37,44 +56,123 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         super(aName);
     }
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Large Boiler",
-                "Produces " + (getEUt() * 40) * (runtimeBoost(20) / 20f) + "L of Steam with 1 Coal at " + getEUt() * 40 + "L/s",
-                "A programmed circuit in the main block throttles the boiler (-1000L/s per config)",
-                "Size(WxHxD): 3x5x3, Controller (Front middle in Fireboxes)",
-                "3x1x3 of "+getCasingMaterial()+" Fire Boxes (Bottom layer, Min 3)",
-                "3x4x3 of "+getCasingMaterial()+" " +getCasingBlockType()+ " Casings (Above Fireboxes, hollow, Min 24!)",
-                "3 "+getCasingMaterial()+" Pipe Casing Blocks (Inside the Hollow Casing)",
-                "1x Input Fuel Hatch/Bus (Any Firebox)",
-                "1x Input Water Hatch (Any Firebox)",
-                "1x Output Hatch (Any Casing)",
-                "1x Maintenance Hatch (Any Firebox)",
-                "1x Muffler Hatch (Any Firebox)",
-                String.format("Diesel fuels have 1/4 efficiency - Takes %.2f seconds to heat up", 500.0 / getEfficiencyIncrease()),
-                "Causes up to " + 20 * getPollutionPerTick(null) + " Pollution per second"
-};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Large Boiler")
+                .addInfo("Produces " + (getEUt() * 40) * (runtimeBoost(20) / 20f) + "L of Steam with 1 Coal at " + getEUt() * 40 + "L/s")
+                .addInfo("A programmed circuit in the main block throttles the boiler (-1000L/s per config)")
+                .addInfo(String.format(Locale.ROOT, "Diesel fuels have 1/4 efficiency - Takes %.2f seconds to heat up", 500.0 / getEfficiencyIncrease()))
+                .addPollutionAmount(20 * getPollutionPerTick(null))
+                .beginStructureBlock(3, 5, 3, false)
+                .addController("Front center of the bottom firebox layer")
+                .addRequirements(getFireboxRequirements(), "Bottom layer, replacing fireboxes", FIREBOX_HINT)
+                .addRequirements(getShellRequirements(), "Upper four layers, replacing casings", OUTPUT_HINT)
+                .addOtherStructurePart(getPipeType(), "Vertical column in the center, above the bottom layer", 3)
+                .addStructureInfo("Two inputs are required: a water hatch and a fuel hatch or bus.")
+                .addStructureInfo("Compatible IMPACT fluid and combined input hatches are accepted.")
+                .addStructureInfo("The top center is a casing or output hatch, not a pipe or air.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
     }
-    
-    public abstract String getCasingMaterial();
 
-    public abstract Block getCasingBlock();
+    public abstract ICasing getCasingType();
 
-    public abstract String getCasingBlockType();
+    public abstract ICasing getPipeType();
 
-    public abstract byte getCasingMeta();
+    public abstract ICasing getFireboxType();
 
-    public abstract byte getCasingTextureIndex();
+    private StructureRequirements getFireboxRequirements() {
+        if (fireboxes == null) {
+            fireboxes = StructureRequirements.builder(getFireboxType(), 3)
+                    .atLeast(HatchElement.Maintenance)
+                    .atLeast(BoilerHatch.WATER)
+                    .atLeast(BoilerHatch.INPUT, 2)
+                    .atLeast(BoilerHatch.MUFFLER)
+                    .build();
+        }
+        return fireboxes;
+    }
 
-    public abstract Block getPipeBlock();
+    private StructureRequirements getShellRequirements() {
+        if (shell == null) {
+            shell = StructureRequirements.builder(getCasingType(), 24)
+                    .atLeast(BoilerHatch.STEAM)
+                    .build();
+        }
+        return shell;
+    }
 
-    public abstract byte getPipeMeta();
+    private enum BoilerHatch implements IHatchElement {
+        WATER,
+        INPUT,
+        STEAM,
+        MUFFLER;
 
-    public abstract Block getFireboxBlock();
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            switch (this) {
+                case WATER:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input
+                            || tile instanceof GTMTE_Multi_Hatch_Input
+                            || tile instanceof GTMTE_BusHatch_Input;
+                case INPUT:
+                    return HatchElement.Input.matches(tile);
+                case STEAM:
+                    // Preserve optional output buses, but only fluid hatches count as steam outputs.
+                    return HatchElement.Output.matches(tile);
+                case MUFFLER:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Muffler;
+                default:
+                    throw new AssertionError(this);
+            }
+        }
 
-    public abstract byte getFireboxMeta();
+        @Override
+        public boolean matchesForPlacement(IMetaTileEntity tile) {
+            if (this == STEAM) {
+                return tile instanceof GT_MetaTileEntity_Hatch_Output;
+            }
+            return matches(tile);
+        }
 
-    public abstract byte getFireboxTextureIndex();
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            switch (this) {
+                case WATER:
+                    return machine.mInputHatches.size() + machine.mQuadrInputHatches.size()
+                            + machine.mInputBusHatches.size();
+                case INPUT:
+                    return HatchElement.Input.count(machine);
+                case STEAM:
+                    return machine.mOutputHatches.size();
+                case MUFFLER:
+                    return machine.mMufflerHatches.size();
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            switch (this) {
+                case WATER:
+                case INPUT:
+                    return machine.addInputToMachineList(tile, texture);
+                case STEAM:
+                    return machine.addOutputToMachineList(tile, texture);
+                case MUFFLER:
+                    return machine.addMufflerToMachineList(tile, texture);
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public String getDescription() {
+            return StatCollector.translateToLocal("gt.tooltip.hatch.boiler_" + name().toLowerCase(Locale.ROOT));
+        }
+    }
 
     public abstract int getEUt();
 
@@ -84,15 +182,15 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
             if (aActive) return new ITexture[]{
-                    Textures.BlockIcons.getCasingTextureForId(getCasingTextureIndex()),
+                    getCasingType().getTexture(),
                     TextureFactory.of(OVERLAY_FRONT_LARGE_BOILER_ACTIVE),
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_LARGE_BOILER_ACTIVE_GLOW).glow().build()};
             return new ITexture[]{
-                    Textures.BlockIcons.getCasingTextureForId(getCasingTextureIndex()),
+                    getCasingType().getTexture(),
                     TextureFactory.of(OVERLAY_FRONT_LARGE_BOILER),
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_LARGE_BOILER_GLOW).glow().build()};
         }
-        return new ITexture[]{Textures.BlockIcons.getCasingTextureForId(getCasingTextureIndex())};
+        return new ITexture[]{getCasingType().getTexture()};
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
@@ -101,10 +199,6 @@ public abstract class GT_MetaTileEntity_LargeBoiler
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
-    }
-
-    public boolean isFacingValid(byte aFacing) {
-        return aFacing > 1;
     }
 
     public boolean checkRecipe(ItemStack aStack) {
@@ -203,64 +297,47 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         super.onPostTick(aBaseMetaTileEntity, aTick);
     }
 
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-        int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        fireboxCount = 0;
+        return checkPiece(STRUCTURE_PIECE, 1, 4, 0)
+                && getFireboxRequirements().isSatisfied(this, fireboxCount)
+                && getShellRequirements().isSatisfied(this, casingCount);
+    }
 
-        int tCasingAmount = 0;
-        int tFireboxAmount = 0;
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                if (i != 0 || j != 0) {
-                    for (int k = 1; k <= 4; k++) {
-                        if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex())) {
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j) != getCasingBlock()) {
-                                return false;
-                            }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, k, zDir + j) != getCasingMeta()) {
-                                return false;
-                            }
-                            tCasingAmount++;
-                        }
-                    }
-                } else {
-                    for (int k = 1; k <= 3; k++) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j) != getPipeBlock()) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, k, zDir + j) != getPipeMeta()) {
-                            return false;
-                        }
-                    }
-                    if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 4, zDir + j), getCasingTextureIndex())) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 4, zDir + j) != getCasingBlock()) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 4, zDir + j) != getCasingMeta()) {
-                            return false;
-                        }
-                        tCasingAmount++;
-                    }
-                }
-            }
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 4, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 4, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_LargeBoiler> getStructureDefinition() {
+        if (structureDefinition == null) {
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_LargeBoiler>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CCC", "CCC"},
+                            {"CCC", "CPC", "CCC"},
+                            {"CCC", "CPC", "CCC"},
+                            {"CCC", "CPC", "CCC"},
+                            {"F~F", "FFF", "FFF"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeBoiler.class)
+                            .buildAndChain(getShellRequirements(), machine -> ++machine.casingCount)
+                            .withHint(OUTPUT_HINT))
+                    .addElement('F', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeBoiler.class)
+                            .buildAndChain(getFireboxRequirements(), machine -> ++machine.fireboxCount)
+                            .withHint(FIREBOX_HINT))
+                    .addElement('P', getPipeType().asElement())
+                    .build();
         }
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                if (xDir + i != 0 || zDir + j != 0) {
-                    IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
-                    if (!addMaintenanceToMachineList(tTileEntity, getFireboxTextureIndex()) && !addInputToMachineList(tTileEntity, getFireboxTextureIndex()) && !addMufflerToMachineList(tTileEntity, getFireboxTextureIndex())) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != getFireboxBlock()) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != getFireboxMeta()) {
-                            return false;
-                        }
-                        tFireboxAmount++;
-                    }
-                }
-            }
-        }
-        return tCasingAmount >= 24 && tFireboxAmount >= 3;
+        return structureDefinition;
     }
 
     public int getMaxEfficiency(ItemStack aStack) {

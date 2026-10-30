@@ -1,9 +1,9 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import net.minecraft.block.Block;
 
 public class GT_MetaTileEntity_LargeBoiler_Bronze
         extends GT_MetaTileEntity_LargeBoiler {
@@ -21,53 +21,18 @@ public class GT_MetaTileEntity_LargeBoiler_Bronze
     }
     
     @Override
-    public String getCasingMaterial(){
-    	return "Bronze";
+    public ICasing getCasingType() {
+        return Casings.BRONZE_PLATED_BRICKS;
     }
 
     @Override
-    public String getCasingBlockType() {
-        return "Plated Bricks";
+    public ICasing getPipeType() {
+        return Casings.BRONZE_PIPE;
     }
 
     @Override
-    public Block getCasingBlock() {
-        return GregTech_API.sBlockCasings1;
-    }
-
-    @Override
-    public byte getCasingMeta() {
-        return 10;
-    }
-
-    @Override
-    public byte getCasingTextureIndex() {
-        return 10;
-    }
-
-    @Override
-    public Block getPipeBlock() {
-        return GregTech_API.sBlockCasings2;
-    }
-
-    @Override
-    public byte getPipeMeta() {
-        return 12;
-    }
-
-    @Override
-    public Block getFireboxBlock() {
-        return GregTech_API.sBlockCasings3;
-    }
-
-    @Override
-    public byte getFireboxMeta() {
-        return 13;
-    }
-
-    @Override
-    public byte getFireboxTextureIndex() {
-        return 45;
+    public ICasing getFireboxType() {
+        return Casings.BRONZE_FIREBOX;
     }
 
     @Override
