@@ -66,7 +66,7 @@ import static space.impact.gregtech.BuildConfigKt.MODNAME;
 
 @Mod(modid = MODID, name = MODNAME, version = "MC1710",  useMetadata = false,
 dependencies =  " required-after:IC2;" +
-        " required-after:impactapi@[1.0.1,);" +
+        " required-after:impactapi@[1.0.6,);" +
         " after:Forestry;" +
         " after:appliedenergistics2;" +
         " after:BuildCraft|Transport;" +
