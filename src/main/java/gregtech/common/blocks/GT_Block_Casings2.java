@@ -1,28 +1,24 @@
 package gregtech.common.blocks;
 
-import gregtech.api.enums.Dyes;
-import gregtech.api.enums.ItemList;
-import gregtech.api.enums.Textures;
-import gregtech.api.objects.GT_CopiedBlockTexture;
-import gregtech.api.render.TextureFactory;
-import gregtech.api.util.GT_LanguageManager;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
+import gregtech.api.enums.ItemList;
+import gregtech.api.enums.Textures;
+import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GT_LanguageManager;
+
 public class GT_Block_Casings2
         extends GT_Block_Casings_Abstract {
     public GT_Block_Casings2() {
         super(GT_Item_Casings2.class, "gt.blockcasings2", GT_Material_Casings.INSTANCE);
         for (byte i = 0; i < 16; i = (byte) (i + 1)) {
-        	if (i != 6){
-                Textures.BlockIcons.casingTexturePages[0][(i + 16)] = TextureFactory.of(this, i);
-        	}
-         }
-        
+            Textures.BlockIcons.casingTexturePages[0][(i + 16)] = TextureFactory.of(this, i);
+        }
+
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Solid Steel Machine Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".1.name", "Frost Proof Machine Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".2.name", "Bronze Gear Box Casing");
@@ -55,7 +51,7 @@ public class GT_Block_Casings2
         ItemList.Casing_Pipe_Steel.set(new ItemStack(this, 1, 13));
         ItemList.Casing_Pipe_Titanium.set(new ItemStack(this, 1, 14));
         ItemList.Casing_Pipe_TungstenSteel.set(new ItemStack(this, 1, 15));
-}
+    }
 
     @Override
     public IIcon getIcon(int aSide, int aMeta) {
