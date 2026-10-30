@@ -1,6 +1,21 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.HatchElement;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.interfaces.IHatchElement;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
+
+import static space.impact.api.structure.StructureUtility.onElementPass;
+import static space.impact.api.structure.StructureUtility.transpose;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaGenerated_Tool;
@@ -8,9 +23,7 @@ import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -19,7 +32,16 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
-public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_MultiBlockBase {
+public abstract class GT_MetaTileEntity_LargeTurbine
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_LargeTurbine>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor SIDE_HINT = HintColor.BLUE;
+    private static final HintColor DYNAMO_HINT = HintColor.YELLOW;
+    private IStructureDefinition<GT_MetaTileEntity_LargeTurbine> structureDefinition;
+    private StructureRequirements shell;
+    private StructureRequirements dynamo;
+    private int casingCount;
 
     public int baseEff = 0;
     public int optFlow = 0;
@@ -44,69 +66,182 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
         return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeTurbine.png");
     }
 
-    @Override
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        byte tSide = getBaseMetaTileEntity().getBackFacing();
-        if ((getBaseMetaTileEntity().getAirAtSideAndDistance(getBaseMetaTileEntity().getBackFacing(), 1)) && (getBaseMetaTileEntity().getAirAtSideAndDistance(getBaseMetaTileEntity().getBackFacing(), 2))) {
+    public abstract ICasing getCasingType();
 
-            for (byte i = 2; i < 6; i = (byte) (i + 1)) {
-                IGregTechTileEntity tTileEntity;
-                if ((null != (tTileEntity = getBaseMetaTileEntity().getIGregTechTileEntityAtSideAndDistance(i, 2))) &&
-                        (tTileEntity.getFrontFacing() == getBaseMetaTileEntity().getFrontFacing()) && (tTileEntity.getMetaTileEntity() != null) &&
-                        ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_LargeTurbine))) {
-                    return false;
-                }
-            }
-            int tX = getBaseMetaTileEntity().getXCoord();
-            int tY = getBaseMetaTileEntity().getYCoord();
-            int tZ = getBaseMetaTileEntity().getZCoord();
-            for (byte i = -1; i < 2; i = (byte) (i + 1)) {
-                for (byte j = -1; j < 2; j = (byte) (j + 1)) {
-                    if ((i != 0) || (j != 0)) {
-                        for (byte k = 0; k < 4; k = (byte) (k + 1)) {
-                            if (((i == 0) || (j == 0)) && ((k == 1) || (k == 2))) {
-                                if (getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingMeta()) {
-                                } else if (!addToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)))) {
-                                    return false;
-                                }
-                            } else if (getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingMeta()) {
-                            } else {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-            this.mDynamoHatches.clear();
-            this.mDynamoHatchesMulti.clear();
-            IGregTechTileEntity tTileEntity = getBaseMetaTileEntity().getIGregTechTileEntityAtSideAndDistance(getBaseMetaTileEntity().getBackFacing(), 3);
-            if ((tTileEntity != null) && (tTileEntity.getMetaTileEntity() != null)) {
-                if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Dynamo)) {
-                    this.mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) tTileEntity.getMetaTileEntity());
-                    ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
-                } else if ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_DynamoMulti)) {
-                    this.mDynamoHatchesMulti.add((GT_MetaTileEntity_Hatch_DynamoMulti) tTileEntity.getMetaTileEntity());
-                    ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-        return true;
+    protected boolean requiresOutputHatch() {
+        return false;
     }
 
-    public abstract Block getCasingBlock();
+    protected MultiblockTooltipBuilder turbineTooltip(String machineType) {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType(machineType)
+                .addInfo("Insert a turbine rotor into the controller GUI to store its characteristics.")
+                .addInfo("The rotor is consumed after its characteristics have been stored.")
+                .beginStructureBlock(3, 3, 4, true)
+                .addController("Front center")
+                .addRequirements(getShellRequirements(), "Shell; hatches only at the centers of the four sides in the two middle layers", SIDE_HINT)
+                .addRequirements(getDynamoRequirements(), "Back center", DYNAMO_HINT)
+                .addAir("Two central blocks between the controller and dynamo")
+                .addStructureInfo("The eight side positions accept hatches or casings; all remaining shell positions require casings.")
+                .addStructureInfo("Compatible IMPACT fluid inputs and multi-amp dynamo hatches are accepted.")
+                .addStructureInfo("Controllers of equally oriented large turbines cannot be two blocks apart horizontally.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory");
+    }
 
-    public abstract byte getCasingMeta();
+    private StructureRequirements getShellRequirements() {
+        if (shell == null) {
+            StructureRequirements.Builder builder = StructureRequirements.builder(getCasingType(), 24)
+                    .atLeast(HatchElement.Maintenance, TurbineHatch.INPUT);
+            if (requiresOutputHatch()) {
+                builder.atLeast(TurbineHatch.OUTPUT);
+            }
+            if (getPollutionPerTick(null) > 0) {
+                builder.atLeast(TurbineHatch.MUFFLER);
+            }
+            shell = builder.build();
+        }
+        return shell;
+    }
 
-    public abstract byte getCasingTextureIndex();
+    private StructureRequirements getDynamoRequirements() {
+        if (dynamo == null) {
+            dynamo = StructureRequirements.builder(getCasingType(), 0).atLeast(TurbineHatch.DYNAMO).build();
+        }
+        return dynamo;
+    }
 
-    private boolean addToMachineList(IGregTechTileEntity tTileEntity) {
-        return ((addMaintenanceToMachineList(tTileEntity, getCasingTextureIndex())) || (addInputToMachineList(tTileEntity, getCasingTextureIndex())) || (addOutputToMachineList(tTileEntity, getCasingTextureIndex())) || (addMufflerToMachineList(tTileEntity, getCasingTextureIndex())));
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        boolean valid = checkPiece(STRUCTURE_PIECE, 1, 1, 0);
+        for (byte side = 2; side < 6; side++) {
+            IGregTechTileEntity neighbor = base.getIGregTechTileEntityAtSideAndDistance(side, 2);
+            if (neighbor != null && neighbor.getFrontFacing() == base.getFrontFacing()
+                    && neighbor.getMetaTileEntity() instanceof GT_MetaTileEntity_LargeTurbine) {
+                return false;
+            }
+        }
+        return valid && getShellRequirements().isSatisfied(this, casingCount)
+                && getDynamoRequirements().isSatisfied(this, 0);
+    }
+
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 1, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 1, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_LargeTurbine> getStructureDefinition() {
+        if (structureDefinition == null) {
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_LargeTurbine>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CHC", "CHC", "CCC"},
+                            {"C~C", "H-H", "H-H", "CDC"},
+                            {"CCC", "CHC", "CHC", "CCC"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', onElementPass(machine -> ++machine.casingCount, getCasingType().asElement()))
+                    .addElement('H', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeTurbine.class)
+                            .allow(TurbineHatch.OUTPUT, TurbineHatch.MUFFLER)
+                            .buildAndChain(getShellRequirements(), machine -> ++machine.casingCount)
+                            .withHint(SIDE_HINT))
+                    .addElement('D', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeTurbine.class)
+                            .hint(DYNAMO_HINT)
+                            .build(getDynamoRequirements()))
+                    .build();
+        }
+        return structureDefinition;
+    }
+
+    private enum TurbineHatch implements IHatchElement {
+        INPUT,
+        OUTPUT,
+        MUFFLER,
+        DYNAMO;
+
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            switch (this) {
+                case INPUT:
+                    return HatchElement.Input.matches(tile);
+                case OUTPUT:
+                    return HatchElement.Output.matches(tile);
+                case MUFFLER:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Muffler;
+                case DYNAMO:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Dynamo
+                            || tile instanceof GT_MetaTileEntity_Hatch_DynamoMulti;
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean matchesForPlacement(IMetaTileEntity tile) {
+            switch (this) {
+                case INPUT:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input
+                            || tile instanceof GTMTE_Multi_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
+                case OUTPUT:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Output;
+                default:
+                    return matches(tile);
+            }
+        }
+
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            switch (this) {
+                case INPUT:
+                    return machine.mInputHatches.size() + machine.mQuadrInputHatches.size()
+                            + machine.mInputBusHatches.size();
+                case OUTPUT:
+                    return machine.mOutputHatches.size();
+                case MUFFLER:
+                    return machine.mMufflerHatches.size();
+                case DYNAMO:
+                    return machine.mDynamoHatches.size() + machine.mDynamoHatchesMulti.size();
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            switch (this) {
+                case INPUT:
+                    return machine.addInputToMachineList(tile, texture);
+                case OUTPUT:
+                    return machine.addOutputToMachineList(tile, texture);
+                case MUFFLER:
+                    return machine.addMufflerToMachineList(tile, texture);
+                case DYNAMO:
+                    return machine.addDynamoToMachineList(tile, texture);
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public String getDescription() {
+            switch (this) {
+                case INPUT:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.input_hatch");
+                case OUTPUT:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.output_hatch");
+                case MUFFLER:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.muffler");
+                case DYNAMO:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.dynamo");
+                default:
+                    throw new AssertionError(this);
+            }
+        }
     }
 
     public boolean checkguislot = true;

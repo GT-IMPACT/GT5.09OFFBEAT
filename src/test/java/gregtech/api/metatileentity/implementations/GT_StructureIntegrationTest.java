@@ -105,7 +105,11 @@ public class GT_StructureIntegrationTest {
         }) {
             for (String name : new String[]{"gregtech.api.interfaces.ICasing",
                     "gregtech.api.interfaces.ISecondaryDescribable", "gregtech.api.util.StructureRequirements",
-                    "gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TooltipMultiBlockBase"}) {
+                    "gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TooltipMultiBlockBase",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_Steam",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_HPSteam",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_Gas",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_Plasma"}) {
                 Class.forName(name, true, server);
             }
             Class<?> builder = Class.forName("gregtech.api.util.MultiblockTooltipBuilder", true, server);
@@ -169,6 +173,7 @@ public class GT_StructureIntegrationTest {
         checkSharedRequirements();
         GT_FusionStructureChecks.run(hatchItem, hintProxy);
         GT_BoilerStructureChecks.run(hatchItem, hintProxy);
+        GT_TurbineStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {

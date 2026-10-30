@@ -3,7 +3,9 @@ package gregtech.common.tileentities.machines.multi;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import gregtech.api.GregTech_API;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -13,7 +15,6 @@ import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -28,23 +29,24 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? TextureFactory.of(Textures.BlockIcons.LARGETURBINE_SS_ACTIVE5) : TextureFactory.of(Textures.BlockIcons.LARGETURBINE_SS5) : Textures.BlockIcons.casingTexturePages[0][58]};
+    public ITexture[] getTexture(IGregTechTileEntity base, byte side, byte facing, byte color,
+                                 boolean active, boolean redstone) {
+        ITexture surface = getCasingType().getTexture();
+        if (side == facing) {
+            surface = TextureFactory.of(active
+                    ? Textures.BlockIcons.LARGETURBINE_SS_ACTIVE5
+                    : Textures.BlockIcons.LARGETURBINE_SS5);
+        }
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][color + 1], surface};
     }
 
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Large Gas Turbine",
-                "Size(WxHxD): 3x3x4 (Hollow), Controller (Front centered)",
-                "1x Gas Input Hatch (Side centered)",
-                "1x Maintenance Hatch (Side centered)",
-                "1x Muffler Hatch (Side centered)",
-                "1x Dynamo Hatch (Back centered)",
-                "Stainless Steel Turbine Casings for the rest (24 at least!)",
-                "Needs a Turbine Rotor (Inside controller GUI) in order for",
-                "Turbine to remember the characteristics of Turbine Rotor (after that Turbine Rotor will be removed)",
-                "Produces " + getPollutionPerTick(null)*20 + " pollution per second"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return turbineTooltip("Large Gas Turbine")
+                .addInfo("Gas fuel input; requires a muffler hatch.")
+                .addPollutionAmount(getPollutionPerTick(null) * 20)
+                .toolTipFinisher();
     }
 
     public int getFuelValue(FluidStack aLiquid) {
@@ -63,18 +65,8 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     }
 
     @Override
-    public Block getCasingBlock() {
-        return GregTech_API.sBlockCasings4;
-    }
-
-    @Override
-    public byte getCasingMeta() {
-        return 10;
-    }
-
-    @Override
-    public byte getCasingTextureIndex() {
-        return 58;
+    public ICasing getCasingType() {
+        return Casings.STAINLESS_STEEL_TURBINE;
     }
 
     @Override

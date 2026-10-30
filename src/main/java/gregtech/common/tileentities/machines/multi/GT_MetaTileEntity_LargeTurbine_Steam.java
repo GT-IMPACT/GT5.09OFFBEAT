@@ -3,7 +3,9 @@ package gregtech.common.tileentities.machines.multi;
 import java.util.ArrayList;
 
 import gregtech.GT_Mod;
-import gregtech.api.GregTech_API;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -12,7 +14,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,24 +34,24 @@ public class GT_MetaTileEntity_LargeTurbine_Steam extends GT_MetaTileEntity_Larg
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? TextureFactory.of(Textures.BlockIcons.LARGETURBINE_ST_ACTIVE5) : TextureFactory.of(Textures.BlockIcons.LARGETURBINE_ST5) : Textures.BlockIcons.casingTexturePages[0][57]};
+    public ITexture[] getTexture(IGregTechTileEntity base, byte side, byte facing, byte color,
+                                 boolean active, boolean redstone) {
+        ITexture surface = getCasingType().getTexture();
+        if (side == facing) {
+            surface = TextureFactory.of(active
+                    ? Textures.BlockIcons.LARGETURBINE_ST_ACTIVE5
+                    : Textures.BlockIcons.LARGETURBINE_ST5);
+        }
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][color + 1], surface};
     }
 
     @Override
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Large Steam Turbine",
-                "Size(WxHxD): 3x3x4 (Hollow), Controller (Front centered)",
-                "1x Steam Input Hatch (Side centered)",
-                "1x Maintenance Hatch (Side centered)",
-                "1x Dynamo Hatch (Back centered)",
-                "1x Output Hatch for Distilled Water (Side centered)",
-                "Turbine Casings for the rest (24 at least!)",
-                "Needs a Turbine Rotor (Inside controller GUI) in order for",
-                "Turbine to remember the characteristics of Turbine Rotor (after that Turbine Rotor will be removed)",
-                "Output depending on Rotor and fitting",
-                "Use screwdriver to adjust fitting of turbine"};
+    protected MultiblockTooltipBuilder createTooltip() {
+        return turbineTooltip("Large Steam Turbine")
+                .addInfo("Steam input; distilled water output.")
+                .addInfo("Output depends on the rotor and fitting.")
+                .addInfo("Use a screwdriver to adjust the turbine fitting.")
+                .toolTipFinisher();
     }
 
     @Override
@@ -59,18 +60,13 @@ public class GT_MetaTileEntity_LargeTurbine_Steam extends GT_MetaTileEntity_Larg
     }
 
     @Override
-    public Block getCasingBlock() {
-        return GregTech_API.sBlockCasings4;
+    public ICasing getCasingType() {
+        return Casings.STEEL_TURBINE;
     }
 
     @Override
-    public byte getCasingMeta() {
-        return 9;
-    }
-
-    @Override
-    public byte getCasingTextureIndex() {
-        return 16;
+    protected boolean requiresOutputHatch() {
+        return true;
     }
 
     @Override

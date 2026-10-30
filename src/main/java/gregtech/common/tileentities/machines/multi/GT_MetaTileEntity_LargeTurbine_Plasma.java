@@ -1,6 +1,8 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -9,7 +11,6 @@ import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,21 +29,23 @@ public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_Lar
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? TextureFactory.of(Textures.BlockIcons.LARGETURBINE_TU_ACTIVE5) : TextureFactory.of(Textures.BlockIcons.LARGETURBINE_TU5) : Textures.BlockIcons.casingTexturePages[0][60]};
+    public ITexture[] getTexture(IGregTechTileEntity base, byte side, byte facing, byte color,
+                                 boolean active, boolean redstone) {
+        ITexture surface = getCasingType().getTexture();
+        if (side == facing) {
+            surface = TextureFactory.of(active
+                    ? Textures.BlockIcons.LARGETURBINE_TU_ACTIVE5
+                    : Textures.BlockIcons.LARGETURBINE_TU5);
+        }
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][color + 1], surface};
     }
 
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Large Plasma Generator",
-                "Size(WxHxD): 3x3x4 (Hollow), Controller (Front centered)",
-                "1x Plasma Input Hatch (Side centered)",
-                "1x Maintenance Hatch (Side centered)",
-                "1x Dynamo Hatch (Back centered)",
-                "Tungstensteel Turbine Casings for the rest (24 at least!)",
-                "Needs a Turbine Rotor (Inside controller GUI) in order for",
-                "Turbine to remember the characteristics of Turbine Rotor (after that Turbine Rotor will be removed)",};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return turbineTooltip("Large Plasma Generator")
+                .addInfo("Plasma input; an optional output hatch collects cooled material.")
+                .toolTipFinisher();
     }
 
     public int getFuelValue(FluidStack aLiquid) {
@@ -61,18 +64,8 @@ public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_Lar
     }
 
     @Override
-    public Block getCasingBlock() {
-        return GregTech_API.sBlockCasings4;
-    }
-
-    @Override
-    public byte getCasingMeta() {
-        return 12;
-    }
-
-    @Override
-    public byte getCasingTextureIndex() {
-        return 60;
+    public ICasing getCasingType() {
+        return Casings.TUNGSTENSTEEL_TURBINE;
     }
 
     @Override
