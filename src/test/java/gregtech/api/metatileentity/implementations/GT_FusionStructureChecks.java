@@ -14,7 +14,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 import space.impact.api.alignment.constructable.ChannelDataAccessor;
-import space.impact.api.ImpactAPI;
 import space.impact.api.hint.HintColor;
 import space.impact.api.structure.ISurvivalBuildEnvironment;
 
@@ -150,24 +149,26 @@ final class GT_FusionStructureChecks {
         hints.hints = 0;
         hints.hintBlocks.clear();
         hints.hintMetadata.clear();
+        hints.hintFrames.clear();
         f.world.isRemote = true;
         f.machine.construct(new ItemStack(Items.stick), true);
         f.world.isRemote = false;
         assertEquals(159, hints.hints);
+        assertEquals(48, hints.hintFrames.size());
         for (Position p : LEGACY) {
             if (p.kind == '~') {
                 continue;
             }
             int[] at = f.coords(p);
             String key = TestWorld.key(at[0], at[1], at[2]);
+            ICasing descriptor = p.kind == 'K' ? f.machine.getFusionCoilType() : f.machine.getCasingType();
+            assertSame("Combined hints keep the actual block texture", descriptor.getBlock(), hints.hintBlocks.get(key));
+            assertEquals(descriptor.getMetadata(), hints.hintMetadata.get(key).intValue());
             if (p.kind == 'E' || p.kind == 'I' || p.kind == 'O') {
                 HintColor color = p.kind == 'E' ? HintColor.YELLOW : p.kind == 'I' ? HintColor.BLUE : HintColor.ORANGE;
-                assertSame("Hatch positions use colored hint blocks", ImpactAPI.getBlockHint(), hints.hintBlocks.get(key));
-                assertEquals(color.getMetadata(), hints.hintMetadata.get(key).intValue());
+                assertSame(color, hints.hintFrames.get(key));
             } else {
-                ICasing descriptor = p.kind == 'K' ? f.machine.getFusionCoilType() : f.machine.getCasingType();
-                assertSame("Casings and coils keep their actual textures", descriptor.getBlock(), hints.hintBlocks.get(key));
-                assertEquals(descriptor.getMetadata(), hints.hintMetadata.get(key).intValue());
+                assertFalse("Ordinary casings and coils need no frame", hints.hintFrames.containsKey(key));
             }
         }
         assertEquals(changes, f.world.changes);

@@ -271,14 +271,14 @@ public abstract class GT_MetaTileEntity_FusionComputer
                     .addElement('C', getCasingType().asElement())
                     .addElement('K', getFusionCoilType().asElement())
                     .addElement('E', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_FusionComputer.class)
-                            .hint(FusionHatch.ENERGY.hintColor)
-                            .buildAndChain(requirements(FusionHatch.ENERGY)))
+                            .buildAndChain(requirements(FusionHatch.ENERGY))
+                            .withHint(FusionHatch.ENERGY.hintColor))
                     .addElement('I', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_FusionComputer.class)
-                            .hint(FusionHatch.INPUT.hintColor)
-                            .buildAndChain(requirements(FusionHatch.INPUT)))
+                            .buildAndChain(requirements(FusionHatch.INPUT))
+                            .withHint(FusionHatch.INPUT.hintColor))
                     .addElement('O', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_FusionComputer.class)
-                            .hint(FusionHatch.OUTPUT.hintColor)
-                            .buildAndChain(requirements(FusionHatch.OUTPUT)))
+                            .buildAndChain(requirements(FusionHatch.OUTPUT))
+                            .withHint(FusionHatch.OUTPUT.hintColor))
                     .build();
         }
         return structureDefinition;
