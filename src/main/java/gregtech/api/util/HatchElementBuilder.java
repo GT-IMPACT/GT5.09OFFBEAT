@@ -28,7 +28,8 @@ import space.impact.structures.structure.StructureUtility;
 import space.impact.structures.util.ItemStackPredicate;
 
 /**
- * A hatch-or-casing element. The hatch channel prioritizes available missing hatches, then builds casings.
+ * A hatch-or-casing element. The hatch channel prioritizes available missing
+ * hatches, then builds casings.
  */
 public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBase> {
     private final Map<IHatchElement, Integer> requirements = new LinkedHashMap<>();
@@ -39,17 +40,22 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     private BiFunction<T, IGregTechTileEntity, ForgeDirection> hatchFacing;
 
     public HatchElementBuilder<T> atLeast(IHatchElement... elements) {
-        for (IHatchElement element : elements) requirements.merge(Objects.requireNonNull(element), 1, Integer::sum);
+        for (IHatchElement element : elements)
+            requirements.merge(Objects.requireNonNull(element), 1, Integer::sum);
         return this;
     }
 
     public HatchElementBuilder<T> casingIndex(int index) {
-        if (index < 0) throw new IllegalArgumentException("Negative casing texture index");
+        if (index < 0)
+            throw new IllegalArgumentException("Negative casing texture index");
         textureIndex = index;
         return this;
     }
 
-    /** Accept existing optional hatches without requesting them during automatic construction. */
+    /**
+     * Accept existing optional hatches without requesting them during automatic
+     * construction.
+     */
     public HatchElementBuilder<T> allow(IHatchElement... elements) {
         for (IHatchElement element : elements) {
             optional.add(Objects.requireNonNull(element));
@@ -57,19 +63,28 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         return this;
     }
 
-    /** Prefer a suitable hatch variant, without requesting any additional hatch categories. */
+    /**
+     * Prefer a suitable hatch variant, without requesting any additional hatch
+     * categories.
+     */
     public HatchElementBuilder<T> preferForPlacement(Predicate<IMetaTileEntity> preference) {
         placementPreference = Objects.requireNonNull(preference);
         return this;
     }
 
-    /** Explicit outward facing for structures whose piece also includes external air clearance. */
+    /**
+     * Explicit outward facing for structures whose piece also includes external air
+     * clearance.
+     */
     public HatchElementBuilder<T> hatchFacing(BiFunction<T, IGregTechTileEntity, ForgeDirection> facing) {
         hatchFacing = Objects.requireNonNull(facing);
         return this;
     }
 
-    /** A dedicated hatch position: never substitute a casing or obstruct further shell construction. */
+    /**
+     * A dedicated hatch position: never substitute a casing or obstruct further
+     * shell construction.
+     */
     public IStructureElement<T> build(StructureRequirements requirements) {
         Objects.requireNonNull(requirements);
         if (requirements.getMinimumCasings() != 0 || requirements.getHatches().isEmpty() || hintColor == null) {
@@ -100,17 +115,17 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
 
             @Override
             public PlaceResult survivalPlaceBlock(T machine, World world, int x, int y, int z,
-                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
+                    ItemStack trigger, AutoPlaceEnvironment environment) {
                 if (ChannelDataAccessor.hasSubChannel(trigger, GTStructureUtility.HATCH_CHANNEL)) {
                     for (IHatchElement hatch : requirements.getHatches().keySet()) {
                         environment.getChatter().accept(new ChatComponentTranslation(
                                 "gt.structure.missing_hatch", GTStructureUtility.formatHintText(color, "■")
-                                + " - " + hatch.getDescription()));
+                                        + " - " + hatch.getDescription()));
                     }
                 }
                 return PlaceResult.SKIP;
             }
-        }, requirements.getHatches());
+        }, requirements.getHatches(), true);
     }
 
     public HatchElementBuilder<T> casingIndex(ICasing casing) {
@@ -125,7 +140,8 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     }
 
     /**
-     * The callback runs only for successfully checked casings, never for hints or placement.
+     * The callback runs only for successfully checked casings, never for hints or
+     * placement.
      */
     public IStructureElement<T> buildAndChain(ICasing casing, Consumer<T> onCasingCheck) {
         Objects.requireNonNull(onCasingCheck);
@@ -133,16 +149,20 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     }
 
     /**
-     * The descriptor supplies the complete requirements, replacing any earlier atLeast calls.
+     * The descriptor supplies the complete requirements, replacing any earlier
+     * atLeast calls.
      */
     public IStructureElement<T> buildAndChain(StructureRequirements requirements, Consumer<T> onCasingCheck) {
         Objects.requireNonNull(requirements);
         return buildAndChain(requirements, requirements.getCasing().<T>asElement(), onCasingCheck);
     }
 
-    /** Keep shared hatch requirements when the shell accepts alternative casing blocks. */
+    /**
+     * Keep shared hatch requirements when the shell accepts alternative casing
+     * blocks.
+     */
     public IStructureElement<T> buildAndChain(StructureRequirements requirements, IStructureElement<T> casing,
-                                             Consumer<T> onCasingCheck) {
+            Consumer<T> onCasingCheck) {
         Objects.requireNonNull(requirements);
         Objects.requireNonNull(casing);
         Objects.requireNonNull(onCasingCheck);
@@ -156,7 +176,8 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     }
 
     /**
-     * Override the casing hologram with a colored marker. By default, use the casing's hint.
+     * Override the casing hologram with a colored marker. By default, use the
+     * casing's hint.
      */
     public HatchElementBuilder<T> hint(HintColor color) {
         hintColor = Objects.requireNonNull(color);
@@ -165,11 +186,17 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
 
     public IStructureElement<T> buildAndChain(IStructureElement<T> casing) {
         Objects.requireNonNull(casing);
-        if (requirements.isEmpty() || textureIndex < 0) throw new IllegalStateException("Hatch types and texture required");
+        if (requirements.isEmpty() || textureIndex < 0)
+            throw new IllegalStateException("Hatch types and texture required");
         return buildElement(casing, new LinkedHashMap<>(requirements));
     }
 
     private IStructureElement<T> buildElement(IStructureElement<T> casing, Map<IHatchElement, Integer> required) {
+        return buildElement(casing, required, false);
+    }
+
+    private IStructureElement<T> buildElement(IStructureElement<T> casing, Map<IHatchElement, Integer> required,
+            boolean dedicated) {
         int texture = textureIndex;
         HintColor color = hintColor;
         Set<IHatchElement> accepted = new LinkedHashSet<>(required.keySet());
@@ -179,18 +206,22 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         return new IStructureElement<T>() {
             private IHatchElement matching(World world, int x, int y, int z) {
                 TileEntity tile = world.getTileEntity(x, y, z);
-                if (!(tile instanceof IGregTechTileEntity)) return null;
+                if (!(tile instanceof IGregTechTileEntity))
+                    return null;
                 for (IHatchElement element : accepted) {
-                    if (element.matches(((IGregTechTileEntity) tile).getMetaTileEntity())) return element;
+                    if (element.matches(((IGregTechTileEntity) tile).getMetaTileEntity()))
+                        return element;
                 }
                 return null;
             }
 
             private Predicate<ItemStack> missingHatches(T machine, IItemSource source) {
-                Predicate<ItemStack> missing = stack -> required.entrySet().stream().anyMatch(entry -> entry.getKey().count(machine)
-                        < entry.getValue() && entry.getKey().matchesForPlacement(GTStructureUtility.getMetaTileEntity(stack)));
+                Predicate<ItemStack> missing = stack -> required.entrySet().stream()
+                        .anyMatch(entry -> (dedicated || entry.getKey().count(machine) < entry.getValue())
+                                && entry.getKey().matchesForPlacement(GTStructureUtility.getMetaTileEntity(stack)));
                 if (preference != null) {
-                    Predicate<ItemStack> preferred = missing.and(stack -> preference.test(GTStructureUtility.getMetaTileEntity(stack)));
+                    Predicate<ItemStack> preferred = missing
+                            .and(stack -> preference.test(GTStructureUtility.getMetaTileEntity(stack)));
                     if (source.takeOne(preferred, true) != null) {
                         return preferred;
                     }
@@ -199,7 +230,8 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
             }
 
             private boolean needsHatches(T machine) {
-                return required.entrySet().stream().anyMatch(entry -> entry.getKey().count(machine) < entry.getValue());
+                return dedicated || required.entrySet().stream()
+                        .anyMatch(entry -> entry.getKey().count(machine) < entry.getValue());
             }
 
             @Override
@@ -221,59 +253,70 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
                     descriptions.add(element.getDescription());
                 }
                 List<String> casingDescription = casing.getDescription(machine);
-                if (casingDescription != null) descriptions.addAll(casingDescription);
+                if (casingDescription != null)
+                    descriptions.addAll(casingDescription);
                 return descriptions;
             }
 
             @Override
             public boolean spawnHint(T machine, World world, int x, int y, int z, ItemStack trigger) {
-                if (color == null) return casing.spawnHint(machine, world, x, y, z, trigger);
+                if (color == null)
+                    return casing.spawnHint(machine, world, x, y, z, trigger);
                 ImpactStructures.hintParticle(world, x, y, z, color);
                 return true;
             }
 
             @Override
             public boolean placeBlock(T machine, World world, int x, int y, int z, ItemStack trigger) {
-                if (couldBeValid(machine, world, x, y, z, trigger)) return true;
-                if (!world.isAirBlock(x, y, z)) return false;
+                if (couldBeValid(machine, world, x, y, z, trigger))
+                    return true;
+                if (!world.isAirBlock(x, y, z))
+                    return false;
                 return casing.placeBlock(machine, world, x, y, z, trigger);
             }
 
             @Override
             public BlocksToPlace getBlocksToPlace(T machine, World world, int x, int y, int z,
-                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
-                if (ChannelDataAccessor.hasSubChannel(trigger, GTStructureUtility.HATCH_CHANNEL) && needsHatches(machine)) {
+                    ItemStack trigger, AutoPlaceEnvironment environment) {
+                if (ChannelDataAccessor.hasSubChannel(trigger, GTStructureUtility.HATCH_CHANNEL)
+                        && needsHatches(machine)) {
                     Predicate<ItemStack> missing = missingHatches(machine, environment.getSource());
-                    if (environment.getSource().takeOne(missing, true) != null) return BlocksToPlace.create(missing);
+                    if (environment.getSource().takeOne(missing, true) != null)
+                        return BlocksToPlace.create(missing);
                 }
                 return casing.getBlocksToPlace(machine, world, x, y, z, trigger, environment);
             }
 
             @Override
             public PlaceResult survivalPlaceBlock(T machine, World world, int x, int y, int z, ItemStack trigger,
-                                                  IItemSource source, EntityPlayerMP actor, Consumer<IChatComponent> chatter) {
+                    IItemSource source, EntityPlayerMP actor, Consumer<IChatComponent> chatter) {
                 return survivalPlaceBlock(machine, world, x, y, z, trigger,
                         AutoPlaceEnvironment.fromLegacy(source, actor, chatter));
             }
 
             @Override
             public PlaceResult survivalPlaceBlock(T machine, World world, int x, int y, int z,
-                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
-                if (couldBeValid(machine, world, x, y, z, trigger)) return PlaceResult.SKIP;
-                if (world.isRemote || !ImpactStructures.isBlockTriviallyReplaceable(world, x, y, z, environment.getActor())) {
+                    ItemStack trigger, AutoPlaceEnvironment environment) {
+                if (couldBeValid(machine, world, x, y, z, trigger))
+                    return PlaceResult.SKIP;
+                if (world.isRemote
+                        || !ImpactStructures.isBlockTriviallyReplaceable(world, x, y, z, environment.getActor())) {
                     return PlaceResult.REJECT;
                 }
-                if (!ChannelDataAccessor.hasSubChannel(trigger, GTStructureUtility.HATCH_CHANNEL) || !needsHatches(machine)) {
+                if (!ChannelDataAccessor.hasSubChannel(trigger, GTStructureUtility.HATCH_CHANNEL)
+                        || !needsHatches(machine)) {
                     return casing.survivalPlaceBlock(machine, world, x, y, z, trigger, environment);
                 }
-                ItemStack candidate = environment.getSource().takeOne(missingHatches(machine, environment.getSource()), true);
+                ItemStack candidate = environment.getSource().takeOne(missingHatches(machine, environment.getSource()),
+                        true);
                 if (candidate == null) {
                     return casing.survivalPlaceBlock(machine, world, x, y, z, trigger, environment);
                 }
                 PlaceResult result = StructureUtility.survivalPlaceBlock(candidate, ItemStackPredicate.NBTMode.EXACT,
                         candidate.getTagCompound(), true, world, x, y, z, environment.getSource(),
                         environment.getActor(), environment.getChatter());
-                if (result != PlaceResult.ACCEPT) return result;
+                if (result != PlaceResult.ACCEPT)
+                    return result;
                 TileEntity tile = world.getTileEntity(x, y, z);
                 if (tile instanceof IGregTechTileEntity) {
                     IGregTechTileEntity hatch = (IGregTechTileEntity) tile;
