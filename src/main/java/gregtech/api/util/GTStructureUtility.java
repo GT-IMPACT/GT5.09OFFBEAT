@@ -1,6 +1,13 @@
 package gregtech.api.util;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import gregtech.api.enums.HeatingCoil;
+import space.impact.api.structure.IStructureElement;
+
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -20,6 +27,61 @@ public final class GTStructureUtility {
 
     public static <T extends GT_MetaTileEntity_MultiBlockBase> HatchElementBuilder<T> buildHatchAdder(Class<T> type) {
         return new HatchElementBuilder<>();
+    }
+
+    /**
+     * The check callback records/compares the machine's coil tier. The selection callback must be read-only:
+     * it is also used by holograms and the construction conflict scan.
+     */
+    public static <T> IStructureElement<T> ofHeatingCoil(BiPredicate<T, HeatingCoil> check,
+                                                         BiFunction<T, ItemStack, HeatingCoil> selection) {
+        Objects.requireNonNull(check);
+        Objects.requireNonNull(selection);
+        return new IStructureElement<T>() {
+            @Override
+            public boolean check(T machine, World world, int x, int y, int z) {
+                HeatingCoil coil = HeatingCoil.at(world, x, y, z);
+                return coil != null && check.test(machine, coil);
+            }
+
+            @Override
+            public boolean couldBeValid(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                return HeatingCoil.at(world, x, y, z) == selection.apply(machine, trigger);
+            }
+
+            @Override
+            public boolean spawnHint(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                return selection.apply(machine, trigger).<T>asElement().spawnHint(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public boolean placeBlock(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                if (couldBeValid(machine, world, x, y, z, trigger)) {
+                    return true;
+                }
+                if (!world.isAirBlock(x, y, z)) {
+                    return false;
+                }
+                return selection.apply(machine, trigger).<T>asElement().placeBlock(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public BlocksToPlace getBlocksToPlace(T machine, World world, int x, int y, int z,
+                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
+                return selection.apply(machine, trigger).<T>asElement()
+                        .getBlocksToPlace(machine, world, x, y, z, trigger, environment);
+            }
+
+            @Override
+            public PlaceResult survivalPlaceBlock(T machine, World world, int x, int y, int z,
+                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
+                if (couldBeValid(machine, world, x, y, z, trigger)) {
+                    return PlaceResult.SKIP;
+                }
+                return selection.apply(machine, trigger).<T>asElement()
+                        .survivalPlaceBlock(machine, world, x, y, z, trigger, environment);
+            }
+        };
     }
 
     /** Minecraft 1.7 text uses a fixed palette; orange and brown use its gold color. */
