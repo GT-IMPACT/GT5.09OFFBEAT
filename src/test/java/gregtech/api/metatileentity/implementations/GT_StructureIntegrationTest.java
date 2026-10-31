@@ -111,6 +111,7 @@ public class GT_StructureIntegrationTest {
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_HPSteam",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_Gas",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_Plasma",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_IndustrialPulverizer",
                     "gregtech.api.enums.HeatingCoil"}) {
                 Class.forName(name, true, server);
             }
@@ -176,6 +177,7 @@ public class GT_StructureIntegrationTest {
         GT_FusionStructureChecks.run(hatchItem, hintProxy);
         GT_BoilerStructureChecks.run(hatchItem, hintProxy);
         GT_TurbineStructureChecks.run(hatchItem, hintProxy);
+        GT_PulverizerStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {

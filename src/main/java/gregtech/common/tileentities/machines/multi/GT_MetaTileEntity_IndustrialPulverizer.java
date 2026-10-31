@@ -2,16 +2,28 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.HatchElement;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import net.minecraft.world.World;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.structure.AutoPlaceEnvironment;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.IStructureElement;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -19,9 +31,18 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
-public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_MultiBlockBase {
-	
-	private final int CASING_INDEX = 16;
+import static space.impact.api.structure.StructureUtility.transpose;
+
+public class GT_MetaTileEntity_IndustrialPulverizer
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_IndustrialPulverizer>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.SOLID_STEEL, 8)
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output)
+            .build();
+    private static IStructureDefinition<GT_MetaTileEntity_IndustrialPulverizer> structureDefinition;
+    private int casingCount;
+    private int pipeCount;
 	
 	public GT_MetaTileEntity_IndustrialPulverizer(int aID, String aName, String aNameRegional) {
 		super(aID, aName, aNameRegional);
@@ -36,33 +57,34 @@ public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_Mu
 		return new GT_MetaTileEntity_IndustrialPulverizer(this.mName);
 	}
 	
-	@Override
-	public String[] getDescription() {
-		return new String[]{
-				"Controller block for the Industrial Pulverizer",
-				"Has the all recipes as the Macerator, Ore Washer and Chemical Bath",
-				"Does not lose efficiency when overclocked",
-				"Size(WxHxD): 3x3x3",
-				"3x3x3 of Solid Steel Machine Casings (hollow, min 8!)",
-				"Controller (Front centered)",
-				"1x Steel Gearbox (inside the hollow casings)",
-				"1x Steel Pipe Machine Casing (next to Steel Gearbox)",
-				"1x Input Bus/Hatch (Any inert casing)",
-				"1x Output Bus/Hatch (Any inert casing)",
-				"1x Maintenance Hatch (Any inert casing)",
-				"1x Energy Hatch (Any inert casing)"};
-	}
-	
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Industrial Pulverizer")
+                .addInfo("Processes Macerator, Ore Washer and Chemical Bath recipes")
+                .addInfo("Does not lose efficiency when overclocked")
+                .beginStructureBlock(3, 3, 3, false)
+                .addController("Front center")
+                .addRequirements(SHELL, "Any outer casing position, except the pipe")
+                .addOtherStructurePart(Casings.STEEL_GEARBOX, "Center of the structure", 1)
+                .addOtherStructurePart(Casings.STEEL_PIPE, "Any of the five faces adjacent to the gearbox, except the controller", 1)
+                .addStructureInfo("At least one steel pipe casing must touch the gearbox; additional pipes at these five positions are allowed.")
+                .addStructureInfo("Construction keeps existing pipes, or places one in a free position next to the gearbox.")
+                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
+    }
+
 	@Override
 	public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive,
 								 boolean aRedstone) {
 		if (aSide == aFacing) {
 			return new ITexture[]{
-					Textures.BlockIcons.casingTexturePages[0][16],
+					Casings.SOLID_STEEL.getTexture(),
 					TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_ACTIVE
 							: Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR)};
 		}
-		return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][16]};
+		return new ITexture[]{Casings.SOLID_STEEL.getTexture()};
 	}
 	
 	@Override
@@ -165,59 +187,141 @@ public class GT_MetaTileEntity_IndustrialPulverizer extends GT_MetaTileEntity_Mu
 		}
 	}
 	
-	@Override
-	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-		int casingAmount = 0;
-		boolean hasHeatingCoil = false;
-		// x=width, z=depth, y=height
-		for (int x = -1 + xDir; x <= xDir + 1; x++) {
-			for (int z = -1 + zDir; z <= zDir + 1; z++) {
-				for (int y = -1; y <= 1; y++) {
-					if (x == 0 && y == 0 && z == 0) {
-						continue;
-					}
-					IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
-					Block block = aBaseMetaTileEntity.getBlockOffset(x, y, z);
-					int centerCoords = 0;
-					if (x == xDir) {
-						centerCoords++;
-					}
-					if (y == 0) {
-						centerCoords++;
-					}
-					if (z == zDir) {
-						centerCoords++;
-					}
-					if (centerCoords == 3) {
-						if (block == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 3) {
-							continue;
-						} else {
-							return false;
-						}
-					}
-					if (centerCoords == 2 && block == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 13) {
-						hasHeatingCoil = true;
-						continue;
-					}
-					if (!addInputToMachineList(tileEntity, CASING_INDEX) && !addOutputToMachineList(tileEntity, CASING_INDEX)
-							&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
-							&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-						if (block == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
-							casingAmount++;
-						} else {
-							return false;
-						}
-					}
-					
-				}
-			}
-			
-		}
-		return casingAmount >= 8 && hasHeatingCoil;
-	}
-	
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        pipeCount = 0;
+        return checkPiece(STRUCTURE_PIECE, 1, 1, 0) && pipeCount > 0 && SHELL.isSatisfied(this, casingCount);
+    }
+
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 1, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 1, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_IndustrialPulverizer> getStructureDefinition() {
+        if (structureDefinition == null) {
+            IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> shell =
+                    GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_IndustrialPulverizer.class)
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount);
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_IndustrialPulverizer>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CPC", "CCC"},
+                            {"C~C", "PGP", "CPC"},
+                            {"CCC", "CPC", "CCC"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', shell)
+                    .addElement('G', Casings.STEEL_GEARBOX.asElement())
+                    .addElement('P', pipeOrShell(shell))
+                    .build();
+        }
+        return structureDefinition;
+    }
+
+    /** Keep all five legacy pipe locations valid, but automatically build only one pipe. */
+    private static IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> pipeOrShell(
+            IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> shell) {
+        IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> pipe = Casings.STEEL_PIPE.asElement();
+        return new IStructureElement<GT_MetaTileEntity_IndustrialPulverizer>() {
+            private IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> constructionElement(
+                    GT_MetaTileEntity_IndustrialPulverizer machine, World world, int x, int y, int z) {
+                if (isPipe(world, x, y, z)) {
+                    return pipe;
+                }
+                int[] selected = machine.findPipePosition(world);
+                return selected != null && selected[0] == x && selected[1] == y && selected[2] == z ? pipe : shell;
+            }
+
+            @Override
+            public boolean check(GT_MetaTileEntity_IndustrialPulverizer machine, World world, int x, int y, int z) {
+                if (isPipe(world, x, y, z)) {
+                    ++machine.pipeCount;
+                    return true;
+                }
+                return shell.check(machine, world, x, y, z);
+            }
+
+            @Override
+            public boolean couldBeValid(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
+                                         int x, int y, int z, ItemStack trigger) {
+                return isPipe(world, x, y, z) || shell.couldBeValid(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public boolean spawnHint(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
+                                     int x, int y, int z, ItemStack trigger) {
+                return constructionElement(machine, world, x, y, z).spawnHint(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public boolean placeBlock(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
+                                      int x, int y, int z, ItemStack trigger) {
+                if (couldBeValid(machine, world, x, y, z, trigger)) {
+                    return true;
+                }
+                if (!world.isAirBlock(x, y, z)) {
+                    return false;
+                }
+                return constructionElement(machine, world, x, y, z).placeBlock(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public BlocksToPlace getBlocksToPlace(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
+                                                  int x, int y, int z, ItemStack trigger, AutoPlaceEnvironment environment) {
+                return constructionElement(machine, world, x, y, z)
+                        .getBlocksToPlace(machine, world, x, y, z, trigger, environment);
+            }
+
+            @Override
+            public PlaceResult survivalPlaceBlock(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
+                                                  int x, int y, int z, ItemStack trigger, AutoPlaceEnvironment environment) {
+                if (couldBeValid(machine, world, x, y, z, trigger)) {
+                    return PlaceResult.SKIP;
+                }
+                return constructionElement(machine, world, x, y, z)
+                        .survivalPlaceBlock(machine, world, x, y, z, trigger, environment);
+            }
+        };
+    }
+
+    private static boolean isPipe(World world, int x, int y, int z) {
+        return world.getBlock(x, y, z) == Casings.STEEL_PIPE.getBlock()
+                && world.getBlockMetadata(x, y, z) == Casings.STEEL_PIPE.getMetadata();
+    }
+
+    /** Read the world rather than check counters: hints must be pure and placement may span several passes. */
+    private int[] findPipePosition(World world) {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        ForgeDirection front = getExtendedFacing().getDirection();
+        int centerX = base.getXCoord() - front.offsetX;
+        int centerY = base.getYCoord();
+        int centerZ = base.getZCoord() - front.offsetZ;
+        int[] selected = null;
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+            if (side == front) {
+                continue;
+            }
+            int x = centerX + side.offsetX;
+            int y = centerY + side.offsetY;
+            int z = centerZ + side.offsetZ;
+            if (isPipe(world, x, y, z)) {
+                return null;
+            }
+            if (selected == null && world.isAirBlock(x, y, z)) {
+                selected = new int[]{x, y, z};
+            }
+        }
+        // With a closed shell, show which casing to replace manually; never overwrite it during construction.
+        return selected == null ? new int[]{centerX, centerY - 1, centerZ} : selected;
+    }
+
 	@Override
 	public int getMaxEfficiency(ItemStack aStack) {
 		return 10000;
