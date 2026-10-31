@@ -966,3 +966,20 @@ TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Structure_Index_0=Хотя
 TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Structure_Index_1=Строительство сохраняет установленные катушки или ставит одну в свободное место рядом с насосом.
 TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Structure_Index_2=Также поддерживаются совместимые входные и энергетические люки IMPACT.
 TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Channel_Index_0=Автоматически устанавливать недостающие люки GregTech из инвентаря
+
+TileEntity_DESCRIPTION_multimachine.distillationtower_MachineType_Index_0=Дистилляционная башня
+TileEntity_DESCRIPTION_multimachine.distillationtower_Information_Index_0=Разделяет жидкости на фракции
+TileEntity_DESCRIPTION_multimachine.distillationtower_Information_Index_1=Высота выхода жидкости соответствует номеру слота в рецепте NEI, начиная с блока над контроллером
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_0=По центру спереди на нижнем слое
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_1=Любое место корпуса
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_2=Нижний слой
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_3=Каждый слой выше нижнего, включая крышу
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_4=Центр каждого промежуточного слоя; дно и крыша заполнены
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_0=Необходимо минимум 7 × h - 5 корпусов, где h — полная высота башни.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_1=На каждом верхнем слое нужен собственный выходной жидкостный люк; выходные шины не засчитываются.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_2=Дополнительные выходные шины выше нижнего слоя и жидкостные выходы снизу допускаются, но не заменяют обязательные выходы.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_3=Поддерживаются жидкостные и совмещённые входы IMPACT, а также многоамперные энергетические люки.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Channel_Index_0=Полная высота = значение канала + 2, от 3 до 12 блоков
+TileEntity_DESCRIPTION_multimachine.distillationtower_Channel_Index_1=Автоматически устанавливать недостающие люки GregTech из инвентаря
+gt.tooltip.hatch.tower_input=Жидкостный входной люк (включая совмещённые входы IMPACT)
+gt.tooltip.hatch.tower_output=Выходной жидкостный люк

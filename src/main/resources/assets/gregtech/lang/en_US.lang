@@ -1267,3 +1267,20 @@ TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Structure_Index_0=At least
 TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Structure_Index_1=Construction keeps existing coils, or places one in a free position next to the pump.
 TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Structure_Index_2=Compatible IMPACT input and energy hatches are also accepted.
 TileEntity_DESCRIPTION_multimachine.multielectrolyzer_Channel_Index_0=Automatically place missing GregTech hatches from your inventory
+
+TileEntity_DESCRIPTION_multimachine.distillationtower_MachineType_Index_0=Distillation Tower
+TileEntity_DESCRIPTION_multimachine.distillationtower_Information_Index_0=Separates fluids into fractions
+TileEntity_DESCRIPTION_multimachine.distillationtower_Information_Index_1=Fluid output height equals its slot number in the NEI recipe, starting one block above the controller
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_0=Front center of the bottom layer
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_1=Any casing position
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_2=Bottom layer
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_3=Each layer above the bottom, including the roof
+TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_4=Center of every intermediate layer; the bottom and roof are filled
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_0=At least 7 x h - 5 casings are required, where h is the total tower height.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_1=Each upper layer needs its own fluid output hatch; output buses do not count toward this requirement.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_2=Additional output buses above the bottom and fluid outputs on the bottom are accepted, but do not replace the required ports.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_3=Compatible IMPACT fluid and combined inputs and multi-amp energy hatches are accepted.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Channel_Index_0=Total height = channel value + 2, from 3 to 12 blocks
+TileEntity_DESCRIPTION_multimachine.distillationtower_Channel_Index_1=Automatically place missing GregTech hatches from your inventory
+gt.tooltip.hatch.tower_input=Fluid Input Hatch (including IMPACT combined inputs)
+gt.tooltip.hatch.tower_output=Fluid Output Hatch
