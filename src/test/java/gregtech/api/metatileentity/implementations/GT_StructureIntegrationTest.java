@@ -125,6 +125,11 @@ public class GT_StructureIntegrationTest {
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine2"}) {
                 Class.forName(name, true, server);
             }
+            // Its existing static recipe requires registered adsorption filter items before initialization.
+            Class<?> airFilter = Class.forName(
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AirFilter", false, server);
+            assertEquals("gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase",
+                    airFilter.getSuperclass().getName());
             Class<?> builder = Class.forName("gregtech.api.util.MultiblockTooltipBuilder", true, server);
             Object tooltip = builder.getConstructor().newInstance();
             builder.getMethod("addInfo", String.class).invoke(tooltip, "Server-safe tooltip");
@@ -198,6 +203,7 @@ public class GT_StructureIntegrationTest {
         GT_DistillationTowerStructureChecks.run(hatchItem, hintProxy);
         GT_OilCrackerStructureChecks.run(hatchItem, hintProxy);
         GT_DieselEngineStructureChecks.run(hatchItem, hintProxy);
+        GT_AirFilterStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {

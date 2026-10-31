@@ -6,8 +6,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -34,6 +36,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     private int textureIndex = -1;
     private HintColor hintColor;
     private Predicate<IMetaTileEntity> placementPreference;
+    private BiFunction<T, IGregTechTileEntity, ForgeDirection> hatchFacing;
 
     public HatchElementBuilder<T> atLeast(IHatchElement... elements) {
         for (IHatchElement element : elements) requirements.merge(Objects.requireNonNull(element), 1, Integer::sum);
@@ -57,6 +60,12 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     /** Prefer a suitable hatch variant, without requesting any additional hatch categories. */
     public HatchElementBuilder<T> preferForPlacement(Predicate<IMetaTileEntity> preference) {
         placementPreference = Objects.requireNonNull(preference);
+        return this;
+    }
+
+    /** Explicit outward facing for structures whose piece also includes external air clearance. */
+    public HatchElementBuilder<T> hatchFacing(BiFunction<T, IGregTechTileEntity, ForgeDirection> facing) {
+        hatchFacing = Objects.requireNonNull(facing);
         return this;
     }
 
@@ -165,6 +174,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         HintColor color = hintColor;
         Set<IHatchElement> accepted = new LinkedHashSet<>(required.keySet());
         Predicate<IMetaTileEntity> preference = placementPreference;
+        BiFunction<T, IGregTechTileEntity, ForgeDirection> facing = hatchFacing;
         accepted.addAll(optional);
         return new IStructureElement<T>() {
             private IHatchElement matching(World world, int x, int y, int z) {
@@ -265,7 +275,16 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
                         environment.getActor(), environment.getChatter());
                 if (result != PlaceResult.ACCEPT) return result;
                 TileEntity tile = world.getTileEntity(x, y, z);
-                if (tile instanceof IGregTechTileEntity) GTStructureUtility.orientHatch((IGregTechTileEntity) tile, environment);
+                if (tile instanceof IGregTechTileEntity) {
+                    IGregTechTileEntity hatch = (IGregTechTileEntity) tile;
+                    ForgeDirection direction = facing == null ? null : facing.apply(machine, hatch);
+                    if (direction != null && direction != ForgeDirection.UNKNOWN
+                            && hatch.isValidFacing((byte) direction.ordinal())) {
+                        hatch.setFrontFacing((byte) direction.ordinal());
+                    } else {
+                        GTStructureUtility.orientHatch(hatch, environment);
+                    }
+                }
                 return PlaceResult.ACCEPT_STOP;
             }
         };

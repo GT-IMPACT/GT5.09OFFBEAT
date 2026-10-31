@@ -1,20 +1,28 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaGenerated_Tool;
+import gregtech.api.metatileentity.implementations.GTMTE_BusHatch_Input;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_OutputBus;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-
 import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
 import gregtech.common.GT_Pollution;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -23,6 +31,11 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,11 +43,26 @@ import java.util.Arrays;
 import static gregtech.api.enums.GT_Values.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static space.impact.api.structure.StructureUtility.transpose;
 
 /**
  * Created by danie_000 on 03.10.2016.
  */
-public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBase {
+public class GT_MetaTileEntity_AirFilter
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_AirFilter>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
+    private static final HintColor MUFFLER_HINT = HintColor.ORANGE;
+    private static final StructureRequirements BOTTOM = StructureRequirements
+            .builder(Casings.AIR_FILTER_TURBINE, 0)
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, FilterHatch.INPUT_BUS, FilterHatch.OUTPUT_BUS)
+            .build();
+    private static final StructureRequirements MUFFLERS = StructureRequirements
+            .builder(Casings.AIR_FILTER_TURBINE, 0)
+            .atLeast(FilterHatch.MUFFLER)
+            .build();
+    private static IStructureDefinition<GT_MetaTileEntity_AirFilter> structureDefinition;
     protected int mPollutionReduction=0;
     protected int baseEff = 2500*4;
     protected boolean hasPollution=false;
@@ -57,28 +85,34 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
     }
 
     @Override
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Air Filter",
-                "Size(WxHxD): 3x4x3 (Hollow), Controller (Front middle bottom)",
-                "8x Air Filter Vent Casing (Two middle Layers, corners)",
-                "1-8x Muffler Hatch (Two middle Layers, sides)",
-                "1x Input Bus (Any bottom layer casing)",
-                "1x Output Bus (Any bottom layer casing)",
-                "1x Energy Hatch (Any bottom layer casing)",
-                "1x Maintenance Hatch (Any bottom layer casing)",
-                "Air Filter Turbine Casings for the rest",
-                "Can accept Adsorption filters, Turbine (in controller)",
-                "Machine tier*2 = Maximal useful muffler tier",
-                "Features Hysteresis control (tm)"
-        };
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Electric Air Filter")
+                .addInfo("Reduces pollution in the surrounding 3 x 3 chunks")
+                .addInfo("Adsorption filters double pollution removal; a turbine in the controller can improve efficiency")
+                .addInfo("Maximum useful muffler tier is twice the machine tier")
+                .addInfo("Starts cleaning at 10000 total pollution and stops below 1000")
+                .beginStructureBlock(3, 4, 3, true)
+                .addController("Front center of the bottom layer")
+                .addRequirements(BOTTOM, "Any bottom layer casing position", BOTTOM_HINT)
+                .addRequirements(MUFFLERS, "Side centers of the two middle layers; 1 to 8 mufflers", MUFFLER_HINT)
+                .addOtherStructurePart(Casings.AIR_FILTER_VENT, "Corners of the two middle layers", 8)
+                .addOtherStructurePart(Casings.AIR_FILTER_TURBINE, "Entire roof", 9)
+                .addAir("Center of both middle layers")
+                .addAir("Two full 3 x 3 layers above the roof")
+                .addAir("One block outward from all four sides of each middle layer, including the vents")
+                .addStructureInfo("Unused bottom hatch and middle muffler positions require Air Filter Turbine Casings.")
+                .addStructureInfo("Item input and output buses are required; fluid-only hatches do not satisfy these requirements.")
+                .addStructureInfo("IMPACT combined item/fluid inputs and multi-amp energy hatches are accepted.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
-            return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][16], TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE)};
+            return new ITexture[]{Casings.SOLID_STEEL.getTexture(), TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE)};
         }
-        return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][16]};
+        return new ITexture[]{Casings.SOLID_STEEL.getTexture()};
     }
     
     @Override
@@ -89,11 +123,6 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
     @Override
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
-    }
-
-    @Override
-    public boolean isFacingValid(byte aFacing) {
-        return aFacing > 1;
     }
 
     @Override
@@ -213,218 +242,131 @@ public class GT_MetaTileEntity_AirFilter extends GT_MetaTileEntity_MultiBlockBas
     }
 
     @Override
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-        int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-        int one = 1;
-        int two = 2;
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        return checkPiece(STRUCTURE_PIECE, 2, 5, 1) && BOTTOM.isSatisfied(this, 0) && MUFFLERS.isSatisfied(this, 0);
+    }
 
-        //air check and top casing check
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, one, zDir) || !aBaseMetaTileEntity.getAirOffset(xDir, two, zDir)) {//check air inside
-            return false;
-        }
-        for(int i=-one;i<two;i++) {
-            for (int j = -one; j < two; j++) {
-                if (!aBaseMetaTileEntity.getAirOffset(xDir+i, 4, zDir+j) || !aBaseMetaTileEntity.getAirOffset(xDir+i, 5, zDir+j)) {//check air at on top of top layer
-                    return false;
-                }
-                if (aBaseMetaTileEntity.getBlockOffset(xDir+i, 3, zDir+j) != GregTech_API.sBlockCasingsNH) {
-                    return false;//top casing
-                }
-                if (aBaseMetaTileEntity.getMetaIDOffset(xDir+i, 3, zDir+j) != 0) {
-                    return false;//top casing
-                }
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 2, 5, 1);
+    }
 
-            }
-        }
-        if (!aBaseMetaTileEntity.getAirOffset(two+xDir, one, zDir) || !aBaseMetaTileEntity.getAirOffset(two+xDir, two, zDir)) {
-            return false;
-        }
-        if (!aBaseMetaTileEntity.getAirOffset(xDir-two, one, zDir) || !aBaseMetaTileEntity.getAirOffset(xDir-two, two, zDir)) {
-            return false;
-        }
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, one, two+zDir) || !aBaseMetaTileEntity.getAirOffset(xDir, two, two+zDir)) {
-            return false;
-        }
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, one, zDir-two) || !aBaseMetaTileEntity.getAirOffset(xDir, two, zDir-two)) {
-            return false;
-        }
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 2, 5, 1, elementBudget, environment);
+    }
 
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_AirFilter> getStructureDefinition() {
+        if (structureDefinition == null) {
+            // Include all mandatory air clearances in the same piece used by survival's conflict scan.
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_AirFilter>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"     ", " --- ", " --- ", " --- ", "     "},
+                            {"     ", " --- ", " --- ", " --- ", "     "},
+                            {"     ", " CCC ", " CCC ", " CCC ", "     "},
+                            {" --- ", "-VMV-", "-M-M-", "-VMV-", " --- "},
+                            {" --- ", "-VMV-", "-M-M-", "-VMV-", " --- "},
+                            {"     ", " B~B ", " BBB ", " BBB ", "     "}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', Casings.AIR_FILTER_TURBINE.asElement())
+                    .addElement('V', Casings.AIR_FILTER_VENT.asElement())
+                    .addElement('B', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AirFilter.class)
+                            .buildAndChain(BOTTOM)
+                            .withHint(BOTTOM_HINT))
+                    .addElement('M', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AirFilter.class)
+                            .hatchFacing(GT_MetaTileEntity_AirFilter::mufflerFacing)
+                            .buildAndChain(MUFFLERS)
+                            .withHint(MUFFLER_HINT))
+                    .build();
+        }
+        return structureDefinition;
+    }
 
-        if (!aBaseMetaTileEntity.getAirOffset(two+xDir, one, one+zDir) || !aBaseMetaTileEntity.getAirOffset(two+xDir, two, one+zDir)) {
-            return false;
+    private ForgeDirection mufflerFacing(IGregTechTileEntity hatch) {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        ForgeDirection back = getExtendedFacing().getDirection().getOpposite();
+        int dx = hatch.getXCoord() - base.getXCoord() - back.offsetX;
+        int dz = hatch.getZCoord() - base.getZCoord() - back.offsetZ;
+        if (dx != 0) {
+            return dx < 0 ? ForgeDirection.WEST : ForgeDirection.EAST;
         }
-        if (!aBaseMetaTileEntity.getAirOffset(two+xDir, one, zDir-one) || !aBaseMetaTileEntity.getAirOffset(two+xDir, two, zDir-one)) {
-            return false;
-        }
+        return dz < 0 ? ForgeDirection.NORTH : ForgeDirection.SOUTH;
+    }
 
-        if (!aBaseMetaTileEntity.getAirOffset(xDir-two, one, one+zDir) || !aBaseMetaTileEntity.getAirOffset(xDir-two, two, one+zDir)) {
-            return false;
-        }
-        if (!aBaseMetaTileEntity.getAirOffset(xDir-two, one, zDir-one) || !aBaseMetaTileEntity.getAirOffset(xDir-two, two, zDir-one)) {
-            return false;
-        }
+    private enum FilterHatch implements IHatchElement {
+        INPUT_BUS,
+        OUTPUT_BUS,
+        MUFFLER;
 
-        if (!aBaseMetaTileEntity.getAirOffset(one+xDir, one, two+zDir) || !aBaseMetaTileEntity.getAirOffset(one+xDir, two, two+zDir)) {
-            return false;
-        }
-        if (!aBaseMetaTileEntity.getAirOffset(xDir-one, one, two+zDir) || !aBaseMetaTileEntity.getAirOffset(xDir-one, two, two+zDir)) {
-            return false;
-        }
-
-        if (!aBaseMetaTileEntity.getAirOffset(one+xDir, one, zDir-two) || !aBaseMetaTileEntity.getAirOffset(one+xDir, two, zDir-two)) {
-            return false;
-        }
-        if (!aBaseMetaTileEntity.getAirOffset(xDir-one, one, zDir-two) || !aBaseMetaTileEntity.getAirOffset(xDir-one, two, zDir-two)) {
-            return false;
-        }
-
-        //air check and top casing check done
-
-        //muffler check
-        mMufflerHatches.clear();
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(one+xDir, one, zDir), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(one+xDir, one, zDir)!= GregTech_API.sBlockCasingsNH) {
-                return false;
-            }
-            if(aBaseMetaTileEntity.getMetaIDOffset(one+xDir, one, zDir)!= 0) {
-                return false;
-            }
-        }
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(one+xDir, two, zDir), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(one+xDir, two, zDir)!= GregTech_API.sBlockCasingsNH) {
-                return false;
-            }
-            if(aBaseMetaTileEntity.getMetaIDOffset(one+xDir, two, zDir)!= 0) {
-                return false;
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            switch (this) {
+                case INPUT_BUS:
+                    return HatchElement.Input.matches(tile);
+                case OUTPUT_BUS:
+                    return HatchElement.Output.matches(tile);
+                case MUFFLER:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Muffler;
+                default:
+                    throw new AssertionError(this);
             }
         }
 
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir-one, one, zDir), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(xDir-one, one, zDir)!= GregTech_API.sBlockCasingsNH) {
-                return false;
-            }
-            if(aBaseMetaTileEntity.getMetaIDOffset(xDir-one, one, zDir)!= 0) {
-                return false;
-            }
-        }
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir-one, two, zDir), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(xDir-one, two, zDir)!= GregTech_API.sBlockCasingsNH) {
-                return false;
-            }
-            if(aBaseMetaTileEntity.getMetaIDOffset(xDir-one, two, zDir)!= 0) {
-                return false;
+        @Override
+        public boolean matchesForPlacement(IMetaTileEntity tile) {
+            switch (this) {
+                case INPUT_BUS:
+                    return tile instanceof GT_MetaTileEntity_Hatch_InputBus || tile instanceof GTMTE_BusHatch_Input;
+                case OUTPUT_BUS:
+                    return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
+                default:
+                    return matches(tile);
             }
         }
 
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, one, one+zDir), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(xDir, one, one+zDir)!= GregTech_API.sBlockCasingsNH) {
-                return false;
-            }
-            if(aBaseMetaTileEntity.getMetaIDOffset(xDir, one, one+zDir)!= 0) {
-                return false;
-            }
-        }
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, two, one+zDir), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(xDir, two, one+zDir)!= GregTech_API.sBlockCasingsNH) {
-                return false;
-            }
-            if(aBaseMetaTileEntity.getMetaIDOffset(xDir, two, one+zDir)!= 0) {
-                return false;
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            switch (this) {
+                case INPUT_BUS:
+                    return machine.mInputBusses.size() + machine.mInputBusHatches.size();
+                case OUTPUT_BUS:
+                    return machine.mOutputBusses.size();
+                case MUFFLER:
+                    return machine.mMufflerHatches.size();
+                default:
+                    throw new AssertionError(this);
             }
         }
 
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, one, zDir-one), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(xDir, one, zDir-one)!= GregTech_API.sBlockCasingsNH) {
-                return false;
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            switch (this) {
+                case INPUT_BUS:
+                    return machine.addInputToMachineList(tile, texture);
+                case OUTPUT_BUS:
+                    return machine.addOutputToMachineList(tile, texture);
+                case MUFFLER:
+                    return machine.addMufflerToMachineList(tile, texture);
+                default:
+                    throw new AssertionError(this);
             }
-            if(aBaseMetaTileEntity.getMetaIDOffset(xDir, one, zDir-one)!= 0) {
-                return false;
-            }
-        }
-        if(!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, two, zDir-one), 160)){
-            if(aBaseMetaTileEntity.getBlockOffset(xDir, two, zDir-one)!= GregTech_API.sBlockCasingsNH) {
-                return false;
-            }
-            if(aBaseMetaTileEntity.getMetaIDOffset(xDir, two, zDir-one)!= 0) {
-                return false;
-            }
-        }
-        if(mMufflerHatches.isEmpty()) {
-            return false;
-        }
-        //muffler check done
-        //pipe casing check
-        if(aBaseMetaTileEntity.getBlockOffset(one+xDir, one, one+zDir)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(one+xDir, one, one+zDir)!= 1) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getBlockOffset(one+xDir, two, one+zDir)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(one+xDir, two, one+zDir)!= 1) {
-            return false;
         }
 
-        if(aBaseMetaTileEntity.getBlockOffset(xDir-one, one, one+zDir)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(xDir-one, one, one+zDir)!= 1) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getBlockOffset(xDir-one, two, one+zDir)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(xDir-one, two, one+zDir)!= 1) {
-            return false;
-        }
-
-        if(aBaseMetaTileEntity.getBlockOffset(one+xDir, one, zDir-one)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(one+xDir, one, zDir-one)!= 1) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getBlockOffset(one+xDir, two, zDir-one)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(one+xDir, two, zDir-one)!= 1) {
-            return false;
-        }
-
-        if(aBaseMetaTileEntity.getBlockOffset(xDir-one, one, zDir-one)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(xDir-one, one, zDir-one)!= 1) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getBlockOffset(xDir-one, two, zDir-one)!= GregTech_API.sBlockCasingsNH) {
-            return false;
-        }
-        if(aBaseMetaTileEntity.getMetaIDOffset(xDir-one, two, zDir-one)!= 1) {
-            return false;
-        }
-        //pipe casing check done
-        //bottom casing
-        for (int i = -one; i < two; i++) {
-            for (int j = -one; j < two; j++) {
-                if (xDir + i != 0 || zDir + j != 0) {//sneak exclusion of the controller block
-                    IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
-                    if (!addMaintenanceToMachineList(tTileEntity, 160) && !addInputToMachineList(tTileEntity, 160) && !addOutputToMachineList(tTileEntity, 160) && !addEnergyInputToMachineList(tTileEntity, 160)) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != GregTech_API.sBlockCasingsNH) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != 0) {
-                            return false;
-                        }
-                    }
-                }
+        @Override
+        public String getDescription() {
+            switch (this) {
+                case INPUT_BUS:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.input_bus");
+                case OUTPUT_BUS:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.output_bus");
+                case MUFFLER:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.muffler");
+                default:
+                    throw new AssertionError(this);
             }
         }
-        //bottom casing done
-        return true;
     }
 
     @Override
