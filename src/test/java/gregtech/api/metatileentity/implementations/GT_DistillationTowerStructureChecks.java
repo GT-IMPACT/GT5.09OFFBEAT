@@ -71,7 +71,7 @@ final class GT_DistillationTowerStructureChecks {
         assertTrue(f.recheck());
         assertEquals(height - 1, f.machine.mOutputHatches.size());
         assertEquals(1, f.machine.mOutputBusses.size());
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             int[] p = f.layers.get(0).get(i);
             f.casing(p);
             assertFalse("Missing bottom or common requirement " + i, f.recheck());
@@ -100,7 +100,10 @@ final class GT_DistillationTowerStructureChecks {
         f.putHatch(upper, 3);
         assertTrue("Additional upper output buses remain valid", f.recheck());
         f.casing(f.layers.get(0).get(3));
-        assertFalse("An upper bus does not replace the bottom output bus", f.recheck());
+        assertTrue("No bottom output bus is required", f.recheck());
+        f.casing(upper);
+        assertTrue("Output buses are entirely optional", f.recheck());
+        assertTrue(f.machine.mOutputBusses.isEmpty());
         f.putHatch(f.layers.get(0).get(3), 3);
         f.casing(upper);
         f.casing(f.layers.get(0).get(0));
@@ -175,6 +178,8 @@ final class GT_DistillationTowerStructureChecks {
         assertTrue(f.machine.mMachine);
         assertEquals(8 * height + 1, source.consumed);
         assertEquals(height - 1, f.machine.mOutputHatches.size());
+        assertTrue("Survival does not auto-place optional output buses", f.machine.mOutputBusses.isEmpty());
+        assertEquals("Optional output bus is not consumed", 1, source.stacks.get(3).stackSize);
         for (int y = 1; y < height; y++) {
             final int worldY = 64 + y;
             assertEquals(1, f.machine.mOutputHatches.stream()
@@ -276,6 +281,8 @@ final class GT_DistillationTowerStructureChecks {
             assertTrue(info.contains(language.equals("en_US") ? "Distillation Tower" : "Дистилляционная башня"));
             assertTrue(structure.contains(language.equals("en_US") ? "3 x 3-12 x 3" : "3 × 3-12 × 3"));
             assertTrue(structure.contains("16-79"));
+            assertTrue(structure.contains(language.equals("en_US")
+                    ? "Output buses are optional" : "Выходные шины необязательны"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE, EnumChatFormatting.GOLD}) {

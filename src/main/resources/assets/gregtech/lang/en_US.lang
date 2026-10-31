@@ -1278,7 +1278,7 @@ TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_3=Each laye
 TileEntity_DESCRIPTION_multimachine.distillationtower_Location_Index_4=Center of every intermediate layer; the bottom and roof are filled
 TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_0=At least 7 x h - 5 casings are required, where h is the total tower height.
 TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_1=Each upper layer needs its own fluid output hatch; output buses do not count toward this requirement.
-TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_2=Additional output buses above the bottom and fluid outputs on the bottom are accepted, but do not replace the required ports.
+TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_2=Output buses are optional on any layer; bottom fluid outputs do not replace the required upper outlets.
 TileEntity_DESCRIPTION_multimachine.distillationtower_Structure_Index_3=Compatible IMPACT fluid and combined inputs and multi-amp energy hatches are accepted.
 TileEntity_DESCRIPTION_multimachine.distillationtower_Channel_Index_0=Total height = channel value + 2, from 3 to 12 blocks
 TileEntity_DESCRIPTION_multimachine.distillationtower_Channel_Index_1=Automatically place missing GregTech hatches from your inventory

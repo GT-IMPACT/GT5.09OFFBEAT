@@ -42,7 +42,7 @@ public class GT_MetaTileEntity_DistillationTower
     private static final StructureRequirements COMMON = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy).build();
     private static final StructureRequirements BOTTOM_PORTS = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 0)
-            .atLeast(TowerHatch.FLUID_INPUT, TowerHatch.BOTTOM_OUTPUT_BUS).build();
+            .atLeast(TowerHatch.FLUID_INPUT).build();
     private static final StructureRequirements BOTTOM = withCommonRequirements(BOTTOM_PORTS);
     private static final StructureRequirements[] OUTPUT_LAYERS = createOutputRequirements();
     private static final StructureRequirements[] SHELLS = createShellRequirements();
@@ -100,7 +100,7 @@ public class GT_MetaTileEntity_DistillationTower
                 .addRequirements(OUTPUT_LAYERS[1], "Each layer above the bottom, including the roof", OUTPUT_HINT)
                 .addAir("Center of every intermediate layer; the bottom and roof are filled")
                 .addStructureInfo("Each upper layer needs its own fluid output hatch; output buses do not count toward this requirement.")
-                .addStructureInfo("Additional output buses above the bottom and fluid outputs on the bottom are accepted, but do not replace the required ports.")
+                .addStructureInfo("Output buses are optional on any layer; bottom fluid outputs do not replace the required upper outlets.")
                 .addStructureInfo("Compatible IMPACT fluid and combined inputs and multi-amp energy hatches are accepted.")
                 .addMasterChannel("Total height = channel value + 2, from 3 to 12 blocks")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
@@ -246,7 +246,6 @@ public class GT_MetaTileEntity_DistillationTower
 
     private enum TowerHatch implements IHatchElement {
         FLUID_INPUT,
-        BOTTOM_OUTPUT_BUS,
         OPTIONAL_OUTPUT_BUS;
 
         @Override
@@ -266,14 +265,7 @@ public class GT_MetaTileEntity_DistillationTower
             if (this == FLUID_INPUT) {
                 return machine.mInputHatches.size() + machine.mQuadrInputHatches.size() + machine.mInputBusHatches.size();
             }
-            int count = 0;
-            for (GT_MetaTileEntity_Hatch_OutputBus bus : machine.mOutputBusses) {
-                if (this == OPTIONAL_OUTPUT_BUS
-                        || bus.getBaseMetaTileEntity().getYCoord() == machine.getBaseMetaTileEntity().getYCoord()) {
-                    count++;
-                }
-            }
-            return count;
+            return machine.mOutputBusses.size();
         }
 
         @Override
