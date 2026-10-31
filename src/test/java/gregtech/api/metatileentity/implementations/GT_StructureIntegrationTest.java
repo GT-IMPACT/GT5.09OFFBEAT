@@ -793,6 +793,22 @@ public class GT_StructureIntegrationTest {
         assertEquals(changes, unloaded.world.changes);
         assertEquals(0, items.queries);
         assertEquals(new HashSet<>(Arrays.asList(unavailable)), hintProxy.errorPositions);
+
+        Fixture partial = new Fixture(ForgeDirection.NORTH);
+        partial.fillShell();
+        for (int i = 0; i < 4; i++) {
+            partial.putHatch(20 + i, i);
+        }
+        assertTrue(partial.machine.recheck());
+        int[] early = partial.shell.get(0);
+        partial.world.unloadedPositions.add(TestWorld.key(early[0], early[1], early[2]));
+        assertFalse("An unloaded required block invalidates an otherwise complete machine", partial.machine.recheck());
+        assertEquals("Continue scanning later hatches after an unloaded block", 1, partial.machine.mMaintenanceHatches.size());
+        assertEquals(1, partial.machine.mEnergyHatches.size());
+        assertEquals(1, partial.machine.mInputBusses.size());
+        assertEquals(1, partial.machine.mOutputBusses.size());
+        partial.world.unloadedPositions.clear();
+        assertTrue(partial.machine.recheck());
     }
 
     public static class Freezer extends GT_MetaTileEntity_VacuumFreezer {

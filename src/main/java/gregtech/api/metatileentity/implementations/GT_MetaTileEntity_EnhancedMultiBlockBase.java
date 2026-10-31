@@ -169,10 +169,10 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
         boolean[] valid = {true};
         getStructureDefinition().iterate(piece, base.getWorld(), getExtendedFacing(),
                 base.getXCoord(), base.getYCoord(), base.getZCoord(), horizontal, vertical, depth,
-                (element, world, x, y, z, a, b, c) -> {
+                IStructureWalker.<T>ignoreBlockUnloaded((element, world, x, y, z, a, b, c) -> {
                     if (!world.blockExists(x, y, z) || !element.check(self(), world, x, y, z)) valid[0] = false;
                     return true;
-                });
+                }));
         return valid[0];
     }
 
