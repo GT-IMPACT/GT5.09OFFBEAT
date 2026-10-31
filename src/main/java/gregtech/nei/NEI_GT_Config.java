@@ -14,9 +14,10 @@ public class NEI_GT_Config
 
     @Override
     public void loadConfig() {
-        // NEI sorts handlers by ascending order; show unpackaging and disassembly after other recipes.
-        NEIClientConfig.handlerOrdering.putIfAbsent(GT_Recipe.GT_Recipe_Map.sUnboxinatorRecipes.mNEIName, Integer.MAX_VALUE);
-        NEIClientConfig.handlerOrdering.putIfAbsent(GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.mNEIName, Integer.MAX_VALUE);
+        // NEI loads handlerordering.csv before plugins, including default zero entries.
+        // Override those entries so unpackaging and disassembly sort after other recipes.
+        NEIClientConfig.handlerOrdering.put(GT_Recipe.GT_Recipe_Map.sUnboxinatorRecipes.mNEIName, Integer.MAX_VALUE);
+        NEIClientConfig.handlerOrdering.put(GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.mNEIName, Integer.MAX_VALUE);
         sIsAdded = false;
         for (GT_Recipe.GT_Recipe_Map tMap : GT_Recipe.GT_Recipe_Map.sMappings) {
             if (tMap.mNEIAllowed) {
