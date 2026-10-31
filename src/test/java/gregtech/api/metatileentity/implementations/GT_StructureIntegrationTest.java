@@ -120,7 +120,9 @@ public class GT_StructureIntegrationTest {
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiblockCentrifuge",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiblockElectrolyzer",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DistillationTower",
-                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_OilCracker"}) {
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_OilCracker",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine2"}) {
                 Class.forName(name, true, server);
             }
             Class<?> builder = Class.forName("gregtech.api.util.MultiblockTooltipBuilder", true, server);
@@ -195,6 +197,7 @@ public class GT_StructureIntegrationTest {
         GT_ElectrolyzerStructureChecks.run(hatchItem, hintProxy);
         GT_DistillationTowerStructureChecks.run(hatchItem, hintProxy);
         GT_OilCrackerStructureChecks.run(hatchItem, hintProxy);
+        GT_DieselEngineStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {

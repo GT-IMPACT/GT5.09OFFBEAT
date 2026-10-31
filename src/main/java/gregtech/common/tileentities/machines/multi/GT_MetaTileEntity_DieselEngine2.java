@@ -1,7 +1,9 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -13,7 +15,6 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffl
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -36,30 +37,20 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
         super(aName);
     }
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Large Combustion Engine T2",
-                "Size(WxHxD): 3x3x4, Controller (front centered)",
-                "3x3x4 of Robust Tungstensteel Machine Casing (hollow, Min 16!)",
-                "2x TungstenSteel Gear Box Machine Casing inside the Hollow Casing",
-                "8x Tungstensteel Pipe Casing (around controller)",
-                "2x Input Hatch (Fuel/Lubricant) (one of the Casings next to a Gear Box)",
-                "1x Maintenance Hatch (one of the Casings next to a Gear Box)",
-                "1x Muffler Hatch (top middle back, next to the rear Gear Box)",
-                "1x Dynamo Hatch (back centered)",
-                "Engine Intake Casings must not be obstructed in front (only air blocks)",
-                "Supply Flammable Fuels and 1000L of Lubricant per hour to run.",
-                "Supply 40L of Oxygen per second to boost output (optional).",
-                "Default: Produces 8192EU/t at 100% efficiency",
-                "Boosted: Produces 24576EU/t at 150% efficiency",
-                "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return engineTooltip(new MultiblockTooltipBuilder(mName)
+                .addMachineType("Combustion Engine Mk2")
+                .addInfo("Consumes flammable fuel and lubricant; oxygen enables boosted output")
+                .addInfo("Output: 8192 EU/t normally, 24576 EU/t when boosted")
+                .addInfo("Oxygen: 3 L/t; lubricant: 2 L per 80 ticks (3 L when boosted)"));
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
-            return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][48], TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE)};
+            return new ITexture[]{getCasingType().getTexture(), TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE)};
         }
-        return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][48]};
+        return new ITexture[]{getCasingType().getTexture()};
     }
 
     @Override
@@ -119,32 +110,61 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
         return false;
     }
 
-    public Block getCasingBlock() {
-        return GregTech_API.sBlockCasings4;
+    @Override
+    public ICasing getCasingType() {
+        return Casings.ROBUST_TUNGSTENSTEEL;
     }
 
+    @Override
+    public ICasing getIntakeType() {
+        return Casings.TUNGSTENSTEEL_PIPE;
+    }
+
+    @Override
+    public ICasing getGearboxType() {
+        return Casings.TUNGSTENSTEEL_GEARBOX;
+    }
+
+    @Deprecated
+    @Override
+    public net.minecraft.block.Block getCasingBlock() {
+        return getCasingType().getBlock();
+    }
+
+    @Deprecated
+    @Override
     public byte getCasingMeta() {
-        return 0;
+        return (byte) getCasingType().getMetadata();
     }
 
-    public Block getIntakeBlock() {
-        return GregTech_API.sBlockCasings2;
+    @Deprecated
+    @Override
+    public net.minecraft.block.Block getIntakeBlock() {
+        return getIntakeType().getBlock();
     }
 
+    @Deprecated
+    @Override
     public byte getIntakeMeta() {
-        return 15;
+        return (byte) getIntakeType().getMetadata();
     }
 
-    public Block getGearboxBlock() {
-        return GregTech_API.sBlockCasings7;
+    @Deprecated
+    @Override
+    public net.minecraft.block.Block getGearboxBlock() {
+        return getGearboxType().getBlock();
     }
 
+    @Deprecated
+    @Override
     public byte getGearboxMeta() {
-        return 1;
+        return (byte) getGearboxType().getMetadata();
     }
 
+    @Deprecated
+    @Override
     public byte getCasingTextureIndex() {
-        return 48;
+        return (byte) getCasingType().getTextureId();
     }
 
     @Override
