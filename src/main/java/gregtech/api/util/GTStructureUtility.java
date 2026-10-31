@@ -8,6 +8,9 @@ import space.impact.api.structure.IStructureElement;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -82,6 +85,112 @@ public final class GTStructureUtility {
                         .survivalPlaceBlock(machine, world, x, y, z, trigger, environment);
             }
         };
+    }
+
+    /**
+     * A casing component in any of the five positions beside the center of a 3x3x3 machine
+     * with a front-centered controller. Use this element at all five positions; use the supplied
+     * shell element elsewhere. Checks accept every existing component, while construction selects
+     * only one free position if none is present. The machine owns the component count.
+     */
+    public static <T extends GT_MetaTileEntity_EnhancedMultiBlockBase<T>> IStructureElement<T> ofCasingAroundCenter(
+            ICasing casing, Consumer<T> onCheck, IStructureElement<T> shell) {
+        Objects.requireNonNull(casing);
+        Objects.requireNonNull(onCheck);
+        Objects.requireNonNull(shell);
+        IStructureElement<T> component = casing.asElement();
+        return new IStructureElement<T>() {
+            private IStructureElement<T> constructionElement(
+                    T machine, World world, int x, int y, int z) {
+                if (matchesCasing(casing, world, x, y, z)) {
+                    return component;
+                }
+                int[] selected = findCasingPosition(machine, casing, world);
+                return selected != null && selected[0] == x && selected[1] == y && selected[2] == z ? component : shell;
+            }
+
+            @Override
+            public boolean check(T machine, World world, int x, int y, int z) {
+                if (matchesCasing(casing, world, x, y, z)) {
+                    onCheck.accept(machine);
+                    return true;
+                }
+                return shell.check(machine, world, x, y, z);
+            }
+
+            @Override
+            public boolean couldBeValid(T machine, World world,
+                                         int x, int y, int z, ItemStack trigger) {
+                return matchesCasing(casing, world, x, y, z) || shell.couldBeValid(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public boolean spawnHint(T machine, World world,
+                                     int x, int y, int z, ItemStack trigger) {
+                return constructionElement(machine, world, x, y, z).spawnHint(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public boolean placeBlock(T machine, World world,
+                                      int x, int y, int z, ItemStack trigger) {
+                if (couldBeValid(machine, world, x, y, z, trigger)) {
+                    return true;
+                }
+                if (!world.isAirBlock(x, y, z)) {
+                    return false;
+                }
+                return constructionElement(machine, world, x, y, z).placeBlock(machine, world, x, y, z, trigger);
+            }
+
+            @Override
+            public BlocksToPlace getBlocksToPlace(T machine, World world,
+                                                  int x, int y, int z, ItemStack trigger, AutoPlaceEnvironment environment) {
+                return constructionElement(machine, world, x, y, z)
+                        .getBlocksToPlace(machine, world, x, y, z, trigger, environment);
+            }
+
+            @Override
+            public PlaceResult survivalPlaceBlock(T machine, World world,
+                                                  int x, int y, int z, ItemStack trigger, AutoPlaceEnvironment environment) {
+                if (couldBeValid(machine, world, x, y, z, trigger)) {
+                    return PlaceResult.SKIP;
+                }
+                return constructionElement(machine, world, x, y, z)
+                        .survivalPlaceBlock(machine, world, x, y, z, trigger, environment);
+            }
+        };
+    }
+
+    private static boolean matchesCasing(ICasing casing, World world, int x, int y, int z) {
+        return world.getBlock(x, y, z) == casing.getBlock()
+                && world.getBlockMetadata(x, y, z) == casing.getMetadata();
+    }
+
+    /** Read the world rather than check counters: hints must be pure and placement may span several passes. */
+    private static <T extends GT_MetaTileEntity_EnhancedMultiBlockBase<T>> int[] findCasingPosition(
+            T machine, ICasing casing, World world) {
+        IGregTechTileEntity base = machine.getBaseMetaTileEntity();
+        ForgeDirection front = machine.getExtendedFacing().getDirection();
+        int centerX = base.getXCoord() - front.offsetX;
+        int centerY = base.getYCoord();
+        int centerZ = base.getZCoord() - front.offsetZ;
+        int[] selected = null;
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+            if (side == front) {
+                continue;
+            }
+            int x = centerX + side.offsetX;
+            int y = centerY + side.offsetY;
+            int z = centerZ + side.offsetZ;
+            if (matchesCasing(casing, world, x, y, z)) {
+                return null;
+            }
+            if (selected == null && world.isAirBlock(x, y, z)) {
+                selected = new int[]{x, y, z};
+            }
+        }
+        // With a closed shell, show which casing to replace manually; never overwrite it during construction.
+        return selected == null ? new int[]{centerX, centerY - 1, centerZ} : selected;
     }
 
     /** Minecraft 1.7 text uses a fixed palette; orange and brown use its gold color. */

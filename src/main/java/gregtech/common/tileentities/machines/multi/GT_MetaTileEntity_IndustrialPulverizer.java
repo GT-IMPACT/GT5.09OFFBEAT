@@ -16,9 +16,7 @@ import gregtech.api.util.GT_Utility;
 import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
-import net.minecraft.world.World;
 import space.impact.api.alignment.constructable.ISurvivalConstructable;
-import space.impact.api.structure.AutoPlaceEnvironment;
 import space.impact.api.structure.IStructureDefinition;
 import space.impact.api.structure.IStructureElement;
 import space.impact.api.structure.ISurvivalBuildEnvironment;
@@ -26,7 +24,6 @@ import space.impact.api.structure.StructureDefinition;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -219,108 +216,13 @@ public class GT_MetaTileEntity_IndustrialPulverizer
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('C', shell)
                     .addElement('G', Casings.STEEL_GEARBOX.asElement())
-                    .addElement('P', pipeOrShell(shell))
+                    .addElement('P', GTStructureUtility.ofCasingAroundCenter(
+                            Casings.STEEL_PIPE, machine -> ++machine.pipeCount, shell))
                     .build();
         }
         return structureDefinition;
     }
 
-    /** Keep all five legacy pipe locations valid, but automatically build only one pipe. */
-    private static IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> pipeOrShell(
-            IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> shell) {
-        IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> pipe = Casings.STEEL_PIPE.asElement();
-        return new IStructureElement<GT_MetaTileEntity_IndustrialPulverizer>() {
-            private IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> constructionElement(
-                    GT_MetaTileEntity_IndustrialPulverizer machine, World world, int x, int y, int z) {
-                if (isPipe(world, x, y, z)) {
-                    return pipe;
-                }
-                int[] selected = machine.findPipePosition(world);
-                return selected != null && selected[0] == x && selected[1] == y && selected[2] == z ? pipe : shell;
-            }
-
-            @Override
-            public boolean check(GT_MetaTileEntity_IndustrialPulverizer machine, World world, int x, int y, int z) {
-                if (isPipe(world, x, y, z)) {
-                    ++machine.pipeCount;
-                    return true;
-                }
-                return shell.check(machine, world, x, y, z);
-            }
-
-            @Override
-            public boolean couldBeValid(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
-                                         int x, int y, int z, ItemStack trigger) {
-                return isPipe(world, x, y, z) || shell.couldBeValid(machine, world, x, y, z, trigger);
-            }
-
-            @Override
-            public boolean spawnHint(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
-                                     int x, int y, int z, ItemStack trigger) {
-                return constructionElement(machine, world, x, y, z).spawnHint(machine, world, x, y, z, trigger);
-            }
-
-            @Override
-            public boolean placeBlock(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
-                                      int x, int y, int z, ItemStack trigger) {
-                if (couldBeValid(machine, world, x, y, z, trigger)) {
-                    return true;
-                }
-                if (!world.isAirBlock(x, y, z)) {
-                    return false;
-                }
-                return constructionElement(machine, world, x, y, z).placeBlock(machine, world, x, y, z, trigger);
-            }
-
-            @Override
-            public BlocksToPlace getBlocksToPlace(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
-                                                  int x, int y, int z, ItemStack trigger, AutoPlaceEnvironment environment) {
-                return constructionElement(machine, world, x, y, z)
-                        .getBlocksToPlace(machine, world, x, y, z, trigger, environment);
-            }
-
-            @Override
-            public PlaceResult survivalPlaceBlock(GT_MetaTileEntity_IndustrialPulverizer machine, World world,
-                                                  int x, int y, int z, ItemStack trigger, AutoPlaceEnvironment environment) {
-                if (couldBeValid(machine, world, x, y, z, trigger)) {
-                    return PlaceResult.SKIP;
-                }
-                return constructionElement(machine, world, x, y, z)
-                        .survivalPlaceBlock(machine, world, x, y, z, trigger, environment);
-            }
-        };
-    }
-
-    private static boolean isPipe(World world, int x, int y, int z) {
-        return world.getBlock(x, y, z) == Casings.STEEL_PIPE.getBlock()
-                && world.getBlockMetadata(x, y, z) == Casings.STEEL_PIPE.getMetadata();
-    }
-
-    /** Read the world rather than check counters: hints must be pure and placement may span several passes. */
-    private int[] findPipePosition(World world) {
-        IGregTechTileEntity base = getBaseMetaTileEntity();
-        ForgeDirection front = getExtendedFacing().getDirection();
-        int centerX = base.getXCoord() - front.offsetX;
-        int centerY = base.getYCoord();
-        int centerZ = base.getZCoord() - front.offsetZ;
-        int[] selected = null;
-        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-            if (side == front) {
-                continue;
-            }
-            int x = centerX + side.offsetX;
-            int y = centerY + side.offsetY;
-            int z = centerZ + side.offsetZ;
-            if (isPipe(world, x, y, z)) {
-                return null;
-            }
-            if (selected == null && world.isAirBlock(x, y, z)) {
-                selected = new int[]{x, y, z};
-            }
-        }
-        // With a closed shell, show which casing to replace manually; never overwrite it during construction.
-        return selected == null ? new int[]{centerX, centerY - 1, centerZ} : selected;
-    }
 
 	@Override
 	public int getMaxEfficiency(ItemStack aStack) {
