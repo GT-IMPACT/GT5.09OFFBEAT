@@ -280,6 +280,11 @@ public class MultiblockTooltipBuilder {
         return line(structure, "   " + text("Structure", info));
     }
 
+    /** Format configuration values after translating the stable template. */
+    public MultiblockTooltipBuilder addStructureInfo(String info, Object... arguments) {
+        return line(structure, "   " + String.format(Locale.ROOT, text("Structure", info), arguments));
+    }
+
     public MultiblockTooltipBuilder addStructureFooter(String info) {
         return line(structure, text("Footer", info));
     }

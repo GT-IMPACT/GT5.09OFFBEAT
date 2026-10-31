@@ -1074,3 +1074,20 @@ gt.tooltip.hatch.data_access=Люк доступа к данным
 tile.gt.blockcasings2.5.name=Корпус сборочной линии
 tile.gt.blockcasings2.9.name=Корпус сборщика
 tile.gt.blockcasings3.10.name=Решётчатый корпус машины
+
+TileEntity_DESCRIPTION_multimachine.cleanroom_MachineType_Index_0=Чистая комната
+TileEntity_DESCRIPTION_multimachine.cleanroom_Information_Index_0=Питание: сначала 40 EU/t, при полной чистоте — 4 EU/t
+TileEntity_DESCRIPTION_multimachine.cleanroom_Information_Index_1=Для сохранения чистоты держите укреплённые двери закрытыми
+TileEntity_DESCRIPTION_multimachine.cleanroom_Location_Index_0=Центр крыши
+TileEntity_DESCRIPTION_multimachine.cleanroom_Location_Index_1=Стены и пол, кроме каркаса
+TileEntity_DESCRIPTION_multimachine.cleanroom_Structure_Index_0=Каркас: пласкрит; внутри крыши: фильтрующие корпуса
+TileEntity_DESCRIPTION_multimachine.cleanroom_Structure_Index_1=До 2 укреплённых дверей и 20 корпусов / диодных кабелей
+TileEntity_DESCRIPTION_multimachine.cleanroom_Structure_Index_2=Стекло: до %s%% от количества пласкрита
+TileEntity_DESCRIPTION_multimachine.cleanroom_Structure_Index_3=Ровно один люк обслуживания и один энергетический
+TileEntity_DESCRIPTION_multimachine.cleanroom_Channel_Index_0=Ширина = 2 x значение + 1
+TileEntity_DESCRIPTION_multimachine.cleanroom_Channel_Index_1=Глубина = 2 x значение + 1
+TileEntity_DESCRIPTION_multimachine.cleanroom_Channel_Index_2=Высота = значение + 3
+TileEntity_DESCRIPTION_multimachine.cleanroom_Channel_Index_3=Автоустановка обязательных люков
+tile.gt.blockreinforced.2.name=Блок пласкрита
+tile.gt.blockcasings3.11.name=Фильтрующий корпус машины
+tile.gt.blockcasings9.0.name=Стекло чистой комнаты
