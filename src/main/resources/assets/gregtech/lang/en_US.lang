@@ -1236,3 +1236,15 @@ TileEntity_DESCRIPTION_multimachine.heatexchanger_Structure_Index_0=The hot inpu
 TileEntity_DESCRIPTION_multimachine.heatexchanger_Structure_Index_1=The hot port accepts fluid input hatches, including IMPACT multi-fluid hatches; the cold port requires a fluid output hatch.
 TileEntity_DESCRIPTION_multimachine.heatexchanger_Structure_Index_2=Compatible IMPACT fluid and combined input hatches can supply distilled water.
 TileEntity_DESCRIPTION_multimachine.heatexchanger_Channel_Index_0=Automatically place missing GregTech hatches from your inventory
+
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_MachineType_Index_0=Large Chemical Reactor
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Information_Index_0=Has the same recipes as the Chemical Reactor
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Information_Index_1=Accepts fluids instead of fluid cells
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Location_Index_0=Front center
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Location_Index_1=Any outer casing position, except the coil
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Location_Index_2=Center of the structure
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Location_Index_3=Any of the five faces adjacent to the PTFE pipe, except the controller
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Structure_Index_0=At least one cupronickel coil must touch the PTFE pipe; additional cupronickel coils at these five positions are allowed.
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Structure_Index_1=Construction keeps existing coils, or places one in a free position next to the PTFE pipe.
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Structure_Index_2=Compatible IMPACT input and energy hatches are also accepted.
+TileEntity_DESCRIPTION_multimachine.chemicalreactor_Channel_Index_0=Automatically place missing GregTech hatches from your inventory

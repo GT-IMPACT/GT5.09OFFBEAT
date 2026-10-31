@@ -1,31 +1,45 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.GT_Mod;
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.HatchElement;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.IStructureElement;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
+import static space.impact.api.structure.StructureUtility.transpose;
 import static gregtech.api.enums.Textures.BlockIcons.*;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
 
-public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_MultiBlockBase {
-	
-	private final int CASING_INDEX = 176;
+public class GT_MetaTileEntity_LargeChemicalReactor
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_LargeChemicalReactor>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.CHEMICALLY_INERT, 8)
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output)
+            .build();
+    private static IStructureDefinition<GT_MetaTileEntity_LargeChemicalReactor> structureDefinition;
+    private int casingCount;
+    private int coilCount;
 	
 	public GT_MetaTileEntity_LargeChemicalReactor(int aID, String aName, String aNameRegional) {
 		super(aID, aName, aNameRegional);
@@ -40,37 +54,39 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 		return new GT_MetaTileEntity_LargeChemicalReactor(this.mName);
 	}
 	
-	@Override
-	public String[] getDescription() {
-		return new String[]{
-				"Controller block for the Large Chemical Reactor",
-				"Has the same recipes as the Chemical Reactor",
-				"Accepts fluids instead of fluid cells",
-				"Size(WxHxD): 3x3x3",
-				"3x3x3 of Chemically Inert Machine Casings (hollow, min 8!)",
-				"Controller (Front centered)",
-				"1x PTFE Pipe Machine Casing (inside the hollow casings)",
-				"1x Cupronickel Coil Block (next to PTFE Pipe Machine Casing)",
-				"1x Input Bus/Hatch (Any inert casing)",
-				"1x Output Bus/Hatch (Any inert casing)",
-				"1x Maintenance Hatch (Any inert casing)",
-				"1x Energy Hatch (Any inert casing)"};
-	}
-	
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Large Chemical Reactor")
+                .addInfo("Has the same recipes as the Chemical Reactor")
+                .addInfo("Accepts fluids instead of fluid cells")
+                .beginStructureBlock(3, 3, 3, false)
+                .addController("Front center")
+                .addRequirements(SHELL, "Any outer casing position, except the coil")
+                .addOtherStructurePart(Casings.PTFE_PIPE, "Center of the structure", 1)
+                .addOtherStructurePart(Casings.CUPRONICKEL_COIL,
+                        "Any of the five faces adjacent to the PTFE pipe, except the controller", 1)
+                .addStructureInfo("At least one cupronickel coil must touch the PTFE pipe; additional cupronickel coils at these five positions are allowed.")
+                .addStructureInfo("Construction keeps existing coils, or places one in a free position next to the PTFE pipe.")
+                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
+    }
+
 	@Override
 	public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive,
 								 boolean aRedstone) {
 		if (aSide == aFacing) {
 			if (aActive) return new ITexture[]{
-					casingTexturePages[1][48],
+					Casings.CHEMICALLY_INERT.getTexture(),
 					TextureFactory.of(OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_ACTIVE),
 					TextureFactory.builder().addIcon(OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_ACTIVE_GLOW).glow().build()};
 			return new ITexture[]{
-					casingTexturePages[1][48],
+					Casings.CHEMICALLY_INERT.getTexture(),
 					TextureFactory.of(OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR),
 					TextureFactory.builder().addIcon(OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_GLOW).glow().build()};
 		}
-		return new ITexture[]{casingTexturePages[1][48]};
+		return new ITexture[]{Casings.CHEMICALLY_INERT.getTexture()};
 	}
 	
 	@Override
@@ -157,59 +173,45 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 		return false;
 	}
 	
-	@Override
-	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-		int casingAmount = 0;
-		boolean hasHeatingCoil = false;
-		// x=width, z=depth, y=height
-		for (int x = -1 + xDir; x <= xDir + 1; x++) {
-			for (int z = -1 + zDir; z <= zDir + 1; z++) {
-				for (int y = -1; y <= 1; y++) {
-					if (x == 0 && y == 0 && z == 0) {
-						continue;
-					}
-					IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
-					Block block = aBaseMetaTileEntity.getBlockOffset(x, y, z);
-					int centerCoords = 0;
-					if (x == xDir) {
-						centerCoords++;
-					}
-					if (y == 0) {
-						centerCoords++;
-					}
-					if (z == zDir) {
-						centerCoords++;
-					}
-					if (centerCoords == 3) {
-						if (block == GregTech_API.sBlockCasings8 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 1) {
-							continue;
-						} else {
-							return false;
-						}
-					}
-					if (centerCoords == 2 && block == GregTech_API.sBlockCasings5 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
-						hasHeatingCoil = true;
-						continue;
-					}
-					if (!addInputToMachineList(tileEntity, CASING_INDEX) && !addOutputToMachineList(tileEntity, CASING_INDEX)
-							&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
-							&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-						if (block == GregTech_API.sBlockCasings8 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
-							casingAmount++;
-						} else {
-							return false;
-						}
-					}
-					
-				}
-			}
-			
-		}
-		return casingAmount >= 8 && hasHeatingCoil;
-	}
-	
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        coilCount = 0;
+        return checkPiece(STRUCTURE_PIECE, 1, 1, 0) && coilCount > 0 && SHELL.isSatisfied(this, casingCount);
+    }
+
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 1, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 1, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_LargeChemicalReactor> getStructureDefinition() {
+        if (structureDefinition == null) {
+            IStructureElement<GT_MetaTileEntity_LargeChemicalReactor> shell =
+                    GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeChemicalReactor.class)
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount);
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_LargeChemicalReactor>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CHC", "CCC"},
+                            {"C~C", "HPH", "CHC"},
+                            {"CCC", "CHC", "CCC"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', shell)
+                    .addElement('P', Casings.PTFE_PIPE.asElement())
+                    .addElement('H', GTStructureUtility.ofCasingAroundCenter(
+                            Casings.CUPRONICKEL_COIL, machine -> ++machine.coilCount, shell))
+                    .build();
+        }
+        return structureDefinition;
+    }
+
 	@Override
 	public int getMaxEfficiency(ItemStack aStack) {
 		return 10000;
