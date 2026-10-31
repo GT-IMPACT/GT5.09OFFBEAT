@@ -279,8 +279,8 @@ final class GT_DistillationTowerStructureChecks {
             String structure = String.join("\n", machine.getCurrentDescription(true));
             String hints = String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick)));
             assertTrue(info.contains(language.equals("en_US") ? "Distillation Tower" : "Дистилляционная башня"));
-            assertTrue(structure.contains(language.equals("en_US") ? "3 x 3-12 x 3" : "3 × 3-12 × 3"));
-            assertTrue(structure.contains("16-79"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3-12 x 3" : "3 × 3-12 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16-79"));
             assertTrue(structure.contains(language.equals("en_US")
                     ? "Output buses are optional" : "Выходные шины необязательны"));
             assertTrue(structure.contains("gt_hatch"));

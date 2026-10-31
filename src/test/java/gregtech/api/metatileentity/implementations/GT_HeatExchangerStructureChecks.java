@@ -305,8 +305,8 @@ final class GT_HeatExchangerStructureChecks {
             String structure = String.join("\n", machine.getCurrentDescription(true));
             String hint = String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick)));
             assertTrue(info.contains(language.equals("en_US") ? "Large Heat Exchanger" : "Большой теплообменник"));
-            assertTrue(structure.contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
-            assertTrue(structure.contains("20"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("20"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.RED, EnumChatFormatting.BLUE}) {

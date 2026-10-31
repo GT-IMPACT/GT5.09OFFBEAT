@@ -302,9 +302,9 @@ final class GT_OilCrackerStructureChecks {
             String structure = String.join("\n", machine.getCurrentDescription(true));
             String hints = String.join("\n", machine.getStructureDescription(trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Oil Cracking Unit" : "Установка крекинга"));
-            assertTrue(structure.contains(language.equals("en_US") ? "5 x 3 x 3" : "5 × 3 × 3"));
-            assertTrue(structure.contains("18"));
-            assertTrue(structure.contains("16"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "5 x 3 x 3" : "5 × 3 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("18"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE,

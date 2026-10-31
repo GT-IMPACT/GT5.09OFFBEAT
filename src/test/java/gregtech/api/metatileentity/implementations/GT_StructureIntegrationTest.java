@@ -261,10 +261,10 @@ public class GT_StructureIntegrationTest {
             assertTrue(primary.contains("Vacuum Freezer"));
             assertTrue(primary.contains("Shift"));
             assertFalse(primary.contains("At least 16"));
-            assertTrue(secondary.contains("At least 16"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("At least 16"));
             assertTrue(secondary.contains("Frost Proof Machine Casing"));
             assertTrue(secondary.contains("Input Bus or Input Hatch"));
-            assertTrue(secondary.contains("3 x 3 x 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("3 x 3 x 3"));
             assertTrue(secondary.contains("gt_hatch"));
             assertFalse(secondary.contains("gt.tooltip."));
             assertFalse(secondary.contains("Format error"));
@@ -364,7 +364,7 @@ public class GT_StructureIntegrationTest {
             assertTrue(String.join("\n", controls.getCurrentDescription(true, true)).contains("Control page"));
             assertTrue(String.join("\n", f.machine.getPrimaryDescription()).contains("Вакуумный морозильник"));
             secondary = String.join("\n", f.machine.getSecondaryDescription());
-            assertTrue(secondary.contains("Минимум 16"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("Минимум 16"));
             assertTrue(secondary.contains("Морозостойкий корпус машины"));
             assertTrue(secondary.contains("Входная шина или входной люк"));
             assertFalse(secondary.contains("gt.tooltip."));
@@ -483,8 +483,8 @@ public class GT_StructureIntegrationTest {
         assertThrows(UnsupportedOperationException.class, () -> two.getHatches().clear());
         assertThrows(IllegalArgumentException.class, () -> StructureRequirements.builder(addonCasing, -1));
         assertThrows(IllegalArgumentException.class, () -> builder.atLeast(addonInput, 0));
-        String tooltip = String.join("\n", new MultiblockTooltipBuilder().addRequirements(two, "shell")
-                .getStructureInformation());
+        String tooltip = EnumChatFormatting.getTextWithoutFormattingCodes(String.join("\n",
+                new MultiblockTooltipBuilder().addRequirements(two, "shell").getStructureInformation()));
         assertTrue(tooltip.contains("Addon Casing"));
         assertTrue(tooltip.contains("Addon Input"));
         assertEquals(2, tooltip.split("At least 2", -1).length - 1);

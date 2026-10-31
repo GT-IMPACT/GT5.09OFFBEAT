@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import net.minecraft.util.EnumChatFormatting;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
@@ -197,7 +198,7 @@ final class GT_PrimitiveBlastStructureChecks {
             assertTrue(f.machine.hasSecondaryDescription());
             assertFalse(info.contains("TileEntity_DESCRIPTION"));
             assertFalse(structure.contains("gt.tooltip"));
-            assertTrue(structure.contains("32"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("32"));
             assertFalse(structure.contains("gt_hatch"));
             assertTrue(f.machine.getSecondaryDescription().length <= 7);
             assertFalse(info.equals(structure));

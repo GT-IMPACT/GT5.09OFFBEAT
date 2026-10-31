@@ -298,10 +298,10 @@ final class GT_MultiFurnaceStructureChecks {
             assertTrue(info.contains("256"));
             assertTrue(info.contains("400"));
             assertFalse(info.contains("gt_hatch"));
-            assertTrue(structure.contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
-            assertTrue(structure.contains(language.equals("en_US") ? "8 Heating Coils" : "8 Нагревательные катушки"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "8 Heating Coils" : "8 Нагревательные катушки"));
             assertTrue(structure.contains("gt_hatch"));
-            assertTrue(structure.contains("10"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("10"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE, EnumChatFormatting.GOLD}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));

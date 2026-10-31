@@ -259,10 +259,10 @@ final class GT_FusionStructureChecks {
             String secondary = String.join("\n", machine.getCurrentDescription(true));
             assertTrue(primary.contains(language.equals("en_US") ? "Fusion Reactor" : "Термоядерный реактор"));
             assertFalse(primary.contains("15 x 3 x 15"));
-            assertTrue(secondary.contains(language.equals("en_US") ? "15 x 3 x 15" : "15 × 3 × 15"));
-            assertTrue(secondary.contains("79-123"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains(language.equals("en_US") ? "15 x 3 x 15" : "15 × 3 × 15"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("79-123"));
             assertTrue(secondary.contains("gt_hatch"));
-            assertFalse(secondary.contains("At least 0"));
+            assertFalse(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("At least 0"));
             assertTrue(String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick))).contains("gt_hatch"));
             EnumChatFormatting[] textColors = {EnumChatFormatting.YELLOW, EnumChatFormatting.BLUE, EnumChatFormatting.GOLD};
             String[] categories = {"energy", "input_hatch", "output_hatch"};

@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import net.minecraft.util.EnumChatFormatting;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
 import gregtech.api.interfaces.ICasing;
@@ -242,9 +243,9 @@ final class GT_ImplosionStructureChecks {
             assertTrue(info.contains(language.equals("en_US") ? "Implosion Compressor" : "Имплозивный компрессор"));
             assertTrue(info.contains("10000"));
             assertFalse(info.contains("gt_hatch"));
-            assertTrue(structure.contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
             assertTrue(structure.contains(language.equals("en_US") ? "warning signs" : "Знаки взрывоопасности"));
-            assertTrue(structure.contains("16"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick))).contains("gt_hatch"));
             assertFalse(structure.contains("■"));

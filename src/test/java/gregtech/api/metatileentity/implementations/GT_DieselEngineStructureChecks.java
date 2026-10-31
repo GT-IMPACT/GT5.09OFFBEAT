@@ -341,8 +341,8 @@ final class GT_DieselEngineStructureChecks {
             String hints = String.join("\n", f.machine.getStructureDescription(trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Combustion Engine Mk" : "Двигатель внутреннего сгорания Mk"));
             assertTrue(info.contains(model == 0 ? "6144" : "24576"));
-            assertTrue(structure.contains(language.equals("en_US") ? "3 x 3 x 4" : "3 × 3 × 4"));
-            assertTrue(structure.contains("16"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 4" : "3 × 3 × 4"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE,

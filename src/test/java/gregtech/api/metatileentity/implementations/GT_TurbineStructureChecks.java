@@ -285,8 +285,8 @@ final class GT_TurbineStructureChecks {
             String hint = String.join("\n", f.machine.getStructureDescription(new ItemStack(Items.stick)));
             assertTrue(info.contains(lang.equals("en_US") ? "rotor" : "ротор"));
             assertFalse(info.contains("gt_hatch"));
-            assertTrue(structure.contains(lang.equals("en_US") ? "3 x 3 x 4" : "3 × 3 × 4"));
-            assertTrue(structure.contains("24"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(lang.equals("en_US") ? "3 x 3 x 4" : "3 × 3 × 4"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("24"));
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(structure.contains(lang.equals("en_US") ? "Back center" : "По центру сзади"));
             String marker = EnumChatFormatting.YELLOW + "■" + EnumChatFormatting.RESET + " - ";

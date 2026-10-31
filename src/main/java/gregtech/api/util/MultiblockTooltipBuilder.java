@@ -1,14 +1,20 @@
 package gregtech.api.util;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
-
-import java.util.*;
-
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.IHatchElement;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import space.impact.structures.hint.HintColor;
 
 /**
@@ -16,6 +22,7 @@ import space.impact.structures.hint.HintColor;
  * language/resource reload.
  */
 public class MultiblockTooltipBuilder {
+    private static final Pattern QUANTITY = Pattern.compile("[0-9]+(?:[.,][0-9]+)*(?:[-–xх×][0-9]+(?:[.,][0-9]+)*)*(?:\\+|[xх×])?");
     private final List<String> information = new ArrayList<>();
     private final List<String> structure = new ArrayList<>();
     private final List<String> controls = new ArrayList<>();
@@ -123,6 +130,49 @@ public class MultiblockTooltipBuilder {
         checkOpen();
         section.add(Objects.requireNonNull(text));
         return this;
+    }
+
+    private static String quantity(String amount) {
+        return EnumChatFormatting.GOLD + amount + EnumChatFormatting.WHITE;
+    }
+
+    private static boolean isWordCharacter(char character) {
+        return Character.isLetterOrDigit(character) || character == '_';
+    }
+
+    /** Highlight quantities after localization, preserving surrounding text formatting. */
+    private static String quantities(String text, EnumChatFormatting defaultColor) {
+        StringBuilder result = new StringBuilder(text.length());
+        String formatting = defaultColor.toString();
+        Matcher matcher = QUANTITY.matcher(text);
+        char previous = ' ';
+        for (int index = 0; index < text.length();) {
+            char character = text.charAt(index);
+            if (character == '\u00a7' && index + 1 < text.length()) {
+                char code = Character.toLowerCase(text.charAt(index + 1));
+                String control = text.substring(index, index + 2);
+                if ("0123456789abcdefr".indexOf(code) >= 0) {
+                    formatting = control;
+                } else if ("klmno".indexOf(code) >= 0) {
+                    formatting += control;
+                }
+                result.append(control);
+                index += 2;
+                continue;
+            }
+            if (Character.isDigit(character) && !isWordCharacter(previous)
+                    && matcher.region(index, text.length()).lookingAt()
+                    && (matcher.end() == text.length() || !isWordCharacter(text.charAt(matcher.end())))) {
+                result.append(EnumChatFormatting.GOLD).append(matcher.group()).append(formatting);
+                previous = text.charAt(matcher.end() - 1);
+                index = matcher.end();
+            } else {
+                result.append(character);
+                previous = character;
+                index++;
+            }
+        }
+        return result.toString();
     }
 
     public MultiblockTooltipBuilder addMachineType(String machine) {
@@ -291,20 +341,20 @@ public class MultiblockTooltipBuilder {
     }
 
     private MultiblockTooltipBuilder part(String name, String location, int... dots) {
-        line(structure, "   " + EnumChatFormatting.WHITE + name + ": " + EnumChatFormatting.GRAY + location);
+        line(structure, "   " + EnumChatFormatting.WHITE + name + ": " + EnumChatFormatting.GRAY + quantities(location, EnumChatFormatting.GRAY));
         return hintNames(name, dots);
     }
 
     public MultiblockTooltipBuilder addOtherStructurePart(int count, String name, String location, int... dots) {
-        return part(count + " " + text("Part", name), text("Location", location), dots);
+        return part(quantity(Integer.toString(count)) + " " + text("Part", name), text("Location", location), dots);
     }
 
     public MultiblockTooltipBuilder addOtherStructurePart(ICasing casing, String location, int count) {
-        return part(count + " " + casing.getDisplayName(), text("Location", location));
+        return part(quantity(Integer.toString(count)) + " " + casing.getDisplayName(), text("Location", location));
     }
 
     public MultiblockTooltipBuilder addOtherStructurePart(ItemStack stack, String location, int count) {
-        return part(count + " " + stack.getDisplayName(), text("Location", location));
+        return part(quantity(Integer.toString(count)) + " " + stack.getDisplayName(), text("Location", location));
     }
 
     public MultiblockTooltipBuilder addAir(String location) {
@@ -314,12 +364,12 @@ public class MultiblockTooltipBuilder {
     }
 
     public MultiblockTooltipBuilder addStructureInfo(String info) {
-        return line(structure, "   " + text("Structure", info));
+        return line(structure, "   " + quantities(text("Structure", info), EnumChatFormatting.GRAY));
     }
 
     /** Format configuration values after translating the stable template. */
     public MultiblockTooltipBuilder addStructureInfo(String info, Object... arguments) {
-        return line(structure, "   " + String.format(Locale.ROOT, text("Structure", info), arguments));
+        return line(structure, "   " + quantities(String.format(Locale.ROOT, text("Structure", info), arguments), EnumChatFormatting.GRAY));
     }
 
     public MultiblockTooltipBuilder addStructureFooter(String info) {

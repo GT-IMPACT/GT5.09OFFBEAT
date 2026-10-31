@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import net.minecraft.util.EnumChatFormatting;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.ItemList;
@@ -279,7 +280,7 @@ final class GT_DrillerStructureChecks {
             String structure = String.join("\n", f.machine.getSecondaryDescription());
             assertFalse(info.contains("TileEntity_DESCRIPTION"));
             assertFalse(structure.contains("gt.tooltip"));
-            assertTrue(structure.contains(language.equals("ru_RU") ? "3 × 7 × 3" : "3 x 7 x 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("ru_RU") ? "3 × 7 × 3" : "3 x 7 x 3"));
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(structure.contains("\u00a79\u25a0\u00a7r - "));
             assertTrue("Compact structure tooltip", f.machine.getSecondaryDescription().length <= 15);

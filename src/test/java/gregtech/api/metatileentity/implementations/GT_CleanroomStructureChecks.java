@@ -355,7 +355,7 @@ final class GT_CleanroomStructureChecks {
             String structure = String.join("\n", f.machine.getCurrentDescription(true));
             String hints = String.join("\n", f.machine.getStructureDescription(f.trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Cleanroom" : "Чистая комната"));
-            assertTrue(structure.contains("27.5%"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("27.5%"));
             assertTrue(structure.contains("width"));
             assertTrue(structure.contains("depth"));
             assertTrue(structure.contains("height"));

@@ -261,7 +261,7 @@ final class GT_AirFilterStructureChecks {
             String hints = String.join("\n", f.machine.getStructureDescription(trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Electric Air Filter" : "Электрический воздушный фильтр"));
             assertTrue(info.contains("10000"));
-            assertTrue(structure.contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
             assertTrue(structure.contains(language.equals("en_US") ? "Two full" : "Два полных"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));

@@ -266,8 +266,8 @@ final class GT_BoilerStructureChecks {
             String primary = String.join("\n", machine.getCurrentDescription(false));
             String secondary = String.join("\n", machine.getCurrentDescription(true));
             assertTrue(primary.contains(language.equals("en_US") ? "Large Boiler" : "Большой котёл"));
-            assertTrue(secondary.contains(language.equals("en_US") ? "3 x 5 x 3" : "3 × 5 × 3"));
-            assertTrue(secondary.contains("24"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains(language.equals("en_US") ? "3 x 5 x 3" : "3 × 5 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("24"));
             assertTrue(secondary.contains("gt_hatch"));
             String inputMarker = EnumChatFormatting.BLUE + "■" + EnumChatFormatting.RESET + " - ";
             String outputMarker = EnumChatFormatting.GOLD + "■" + EnumChatFormatting.RESET + " - ";

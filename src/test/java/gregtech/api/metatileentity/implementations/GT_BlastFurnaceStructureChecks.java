@@ -331,8 +331,8 @@ final class GT_BlastFurnaceStructureChecks {
             assertTrue(info.contains("900"));
             assertTrue(info.contains("1800"));
             assertFalse(info.contains("gt_hatch"));
-            assertTrue(structure.contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
-            assertTrue(structure.contains(language.equals("en_US") ? "16 Heating Coils" : "16 Нагревательные катушки"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "16 Heating Coils" : "16 Нагревательные катушки"));
             assertTrue(structure.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE,
                     EnumChatFormatting.YELLOW, EnumChatFormatting.GOLD}) {
