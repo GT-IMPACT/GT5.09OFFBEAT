@@ -125,7 +125,9 @@ public class GT_StructureIntegrationTest {
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine2",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AssemblyLine",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Cleanroom",
-                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Charcoal_Pit"}) {
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Charcoal_Pit",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_BrickedBlastFurnace",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_BronzeBlastFurnace"}) {
                 Class.forName(name, true, server);
             }
             for (String family : new String[]{"OilDrill", "ConcreteBackfiller"}) {
@@ -218,6 +220,7 @@ public class GT_StructureIntegrationTest {
         GT_CleanroomStructureChecks.run(hatchItem, hintProxy);
         GT_CharcoalPitStructureChecks.run(hintProxy);
         GT_DrillerStructureChecks.run(hatchItem, hintProxy);
+        GT_PrimitiveBlastStructureChecks.run(hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {

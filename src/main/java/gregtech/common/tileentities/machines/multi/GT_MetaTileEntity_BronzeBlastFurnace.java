@@ -1,14 +1,12 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.Casings;
+import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 
 import gregtech.api.render.TextureFactory;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
@@ -33,16 +31,6 @@ public class GT_MetaTileEntity_BronzeBlastFurnace
 		return new GT_MetaTileEntity_BronzeBlastFurnace(this.mName);
 	}
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Bronze Blast Furnace",
-                "Useable for Steel and general Pyrometallurgy",
-                "Size(WxHxD): 3x4x3 (Hollow, with opening on top)",
-                "Built from 32 Bronze Plated Bricks",
-                "Recipes are reduced by 4x times",
-                "Causes "+ setPollut() +" Pollution per second"};
-    }
-
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
             return aActive ? FACING_ACTIVE : FACING_FRONT;
@@ -51,13 +39,8 @@ public class GT_MetaTileEntity_BronzeBlastFurnace
     }
 
     @Override
-    protected boolean isCorrectCasingBlock(Block block) {
-        return block == GregTech_API.sBlockCasings1;
-    }
-
-    @Override
-    protected boolean isCorrectCasingMetaID(int metaID) {
-        return metaID == 10;
+    public ICasing getCasingType() {
+        return Casings.BRONZE_PLATED_BRICKS;
     }
 
     @Override
