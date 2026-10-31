@@ -1,27 +1,41 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.HatchElement;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
-public class GT_MetaTileEntity_MultiblockCentrifuge extends GT_MetaTileEntity_MultiBlockBase {
+import static space.impact.api.structure.StructureUtility.transpose;
 
-	private final int CASING_INDEX = 49;
+public class GT_MetaTileEntity_MultiblockCentrifuge
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_MultiblockCentrifuge>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 8)
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output)
+            .build();
+    private static IStructureDefinition<GT_MetaTileEntity_MultiblockCentrifuge> structureDefinition;
+    private int casingCount;
 	
 	public GT_MetaTileEntity_MultiblockCentrifuge(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -37,18 +51,17 @@ public class GT_MetaTileEntity_MultiblockCentrifuge extends GT_MetaTileEntity_Mu
     }
 
     @Override
-    public String[] getDescription() {
-        return new String[]{
-        		"Controller block for the Large Centrifuge",
-				"Has the all recipes as the Centrifuge",
-				"Size(WxHxD): 3x3x3",
-				"3x3x3 of Clean Stainless Steel Machine Casing (hollow, min 8!)",
-				"Controller (Front centered)",
-				"1x Motor Machine Casing (inside the hollow casings)",
-				"Nx Input Bus/Hatch (Any inert casing)",
-				"Nx Output Bus/Hatch (Any inert casing)",
-				"1x Maintenance Hatch (Any inert casing)",
-				"1x Energy Hatch (Any inert casing)" };
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Large Centrifuge")
+                .addInfo("Processes all Centrifuge recipes")
+                .beginStructureBlock(3, 3, 3, false)
+                .addController("Front center")
+                .addRequirements(SHELL, "Any outer casing position")
+                .addOtherStructurePart(Casings.MOTOR, "Center of the structure", 1)
+                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
     }
 
     @Override
@@ -56,22 +69,17 @@ public class GT_MetaTileEntity_MultiblockCentrifuge extends GT_MetaTileEntity_Mu
 			boolean aRedstone) {
 		if (aSide == aFacing) {
 			return new ITexture[] {
-					Textures.BlockIcons.casingTexturePages[0][49],
+					Casings.CLEAN_STAINLESS_STEEL.getTexture(),
 					TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_ACTIVE
 							: Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR) };
 		}
-		return new ITexture[] { Textures.BlockIcons.casingTexturePages[0][49] };
+		return new ITexture[] { Casings.CLEAN_STAINLESS_STEEL.getTexture() };
 	}
 
 	@Override
 	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
 		return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeChemicalReactor.png");
 	}
-
-	/*@Override
-	public GT_Recipe.GT_Recipe_Map getRecipeMap() {
-		return GT_Recipe.GT_Recipe_Map.sCentrifugeRecipes;
-	}*/
 
 	@Override
 	public boolean isCorrectMachinePart(ItemStack aStack) {
@@ -149,54 +157,39 @@ public class GT_MetaTileEntity_MultiblockCentrifuge extends GT_MetaTileEntity_Mu
 		return false;
 	}
 	
-	@Override
-	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-		int casingAmount = 0;
-		boolean hasHeatingCoil = false;
-		// x=width, z=depth, y=height
-		for (int x = -1 + xDir; x <= xDir + 1; x++) {
-			for (int z = -1 + zDir; z <= zDir + 1; z++) {
-				for (int y = -1; y <= 1; y++) {
-					if (x == 0 && y == 0 && z == 0) {
-						continue;
-					}
-					IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
-					Block block = aBaseMetaTileEntity.getBlockOffset(x, y, z);
-					int centerCoords = 0;
-					if (x == xDir) {
-						centerCoords++;
-					}
-					if (y == 0) {
-						centerCoords++;
-					}
-					if (z == zDir) {
-						centerCoords++;
-					}
-					if (centerCoords == 3) {
-						if (block == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 11) {
-							continue;
-						} else {
-							return false;
-						}
-					}
-					if (!addInputToMachineList(tileEntity, CASING_INDEX) && !addOutputToMachineList(tileEntity, CASING_INDEX)
-							&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
-							&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-						if (block == GregTech_API.sBlockCasings4 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 1) {
-							casingAmount++;
-						} else {
-							return false;
-						}
-					}
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        return checkPiece(STRUCTURE_PIECE, 1, 1, 0) && SHELL.isSatisfied(this, casingCount);
+    }
 
-				}
-			}
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 1, 0);
+    }
 
-		}
-		return casingAmount >= 8;
-	}
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 1, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_MultiblockCentrifuge> getStructureDefinition() {
+        if (structureDefinition == null) {
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_MultiblockCentrifuge>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CCC", "CCC"},
+                            {"C~C", "CMC", "CCC"},
+                            {"CCC", "CCC", "CCC"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiblockCentrifuge.class)
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount))
+                    .addElement('M', Casings.MOTOR.asElement())
+                    .build();
+        }
+        return structureDefinition;
+    }
 
 	@Override
 	public int getMaxEfficiency(ItemStack aStack) {
