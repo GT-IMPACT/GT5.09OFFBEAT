@@ -1,26 +1,36 @@
 package gregtech.api.util;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import gregtech.api.GregTech_API;
 import gregtech.api.enums.HeatingCoil;
+import gregtech.api.enums.Materials;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Frame;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.common.blocks.GT_Item_Machines;
+
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import space.impact.api.ImpactAPI;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.AutoPlaceEnvironment;
 import space.impact.api.structure.IStructureElement;
+import space.impact.api.structure.StructureUtility;
+import space.impact.api.util.ItemStackPredicate;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import gregtech.api.interfaces.ICasing;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import gregtech.api.GregTech_API;
-import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.common.blocks.GT_Item_Machines;
-import space.impact.api.structure.AutoPlaceEnvironment;
-import space.impact.api.hint.HintColor;
 
 public final class GTStructureUtility {
     public static final String HATCH_CHANNEL = "gt_hatch";
@@ -30,6 +40,64 @@ public final class GTStructureUtility {
 
     public static <T extends GT_MetaTileEntity_MultiBlockBase> HatchElementBuilder<T> buildHatchAdder(Class<T> type) {
         return new HatchElementBuilder<>();
+    }
+
+    /** Frame material is stored in its metatile entity, not in the shared machine block metadata. */
+    public static <T> IStructureElement<T> ofFrame(Materials material) {
+        Objects.requireNonNull(material);
+        return new IStructureElement<T>() {
+            private ItemStack stack() {
+                return GT_OreDictUnificator.get(OrePrefixes.frameGt, material, 1);
+            }
+
+            @Override
+            public boolean check(T machine, World world, int x, int y, int z) {
+                TileEntity tile = world.getTileEntity(x, y, z);
+                if (!(tile instanceof IGregTechTileEntity)) return false;
+                IMetaTileEntity meta = ((IGregTechTileEntity) tile).getMetaTileEntity();
+                return meta instanceof GT_MetaPipeEntity_Frame && ((GT_MetaPipeEntity_Frame) meta).mMaterial == material;
+            }
+
+            @Override
+            public boolean couldBeValid(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                return check(machine, world, x, y, z);
+            }
+
+            @Override
+            public boolean spawnHint(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                IIcon icon = material.mIconSet.mTextures[OrePrefixes.frameGt.mTextureIndex].getIcon();
+                ImpactAPI.hintParticleTinted(world, x, y, z, new IIcon[]{icon, icon, icon, icon, icon, icon},
+                        material.mRGBa, stack());
+                return true;
+            }
+
+            @Override
+            public boolean placeBlock(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                if (check(machine, world, x, y, z)) return true;
+                if (!world.isAirBlock(x, y, z)) return false;
+                ItemStack frame = stack();
+                return frame != null && frame.getItem() instanceof ItemBlock
+                        && ((ItemBlock) frame.getItem()).placeBlockAt(frame, null, world, x, y, z,
+                                ForgeDirection.UP.ordinal(), 0.5f, 0.5f, 0.5f, frame.getItemDamage());
+            }
+
+            @Override
+            public BlocksToPlace getBlocksToPlace(T machine, World world, int x, int y, int z,
+                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
+                return BlocksToPlace.create(stack());
+            }
+
+            @Override
+            public PlaceResult survivalPlaceBlock(T machine, World world, int x, int y, int z,
+                                                  ItemStack trigger, AutoPlaceEnvironment environment) {
+                if (check(machine, world, x, y, z)) return PlaceResult.SKIP;
+                ItemStack frame = stack();
+                if (frame == null) return PlaceResult.REJECT;
+                return StructureUtility.survivalPlaceBlock(frame, ItemStackPredicate.NBTMode.EXACT,
+                        frame.getTagCompound(), false, world, x, y, z, environment.getSource(),
+                        environment.getActor(), environment.getChatter());
+            }
+        };
     }
 
     /**

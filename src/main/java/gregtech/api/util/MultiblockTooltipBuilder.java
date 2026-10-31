@@ -1,5 +1,6 @@
 package gregtech.api.util;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
@@ -268,6 +269,10 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addOtherStructurePart(ICasing casing, String location, int count) {
         return part(count + " " + casing.getDisplayName(), text("Location", location));
+    }
+
+    public MultiblockTooltipBuilder addOtherStructurePart(ItemStack stack, String location, int count) {
+        return part(count + " " + stack.getDisplayName(), text("Location", location));
     }
 
     public MultiblockTooltipBuilder addAir(String location) {
