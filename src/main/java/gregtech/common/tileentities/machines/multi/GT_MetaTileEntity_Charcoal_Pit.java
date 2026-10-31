@@ -20,16 +20,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import space.impact.api.ImpactAPI;
-import space.impact.api.alignment.constructable.ChannelDataAccessor;
-import space.impact.api.alignment.constructable.ISurvivalConstructable;
-import space.impact.api.structure.AutoPlaceEnvironment;
-import space.impact.api.structure.IStructureDefinition;
-import space.impact.api.structure.IStructureElement;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
-import space.impact.api.structure.StructureDefinition;
-import space.impact.api.structure.StructureUtility;
-import space.impact.api.util.ItemStackPredicate;
+import space.impact.structures.ImpactStructures;
+import space.impact.structures.alignment.constructable.ChannelDataAccessor;
+import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.structure.AutoPlaceEnvironment;
+import space.impact.structures.structure.IStructureDefinition;
+import space.impact.structures.structure.IStructureElement;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.structure.StructureDefinition;
+import space.impact.structures.structure.StructureUtility;
+import space.impact.structures.util.ItemStackPredicate;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
-import static space.impact.api.structure.StructureUtility.transpose;
+import static space.impact.structures.structure.StructureUtility.transpose;
 
 public class GT_MetaTileEntity_Charcoal_Pit
         extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_Charcoal_Pit>
@@ -325,7 +325,7 @@ public class GT_MetaTileEntity_Charcoal_Pit
             public boolean spawnHint(GT_MetaTileEntity_Charcoal_Pit machine, World world,
                                      int x, int y, int z, ItemStack trigger) {
                 boolean existing = check(machine, world, x, y, z);
-                ImpactAPI.hintParticle(world, x, y, z, existing ? world.getBlock(x, y, z) : preview,
+                ImpactStructures.hintParticle(world, x, y, z, existing ? world.getBlock(x, y, z) : preview,
                         existing ? world.getBlockMetadata(x, y, z) : 0);
                 return true;
             }

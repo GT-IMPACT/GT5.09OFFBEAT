@@ -25,10 +25,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import space.impact.api.Main;
-import space.impact.api.alignment.constructable.ChannelDataAccessor;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.Main;
+import space.impact.structures.alignment.constructable.ChannelDataAccessor;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -196,9 +196,9 @@ final class GT_DrillerStructureChecks {
         assertFalse(other.recheck());
         assertTrue(f.recheck());
         assertFalse("No extended rotations", f.machine.isNewExtendedFacingValid(
-                space.impact.api.alignment.enumerable.ExtendedFacing.of(facing,
-                        space.impact.api.alignment.enumerable.Rotation.CLOCKWISE,
-                        space.impact.api.alignment.enumerable.Flip.NONE)));
+                space.impact.structures.alignment.enumerable.ExtendedFacing.of(facing,
+                        space.impact.structures.alignment.enumerable.Rotation.CLOCKWISE,
+                        space.impact.structures.alignment.enumerable.Flip.NONE)));
     }
 
     private static void checkSurvival(int model, ForgeDirection facing, Item hatchItem, DrillerHints hints) {

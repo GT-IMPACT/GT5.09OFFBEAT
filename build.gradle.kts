@@ -33,7 +33,7 @@ buildConfig {
 dependencies {
 
     // impact
-    api("space.impact:ImpactStructures:1.0.8:dev")
+    api("space.impact:ImpactStructures:1.1.0:dev")
     implementation("space.impact:VirtualWorld:2.0.4:dev")
 
     compileOnlyApi("space.impact:impact-core:1.1.0.25-1-gb6211b5.dirty:dev") { isTransitive = false }

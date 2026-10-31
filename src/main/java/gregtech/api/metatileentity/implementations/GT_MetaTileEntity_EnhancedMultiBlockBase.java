@@ -8,18 +8,18 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.network.NetworkRegistry;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import space.impact.api.ImpactAPI;
-import space.impact.api.Main;
-import space.impact.api.alignment.IAlignment;
-import space.impact.api.alignment.IAlignmentLimits;
-import space.impact.api.alignment.IAlignmentProvider;
-import space.impact.api.alignment.constructable.IConstructable;
-import space.impact.api.alignment.enumerable.ExtendedFacing;
-import space.impact.api.alignment.enumerable.Flip;
-import space.impact.api.alignment.enumerable.Rotation;
-import space.impact.api.structure.IStructureDefinition;
-import space.impact.api.structure.IStructureWalker;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.ImpactStructures;
+import space.impact.structures.Main;
+import space.impact.structures.alignment.IAlignment;
+import space.impact.structures.alignment.IAlignmentLimits;
+import space.impact.structures.alignment.IAlignmentProvider;
+import space.impact.structures.alignment.constructable.IConstructable;
+import space.impact.structures.alignment.enumerable.ExtendedFacing;
+import space.impact.structures.alignment.enumerable.Flip;
+import space.impact.structures.alignment.enumerable.Rotation;
+import space.impact.structures.structure.IStructureDefinition;
+import space.impact.structures.structure.IStructureWalker;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
 /**
  * Declarative structures and construction, following GTNH's enhanced multiblock API.
@@ -90,7 +90,7 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
         if (base.getWorld() == null) return;
         if (base.isServerSide()) {
             base.markDirty();
-            ImpactAPI.sendAlignment((IAlignmentProvider) base, new NetworkRegistry.TargetPoint(
+            ImpactStructures.sendAlignment((IAlignmentProvider) base, new NetworkRegistry.TargetPoint(
                     base.getWorld().provider.dimensionId, base.getXCoord(), base.getYCoord(), base.getZCoord(), 128));
         } else {
             base.issueTextureUpdate();
@@ -144,7 +144,7 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
                 base.setFrontFacing((byte) facing.getDirection().ordinal());
             }
         } else {
-            ImpactAPI.queryAlignment((IAlignmentProvider) base);
+            ImpactStructures.queryAlignment((IAlignmentProvider) base);
         }
     }
 
@@ -219,11 +219,11 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
                 IStructureWalker.<T>ignoreBlockUnloaded((element, world, x, y, z, a, b, c) -> {
                     boolean blocked = !world.blockExists(x, y, z);
                     if (!blocked && !element.couldBeValid(self(), world, x, y, z, trigger)) {
-                        blocked = !ImpactAPI.isBlockTriviallyReplaceable(world, x, y, z, actor);
+                        blocked = !ImpactStructures.isBlockTriviallyReplaceable(world, x, y, z, actor);
                     }
                     if (blocked) {
                         conflicts[0]++;
-                        if (actor != null) ImpactAPI.markHintParticleError(actor, world, x, y, z);
+                        if (actor != null) ImpactStructures.markHintParticleError(actor, world, x, y, z);
                     }
                     return true;
                 }));

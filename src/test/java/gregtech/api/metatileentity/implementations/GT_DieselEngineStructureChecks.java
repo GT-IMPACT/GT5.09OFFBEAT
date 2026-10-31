@@ -22,9 +22,9 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import space.impact.api.alignment.constructable.ChannelDataAccessor;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.alignment.constructable.ChannelDataAccessor;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;

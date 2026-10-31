@@ -20,12 +20,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import space.impact.api.ImpactAPI;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.AutoPlaceEnvironment;
-import space.impact.api.structure.IStructureElement;
-import space.impact.api.structure.StructureUtility;
-import space.impact.api.util.ItemStackPredicate;
+import space.impact.structures.ImpactStructures;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.AutoPlaceEnvironment;
+import space.impact.structures.structure.IStructureElement;
+import space.impact.structures.structure.StructureUtility;
+import space.impact.structures.util.ItemStackPredicate;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -66,7 +66,7 @@ public final class GTStructureUtility {
             @Override
             public boolean spawnHint(T machine, World world, int x, int y, int z, ItemStack trigger) {
                 IIcon icon = material.mIconSet.mTextures[OrePrefixes.frameGt.mTextureIndex].getIcon();
-                ImpactAPI.hintParticleTinted(world, x, y, z, new IIcon[]{icon, icon, icon, icon, icon, icon},
+                ImpactStructures.hintParticleTinted(world, x, y, z, new IIcon[]{icon, icon, icon, icon, icon, icon},
                         material.mRGBa, stack());
                 return true;
             }

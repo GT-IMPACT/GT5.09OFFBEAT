@@ -3,7 +3,7 @@ package gregtech.api.interfaces;
 import gregtech.api.render.TextureFactory;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
-import space.impact.api.alignment.enumerable.ExtendedFacing;
+import space.impact.structures.alignment.enumerable.ExtendedFacing;
 
 /**
  * <p>This Interface defines operations to configure and build instances of the {@link ITexture} implementations</p>

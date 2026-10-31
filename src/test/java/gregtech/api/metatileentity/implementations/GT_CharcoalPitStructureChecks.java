@@ -21,8 +21,8 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
-import space.impact.api.alignment.constructable.ChannelDataAccessor;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.alignment.constructable.ChannelDataAccessor;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;

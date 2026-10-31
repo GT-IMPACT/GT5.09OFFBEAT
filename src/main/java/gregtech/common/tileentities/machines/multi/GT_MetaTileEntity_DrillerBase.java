@@ -26,18 +26,18 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import space.impact.api.alignment.constructable.ISurvivalConstructable;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.IStructureDefinition;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
-import space.impact.api.structure.StructureDefinition;
+import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.IStructureDefinition;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.structure.StructureDefinition;
 
 import java.util.ArrayList;
 
 import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.api.enums.GT_Values.W;
 import static gregtech.api.enums.Textures.BlockIcons.*;
-import static space.impact.api.structure.StructureUtility.transpose;
+import static space.impact.structures.structure.StructureUtility.transpose;
 
 public abstract class GT_MetaTileEntity_DrillerBase
         extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_DrillerBase>

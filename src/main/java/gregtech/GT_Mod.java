@@ -53,7 +53,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import space.impact.api.ImpactAPI;
+import space.impact.structures.ImpactStructures;
 
 import java.io.*;
 import java.util.*;
@@ -66,7 +66,7 @@ import static space.impact.gregtech.BuildConfigKt.MODNAME;
 
 @Mod(modid = MODID, name = MODNAME, version = "MC1710",  useMetadata = false,
 dependencies =  " required-after:IC2;" +
-        " required-after:impactapi@[1.0.6,);" +
+        " required-after:impactapi@[1.1.0,);" +
         " after:Forestry;" +
         " after:appliedenergistics2;" +
         " after:BuildCraft|Transport;" +
@@ -586,7 +586,7 @@ public class GT_Mod implements IGT_Mod {
         if (GregTech_API.sLoadStarted) {
             return;
         }
-        ImpactAPI.registerChannelDescription(
+        ImpactStructures.registerChannelDescription(
                 GTStructureUtility.HATCH_CHANNEL, MODID, "gt.structure.hatch_channel");
         try {
             for (Runnable tRunnable : GregTech_API.sBeforeGTLoad) {

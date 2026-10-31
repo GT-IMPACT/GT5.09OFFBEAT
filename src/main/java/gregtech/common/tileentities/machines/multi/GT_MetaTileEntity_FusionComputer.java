@@ -1,7 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
-import static space.impact.api.structure.StructureUtility.transpose;
+import static space.impact.structures.structure.StructureUtility.transpose;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -32,11 +32,11 @@ import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
 import gregtech.common.gui.GT_GUIContainer_FusionReactor;
-import space.impact.api.alignment.constructable.ISurvivalConstructable;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.IStructureDefinition;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
-import space.impact.api.structure.StructureDefinition;
+import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.IStructureDefinition;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.structure.StructureDefinition;
 
 public abstract class GT_MetaTileEntity_FusionComputer
         extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_FusionComputer>

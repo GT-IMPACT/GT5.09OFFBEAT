@@ -8,8 +8,8 @@ import net.minecraft.util.StatCollector;
 import java.util.Objects;
 
 import gregtech.api.enums.Textures;
-import space.impact.api.structure.IStructureElement;
-import space.impact.api.structure.StructureUtility;
+import space.impact.structures.structure.IStructureElement;
+import space.impact.structures.structure.StructureUtility;
 
 /**
  * A casing shared by rendering, structure checks, holograms and construction.

@@ -11,11 +11,11 @@ import gregtech.api.enums.HatchElement;
 import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
-import space.impact.api.alignment.constructable.ISurvivalConstructable;
-import space.impact.api.structure.IStructureDefinition;
-import space.impact.api.structure.IStructureElement;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
-import space.impact.api.structure.StructureDefinition;
+import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.structure.IStructureDefinition;
+import space.impact.structures.structure.IStructureElement;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.structure.StructureDefinition;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
@@ -26,7 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
-import static space.impact.api.structure.StructureUtility.transpose;
+import static space.impact.structures.structure.StructureUtility.transpose;
 import static gregtech.api.enums.Textures.BlockIcons.*;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
 

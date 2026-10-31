@@ -9,7 +9,7 @@ import java.util.*;
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.IHatchElement;
-import space.impact.api.hint.HintColor;
+import space.impact.structures.hint.HintColor;
 
 /**
  * Fluent multiblock descriptions. Create after registration and rebuild after a language/resource reload.

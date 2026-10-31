@@ -18,14 +18,14 @@ import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import space.impact.api.ImpactAPI;
-import space.impact.api.alignment.constructable.ChannelDataAccessor;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.AutoPlaceEnvironment;
-import space.impact.api.structure.IItemSource;
-import space.impact.api.structure.IStructureElement;
-import space.impact.api.structure.StructureUtility;
-import space.impact.api.util.ItemStackPredicate;
+import space.impact.structures.ImpactStructures;
+import space.impact.structures.alignment.constructable.ChannelDataAccessor;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.AutoPlaceEnvironment;
+import space.impact.structures.structure.IItemSource;
+import space.impact.structures.structure.IStructureElement;
+import space.impact.structures.structure.StructureUtility;
+import space.impact.structures.util.ItemStackPredicate;
 
 /**
  * A hatch-or-casing element. The hatch channel prioritizes available missing hatches, then builds casings.
@@ -228,7 +228,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
             @Override
             public boolean spawnHint(T machine, World world, int x, int y, int z, ItemStack trigger) {
                 if (color == null) return casing.spawnHint(machine, world, x, y, z, trigger);
-                ImpactAPI.hintParticle(world, x, y, z, color);
+                ImpactStructures.hintParticle(world, x, y, z, color);
                 return true;
             }
 
@@ -260,7 +260,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
             public PlaceResult survivalPlaceBlock(T machine, World world, int x, int y, int z,
                                                   ItemStack trigger, AutoPlaceEnvironment environment) {
                 if (couldBeValid(machine, world, x, y, z, trigger)) return PlaceResult.SKIP;
-                if (world.isRemote || !ImpactAPI.isBlockTriviallyReplaceable(world, x, y, z, environment.getActor())) {
+                if (world.isRemote || !ImpactStructures.isBlockTriviallyReplaceable(world, x, y, z, environment.getActor())) {
                     return PlaceResult.REJECT;
                 }
                 if (!ChannelDataAccessor.hasSubChannel(trigger, GTStructureUtility.HATCH_CHANNEL) || !needsHatches(machine)) {

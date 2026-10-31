@@ -31,11 +31,11 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
-import space.impact.api.alignment.constructable.ISurvivalConstructable;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.IStructureDefinition;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
-import space.impact.api.structure.StructureDefinition;
+import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.IStructureDefinition;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.structure.StructureDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +43,7 @@ import java.util.Arrays;
 import static gregtech.api.enums.GT_Values.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static space.impact.api.structure.StructureUtility.transpose;
+import static space.impact.structures.structure.StructureUtility.transpose;
 
 /**
  * Created by danie_000 on 03.10.2016.

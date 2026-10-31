@@ -21,9 +21,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StringTranslate;
 import net.minecraftforge.common.util.ForgeDirection;
-import space.impact.api.alignment.constructable.ChannelDataAccessor;
-import space.impact.api.hint.HintColor;
-import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.structures.alignment.constructable.ChannelDataAccessor;
+import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;

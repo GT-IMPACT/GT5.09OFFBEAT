@@ -66,12 +66,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import space.impact.api.alignment.IAlignment;
-import space.impact.api.alignment.IAlignmentLimits;
-import space.impact.api.alignment.IAlignmentProvider;
-import space.impact.api.alignment.constructable.IConstructable;
-import space.impact.api.alignment.constructable.IConstructableProvider;
-import space.impact.api.alignment.enumerable.ExtendedFacing;
+import space.impact.structures.alignment.IAlignment;
+import space.impact.structures.alignment.IAlignmentLimits;
+import space.impact.structures.alignment.IAlignmentProvider;
+import space.impact.structures.alignment.constructable.IConstructable;
+import space.impact.structures.alignment.constructable.IConstructableProvider;
+import space.impact.structures.alignment.enumerable.ExtendedFacing;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
