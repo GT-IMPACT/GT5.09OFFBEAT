@@ -1,18 +1,15 @@
 package gregtech.api.metatileentity.implementations;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import gregtech.api.interfaces.ISecondaryDescribable;
 import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.MultiblockTooltipCache;
 
 /**
  * Optional tooltip support, following GTNH's tooltip multiblock base without client dependencies.
  */
 public abstract class GT_MetaTileEntity_TooltipMultiBlockBase extends GT_MetaTileEntity_MultiBlockBase
         implements ISecondaryDescribable {
-    private static final AtomicLong RESOURCE_GENERATION = new AtomicLong();
-    private long tooltipGeneration = -1;
-    private MultiblockTooltipBuilder tooltip;
+    private final MultiblockTooltipCache tooltipCache = new MultiblockTooltipCache(this::createTooltip);
 
     protected GT_MetaTileEntity_TooltipMultiBlockBase(int id, String name, String regionalName) {
         super(id, name, regionalName);
@@ -30,20 +27,14 @@ public abstract class GT_MetaTileEntity_TooltipMultiBlockBase extends GT_MetaTil
     }
 
     protected final MultiblockTooltipBuilder getTooltip() {
-        long generation = RESOURCE_GENERATION.get();
-        if (tooltipGeneration != generation) {
-            tooltip = createTooltip();
-            if (tooltip != null) tooltip.toolTipFinisher();
-            tooltipGeneration = generation;
-        }
-        return tooltip;
+        return tooltipCache.get();
     }
 
     /**
      * Called by the client resource listener. No registry of machine instances is retained.
      */
     public static void invalidateTooltipCache() {
-        RESOURCE_GENERATION.incrementAndGet();
+        MultiblockTooltipCache.invalidateAll();
     }
 
     @Override
