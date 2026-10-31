@@ -1151,16 +1151,6 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.ConcreteBackfiller1.get(1L), bitsd, new Object[]{"WPW", "EME", "CQC", 'M', ItemList.Hull_MV, 'W', OrePrefixes.frameGt.get(Materials.Steel), 'E', OrePrefixes.circuit.get(Materials.Good), 'C', ItemList.Electric_Motor_MV, 'P', OrePrefixes.pipeLarge.get(Materials.Steel), 'Q', ItemList.Electric_Pump_MV});
         GT_ModHandler.addCraftingRecipe(ItemList.ConcreteBackfiller2.get(1L), bitsd, new Object[]{"WPW", "EME", "CQC", 'M', ItemList.ConcreteBackfiller1, 'W', OrePrefixes.frameGt.get(Materials.Titanium), 'E', OrePrefixes.circuit.get(Materials.Data), 'C', ItemList.Electric_Motor_EV, 'P', OrePrefixes.pipeLarge.get(Materials.Steel), 'Q', ItemList.Electric_Pump_EV});
 
-        //ItemList.OreDrill1.set(new GT_MetaTileEntity_OreDrillingPlant1(1158, "multimachine.oredrill1", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant").getStackForm(1));
-
-        //ItemList.OreDrill2.set(new GT_MetaTileEntity_OreDrillingPlant2(1177, "multimachine.oredrill2", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant II").getStackForm(1));
-
-        //ItemList.OreDrill3.set(new GT_MetaTileEntity_OreDrillingPlant3(1178, "multimachine.oredrill3", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant III").getStackForm(1));
-
-        //ItemList.OreDrill4.set(new GT_MetaTileEntity_OreDrillingPlant4(1179, "multimachine.oredrill4", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant IV").getStackForm(1));
-
-        //ItemList.OreDrill5.set(new GT_MetaTileEntity_OreDrillingPlant5(12190, "multimachine.oredrill5", EnumChatFormatting.DARK_RED + "[DELETED]" + EnumChatFormatting.RESET + "Ore Drilling Plant V").getStackForm(1));
-
         ItemList.OilCracker.set(new GT_MetaTileEntity_OilCracker(1160, "multimachine.cracker", "Oil Cracking Unit").getStackForm(1));
 
         ItemList.MicroTransmitter_HV.set(new GT_MetaTileEntity_MicrowaveEnergyTransmitter(1161, "basicmachine.microtransmitter.03", "HV Microwave Energy Transmitter", 3).getStackForm(1L));
