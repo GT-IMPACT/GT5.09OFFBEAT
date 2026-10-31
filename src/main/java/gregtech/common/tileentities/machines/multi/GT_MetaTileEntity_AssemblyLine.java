@@ -2,34 +2,76 @@ package gregtech.common.tileentities.machines.multi;
 
 import com.impact.mods.gregtech.tileentities.hatches.lasers.GTMTE_LaserEnergy_In;
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.Casings;
 import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.ItemList;
-import gregtech.api.enums.Textures;
-import gregtech.api.enums.Textures.BlockIcons;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_DataAccess;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_EnergyMulti;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import ic2.core.Ic2Items;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import static gregtech.GT_Mod.GT_FML_LOGGER;
 import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.api.structure.StructureUtility.ofBlockAnyMeta;
+import static space.impact.api.structure.StructureUtility.transpose;
 
 public class GT_MetaTileEntity_AssemblyLine
-        extends GT_MetaTileEntity_MultiBlockBase {
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_AssemblyLine>
+        implements ISurvivalConstructable {
+    private static final int MIN_LENGTH = 5;
+    private static final int MAX_LENGTH = 16;
+    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
+    private static final HintColor ENERGY_HINT = HintColor.YELLOW;
+    private static final HintColor INPUT_HINT = HintColor.ORANGE;
+    private static final HintColor OUTPUT_HINT = HintColor.GREEN;
+    private static final HintColor DATA_HINT = HintColor.PURPLE;
+    private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
+            .atLeast(HatchElement.Maintenance)
+            .build();
+    private static final StructureRequirements ENERGY = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
+            .atLeast(LineHatch.ENERGY)
+            .build();
+    private static final StructureRequirements OUTPUT = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
+            .atLeast(LineHatch.OUTPUT_BUS)
+            .build();
+    private static final StructureRequirements[] INPUTS = createInputRequirements();
+    private static IStructureDefinition<GT_MetaTileEntity_AssemblyLine> structureDefinition;
+    private int buildingLength;
+
+    private static StructureRequirements[] createInputRequirements() {
+        StructureRequirements[] inputs = new StructureRequirements[MAX_LENGTH - 1];
+        for (int slice = 0; slice < inputs.length; slice++) {
+            inputs[slice] = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
+                    .atLeast(new SliceInput(slice))
+                    .build();
+        }
+        return inputs;
+    }
 
     public ArrayList<GT_MetaTileEntity_Hatch_DataAccess> mDataAccessHatches = new ArrayList<GT_MetaTileEntity_Hatch_DataAccess>();
 
@@ -45,34 +87,39 @@ public class GT_MetaTileEntity_AssemblyLine
         return new GT_MetaTileEntity_AssemblyLine(this.mName);
     }
 
-    public String[] getDescription() {
-        return new String[]{"Assembling Line",
-                "Size: 3x(5-16)x4, variable length",
-                "From Bottom to Top, Left to Right",
-                "Layer 1 - Solid Steel Machine Casing, Input Bus (last is Output Bus), Solid Steel Machine Casing",
-                "        - Casings can be replaced by Maintenance or Input Hatch",
-                "Layer 2 - Reinforced Glass, Assembling Line Casing, Reinforced Glass",
-                "Layer 3 - Grate Machine Casing, Assembler Machine Casing, Grate Machine Casing",
-                "Layer 4 - Empty, Solid Steel Machine Casing, Empty - Casing can be replaced by Energy Hatch",
-                "Up to 16 repeating slices, First replaces 1 Grate with Assembly Line,",
-                "Last has Output Bus instead of Input Bus",
-                "Up to 8 Basic Energy Hatches or 1 Multi-Ampere Energy Hatch (not Laser!)",
-                "Optional - Replace 1x Grate with Data Access Hatch next to the Controller"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Assembly Line")
+                .addInfo("Data stick: controller or Data Access Hatch")
+                .addInfo("Inputs follow slice order; fluids: front before back")
+                .beginVariableStructureBlock(MIN_LENGTH, MAX_LENGTH, 4, 4, 3, 3, false)
+                .addController("Slice 1, front, third layer from bottom")
+                .addRequirements(BOTTOM, "Bottom sides", BOTTOM_HINT)
+                .addRequirements(ENERGY, "Top center", ENERGY_HINT)
+                .addRequirements(INPUTS[0], "Bottom center; each slice except last; slot 1", INPUT_HINT)
+                .addRequirements(OUTPUT, "Last slice, bottom center", OUTPUT_HINT)
+                .addStructureHint("Fluid Input (optional, single-fluid)", BOTTOM_HINT)
+                .addStructureHint("Data Access Hatch (optional, next to controller)", DATA_HINT)
+                .addStructureInfo("Power: 1-8 basic OR 1 multi-amp; no mixing or lasers")
+                .addMasterChannel("Length: channel + 4 (5-16)")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Auto-place required hatches")
+                .toolTipFinisher();
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
             if (aActive)
                 return new ITexture[]{
-                        Textures.BlockIcons.casingTexturePages[0][16],
+                        Casings.SOLID_STEEL.getTexture(),
                         TextureFactory.of(OVERLAY_FRONT_ASSEMBLY_LINE_ACTIVE),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_ASSEMBLY_LINE_ACTIVE_GLOW).glow().build()};
             return new ITexture[]{
-                    BlockIcons.casingTexturePages[0][16],
+                    Casings.SOLID_STEEL.getTexture(),
                     TextureFactory.of(OVERLAY_FRONT_ASSEMBLY_LINE),
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_ASSEMBLY_LINE_GLOW).glow().build()};
         }
-        return new ITexture[]{Textures.BlockIcons.casingTexturePages[0][16]};
+        return new ITexture[]{Casings.SOLID_STEEL.getTexture()};
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
@@ -85,10 +132,6 @@ public class GT_MetaTileEntity_AssemblyLine
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
-    }
-
-    public boolean isFacingValid(byte aFacing) {
-        return aFacing > 1;
     }
 
     public boolean checkRecipe(ItemStack aStack) {
@@ -106,11 +149,14 @@ public class GT_MetaTileEntity_AssemblyLine
             NBTTagCompound tTag = tDataStick.getTagCompound();
             if (tTag == null)
                 continue;
+            // Each data stick is a separate candidate; failed candidates must not leave inputs behind.
+            Arrays.fill(tStack, null);
+            Arrays.fill(tFluids, null);
             for (int i = 0; i < 15; i++) {
     			int count = tTag.getInteger("a"+i);
                 if (!tTag.hasKey("" + i) && count <= 0)
                     continue;
-                if (mInputBusses.get(i) == null) {
+                if (i >= mInputBusses.size() || mInputBusses.get(i) == null) {
                     continue nextDS;
                 }
                 
@@ -153,7 +199,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 if (tFluids[i] == null) continue;
                     if(GT_Values.D1)
                         GT_FML_LOGGER.info("Fluid "+i+" "+tFluids[i].getUnlocalizedName());
-                if (mInputHatches.get(i) == null) {
+                if (i >= mInputHatches.size() || mInputHatches.get(i) == null) {
                     continue nextDS;
                 }
                 FluidStack fluidInHatch = mInputHatches.get(i).mFluid;
@@ -250,142 +296,233 @@ public class GT_MetaTileEntity_AssemblyLine
         }
     }
 
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
         mDataAccessHatches.clear();
-        int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-        int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-        if (xDir != 0) {
-            for (int r = 0; r <= 16; r++) {
-                int i = r * xDir;
-
-                IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(0, 0, i);
-                if (i != 0 && !(aBaseMetaTileEntity.getBlockOffset(0, 0, i) == GregTech_API.sBlockCasings3 && aBaseMetaTileEntity.getMetaIDOffset(0, 0, i) == 10)) {
-                    if(r == 1 && !addDataAccessToMachineList(tTileEntity, 16)){
-                        return false;
-                    }
-                }
-                if (!aBaseMetaTileEntity.getBlockOffset(0, -1, i).getUnlocalizedName().equals("blockAlloyGlass")) {
-                    return false;
-                }
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(0, -2, i);
-                if ((!addMaintenanceToMachineList(tTileEntity, 16)) && (!addInputToMachineList(tTileEntity, 16))) {
-                    if (aBaseMetaTileEntity.getBlockOffset(0, -2, i) != GregTech_API.sBlockCasings2) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(0, -2, i) != 0) {
-                        return false;
-                    }
-                }
-
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, 1, i);
-                if (!addEnergyInputToMachineList(tTileEntity, 16)) {
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir, 1, i) != GregTech_API.sBlockCasings2) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir, 1, i) != 0) {
-                        return false;
-                    }
-                }
-                if (i != 0 && !(aBaseMetaTileEntity.getBlockOffset(xDir, 0, i) == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(xDir, 0, i) == 9)) {
-                    return false;
-                }
-                if (i != 0 && !(aBaseMetaTileEntity.getBlockOffset(xDir, -1, i) == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(xDir, -1, i) == 5)) {
-                    return false;
-                }
-
-
-                if (!(aBaseMetaTileEntity.getBlockOffset(xDir * 2, 0, i) == GregTech_API.sBlockCasings3 && aBaseMetaTileEntity.getMetaIDOffset(xDir * 2, 0, i) == 10)) {
-                    return false;
-                }
-                if (!aBaseMetaTileEntity.getBlockOffset(xDir * 2, -1, i).getUnlocalizedName().equals("blockAlloyGlass")) {
-                    return false;
-                }
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir * 2, -2, i);
-                if ((!addMaintenanceToMachineList(tTileEntity, 16)) && (!addInputToMachineList(tTileEntity, 16))) {
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir * 2, -2, i) != GregTech_API.sBlockCasings2) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir * 2, -2, i) != 0) {
-                        return false;
-                    }
-                }
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, -2, i);
-                if (!addInputToMachineList(tTileEntity, 16) && addOutputToMachineList(tTileEntity, 16)) {
-
-                    for (GT_MetaTileEntity_Hatch_EnergyMulti te : mEnergyHatchesMulti) {
-                        if (te instanceof GTMTE_LaserEnergy_In) return false;
-                    }
-
-                    return r > 0 && (!mEnergyHatches.isEmpty() || !mEnergyHatchesMulti.isEmpty()) && (mEnergyHatchesMulti.size() <= 1 && mEnergyHatches.isEmpty() || mEnergyHatchesMulti.isEmpty() && mEnergyHatches.size() <= 8);
-                }
-            }
-        } else {
-            for (int r = 0; r <= 16; r++) {
-                int i = r * -zDir;
-
-                IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(i, 0, 0);
-                if (i != 0 && !(aBaseMetaTileEntity.getBlockOffset(i, 0, 0) == GregTech_API.sBlockCasings3 && aBaseMetaTileEntity.getMetaIDOffset(i, 0, 0) == 10)) {
-                    if(r == 1 && !addDataAccessToMachineList(tTileEntity, 16)){
-                        return false;
-                    }
-                }
-                if (!aBaseMetaTileEntity.getBlockOffset(i, -1, 0).getUnlocalizedName().equals("blockAlloyGlass")) {
-                    return false;
-                }
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(i, -2, 0);
-                if ((!addMaintenanceToMachineList(tTileEntity, 16)) && (!addInputToMachineList(tTileEntity, 16))) {
-                    if (aBaseMetaTileEntity.getBlockOffset(i, -2, 0) != GregTech_API.sBlockCasings2) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(i, -2, 0) != 0) {
-                        return false;
-                    }
-                }
-
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(i, 1, zDir);
-                if (!addEnergyInputToMachineList(tTileEntity, 16)) {
-                    if (aBaseMetaTileEntity.getBlockOffset(i, 1, zDir) != GregTech_API.sBlockCasings2) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(i, 1, zDir) != 0) {
-                        return false;
-                    }
-                }
-                if (i != 0 && !(aBaseMetaTileEntity.getBlockOffset(i, 0, zDir) == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(i, 0, zDir) == 9)) {
-                    return false;
-                }
-                if (i != 0 && !(aBaseMetaTileEntity.getBlockOffset(i, -1, zDir) == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(i, -1, zDir) == 5)) {
-                    return false;
-                }
-
-
-                if (!(aBaseMetaTileEntity.getBlockOffset(i, 0, zDir * 2) == GregTech_API.sBlockCasings3 && aBaseMetaTileEntity.getMetaIDOffset(i, 0, zDir * 2) == 10)) {
-                    return false;
-                }
-                if (!aBaseMetaTileEntity.getBlockOffset(i, -1, zDir * 2).getUnlocalizedName().equals("blockAlloyGlass")) {
-                    return false;
-                }
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(i, -2, zDir * 2);
-                if ((!addMaintenanceToMachineList(tTileEntity, 16)) && (!addInputToMachineList(tTileEntity, 16))) {
-                    if (aBaseMetaTileEntity.getBlockOffset(i, -2, zDir * 2) != GregTech_API.sBlockCasings2) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(i, -2, zDir * 2) != 0) {
-                        return false;
-                    }
-                }
-                tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(i, -2, zDir);
-                if (!addInputToMachineList(tTileEntity, 16) && addOutputToMachineList(tTileEntity, 16)) {
-
-                    for (GT_MetaTileEntity_Hatch_EnergyMulti te : mEnergyHatchesMulti) {
-                        if (te instanceof GTMTE_LaserEnergy_In) return false;
-                    }
-
-                    return r > 0 && (!mEnergyHatches.isEmpty() || !mEnergyHatchesMulti.isEmpty()) && (mEnergyHatchesMulti.size() <= 1 && mEnergyHatches.isEmpty() || mEnergyHatchesMulti.isEmpty() && mEnergyHatches.size() <= 8);
-                }
+        int length = buildingLength == 0 ? findLength() : buildingLength;
+        boolean valid = checkPiece(piece(Math.max(MIN_LENGTH, length)), 0, 1, 0);
+        // Structure traversal groups rows by depth; recipes require the original slice-first ordering.
+        mInputBusses.sort(Comparator.comparingInt(hatch -> sliceOf(hatch.getBaseMetaTileEntity())));
+        mInputHatches.sort(Comparator.comparingInt(hatch -> inputOrder(hatch.getBaseMetaTileEntity())));
+        if (!valid || length < MIN_LENGTH || !BOTTOM.isSatisfied(this, 0)
+                || !ENERGY.isSatisfied(this, 0) || !OUTPUT.isSatisfied(this, 0)) {
+            return false;
+        }
+        for (int slice = 0; slice < length - 1; slice++) {
+            if (!INPUTS[slice].isSatisfied(this, 0)) {
+                return false;
             }
         }
-        return false;
+        return mEnergyHatchesMulti.isEmpty() ? mEnergyHatches.size() <= 8
+                : mEnergyHatchesMulti.size() == 1 && mEnergyHatches.isEmpty();
+    }
+
+    private int findLength() {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        ForgeDirection along = getExtendedFacing().getRelativeLeftInWorld();
+        ForgeDirection back = getExtendedFacing().getRelativeBackInWorld();
+        for (int slice = 0; slice < MAX_LENGTH; slice++) {
+            IGregTechTileEntity tile = base.getIGregTechTileEntityOffset(
+                    along.offsetX * slice + back.offsetX, -2, along.offsetZ * slice + back.offsetZ);
+            if (tile != null && tile.getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_OutputBus) {
+                return slice + 1;
+            }
+        }
+        return MAX_LENGTH;
+    }
+
+    private int sliceOf(IGregTechTileEntity tile) {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        ForgeDirection along = getExtendedFacing().getRelativeLeftInWorld();
+        return (tile.getXCoord() - base.getXCoord()) * along.offsetX
+                + (tile.getZCoord() - base.getZCoord()) * along.offsetZ;
+    }
+
+    private int inputOrder(IGregTechTileEntity tile) {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        ForgeDirection back = getExtendedFacing().getRelativeBackInWorld();
+        return sliceOf(tile) * 3 + (tile.getXCoord() - base.getXCoord()) * back.offsetX
+                + (tile.getZCoord() - base.getZCoord()) * back.offsetZ;
+    }
+
+    private static String piece(int length) {
+        return "line_" + length;
+    }
+
+    private static int constructionLength(ItemStack trigger) {
+        return Math.max(MIN_LENGTH, Math.min(MAX_LENGTH - 4, trigger.stackSize) + 4);
+    }
+
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(piece(constructionLength(trigger)), trigger, hintsOnly, 0, 1, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        // Limit hatch discovery to the selected length even before its output bus exists.
+        buildingLength = constructionLength(trigger);
+        try {
+            return survivalBuildPiece(piece(buildingLength), trigger, 0, 1, 0, elementBudget, environment);
+        } finally {
+            buildingLength = 0;
+        }
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_AssemblyLine> getStructureDefinition() {
+        if (structureDefinition == null) {
+            StructureDefinition.Builder<GT_MetaTileEntity_AssemblyLine> builder = StructureDefinition
+                    .<GT_MetaTileEntity_AssemblyLine>builder()
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('B', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
+                            .allow(LineHatch.FLUID_INPUT)
+                            .buildAndChain(BOTTOM)
+                            .withHint(BOTTOM_HINT))
+                    .addElement('E', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
+                            .buildAndChain(ENERGY)
+                            .withHint(ENERGY_HINT))
+                    .addElement('O', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
+                            .hint(OUTPUT_HINT)
+                            .build(OUTPUT))
+                    .addElement('D', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
+                            .allow(LineHatch.DATA)
+                            .buildAndChain(StructureRequirements.builder(Casings.GRATE, 0).build())
+                            .withHint(DATA_HINT))
+                    .addElement('G', Casings.GRATE.asElement())
+                    .addElement('A', Casings.ASSEMBLER.asElement())
+                    .addElement('C', Casings.ASSEMBLY_LINE.asElement())
+                    .addElement('L', ofBlockAnyMeta(GT_Utility.getBlockFromStack(Ic2Items.reinforcedGlass),
+                            GT_Utility.getBlockFromStack(Ic2Items.reinforcedGlass), Ic2Items.reinforcedGlass.getItemDamage()));
+            for (int slice = 0; slice < MAX_LENGTH - 1; slice++) {
+                builder.addElement((char) ('a' + slice), GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
+                        .hint(INPUT_HINT)
+                        .build(INPUTS[slice]));
+            }
+            for (int length = MIN_LENGTH; length <= MAX_LENGTH; length++) {
+                StringBuilder buses = new StringBuilder();
+                for (int slice = 0; slice < length - 1; slice++) {
+                    buses.append((char) ('a' + slice));
+                }
+                buses.append('O');
+                builder.addShape(piece(length), transpose(new String[][]{
+                        {row('-', length), row('E', length), row('-', length)},
+                        {"~D" + row('G', length - 2), row('A', length), row('G', length)},
+                        {row('L', length), row('C', length), row('L', length)},
+                        {row('B', length), buses.toString(), row('B', length)}
+                }));
+            }
+            structureDefinition = builder.build();
+        }
+        return structureDefinition;
+    }
+
+    private static String row(char element, int length) {
+        char[] row = new char[length];
+        Arrays.fill(row, element);
+        return new String(row);
+    }
+
+    private static final class SliceInput implements IHatchElement {
+        private final int slice;
+
+        private SliceInput(int slice) {
+            this.slice = slice;
+        }
+
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            return tile instanceof GT_MetaTileEntity_Hatch_InputBus;
+        }
+
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            GT_MetaTileEntity_AssemblyLine line = (GT_MetaTileEntity_AssemblyLine) machine;
+            return (int) line.mInputBusses.stream()
+                    .filter(hatch -> line.sliceOf(hatch.getBaseMetaTileEntity()) == slice)
+                    .count();
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            return machine.addInputToMachineList(tile, texture);
+        }
+
+        @Override
+        public String getDescription() {
+            return StatCollector.translateToLocal("gt.tooltip.hatch.input_bus");
+        }
+    }
+
+    private enum LineHatch implements IHatchElement {
+        ENERGY,
+        OUTPUT_BUS,
+        FLUID_INPUT,
+        DATA;
+
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            switch (this) {
+                case ENERGY:
+                    return HatchElement.Energy.matches(tile) && !(tile instanceof GTMTE_LaserEnergy_In);
+                case OUTPUT_BUS:
+                    return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
+                case FLUID_INPUT:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input && !(tile instanceof GTMTE_Multi_Hatch_Input);
+                case DATA:
+                    return tile instanceof GT_MetaTileEntity_Hatch_DataAccess;
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            switch (this) {
+                case ENERGY:
+                    return HatchElement.Energy.count(machine);
+                case OUTPUT_BUS:
+                    return machine.mOutputBusses.size();
+                case FLUID_INPUT:
+                    return machine.mInputHatches.size();
+                case DATA:
+                    return ((GT_MetaTileEntity_AssemblyLine) machine).mDataAccessHatches.size();
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            switch (this) {
+                case ENERGY:
+                    return machine.addEnergyInputToMachineList(tile, texture);
+                case OUTPUT_BUS:
+                    return machine.addOutputToMachineList(tile, texture);
+                case FLUID_INPUT:
+                    return machine.addInputToMachineList(tile, texture);
+                case DATA:
+                    return ((GT_MetaTileEntity_AssemblyLine) machine).addDataAccessToMachineList(tile, texture);
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public String getDescription() {
+            switch (this) {
+                case ENERGY:
+                    return HatchElement.Energy.getDescription();
+                case OUTPUT_BUS:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.output_bus");
+                case FLUID_INPUT:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.input_hatch");
+                case DATA:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.data_access");
+                default:
+                    throw new AssertionError(this);
+            }
+        }
     }
 
     /**

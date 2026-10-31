@@ -68,6 +68,10 @@ dependencies {
     runtimeOnlyNonPublishable(modUtils.deobfuscate("curse.maven:journeymap-32274:4500659"))
 
     testImplementation("junit:junit:4.13.2")
+    // Exercise Assembly Line's exclusion of IMPACT laser energy hatches.
+    testRuntimeOnly("space.impact:impact-core:1.1.0.25-1-gb6211b5.dirty:dev") {
+        isTransitive = false
+    }
     // AE stack interfaces reference Minecraft client types even in server-side storage tests.
     testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.3") { isTransitive = false }
     testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")

@@ -122,7 +122,8 @@ public class GT_StructureIntegrationTest {
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DistillationTower",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_OilCracker",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine",
-                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine2"}) {
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine2",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AssemblyLine"}) {
                 Class.forName(name, true, server);
             }
             // Its existing static recipe requires registered adsorption filter items before initialization.
@@ -204,6 +205,7 @@ public class GT_StructureIntegrationTest {
         GT_OilCrackerStructureChecks.run(hatchItem, hintProxy);
         GT_DieselEngineStructureChecks.run(hatchItem, hintProxy);
         GT_AirFilterStructureChecks.run(hatchItem, hintProxy);
+        GT_AssemblyLineStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {
