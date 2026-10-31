@@ -152,7 +152,7 @@ final class GT_AssemblyLineStructureChecks {
         assertSame(f.tile(1, -2, 0).getMetaTileEntity(), f.machine.mInputHatches.get(1));
         for (int depth : new int[]{0, 2}) {
             f.block(f.length - 1, 1, depth, Blocks.bedrock, 0);
-            assertFalse("Top sides remain air", f.recheck());
+            assertTrue("Top sides are outside the structure", f.recheck());
             f.clear(f.length - 1, 1, depth);
             f.block(f.length - 1, -1, depth, Blocks.glass, 5);
             assertTrue("Glass metadata remains unrestricted", f.recheck());
@@ -185,7 +185,7 @@ final class GT_AssemblyLineStructureChecks {
         f.world.isRemote = true;
         f.machine.construct(f.trigger(true), true);
         f.world.isRemote = false;
-        assertEquals(12 * f.length - 1, hints.hints);
+        assertEquals(10 * f.length - 1, hints.hints);
         assertEquals(3 * f.length + 1, hints.hintFrames.size());
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputBusses.size());
@@ -199,6 +199,11 @@ final class GT_AssemblyLineStructureChecks {
 
     private static void checkSurvival(ForgeDirection facing, int length, Item hatchItem, HintProxy hints) {
         Line f = new Line(facing, length);
+        for (int slice = 0; slice < length; slice++) {
+            for (int depth : new int[]{0, 2}) {
+                f.block(slice, 1, depth, Blocks.bedrock, 0);
+            }
+        }
         Source source = new Source(new ItemStack(hatchItem, 1, 32731), new ItemStack(hatchItem, 1, 32004),
                 new ItemStack(hatchItem, 1, 32005), new ItemStack(hatchItem, 1, 32730),
                 new ItemStack(hatchItem, 1, 32000), new ItemStack(hatchItem, 1, 32006),
@@ -238,7 +243,7 @@ final class GT_AssemblyLineStructureChecks {
         assertEquals(1, disabled.world.blocks.size());
         assertFalse(disabled.player.messages.isEmpty());
         Line conflict = new Line(facing, length);
-        int[][] positions = {conflict.pos(length - 1, 1, 2), conflict.pos(0, -1, 1), conflict.pos(length - 1, -2, 1)};
+        int[][] positions = {conflict.pos(length - 1, 1, 1), conflict.pos(0, -1, 1), conflict.pos(length - 1, -2, 1)};
         for (int[] p : positions) {
             conflict.world.setBlock(p[0], p[1], p[2], Blocks.bedrock, 0, 0);
         }

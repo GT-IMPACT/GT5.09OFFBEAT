@@ -406,7 +406,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 }
                 buses.append('O');
                 builder.addShape(piece(length), transpose(new String[][]{
-                        {row('-', length), row('E', length), row('-', length)},
+                        {row(' ', length), row('E', length), row(' ', length)},
                         {"~D" + row('G', length - 2), row('A', length), row('G', length)},
                         {row('L', length), row('C', length), row('L', length)},
                         {row('B', length), buses.toString(), row('B', length)}
