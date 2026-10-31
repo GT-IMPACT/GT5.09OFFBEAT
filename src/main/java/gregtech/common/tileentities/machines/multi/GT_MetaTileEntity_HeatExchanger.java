@@ -1,7 +1,8 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.HatchElement;
+import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -10,26 +11,48 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.metatileentity.implementations.GTMTE_Multi_Hatch_Input;
+import gregtech.api.metatileentity.implementations.GTMTE_BusHatch_Input;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
-import net.minecraft.block.Block;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.api.structure.StructureUtility.transpose;
 
-public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBlockBase {
+public class GT_MetaTileEntity_HeatExchanger
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_HeatExchanger>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor HOT_HINT = HintColor.RED;
+    private static final HintColor COLD_HINT = HintColor.BLUE;
+    private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.STABLE_TITANIUM, 20)
+            .atLeast(HatchElement.Maintenance, ExchangerHatch.WATER, ExchangerHatch.STEAM).build();
+    private static final StructureRequirements HOT_INPUT = StructureRequirements.builder(Casings.STABLE_TITANIUM, 0)
+            .atLeast(ExchangerHatch.HOT).build();
+    private static final StructureRequirements COLD_OUTPUT = StructureRequirements.builder(Casings.STABLE_TITANIUM, 0)
+            .atLeast(ExchangerHatch.COLD).build();
+    private static IStructureDefinition<GT_MetaTileEntity_HeatExchanger> structureDefinition;
+    private int casingCount;
     public static float penalty_per_config = 0.015f;  // penalize 1.5% efficiency per circuitry level (1-25)
 
-    private static boolean controller;
     private GT_MetaTileEntity_Hatch_Input mInputHotFluidHatch;
     private GT_MetaTileEntity_Hatch_Output mOutputColdFluidHatch;
     private boolean superheated = false;
@@ -43,17 +66,25 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
         super(aName);
     }
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Heat Exchanger",
-                "Size(WxHxD): 3x4x3, Controller (Front middle at bottom)",
-                "3x3x4 of Stable Titanium Machine Casings (hollow, Min 20!)",
-                "2x Titanium Pipe Casing (Inside the Hollow Machine Casings)",
-                "1x Distillated Water Input (Any casing)",
-                "1x Steam Output (Any casing)",
-                "1x Hot Fluid Input (Bottom center)",
-                "1x Cold Fluid Output (Top Center)",
-                "1x Maintenance Hatch (Any casing)"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Large Heat Exchanger")
+                .addInfo("Converts heat from lava or hot coolant into steam using distilled water")
+                .addInfo("Sufficient hot fluid produces superheated steam")
+                .addInfo("A programmed circuit lowers the superheated-steam threshold at the cost of efficiency")
+                .addInfo("Running without distilled water causes an explosion")
+                .beginStructureBlock(3, 4, 3, false)
+                .addController("Front center of the bottom layer")
+                .addRequirements(SHELL, "Any outer casing position")
+                .addRequirements(HOT_INPUT, "Bottom center", HOT_HINT)
+                .addRequirements(COLD_OUTPUT, "Top center", COLD_HINT)
+                .addOtherStructurePart(Casings.TITANIUM_PIPE, "Vertical column between the hot input and cold output", 2)
+                .addStructureInfo("The hot input and cold output are separate from the distilled-water and steam hatches.")
+                .addStructureInfo("The hot port accepts fluid input hatches, including IMPACT multi-fluid hatches; the cold port requires a fluid output hatch.")
+                .addStructureInfo("Compatible IMPACT fluid and combined input hatches can supply distilled water.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
     }
 
     @Override
@@ -72,15 +103,15 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
         if (aSide == aFacing) {
             if (aActive)
                 return new ITexture[]{
-                        casingTexturePages[0][50],
+                        Casings.STABLE_TITANIUM.getTexture(),
                         TextureFactory.of(OVERLAY_FRONT_HEAT_EXCHANGER_ACTIVE),
                         TextureFactory.builder().addIcon(OVERLAY_FRONT_HEAT_EXCHANGER_ACTIVE_GLOW).glow().build()};
             return new ITexture[]{
-                    casingTexturePages[0][50],
+                    Casings.STABLE_TITANIUM.getTexture(),
                     TextureFactory.of(OVERLAY_FRONT_HEAT_EXCHANGER),
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_HEAT_EXCHANGER_GLOW).glow().build()};
         }
-        return new ITexture[]{casingTexturePages[0][50]};
+        return new ITexture[]{Casings.STABLE_TITANIUM.getTexture()};
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
@@ -89,10 +120,6 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
-    }
-
-    public boolean isFacingValid(byte aFacing) {
-        return aFacing > 1;
     }
 
     public boolean checkRecipe(ItemStack aStack) {
@@ -183,60 +210,132 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
         return true;
     }
 
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-        int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-
-        int tCasingAmount = 0;
-        controller = false;
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                if ((i != 0) || (j != 0)) {
-                    for (int k = 0; k <= 3; k++) {
-                        if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), 50) &&
-                                !addInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), 50) &&
-                                !addMaintenanceToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), 50) &&
-                                !ignoreController(aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j))) {
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j) != getCasingBlock()) {
-                                return false;
-                            }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, k, zDir + j) != getCasingMeta()) {
-                                return false;
-                            }
-                            tCasingAmount++;
-                        }
-                    }
-                } else {
-                    if (!addHotFluidInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j), 50)) {
-                        return false;
-                    }
-                    if (!addColdFluidOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j), 50)) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 1, zDir + j) != getPipeBlock()) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 1, zDir + j) != getPipeMeta()) {
-                        return false;
-                    }
-
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 2, zDir + j) != getPipeBlock()) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 2, zDir + j) != getPipeMeta()) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return tCasingAmount >= 20;
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        mInputHotFluidHatch = null;
+        mOutputColdFluidHatch = null;
+        return checkPiece(STRUCTURE_PIECE, 1, 3, 0) && SHELL.isSatisfied(this, casingCount)
+                && HOT_INPUT.isSatisfied(this, 0) && COLD_OUTPUT.isSatisfied(this, 0);
     }
 
-    public boolean ignoreController(Block tTileEntity) {
-        if (!controller && tTileEntity == GregTech_API.sBlockMachines) {
-            return true;
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 3, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 3, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_HeatExchanger> getStructureDefinition() {
+        if (structureDefinition == null) {
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_HeatExchanger>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "COC", "CCC"},
+                            {"CCC", "CPC", "CCC"},
+                            {"CCC", "CPC", "CCC"},
+                            {"C~C", "CIC", "CCC"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_HeatExchanger.class)
+                            .preferForPlacement(tile -> tile instanceof GTMTE_BusHatch_Input)
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount))
+                    .addElement('P', Casings.TITANIUM_PIPE.asElement())
+                    .addElement('I', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_HeatExchanger.class)
+                            .hint(HOT_HINT).build(HOT_INPUT))
+                    .addElement('O', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_HeatExchanger.class)
+                            .hint(COLD_HINT).build(COLD_OUTPUT))
+                    .build();
         }
-        return false;
+        return structureDefinition;
+    }
+
+    private enum ExchangerHatch implements IHatchElement {
+        WATER,
+        STEAM,
+        HOT,
+        COLD;
+
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            switch (this) {
+                case WATER:
+                    return HatchElement.Input.matches(tile);
+                case STEAM:
+                    return HatchElement.Output.matches(tile);
+                case HOT:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input;
+                case COLD:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Output;
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean matchesForPlacement(IMetaTileEntity tile) {
+            switch (this) {
+                case WATER:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input
+                            || tile instanceof GTMTE_Multi_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
+                case STEAM:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Output;
+                default:
+                    return matches(tile);
+            }
+        }
+
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            switch (this) {
+                case WATER:
+                    return machine.mInputHatches.size() + machine.mQuadrInputHatches.size()
+                            + machine.mInputBusHatches.size();
+                case STEAM:
+                    return machine.mOutputHatches.size();
+                case HOT:
+                    return ((GT_MetaTileEntity_HeatExchanger) machine).mInputHotFluidHatch == null ? 0 : 1;
+                case COLD:
+                    return ((GT_MetaTileEntity_HeatExchanger) machine).mOutputColdFluidHatch == null ? 0 : 1;
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            switch (this) {
+                case WATER:
+                    return machine.addInputToMachineList(tile, texture);
+                case STEAM:
+                    return machine.addOutputToMachineList(tile, texture);
+                case HOT:
+                    return ((GT_MetaTileEntity_HeatExchanger) machine).addHotFluidInputToMachineList(tile, texture);
+                case COLD:
+                    return ((GT_MetaTileEntity_HeatExchanger) machine).addColdFluidOutputToMachineList(tile, texture);
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public String getDescription() {
+            switch (this) {
+                case WATER:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.exchanger_water");
+                case STEAM:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.exchanger_steam");
+                case HOT:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.exchanger_hot");
+                case COLD:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.exchanger_cold");
+                default:
+                    throw new AssertionError(this);
+            }
+        }
     }
 
     public boolean addColdFluidOutputToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
@@ -264,26 +363,6 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
         return false;
     }
 
-    public Block getCasingBlock() {
-        return GregTech_API.sBlockCasings4;
-    }
-
-    public byte getCasingMeta() {
-        return 2;
-    }
-
-    public byte getCasingTextureIndex() {
-        return 50;
-    }
-
-    public Block getPipeBlock() {
-        return GregTech_API.sBlockCasings2;
-    }
-
-    public byte getPipeMeta() {
-        return 14;
-    }
-
     public int getMaxEfficiency(ItemStack aStack) {
         return 10000;
     }
@@ -301,11 +380,6 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
 
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_HeatExchanger(this.mName);
-    }
-
-    @Override
-    public boolean isGivingInformation() {
-        return super.isGivingInformation();
     }
 
     @Override

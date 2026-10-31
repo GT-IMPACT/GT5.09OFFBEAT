@@ -104,8 +104,7 @@ public class GT_StructureIntegrationTest {
             }
         }) {
             for (String name : new String[]{"gregtech.api.interfaces.ICasing",
-                    "gregtech.api.interfaces.ISecondaryDescribable",
-                    "gregtech.api.util.StructureRequirements",
+                    "gregtech.api.interfaces.ISecondaryDescribable", "gregtech.api.util.StructureRequirements",
                     "gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TooltipMultiBlockBase",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_Steam",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine_HPSteam",
@@ -115,7 +114,8 @@ public class GT_StructureIntegrationTest {
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_ImplosionCompressor",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiFurnace",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_ElectricBlastFurnace",
-                    "gregtech.api.enums.HeatingCoil"}) {
+                    "gregtech.api.enums.HeatingCoil",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_HeatExchanger"}) {
                 Class.forName(name, true, server);
             }
             Class<?> builder = Class.forName("gregtech.api.util.MultiblockTooltipBuilder", true, server);
@@ -184,6 +184,7 @@ public class GT_StructureIntegrationTest {
         GT_ImplosionStructureChecks.run(hatchItem, hintProxy);
         GT_MultiFurnaceStructureChecks.run(hatchItem, hintProxy);
         GT_BlastFurnaceStructureChecks.run(hatchItem, hintProxy);
+        GT_HeatExchangerStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {
