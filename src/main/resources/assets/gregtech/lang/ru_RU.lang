@@ -1091,3 +1091,19 @@ TileEntity_DESCRIPTION_multimachine.cleanroom_Channel_Index_3=Автоустан
 tile.gt.blockreinforced.2.name=Блок пласкрита
 tile.gt.blockcasings3.11.name=Фильтрующий корпус машины
 tile.gt.blockcasings9.0.name=Стекло чистой комнаты
+
+TileEntity_DESCRIPTION_multimachine.charcoalpile_MachineType_Index_0=Углежогная яма
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Information_Index_0=Превращает герметично закрытую кладку брёвен в хрупкий уголь
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Information_Index_1=Не требует энергии и люков
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Information_Index_2=Время обжига зависит от количества брёвен
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Information_Index_3=Загрязнение при запуске: 10 за каждый тик обжига
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Location_Index_0=Сверху по центру, непосредственно над бревном
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Structure_Index_0=Шаблон: до 11 x 5 x 11 брёвен; размер включает оболочку
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Structure_Index_1=Под брёвнами — кирпичи; по бокам и сверху — земля или дёрн
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Structure_Index_2=Без пустот; допустима связная кладка произвольной формы
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Channel_Index_0=Ширина брёвен = 2 x значение - 1
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Channel_Index_1=Глубина брёвен = 2 x значение - 1
+TileEntity_DESCRIPTION_multimachine.charcoalpile_Channel_Index_2=Слоёв брёвен: 1-5
+gt.structure.missing_logs=Недостаточно брёвен (logWood).
+gt.structure.missing_soil=Недостаточно земли или дёрна.
+tile.gt.blockreinforced.4.name=Блок хрупкого древесного угля
