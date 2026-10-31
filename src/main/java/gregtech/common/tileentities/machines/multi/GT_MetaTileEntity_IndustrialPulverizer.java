@@ -144,7 +144,7 @@ public class GT_MetaTileEntity_IndustrialPulverizer
 			GT_Recipe recipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe, false,
 					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs
 			);
-			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
+			if (recipe != null && isRecipeVoltageAllowed(recipe.mEUt) && recipe.isRecipeInputEqual(true, fluids, inputs)) {
 				cashedRecipe = recipe;
 				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;

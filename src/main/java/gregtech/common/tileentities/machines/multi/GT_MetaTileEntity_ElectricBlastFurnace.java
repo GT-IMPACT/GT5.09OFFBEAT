@@ -159,7 +159,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 long tVoltage = getMaxInputVoltage();
                 byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
                 GT_Recipe tRecipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
-                if ((tRecipe != null) && (this.mHeatingCapacity >= tRecipe.mSpecialValue) && (tRecipe.isRecipeInputEqual(true, tFluids, tInputs))) {
+                if ((tRecipe != null) && isRecipeVoltageAllowed(tRecipe.mEUt) && (this.mHeatingCapacity >= tRecipe.mSpecialValue) && (tRecipe.isRecipeInputEqual(true, tFluids, tInputs))) {
                     cashedRecipe = tRecipe;
                     this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
                     this.mEfficiencyIncrease = 10000;

@@ -721,6 +721,34 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage() * tHatch.Amp;
         return rVoltage;
     }
+
+    /** Actual hatch voltage, without treating additional amperage as a higher voltage tier. */
+    public long getAverageInputVoltage() {
+        long voltage = 0;
+        int count = 0;
+        for (GT_MetaTileEntity_Hatch_Energy hatch : mEnergyHatches) {
+            if (isValidMetaTileEntity(hatch)) {
+                voltage += hatch.getBaseMetaTileEntity().getInputVoltage();
+                count++;
+            }
+        }
+        for (GT_MetaTileEntity_Hatch_EnergyMulti hatch : mEnergyHatchesMulti) {
+            if (isValidMetaTileEntity(hatch)) {
+                voltage += hatch.getBaseMetaTileEntity().getInputVoltage();
+                count++;
+            }
+        }
+        return count == 0 ? 0 : voltage / count;
+    }
+
+    /**
+     * Like GTNH's default tier-skip limit, admits base recipes up to one tier above hatch voltage.
+     * This is separate from available power and overclocking; check it before consuming inputs.
+     */
+    protected boolean isRecipeVoltageAllowed(long recipeEUt) {
+        long voltage = getAverageInputVoltage();
+        return voltage > 0 && recipeEUt <= voltage * 4L;
+    }
     
     /**
      * Calcualtes overclocked ness using long integers

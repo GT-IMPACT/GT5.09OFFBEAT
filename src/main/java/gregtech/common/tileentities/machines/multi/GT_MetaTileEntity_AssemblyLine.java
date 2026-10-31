@@ -149,6 +149,8 @@ public class GT_MetaTileEntity_AssemblyLine
             NBTTagCompound tTag = tDataStick.getTagCompound();
             if (tTag == null)
                 continue;
+            if (!tTag.hasKey("eu") || !isRecipeVoltageAllowed(tTag.getInteger("eu")))
+                continue;
             // Each data stick is a separate candidate; failed candidates must not leave inputs behind.
             Arrays.fill(tStack, null);
             Arrays.fill(tFluids, null);
@@ -229,11 +231,6 @@ public class GT_MetaTileEntity_AssemblyLine
                 continue;
             mEUt = tTag.getInteger("eu");
 
-           /* if (Math.abs(this.mEUt) > this.getMaxInputVoltage()) {
-                if(GT_Values.D1)
-                    GT_FML_LOGGER.info("Found avaiable recipe, but Voltage too low!");
-                return false;
-            }*/
             if(GT_Values.D1)GT_FML_LOGGER.info("Find avaiable recipe");
                 findRecipe = true;
             break;

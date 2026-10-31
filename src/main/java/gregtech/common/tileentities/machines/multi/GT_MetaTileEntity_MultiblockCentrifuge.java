@@ -131,7 +131,7 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
 			GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sMultiblockCentrifugeRecipes.findRecipe(getBaseMetaTileEntity(), cashedRecipe, false,
 					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs
 			);
-			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
+			if (recipe != null && isRecipeVoltageAllowed(recipe.mEUt) && recipe.isRecipeInputEqual(true, fluids, inputs)) {
 				cashedRecipe = recipe;
 				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;

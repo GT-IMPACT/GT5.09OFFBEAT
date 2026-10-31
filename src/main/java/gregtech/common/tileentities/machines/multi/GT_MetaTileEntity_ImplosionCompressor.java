@@ -117,7 +117,7 @@ public class GT_MetaTileEntity_ImplosionCompressor
 		ItemStack[] tInputs = tInputList.toArray(new ItemStack[0]);
 		if (tInputList.size() > 0) {
 			GT_Recipe tRecipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe, false, 9223372036854775807L, null, tInputs);
-			if ((tRecipe != null) && (tRecipe.isRecipeInputEqual(true, null, tInputs))) {
+			if ((tRecipe != null) && isRecipeVoltageAllowed(tRecipe.mEUt) && (tRecipe.isRecipeInputEqual(true, null, tInputs))) {
 				cashedRecipe             = tRecipe;
 				this.mEfficiency         = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;

@@ -103,7 +103,7 @@ public class GT_MetaTileEntity_VacuumFreezer
             byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
             GT_Recipe tRecipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe,
                     false, false, GT_Values.V[tTier], tFluids, tInput);
-            if (tRecipe != null) {
+            if (tRecipe != null && isRecipeVoltageAllowed(tRecipe.mEUt)) {
                 if (tRecipe.isRecipeInputEqual(true, tFluids, tInput)) {
                     cashedRecipe = tRecipe;
                     this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);

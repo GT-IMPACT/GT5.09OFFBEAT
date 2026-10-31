@@ -144,7 +144,7 @@ public class GT_MetaTileEntity_LargeChemicalReactor
 			GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sMultiblockChemicalRecipes.findRecipe(getBaseMetaTileEntity(), false,
 					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs
 			);
-			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
+			if (recipe != null && isRecipeVoltageAllowed(recipe.mEUt) && recipe.isRecipeInputEqual(true, fluids, inputs)) {
 				if (GT_Mod.gregtechproxy.mLowGravProcessing && (recipe.mSpecialValue == -100) && !isValidForLowGravity(recipe, getBaseMetaTileEntity().getWorld().provider.dimensionId)) {
 					return false;
 				}
