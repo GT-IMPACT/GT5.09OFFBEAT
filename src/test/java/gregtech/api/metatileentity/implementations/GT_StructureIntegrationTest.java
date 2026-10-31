@@ -117,7 +117,8 @@ public class GT_StructureIntegrationTest {
                     "gregtech.api.enums.HeatingCoil",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_HeatExchanger",
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeChemicalReactor",
-                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiblockCentrifuge"}) {
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiblockCentrifuge",
+                    "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiblockElectrolyzer"}) {
                 Class.forName(name, true, server);
             }
             Class<?> builder = Class.forName("gregtech.api.util.MultiblockTooltipBuilder", true, server);
@@ -189,6 +190,7 @@ public class GT_StructureIntegrationTest {
         GT_HeatExchangerStructureChecks.run(hatchItem, hintProxy);
         GT_ChemicalReactorStructureChecks.run(hatchItem, hintProxy);
         GT_CentrifugeStructureChecks.run(hatchItem, hintProxy);
+        GT_ElectrolyzerStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {

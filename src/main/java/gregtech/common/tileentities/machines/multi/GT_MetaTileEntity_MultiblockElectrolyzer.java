@@ -1,27 +1,43 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.HatchElement;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.IStructureElement;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 
-public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity_MultiBlockBase{
-	
-	private final int CASING_INDEX = 50;
+import static space.impact.api.structure.StructureUtility.transpose;
+
+public class GT_MetaTileEntity_MultiblockElectrolyzer
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_MultiblockElectrolyzer>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.STABLE_TITANIUM, 8)
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output)
+            .build();
+    private static IStructureDefinition<GT_MetaTileEntity_MultiblockElectrolyzer> structureDefinition;
+    private int casingCount;
+    private int coilCount;
 	
 	public GT_MetaTileEntity_MultiblockElectrolyzer(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -37,19 +53,21 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity
     }
 
     @Override
-    public String[] getDescription() {
-        return new String[]{
-        		"Controller block for the Multiblock Electrolyzer",
-				"Has the all recipes as the Electrolyzer",
-				"Size(WxHxD): 3x3x3",
-				"3x3x3 of Stable Titanium Machine Casing (hollow, min 8!)",
-				"Controller (Front centered)",
-				"1x Pump Machine Casing (inside the hollow casings)",
-				"1x Cupronickel Coil Block (next to Pump Casing)",
-				"Nx Input Bus/Hatch (Any inert casing)",
-				"Nx Output Bus/Hatch (Any inert casing)",
-				"1x Maintenance Hatch (Any inert casing)",
-				"1x Energy Hatch (Any inert casing)" };
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Multiblock Electrolyzer")
+                .addInfo("Processes all Electrolyzer recipes")
+                .beginStructureBlock(3, 3, 3, false)
+                .addController("Front center")
+                .addRequirements(SHELL, "Any outer casing position, except the coil")
+                .addOtherStructurePart(Casings.PUMP, "Center of the structure", 1)
+                .addOtherStructurePart(Casings.CUPRONICKEL_COIL,
+                        "Any of the five faces adjacent to the pump, except the controller", 1)
+                .addStructureInfo("At least one cupronickel coil must touch the pump; additional cupronickel coils at these five positions are allowed.")
+                .addStructureInfo("Construction keeps existing coils, or places one in a free position next to the pump.")
+                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
     }
 
     @Override
@@ -57,11 +75,11 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity
 			boolean aRedstone) {
 		if (aSide == aFacing) {
 			return new ITexture[] {
-					Textures.BlockIcons.casingTexturePages[0][50],
+					Casings.STABLE_TITANIUM.getTexture(),
 					TextureFactory.of(aActive ? Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_ACTIVE
 							: Textures.BlockIcons.OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR) };
 		}
-		return new ITexture[] { Textures.BlockIcons.casingTexturePages[0][50] };
+		return new ITexture[] { Casings.STABLE_TITANIUM.getTexture() };
 	}
 
 	@Override
@@ -150,58 +168,44 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer  extends GT_MetaTileEntity
 		return false;
 	}
 	
-	@Override
-	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-		int casingAmount = 0;
-		boolean hasHeatingCoil = false;
-		// x=width, z=depth, y=height
-		for (int x = -1 + xDir; x <= xDir + 1; x++) {
-			for (int z = -1 + zDir; z <= zDir + 1; z++) {
-				for (int y = -1; y <= 1; y++) {
-					if (x == 0 && y == 0 && z == 0) {
-						continue;
-					}
-					IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
-					Block block = aBaseMetaTileEntity.getBlockOffset(x, y, z);
-					int centerCoords = 0;
-					if (x == xDir) {
-						centerCoords++;
-					}
-					if (y == 0) {
-						centerCoords++;
-					}
-					if (z == zDir) {
-						centerCoords++;
-					}
-					if (centerCoords == 3) {
-						if (block == GregTech_API.sBlockCasings2 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 10) {
-							continue;
-						} else {
-							return false;
-						}
-					}
-					if (centerCoords == 2 && block == GregTech_API.sBlockCasings5 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
-						hasHeatingCoil = true;
-						continue;
-					}
-					if (!addInputToMachineList(tileEntity, CASING_INDEX) && !addOutputToMachineList(tileEntity, CASING_INDEX)
-							&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
-							&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-						if (block == GregTech_API.sBlockCasings4 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 2) {
-							casingAmount++;
-						} else {
-							return false;
-						}
-					}
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        casingCount = 0;
+        coilCount = 0;
+        return checkPiece(STRUCTURE_PIECE, 1, 1, 0) && coilCount > 0 && SHELL.isSatisfied(this, casingCount);
+    }
 
-				}
-			}
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 1, 0);
+    }
 
-		}
-		return casingAmount >= 8 && hasHeatingCoil;
-	}
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 1, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_MultiblockElectrolyzer> getStructureDefinition() {
+        if (structureDefinition == null) {
+            IStructureElement<GT_MetaTileEntity_MultiblockElectrolyzer> shell =
+                    GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiblockElectrolyzer.class)
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount);
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_MultiblockElectrolyzer>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CHC", "CCC"},
+                            {"C~C", "HPH", "CHC"},
+                            {"CCC", "CHC", "CCC"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', shell)
+                    .addElement('P', Casings.PUMP.asElement())
+                    .addElement('H', GTStructureUtility.ofCasingAroundCenter(
+                            Casings.CUPRONICKEL_COIL, machine -> ++machine.coilCount, shell))
+                    .build();
+        }
+        return structureDefinition;
+    }
 
 	@Override
 	public int getMaxEfficiency(ItemStack aStack) {
