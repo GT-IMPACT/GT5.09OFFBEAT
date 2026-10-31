@@ -38,6 +38,10 @@ public class GT_Item_Machines
         setCreativeTab(GregTech_API.TAB_GREGTECH);
     }
 
+    protected boolean isControlTooltipRequested() {
+        return GT_Mod.gregtechproxy != null && GT_Mod.gregtechproxy.isControlTooltipRequested();
+    }
+
     protected boolean isStructureTooltipRequested() {
         return GT_Mod.gregtechproxy != null && GT_Mod.gregtechproxy.isStructureTooltipRequested();
     }
@@ -54,9 +58,11 @@ public class GT_Item_Machines
                 IGregTechTileEntity tTileEntity = GregTech_API.METATILEENTITIES[tDamage].getBaseMetaTileEntity();
                 IMetaTileEntity meta = tTileEntity.getMetaTileEntity();
                 ISecondaryDescribable describable = meta instanceof ISecondaryDescribable
-                        ? (ISecondaryDescribable) meta : null;
+                        ? (ISecondaryDescribable) meta
+                        : null;
                 boolean structured = describable != null && describable.hasSecondaryDescription();
-                String[] description = structured ? describable.getCurrentDescription(isStructureTooltipRequested())
+                String[] description = structured
+                        ? describable.getCurrentDescription(isStructureTooltipRequested(), isControlTooltipRequested())
                         : tTileEntity.getDescription();
                 if (description != null) {
                     int i = 0;
@@ -78,18 +84,27 @@ public class GT_Item_Machines
                                             tBuffer.append(" %s");
                                             tRep[j / 2] = tString[j];
                                         }
-                                    aList.add(String.format(GT_LanguageManager.addStringLocalization("TileEntity_DESCRIPTION_" + tDamage + "_Index_" + i++, tBuffer.toString(), !GregTech_API.sPostloadFinished), tRep));
+                                    aList.add(
+                                            String.format(
+                                                    GT_LanguageManager.addStringLocalization(
+                                                            "TileEntity_DESCRIPTION_" + tDamage + "_Index_" + i++,
+                                                            tBuffer.toString(), !GregTech_API.sPostloadFinished),
+                                                    tRep));
                                 }
                             } else {
-                                String tTranslated = GT_LanguageManager.addStringLocalization("TileEntity_DESCRIPTION_" + tDamage + "_Index_" + i++, tDescription, !GregTech_API.sPostloadFinished);
+                                String tTranslated = GT_LanguageManager.addStringLocalization(
+                                        "TileEntity_DESCRIPTION_" + tDamage + "_Index_" + i++, tDescription,
+                                        !GregTech_API.sPostloadFinished);
                                 aList.add(tTranslated.equals("") ? tDescription : tTranslated);
                             }
-                        } else i++;
+                        } else
+                            i++;
                     }
                 }
                 if (tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
                     if (tTileEntity.getMetaTileEntity().getCapacity() > 0)
-                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_Fluid_CAPACITY", "Fluid Tank: ", !GregTech_API.sPostloadFinished) + tTileEntity.getMetaTileEntity().getCapacity() + "L");
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_Fluid_CAPACITY", "Fluid Tank: ",
+                                !GregTech_API.sPostloadFinished) + tTileEntity.getMetaTileEntity().getCapacity() + "L");
                 }
                 if (tTileEntity.getEUCapacity() > 0L) {
                     IMetaTileEntity tMetaTileEntity = tTileEntity.getMetaTileEntity();
@@ -99,43 +114,57 @@ public class GT_Item_Machines
                     long tOutputThroughput = tMetaTileEntity.getRatedOutputThroughput();
                     if (tInputVoltage > 0L) {
                         int currentTier = Math.min(GT_Utility.getTier(tInputVoltage), 15);
-                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_IN", "Voltage IN: ", !GregTech_API.sPostloadFinished ) + GREEN + GT_Utility.formatNumbers(tInputVoltage) + " (" + GT_Values.VN[currentTier] + ")" + GRAY);
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_IN", "Voltage IN: ",
+                                !GregTech_API.sPostloadFinished) + GREEN + GT_Utility.formatNumbers(tInputVoltage)
+                                + " (" + GT_Values.VN[currentTier] + ")" + GRAY);
                         if (tInputThroughput > 0L) {
-                            aList.add(StatCollector.translateToLocal("TileEntity_EUp_THROUGHPUT_IN") + " " + GREEN + GT_Utility.formatNumbers(tInputThroughput) + " EU/t" + GRAY);
+                            aList.add(StatCollector.translateToLocal("TileEntity_EUp_THROUGHPUT_IN") + " " + GREEN
+                                    + GT_Utility.formatNumbers(tInputThroughput) + " EU/t" + GRAY);
                         }
                     }
                     if (tOutputVoltage > 0L) {
                         int currentTier = Math.min(GT_Utility.getTier(tOutputVoltage), 15);
-                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_OUT", "Voltage OUT: ", !GregTech_API.sPostloadFinished) + GREEN + GT_Utility.formatNumbers(tOutputVoltage) + " (" + GT_Values.VN[currentTier] + ")" + GRAY);
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_OUT", "Voltage OUT: ",
+                                !GregTech_API.sPostloadFinished) + GREEN + GT_Utility.formatNumbers(tOutputVoltage)
+                                + " (" + GT_Values.VN[currentTier] + ")" + GRAY);
                         if (tOutputThroughput > 0L) {
-                            aList.add(StatCollector.translateToLocal("TileEntity_EUp_THROUGHPUT_OUT") + " " + GREEN + GT_Utility.formatNumbers(tOutputThroughput) + " EU/t" + GRAY);
+                            aList.add(StatCollector.translateToLocal("TileEntity_EUp_THROUGHPUT_OUT") + " " + GREEN
+                                    + GT_Utility.formatNumbers(tOutputThroughput) + " EU/t" + GRAY);
                         }
                     }
                     if (tTileEntity.getOutputAmperage() > 1L) {
-                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_AMOUNT", "Amperage: ", !GregTech_API.sPostloadFinished) + YELLOW + GT_Utility.formatNumbers(tTileEntity.getOutputAmperage()) + GRAY);
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_AMOUNT", "Amperage: ",
+                                !GregTech_API.sPostloadFinished) + YELLOW
+                                + GT_Utility.formatNumbers(tTileEntity.getOutputAmperage()) + GRAY);
                     }
-                    aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_STORE", "Capacity: ", !GregTech_API.sPostloadFinished) + BLUE + GT_Utility.formatNumbers(tTileEntity.getEUCapacity()) + GRAY);
+                    aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_STORE", "Capacity: ",
+                            !GregTech_API.sPostloadFinished) + BLUE
+                            + GT_Utility.formatNumbers(tTileEntity.getEUCapacity()) + GRAY);
                 }
             }
             NBTTagCompound aNBT = aStack.getTagCompound();
             if (aNBT != null) {
                 if (aNBT.getBoolean("mMuffler")) {
-                    aList.add(GT_LanguageManager.addStringLocalization("GT_TileEntity_MUFFLER", "has Muffler Upgrade", !GregTech_API.sPostloadFinished));
+                    aList.add(GT_LanguageManager.addStringLocalization("GT_TileEntity_MUFFLER", "has Muffler Upgrade",
+                            !GregTech_API.sPostloadFinished));
                 }
                 if (aNBT.getBoolean("mSteamConverter")) {
-                    aList.add(GT_LanguageManager.addStringLocalization("GT_TileEntity_STEAMCONVERTER", "has Steam Upgrade", !GregTech_API.sPostloadFinished));
+                    aList.add(GT_LanguageManager.addStringLocalization("GT_TileEntity_STEAMCONVERTER",
+                            "has Steam Upgrade", !GregTech_API.sPostloadFinished));
                 }
                 NBTTagCompound tFluidAmount = aNBT.getCompoundTag("mFluid");
                 if (tFluidAmount != null) {
                     String fluidName = GT_LanguageManager.getTranslation(tFluidAmount.getString("FluidName"));
                     int amountFluid;
                     if ((amountFluid = tFluidAmount.getInteger("Amount")) > 0) {
-                        aList.add("Stored " + BLUE + NumberFormat.getNumberInstance().format((int) amountFluid) + "L" + GRAY + " of " + BLUE + fluidName + GRAY);
+                        aList.add("Stored " + BLUE + NumberFormat.getNumberInstance().format((int) amountFluid) + "L"
+                                + GRAY + " of " + BLUE + fluidName + GRAY);
                     }
                 }
                 int tAmount;
                 if ((tAmount = aNBT.getByte("mSteamTanks")) > 0) {
-                    aList.add(tAmount + " " + GT_LanguageManager.addStringLocalization("GT_TileEntity_STEAMTANKS", "Steam Tank Upgrades", !GregTech_API.sPostloadFinished));
+                    aList.add(tAmount + " " + GT_LanguageManager.addStringLocalization("GT_TileEntity_STEAMTANKS",
+                            "Steam Tank Upgrades", !GregTech_API.sPostloadFinished));
                 }
             }
         } catch (Throwable e) {
@@ -143,7 +172,8 @@ public class GT_Item_Machines
         }
     }
 
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float hitX, float hitY, float hitZ) {
         return false;
     }
 
@@ -161,7 +191,8 @@ public class GT_Item_Machines
     public String getItemStackDisplayName(ItemStack aStack) {
         String aName = super.getItemStackDisplayName(aStack);
         short aDamage = (short) getDamage(aStack);
-        if (aDamage >= 0 && aDamage < GregTech_API.METATILEENTITIES.length && GregTech_API.METATILEENTITIES[aDamage] != null) {
+        if (aDamage >= 0 && aDamage < GregTech_API.METATILEENTITIES.length
+                && GregTech_API.METATILEENTITIES[aDamage] != null) {
             Materials aMaterial = null;
             if (GregTech_API.METATILEENTITIES[aDamage] instanceof GT_MetaPipeEntity_Item) {
                 aMaterial = ((GT_MetaPipeEntity_Item) GregTech_API.METATILEENTITIES[aDamage]).mMaterial;
@@ -182,12 +213,14 @@ public class GT_Item_Machines
     public void onCreated(ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
         super.onCreated(aStack, aWorld, aPlayer);
         short tDamage = (short) getDamage(aStack);
-        if ((tDamage < 0) || ((tDamage >= GregTech_API.METATILEENTITIES.length) && (GregTech_API.METATILEENTITIES[tDamage] != null))) {
+        if ((tDamage < 0) || ((tDamage >= GregTech_API.METATILEENTITIES.length)
+                && (GregTech_API.METATILEENTITIES[tDamage] != null))) {
             GregTech_API.METATILEENTITIES[tDamage].onCreated(aStack, aWorld, aPlayer);
         }
     }
 
-    public boolean placeBlockAt(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side, float hitX, float hitY, float hitZ, int aMeta) {
+    public boolean placeBlockAt(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side,
+            float hitX, float hitY, float hitZ, int aMeta) {
         short tDamage = (short) getDamage(aStack);
         if (tDamage > 0) {
             if (GregTech_API.METATILEENTITIES[tDamage] == null) {
@@ -198,10 +231,12 @@ public class GT_Item_Machines
                 return false;
             }
             if (aWorld.getBlock(aX, aY, aZ) != this.field_150939_a) {
-                throw new GT_ItsNotMyFaultException("Failed to place Block even though World.setBlock returned true. It COULD be MCPC/Bukkit causing that. In case you really have that installed, don't report this Bug to me, I don't know how to fix it.");
+                throw new GT_ItsNotMyFaultException(
+                        "Failed to place Block even though World.setBlock returned true. It COULD be MCPC/Bukkit causing that. In case you really have that installed, don't report this Bug to me, I don't know how to fix it.");
             }
             if (aWorld.getBlockMetadata(aX, aY, aZ) != tMetaData) {
-                throw new GT_ItsNotMyFaultException("Failed to set the MetaValue of the Block even though World.setBlock returned true. It COULD be MCPC/Bukkit causing that. In case you really have that installed, don't report this Bug to me, I don't know how to fix it.");
+                throw new GT_ItsNotMyFaultException(
+                        "Failed to set the MetaValue of the Block even though World.setBlock returned true. It COULD be MCPC/Bukkit causing that. In case you really have that installed, don't report this Bug to me, I don't know how to fix it.");
             }
             IGregTechTileEntity tTileEntity = (IGregTechTileEntity) aWorld.getTileEntity(aX, aY, aZ);
             if (tTileEntity != null) {
@@ -219,7 +254,8 @@ public class GT_Item_Machines
                     // If we're connectable, try connecting to whatever we're up against
                     ((IConnectable) tTileEntity.getMetaTileEntity()).connect(aSide);
                 } else if (aPlayer != null && aPlayer.isSneaking()) {
-                    // If we're being placed against something that is connectable, try telling it to connect to us
+                    // If we're being placed against something that is connectable, try telling it
+                    // to connect to us
                     IGregTechTileEntity aTileEntity = tTileEntity.getIGregTechTileEntityAtSide(aSide);
                     if (aTileEntity != null && aTileEntity.getMetaTileEntity() instanceof IConnectable) {
                         ((IConnectable) aTileEntity.getMetaTileEntity()).connect((byte) side);
@@ -240,7 +276,8 @@ public class GT_Item_Machines
     private static void setAEProxyOwner(IGregTechTileEntity tile, EntityPlayer player) {
         if (tile.getMetaTileEntity() instanceof MetaTileEntity) {
             AENetworkProxy proxy = ((MetaTileEntity) tile.getMetaTileEntity()).getProxy();
-            if (proxy != null) proxy.setOwner(player);
+            if (proxy != null)
+                proxy.setOwner(player);
         }
     }
 }

@@ -5,7 +5,8 @@ import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.MultiblockTooltipCache;
 
 /**
- * Optional tooltip support, following GTNH's tooltip multiblock base without client dependencies.
+ * Optional tooltip support, following GTNH's tooltip multiblock base without
+ * client dependencies.
  */
 public abstract class GT_MetaTileEntity_TooltipMultiBlockBase extends GT_MetaTileEntity_MultiBlockBase
         implements ISecondaryDescribable {
@@ -13,6 +14,14 @@ public abstract class GT_MetaTileEntity_TooltipMultiBlockBase extends GT_MetaTil
 
     protected GT_MetaTileEntity_TooltipMultiBlockBase(int id, String name, String regionalName) {
         super(id, name, regionalName);
+    }
+
+    protected GT_MetaTileEntity_TooltipMultiBlockBase(int id, String name, String regionalName, int slots) {
+        super(id, name, regionalName, slots);
+    }
+
+    protected GT_MetaTileEntity_TooltipMultiBlockBase(String name, int slots) {
+        super(name, slots);
     }
 
     protected GT_MetaTileEntity_TooltipMultiBlockBase(String name) {
@@ -31,7 +40,8 @@ public abstract class GT_MetaTileEntity_TooltipMultiBlockBase extends GT_MetaTil
     }
 
     /**
-     * Called by the client resource listener. No registry of machine instances is retained.
+     * Called by the client resource listener. No registry of machine instances is
+     * retained.
      */
     public static void invalidateTooltipCache() {
         MultiblockTooltipCache.invalidateAll();
@@ -52,6 +62,18 @@ public abstract class GT_MetaTileEntity_TooltipMultiBlockBase extends GT_MetaTil
     public final String[] getPrimaryDescription() {
         MultiblockTooltipBuilder tooltip = getTooltip();
         return tooltip == null ? getDescription() : tooltip.getInformation();
+    }
+
+    @Override
+    public final boolean hasControlDescription() {
+        MultiblockTooltipBuilder tooltip = getTooltip();
+        return tooltip != null && tooltip.hasControlInfo();
+    }
+
+    @Override
+    public final String[] getControlDescription() {
+        MultiblockTooltipBuilder tooltip = getTooltip();
+        return tooltip == null ? getDescription() : tooltip.getControlInfo();
     }
 
     @Override

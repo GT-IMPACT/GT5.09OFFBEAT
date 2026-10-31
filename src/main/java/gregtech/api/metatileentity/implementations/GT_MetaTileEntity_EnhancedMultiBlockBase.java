@@ -22,7 +22,8 @@ import space.impact.structures.structure.IStructureWalker;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
 /**
- * Declarative structures and construction, following GTNH's enhanced multiblock API.
+ * Declarative structures and construction, following GTNH's enhanced multiblock
+ * API.
  */
 public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_MetaTileEntity_EnhancedMultiBlockBase<T>>
         extends GT_MetaTileEntity_TooltipMultiBlockBase implements IAlignment, IConstructable {
@@ -31,6 +32,14 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
 
     protected GT_MetaTileEntity_EnhancedMultiBlockBase(int id, String name, String regionalName) {
         super(id, name, regionalName);
+    }
+
+    protected GT_MetaTileEntity_EnhancedMultiBlockBase(int id, String name, String regionalName, int slots) {
+        super(id, name, regionalName, slots);
+    }
+
+    protected GT_MetaTileEntity_EnhancedMultiBlockBase(String name, int slots) {
+        super(name, slots);
     }
 
     protected GT_MetaTileEntity_EnhancedMultiBlockBase(String name) {
@@ -66,28 +75,34 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
     }
 
     private ExtendedFacing correctAlignment(ExtendedFacing facing) {
-        if (isNewExtendedFacingValid(facing)) return facing;
+        if (isNewExtendedFacingValid(facing))
+            return facing;
         ExtendedFacing unrotated = ExtendedFacing.of(facing.getDirection());
-        if (isNewExtendedFacingValid(unrotated)) return unrotated;
+        if (isNewExtendedFacingValid(unrotated))
+            return unrotated;
         for (ExtendedFacing candidate : ExtendedFacing.VALUES) {
-            if (isNewExtendedFacingValid(candidate)) return candidate;
+            if (isNewExtendedFacingValid(candidate))
+                return candidate;
         }
         throw new IllegalStateException("No permitted alignment for " + mName);
     }
 
     @Override
     public final void setExtendedFacing(ExtendedFacing facing) {
-        if (facing == null || !isNewExtendedFacingValid(facing) || facing == extendedFacing) return;
+        if (facing == null || !isNewExtendedFacingValid(facing) || facing == extendedFacing)
+            return;
         extendedFacing = facing;
         IGregTechTileEntity base = getBaseMetaTileEntity();
-        if (base == null) return;
+        if (base == null)
+            return;
         if (base.getFrontFacing() != facing.getDirection().ordinal()) {
             base.setFrontFacing((byte) facing.getDirection().ordinal());
         }
         mMachine = false;
         onMachineBlockUpdate();
         mUpdate = 1;
-        if (base.getWorld() == null) return;
+        if (base.getWorld() == null)
+            return;
         if (base.isServerSide()) {
             base.markDirty();
             ImpactStructures.sendAlignment((IAlignmentProvider) base, new NetworkRegistry.TargetPoint(
@@ -112,7 +127,8 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
             return super.onWrenchRightClick(side, wrenchingSide, player, x, y, z);
         }
         if (player.isSneaking()) {
-            return isFlipChangeAllowed() && toolSetFlip(getFlip().isHorizontallyFlipped() ? Flip.NONE : Flip.HORIZONTAL);
+            return isFlipChangeAllowed()
+                    && toolSetFlip(getFlip().isHorizontallyFlipped() ? Flip.NONE : Flip.HORIZONTAL);
         }
         return isRotationChangeAllowed() && toolSetRotation(null);
     }
@@ -162,39 +178,45 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
     }
 
     /**
-     * Visit the entire piece, including after errors, so incomplete machines still discover all their hatches.
+     * Visit the entire piece, including after errors, so incomplete machines still
+     * discover all their hatches.
      */
     protected final boolean checkPiece(String piece, int horizontal, int vertical, int depth) {
         IGregTechTileEntity base = getBaseMetaTileEntity();
-        boolean[] valid = {true};
+        boolean[] valid = { true };
         getStructureDefinition().iterate(piece, base.getWorld(), getExtendedFacing(),
                 base.getXCoord(), base.getYCoord(), base.getZCoord(), horizontal, vertical, depth,
                 IStructureWalker.<T>ignoreBlockUnloaded((element, world, x, y, z, a, b, c) -> {
-                    if (!world.blockExists(x, y, z) || !element.check(self(), world, x, y, z)) valid[0] = false;
+                    if (!world.blockExists(x, y, z) || !element.check(self(), world, x, y, z))
+                        valid[0] = false;
                     return true;
                 }));
         return valid[0];
     }
 
     protected final boolean buildPiece(String piece, ItemStack trigger, boolean hintsOnly,
-                                       int horizontal, int vertical, int depth) {
+            int horizontal, int vertical, int depth) {
         IGregTechTileEntity base = getBaseMetaTileEntity();
-        if (base.isClientSide() != hintsOnly) return false;
+        if (base.isClientSide() != hintsOnly)
+            return false;
         if (hintsOnly) {
-            boolean hinted = getStructureDefinition().hints(self(), trigger, piece, base.getWorld(), getExtendedFacing(),
+            boolean hinted = getStructureDefinition().hints(self(), trigger, piece, base.getWorld(),
+                    getExtendedFacing(),
                     base.getXCoord(), base.getYCoord(), base.getZCoord(), horizontal, vertical, depth);
-            // Mark all survival obstructions on the freshly generated hologram, without requiring show_error.
+            // Mark all survival obstructions on the freshly generated hologram, without
+            // requiring show_error.
             EntityPlayer player = Main.getCurrentPlayer();
             if (player != null && !player.capabilities.isCreativeMode) {
                 findConstructionConflicts(piece, trigger, horizontal, vertical, depth, player);
             }
             return hinted;
         }
-        boolean[] complete = {true};
+        boolean[] complete = { true };
         getStructureDefinition().iterate(piece, base.getWorld(), getExtendedFacing(),
                 base.getXCoord(), base.getYCoord(), base.getZCoord(), horizontal, vertical, depth,
                 (element, world, x, y, z, a, b, c) -> {
-                    if (!world.blockExists(x, y, z)) complete[0] = false;
+                    if (!world.blockExists(x, y, z))
+                        complete[0] = false;
                     else if (!element.couldBeValid(self(), world, x, y, z, trigger)) {
                         if (!world.isAirBlock(x, y, z) || !element.placeBlock(self(), world, x, y, z, trigger)) {
                             complete[0] = false;
@@ -207,13 +229,14 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
     }
 
     /**
-     * Read-only scan of the entire piece, independent of placement budget and available items.
-     * Never call check() here: it can register hatches or increment a machine's casing counters.
+     * Read-only scan of the entire piece, independent of placement budget and
+     * available items. Never call check() here: it can register hatches or
+     * increment a machine's casing counters.
      */
     private int findConstructionConflicts(String piece, ItemStack trigger, int horizontal, int vertical, int depth,
-                                          EntityPlayer actor) {
+            EntityPlayer actor) {
         IGregTechTileEntity base = getBaseMetaTileEntity();
-        int[] conflicts = {0};
+        int[] conflicts = { 0 };
         getStructureDefinition().iterate(piece, base.getWorld(), getExtendedFacing(),
                 base.getXCoord(), base.getYCoord(), base.getZCoord(), horizontal, vertical, depth,
                 IStructureWalker.<T>ignoreBlockUnloaded((element, world, x, y, z, a, b, c) -> {
@@ -223,7 +246,8 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
                     }
                     if (blocked) {
                         conflicts[0]++;
-                        if (actor != null) ImpactStructures.markHintParticleError(actor, world, x, y, z);
+                        if (actor != null)
+                            ImpactStructures.markHintParticleError(actor, world, x, y, z);
                     }
                     return true;
                 }));
@@ -231,9 +255,10 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
     }
 
     protected final int survivalBuildPiece(String piece, ItemStack trigger, int horizontal, int vertical, int depth,
-                                           int budget, ISurvivalBuildEnvironment environment) {
+            int budget, ISurvivalBuildEnvironment environment) {
         IGregTechTileEntity base = getBaseMetaTileEntity();
-        if (!base.isServerSide() || budget <= 0) return 0;
+        if (!base.isServerSide() || budget <= 0)
+            return 0;
         int conflicts = findConstructionConflicts(piece, trigger, horizontal, vertical, depth,
                 environment.getActor());
         if (conflicts > 0) {
@@ -242,7 +267,8 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
             return 0;
         }
         setupMachine(base, mInventory[1]);
-        if (mMachine) return -1;
+        if (mMachine)
+            return -1;
         int built = getStructureDefinition().survivalBuild(self(), trigger, piece, base.getWorld(), getExtendedFacing(),
                 base.getXCoord(), base.getYCoord(), base.getZCoord(), horizontal, vertical, depth,
                 budget, environment, false);

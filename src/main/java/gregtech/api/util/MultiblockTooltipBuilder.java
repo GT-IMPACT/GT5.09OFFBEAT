@@ -12,11 +12,13 @@ import gregtech.api.interfaces.IHatchElement;
 import space.impact.structures.hint.HintColor;
 
 /**
- * Fluent multiblock descriptions. Create after registration and rebuild after a language/resource reload.
+ * Fluent multiblock descriptions. Create after registration and rebuild after a
+ * language/resource reload.
  */
 public class MultiblockTooltipBuilder {
     private final List<String> information = new ArrayList<>();
     private final List<String> structure = new ArrayList<>();
+    private final List<String> controls = new ArrayList<>();
     private final List<String> hints = new ArrayList<>();
     private final Map<HintColor, LinkedHashSet<String>> coloredHints = new LinkedHashMap<>();
     private final String machineName;
@@ -31,16 +33,19 @@ public class MultiblockTooltipBuilder {
     }
 
     /**
-     * Automatically registers English text under separate per-machine translation keys for each section.
+     * Automatically registers English text under separate per-machine translation
+     * keys for each section.
      */
     public MultiblockTooltipBuilder(String machineName) {
         this.machineName = Objects.requireNonNull(machineName);
-        if (machineName.isEmpty()) throw new IllegalArgumentException("Empty machine name");
+        if (machineName.isEmpty())
+            throw new IllegalArgumentException("Empty machine name");
     }
 
     private String text(String section, String english) {
         Objects.requireNonNull(english);
-        if (machineName == null) return english;
+        if (machineName == null)
+            return english;
         Map<String, String> entries = translatedText.computeIfAbsent(section, key -> new LinkedHashMap<>());
         return entries.computeIfAbsent(english, value -> translate(
                 "TileEntity_DESCRIPTION_" + machineName + "_" + section + "_Index_" + entries.size(), value));
@@ -60,55 +65,58 @@ public class MultiblockTooltipBuilder {
 
     private static String englishTemplate(String key) {
         switch (key) {
-            case "machine_type":
-                return "Machine Type";
-            case "dimensions":
-                return "Dimensions (WxHxD): %s x %s x %s";
-            case "hollow":
-                return "Hollow";
-            case "structure":
-                return "Structure";
-            case "controller":
-                return "Controller";
-            case "tiered":
-                return "Tiered";
-            case "minimum":
-                return "At least %s";
-            case "air":
-                return "Required air";
-            case "hold_shift":
-                return "Hold Shift to display structure requirements";
-            case "projector":
-                return "Use the ImpactStructures hologram projector on the controller to show the structure; sneak-use to build.";
-            case "pollution":
-                return "Produces %s pollution per second";
-            case "channel":
-                return "Channel %s: %s";
-            case "master_channel":
-                return "Projector stack size determines: %s";
-            case "hatch.energy":
-                return "Energy Hatch";
-            case "hatch.dynamo":
-                return "Dynamo Hatch";
-            case "hatch.maintenance":
-                return "Maintenance Hatch";
-            case "hatch.muffler":
-                return "Muffler Hatch";
-            case "hatch.input_bus":
-                return "Input Bus";
-            case "hatch.input_hatch":
-                return "Input Hatch";
-            case "hatch.output_bus":
-                return "Output Bus";
-            case "hatch.output_hatch":
-                return "Output Hatch";
-            default:
-                throw new IllegalArgumentException("Unknown tooltip template: " + key);
+        case "machine_type":
+            return "Machine Type";
+        case "dimensions":
+            return "Dimensions (WxHxD): %s x %s x %s";
+        case "hollow":
+            return "Hollow";
+        case "structure":
+            return "Structure";
+        case "controller":
+            return "Controller";
+        case "tiered":
+            return "Tiered";
+        case "minimum":
+            return "At least %s";
+        case "air":
+            return "Required air";
+        case "hold_shift":
+            return "Hold Shift to display structure requirements";
+        case "hold_ctrl":
+            return "Hold Ctrl to display machine controls";
+        case "projector":
+            return "Use the ImpactStructures hologram projector on the controller to show the structure; sneak-use to build.";
+        case "pollution":
+            return "Produces %s pollution per second";
+        case "channel":
+            return "Channel %s: %s";
+        case "master_channel":
+            return "Projector stack size determines: %s";
+        case "hatch.energy":
+            return "Energy Hatch";
+        case "hatch.dynamo":
+            return "Dynamo Hatch";
+        case "hatch.maintenance":
+            return "Maintenance Hatch";
+        case "hatch.muffler":
+            return "Muffler Hatch";
+        case "hatch.input_bus":
+            return "Input Bus";
+        case "hatch.input_hatch":
+            return "Input Hatch";
+        case "hatch.output_bus":
+            return "Output Bus";
+        case "hatch.output_hatch":
+            return "Output Hatch";
+        default:
+            throw new IllegalArgumentException("Unknown tooltip template: " + key);
         }
     }
 
     private void checkOpen() {
-        if (finished) throw new IllegalStateException("Tooltip is already finished");
+        if (finished)
+            throw new IllegalStateException("Tooltip is already finished");
     }
 
     private MultiblockTooltipBuilder line(List<String> section, String text) {
@@ -126,8 +134,22 @@ public class MultiblockTooltipBuilder {
         return line(information, text("Information", info));
     }
 
+    public MultiblockTooltipBuilder addControlInfo(String info) {
+        return line(controls, text("Controls", info));
+    }
+
+    public boolean hasControlInfo() {
+        return !controls.isEmpty();
+    }
+
+    public String[] getControlInfo() {
+        toolTipFinisher();
+        return controls.toArray(new String[0]);
+    }
+
     public MultiblockTooltipBuilder addInfoAll(String... lines) {
-        for (String text : lines) addInfo(text);
+        for (String text : lines)
+            addInfo(text);
         return this;
     }
 
@@ -144,9 +166,11 @@ public class MultiblockTooltipBuilder {
     }
 
     private static String separator(EnumChatFormatting color, int length) {
-        if (length < 0) throw new IllegalArgumentException("Negative separator length");
+        if (length < 0)
+            throw new IllegalArgumentException("Negative separator length");
         StringBuilder text = new StringBuilder(color.toString());
-        for (int i = 0; i < length; i++) text.append('-');
+        for (int i = 0; i < length; i++)
+            text.append('-');
         return text.toString();
     }
 
@@ -159,14 +183,15 @@ public class MultiblockTooltipBuilder {
     }
 
     public MultiblockTooltipBuilder beginVariableStructureBlock(int minWidth, int maxWidth, int minHeight,
-                                                                int maxHeight, int minDepth, int maxDepth, boolean hollow) {
+            int maxHeight, int minDepth, int maxDepth, boolean hollow) {
         line(structure, tr("dimensions", range(minWidth, maxWidth), range(minHeight, maxHeight),
                 range(minDepth, maxDepth)) + (hollow ? " (" + tr("hollow") + ")" : ""));
         return line(structure, EnumChatFormatting.WHITE + tr("structure") + ":");
     }
 
     private static String range(int min, int max) {
-        if (min < 0 || max < min) throw new IllegalArgumentException("Invalid range");
+        if (min < 0 || max < min)
+            throw new IllegalArgumentException("Invalid range");
         return min == max ? Integer.toString(min) : min + "-" + max;
     }
 
@@ -179,7 +204,8 @@ public class MultiblockTooltipBuilder {
     }
 
     private MultiblockTooltipBuilder casing(String count, String name, boolean tiered) {
-        return line(structure, "   " + EnumChatFormatting.GOLD + count + " " + EnumChatFormatting.WHITE + name
+        String amount = count.isEmpty() ? "" : EnumChatFormatting.GOLD + count + " ";
+        return line(structure, "   " + amount + EnumChatFormatting.WHITE + name
                 + (tiered ? " (" + tr("tiered") + ")" : ""));
     }
 
@@ -216,13 +242,15 @@ public class MultiblockTooltipBuilder {
     }
 
     /**
-     * Renders the same minimums used by machine validation and survival hatch selection.
+     * Renders the same minimums used by machine validation and survival hatch
+     * selection.
      */
     public MultiblockTooltipBuilder addRequirements(StructureRequirements requirements, String location) {
         return requirements(requirements, location, null);
     }
 
-    private MultiblockTooltipBuilder requirements(StructureRequirements requirements, String location, HintColor color) {
+    private MultiblockTooltipBuilder requirements(StructureRequirements requirements, String location,
+            HintColor color) {
         int start = structure.size();
         if (requirements.getMinimumCasings() > 0) {
             addCasingInfoMin(requirements.getCasing(), requirements.getMinimumCasings(), false);
@@ -237,8 +265,12 @@ public class MultiblockTooltipBuilder {
         return this;
     }
 
-    /** Adds the hatch group's hologram color to the structure and construction legend. */
-    public MultiblockTooltipBuilder addRequirements(StructureRequirements requirements, String location, HintColor color) {
+    /**
+     * Adds the hatch group's hologram color to the structure and construction
+     * legend.
+     */
+    public MultiblockTooltipBuilder addRequirements(StructureRequirements requirements, String location,
+            HintColor color) {
         return requirements(requirements, location, Objects.requireNonNull(color));
     }
 
@@ -311,10 +343,12 @@ public class MultiblockTooltipBuilder {
     }
 
     /**
-     * GTNH-compatible key-based hint; numeric dots 1..16 map to ImpactStructures colors 0..15.
+     * GTNH-compatible key-based hint; numeric dots 1..16 map to ImpactStructures
+     * colors 0..15.
      */
     public MultiblockTooltipBuilder addStructureHint(String nameKey, int... dots) {
-        String name = StatCollector.canTranslate(nameKey) ? StatCollector.translateToLocal(nameKey) : text("Hint", nameKey);
+        String name = StatCollector.canTranslate(nameKey) ? StatCollector.translateToLocal(nameKey)
+                : text("Hint", nameKey);
         return dots.length == 0 ? line(hints, name) : hintNames(name, dots);
     }
 
@@ -330,7 +364,8 @@ public class MultiblockTooltipBuilder {
     }
 
     private MultiblockTooltipBuilder hintNames(String name, int... dots) {
-        for (int dot : dots) coloredHint(name, HintColor.fromMetadata(dot - 1));
+        for (int dot : dots)
+            coloredHint(name, HintColor.fromMetadata(dot - 1));
         return this;
     }
 
@@ -407,8 +442,11 @@ public class MultiblockTooltipBuilder {
     }
 
     public MultiblockTooltipBuilder toolTipFinisher() {
-        if (finished) return this;
+        if (finished)
+            return this;
         line(information, EnumChatFormatting.GRAY + tr("hold_shift"));
+        if (!controls.isEmpty())
+            line(information, EnumChatFormatting.GRAY + tr("hold_ctrl"));
         line(structure, tr("projector"));
         line(hints, tr("projector"));
         for (Map.Entry<HintColor, LinkedHashSet<String>> entry : coloredHints.entrySet()) {
