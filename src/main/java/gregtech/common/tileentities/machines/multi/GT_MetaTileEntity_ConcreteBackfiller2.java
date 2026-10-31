@@ -1,11 +1,11 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.enums.ItemList;
+import gregtech.api.enums.Casings;
 import gregtech.api.enums.Materials;
+import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-
-import static gregtech.api.enums.GT_Values.VN;
+import gregtech.api.util.MultiblockTooltipBuilder;
 
 public class GT_MetaTileEntity_ConcreteBackfiller2 extends GT_MetaTileEntity_ConcreteBackfillerBase {
     public GT_MetaTileEntity_ConcreteBackfiller2(int aID, String aName, String aNameRegional) {
@@ -17,30 +17,13 @@ public class GT_MetaTileEntity_ConcreteBackfiller2 extends GT_MetaTileEntity_Con
     }
 
     @Override
-    public String[] getDescription() {
-        String casings = getCasingBlockItem().get(0).getDisplayName();
-        return new String[]{
-                "Controller Block for the Advanced Concrete Backfiller",
-                "Size(WxHxD): 3x7x3", "Controller (Front middle at bottom)",
-                "3x1x3 Base of " + casings,
-                "1x3x1 " + casings + " pillar (Center of base)",
-                "1x3x1 " + getFrameMaterial().mName + " Frame Boxes (Each pillar side and on top)",
-                "1x Input Hatch (One of base casings)",
-                "1x Maintenance Hatch (One of base casings)",
-                "1x " + VN[getMinTier()] + "+ Energy Hatch (Any bottom layer casing)",
-                "Put Programmed Circuits into Data Access to config radius",
-                "Radius = (total config value)x2 blocks",
-                "Default 64, Maximum 128",};
-    }
-
-    @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_ConcreteBackfiller2(mName);
     }
 
     @Override
-    protected ItemList getCasingBlockItem() {
-        return ItemList.Casing_StableTitanium;
+    public ICasing getCasingType() {
+        return Casings.STABLE_TITANIUM;
     }
 
     @Override
@@ -49,8 +32,13 @@ public class GT_MetaTileEntity_ConcreteBackfiller2 extends GT_MetaTileEntity_Con
     }
 
     @Override
-    protected int getCasingTextureIndex() {
-        return 50;
+    protected MultiblockTooltipBuilder createTooltip() {
+        return addDrillerStructure(new MultiblockTooltipBuilder(mName)
+                .addMachineType("Advanced Concrete Backfiller")
+                .addInfo("Fills underground air pockets with concrete")
+                .addInfo("Consumes 144 L of concrete per block")
+                .addInfo("Radius: circuit sum x 2; default 64, maximum 128")
+                .addInfo("Circuits: controller or Data Access Hatch"));
     }
 
     @Override

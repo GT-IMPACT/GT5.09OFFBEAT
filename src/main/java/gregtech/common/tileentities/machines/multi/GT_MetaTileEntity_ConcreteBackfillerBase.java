@@ -5,10 +5,11 @@ import gregtech.api.enums.Materials;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-
-import static gregtech.api.enums.GT_Values.VN;
 
 public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTileEntity_DrillerBase {
 
@@ -22,18 +23,13 @@ public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTi
         super(aName);
     }
 
-    protected String[] getDescriptionInternal(String tierSuffix) {
-        String casings = getCasingBlockItem().get(0).getDisplayName();
-        return new String[]{
-                "Controller Block for the Concrete Backfiller " + (tierSuffix != null ? tierSuffix : ""),
-                "Size(WxHxD): 3x7x3", "Controller (Front middle at bottom)",
-                "3x1x3 Base of " + casings,
-                "1x3x1 " + casings + " pillar (Center of base)",
-                "1x3x1 " + getFrameMaterial().mName + " Frame Boxes (Each pillar side and on top)",
-                "1x Input Hatch (One of base casings)",
-                "1x Maintenance Hatch (One of base casings)",
-                "1x " + VN[getMinTier()] + "+ Energy Hatch (Any bottom layer casing)",
-                "Radius is " + getRadius() + " blocks"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return addDrillerStructure(new MultiblockTooltipBuilder(mName)
+                .addMachineType("Concrete Backfiller")
+                .addInfo("Fills underground air pockets with concrete")
+                .addInfo("Consumes 144 L of concrete per block")
+                .addInfo("Radius: 16 blocks"));
     }
 
     @Override
@@ -44,8 +40,8 @@ public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTi
     protected abstract int getRadius();
 
     @Override
-    protected boolean checkHatches() {
-        return !mMaintenanceHatches.isEmpty() && !mInputHatches.isEmpty() && !mEnergyHatches.isEmpty();
+    protected StructureRequirements.Builder createBaseRequirements() {
+        return StructureRequirements.builder(getCasingType(), 0).atLeast(DrillerHatch.FLUID_INPUT);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package gregtech.common.tileentities.machines.multi;
 
-import static gregtech.api.enums.GT_Values.VN;
-import static gregtech.common.GT_UndergroundOil.DIVIDER;
+import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.util.GT_Utility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,12 +12,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.util.GT_Utility;
 import space.gtimpact.virtual_world.api.VirtualAPI;
 import space.gtimpact.virtual_world.api.core.WorldPos;
 import space.gtimpact.virtual_world.api.services.mining.fluids.FluidExtractionResult;
+
+import static gregtech.common.GT_UndergroundOil.DIVIDER;
 
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
@@ -40,19 +42,13 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
         mOilId = aNBT.getInteger("mOilId");
     }
 
-    protected String[] getDescriptionInternal(String tierSuffix) {
-        String casings = getCasingBlockItem().get(0).getDisplayName();
-        return new String[]{
-                "Controller Block for the Oil/Gas/Fluid Drilling Rig " + (tierSuffix != null ? tierSuffix : ""),
-                "Size(WxHxD): 3x7x3", "Controller (Front middle at bottom)",
-                "3x1x3 Base of " + casings,
-                "1x3x1 " + casings + " pillar (Center of base)",
-                "1x3x1 " + getFrameMaterial().mName + " Frame Boxes (Each pillar side and on top)",
-                "1x Output Hatch (One of base casings)",
-                "1x Maintenance Hatch (One of base casings)",
-                "1x " + VN[getMinTier()] + "+ Energy Hatch (Any bottom layer casing)",
-                "Working on 4 * 4 chunks (underground vein size)",
-                "Use Programmed Circuits to ignore near exhausted oil field"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return addDrillerStructure(new MultiblockTooltipBuilder(mName)
+                .addMachineType("Oil / Gas / Fluid Drilling Rig")
+                .addInfo("Extracts underground fluids from a 4 x 4 chunk vein")
+                .addInfo("Circuits set the minimum yield; controller or Data Access")
+                .addInfo("Mining pipes: controller or optional Input Bus"));
     }
 
 
@@ -64,8 +60,8 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     protected abstract int getRangeInChunks();
 
     @Override
-    protected boolean checkHatches() {
-        return !mMaintenanceHatches.isEmpty() && !mOutputHatches.isEmpty() && !mEnergyHatches.isEmpty();
+    protected StructureRequirements.Builder createBaseRequirements() {
+        return StructureRequirements.builder(getCasingType(), 0).atLeast(DrillerHatch.FLUID_OUTPUT);
     }
 
     @Override

@@ -128,6 +128,13 @@ public class GT_StructureIntegrationTest {
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Charcoal_Pit"}) {
                 Class.forName(name, true, server);
             }
+            for (String family : new String[]{"OilDrill", "ConcreteBackfiller"}) {
+                int variants = family.equals("OilDrill") ? 3 : 2;
+                for (int variant = 1; variant <= variants; variant++) {
+                    Class.forName("gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_" + family + variant,
+                            true, server);
+                }
+            }
             // Its existing static recipe requires registered adsorption filter items before initialization.
             Class<?> airFilter = Class.forName(
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AirFilter", false, server);
@@ -210,6 +217,7 @@ public class GT_StructureIntegrationTest {
         GT_AssemblyLineStructureChecks.run(hatchItem, hintProxy);
         GT_CleanroomStructureChecks.run(hatchItem, hintProxy);
         GT_CharcoalPitStructureChecks.run(hintProxy);
+        GT_DrillerStructureChecks.run(hatchItem, hintProxy);
     }
 
     private static void loadLanguage(String language) throws Exception {

@@ -1,82 +1,83 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.GregTech_API;
+import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.interfaces.ICasing;
+import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_DataAccess;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
+
 import java.util.ArrayList;
 
+import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.api.enums.GT_Values.W;
 import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.api.structure.StructureUtility.transpose;
 
-public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_MultiBlockBase {
+public abstract class GT_MetaTileEntity_DrillerBase
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_DrillerBase>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor BASE_HINT = HintColor.BLUE;
+    private IStructureDefinition<GT_MetaTileEntity_DrillerBase> structureDefinition;
+    private StructureRequirements baseRequirements;
     private static final ItemStack miningPipe = GT_ModHandler.getIC2Item("miningPipe", 0);
     private static final ItemStack miningPipeTip = GT_ModHandler.getIC2Item("miningPipeTip", 0);
     private static final Block miningPipeBlock = GT_Utility.getBlockFromStack(miningPipe);
     private static final Block miningPipeTipBlock = GT_Utility.getBlockFromStack(miningPipeTip);
 
-    private Block casingBlock;
-    private int casingMeta;
-    private int frameMeta;
-    private int casingTextureIndex;
     protected boolean isPickingPipes;
 
-    private ForgeDirection back;
-
     private int xDrill, yDrill, zDrill, xPipe, zPipe, yHead;
-    protected int workState;
+    protected int workState = STATE_DOWNWARD;
     protected static final int STATE_DOWNWARD = 0, STATE_AT_BOTTOM = 1, STATE_UPWARD = 2;
 
     public GT_MetaTileEntity_DrillerBase(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
-        initFields();
     }
 
     public GT_MetaTileEntity_DrillerBase(String aName) {
         super(aName);
-        initFields();
     }
 
-    private void initFields() {
-        casingBlock = getCasingBlockItem().getBlock();
-        casingMeta = getCasingBlockItem().get(0).getItemDamage();
-        int frameId = 4096 + getFrameMaterial().mMetaItemSubID;
-        frameMeta = GregTech_API.METATILEENTITIES[frameId] != null ? GregTech_API.METATILEENTITIES[frameId].getTileEntityBaseType() : W;
-        casingTextureIndex = getCasingTextureIndex();
-        workState = STATE_DOWNWARD;
-    }
-    
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
             if (aActive) return new ITexture[]{
-                    getCasingTextureForId(casingTextureIndex),
+                    getCasingType().getTexture(),
                     TextureFactory.of(OVERLAY_FRONT_ORE_DRILL_ACTIVE),
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_ORE_DRILL_ACTIVE_GLOW).glow().build()};
             return new ITexture[]{
-                    getCasingTextureForId(casingTextureIndex),
+                    getCasingType().getTexture(),
                     TextureFactory.of(OVERLAY_FRONT_ORE_DRILL),
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_ORE_DRILL_GLOW).glow().build()};
         }
-        return new ITexture[]{getCasingTextureForId(casingTextureIndex)};
+        return new ITexture[]{getCasingType().getTexture()};
     }
 
     @Override
@@ -216,6 +217,10 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
             requiredEnergy -= energyHatch.getEUVar();
             if (requiredEnergy <= 0) return true;
         }
+        for (GT_MetaTileEntity_Hatch_EnergyMulti energyHatch : mEnergyHatchesMulti) {
+            requiredEnergy -= energyHatch.getEUVar();
+            if (requiredEnergy <= 0) return true;
+        }
         return false;
     }
 
@@ -248,6 +253,7 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
     @Override
     public boolean checkRecipe(ItemStack aStack) {
         //Public pipe actions
+        updateCoordinates();
         setElectricityStats();
         int oldYHead = yHead;
         if (!checkPipesAndSetYHead() || !isEnergyEnough()) {
@@ -270,41 +276,71 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
     @Override
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         updateCoordinates();
-        //check base layer
-        for (int xOff = -1 + back.offsetX; xOff <= 1 + back.offsetX; xOff++) {
-            for (int zOff = -1 + back.offsetZ; zOff <= 1 + back.offsetZ; zOff++) {
-                if (xOff == 0 && zOff == 0) continue;
+        mDataAccessHatches.clear();
+        return checkPiece(STRUCTURE_PIECE, 1, 6, 0) && getBaseRequirements().isSatisfied(this, 0);
+    }
 
-                IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xOff, 0, zOff);
-                if (!checkCasingBlock(xOff, 0, zOff)
-                        && !addMaintenanceToMachineList(tTileEntity, casingTextureIndex)
-                        && !addInputToMachineList(tTileEntity, casingTextureIndex)
-                        && !addOutputToMachineList(tTileEntity, casingTextureIndex)
-                        && !addEnergyInputToMachineList(tTileEntity, casingTextureIndex)
-                        && !addDataAccessToMachineList(tTileEntity, casingTextureIndex))
-                    return false;
-            }
+    public final StructureRequirements getBaseRequirements() {
+        if (baseRequirements == null) {
+            baseRequirements = createBaseRequirements()
+                    .atLeast(HatchElement.Maintenance, new DrillerEnergy(getMinTier()))
+                    .build();
         }
-        if(!checkHatches()) return false;
-        if (GT_Utility.getTier(getMaxInputVoltage()) < getMinTier()) return false;
-        //check tower
-        for (int yOff = 1; yOff < 4; yOff++) {
-            if (!checkCasingBlock(back.offsetX, yOff, back.offsetZ)
-                    || !checkFrameBlock(back.offsetX + 1, yOff, back.offsetZ)
-                    || !checkFrameBlock(back.offsetX - 1, yOff, back.offsetZ)
-                    || !checkFrameBlock(back.offsetX, yOff, back.offsetZ + 1)
-                    || !checkFrameBlock(back.offsetX, yOff, back.offsetZ - 1)
-                    || !checkFrameBlock(back.offsetX, yOff + 3, back.offsetZ))
-                return false;
+        return baseRequirements;
+    }
+
+    protected abstract StructureRequirements.Builder createBaseRequirements();
+
+    protected final MultiblockTooltipBuilder addDrillerStructure(MultiblockTooltipBuilder tooltip) {
+        return tooltip.beginStructureBlock(3, 7, 3, false)
+                .addController("Front center, bottom layer")
+                .addOtherStructurePart(getCasingType(), "Base and central pillar; hatches replace base casings", 11)
+                .addOtherStructurePart(GT_OreDictUnificator.get(OrePrefixes.frameGt, getFrameMaterial(), 1),
+                        "Beside the pillar and above it", 15)
+                .addRequirements(getBaseRequirements(), "Base only", BASE_HINT)
+                .addStructureHint("Input Bus / Data Access (optional, base)", BASE_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Auto-place required hatches")
+                .toolTipFinisher();
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_DrillerBase> getStructureDefinition() {
+        if (structureDefinition == null) {
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_DrillerBase>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"   ", " F ", "   "},
+                            {"   ", " F ", "   "},
+                            {"   ", " F ", "   "},
+                            {" F ", "FCF", " F "},
+                            {" F ", "FCF", " F "},
+                            {" F ", "FCF", " F "},
+                            {"H~H", "HHH", "HHH"}
+                    }))
+                    .addElement('C', getCasingType().asElement())
+                    .addElement('F', GTStructureUtility.ofFrame(getFrameMaterial()))
+                    .addElement('H', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_DrillerBase.class)
+                            .allow(HatchElement.Input, HatchElement.Output, DrillerHatch.DATA)
+                            .buildAndChain(getBaseRequirements()).withHint(BASE_HINT))
+                    .build();
         }
-        return true;
+        return structureDefinition;
+    }
+
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 6, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int budget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 6, 0, budget, environment);
     }
 
     private void updateCoordinates() {
         xDrill = getBaseMetaTileEntity().getXCoord();
         yDrill = getBaseMetaTileEntity().getYCoord();
         zDrill = getBaseMetaTileEntity().getZCoord();
-        back = ForgeDirection.getOrientation(getBaseMetaTileEntity().getBackFacing());
+        ForgeDirection back = ForgeDirection.getOrientation(getBaseMetaTileEntity().getBackFacing());
         xPipe = xDrill + back.offsetX;
         zPipe = zDrill + back.offsetZ;
     }
@@ -317,18 +353,6 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         //pipe column is broken - try fix
         getBaseMetaTileEntity().getWorld().setBlock(xPipe, yHead, zPipe, miningPipeTipBlock);
         return true;
-    }
-
-    protected boolean checkCasingBlock(int xOff, int yOff, int zOff) {
-        return checkBlockAndMetaOffset(xOff, yOff, zOff, casingBlock, casingMeta);
-    }
-    //meta of frame is getTileEntityBaseType; frame should be checked using its drops (possible a high weight operation)
-    protected boolean checkFrameBlock(int xOff, int yOff, int zOff) {
-        return checkBlockAndMetaOffset(xOff, yOff, zOff, GregTech_API.sBlockMachines, frameMeta);
-    }
-
-    protected boolean checkBlockAndMetaOffset(int xOff, int yOff, int zOff, Block block, int meta) {
-        return checkBlockAndMeta(xDrill + xOff, yDrill + yOff, zDrill + zOff, block, meta);
     }
 
     private boolean checkBlockAndMeta(int x, int y, int z, Block block, int meta) {
@@ -370,15 +394,11 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         return false;
     }
 
-    protected abstract ItemList getCasingBlockItem();
+    public abstract ICasing getCasingType();
 
     protected abstract Materials getFrameMaterial();
 
-    protected abstract int getCasingTextureIndex();
-
     protected abstract int getMinTier();
-
-    protected abstract boolean checkHatches();
 
     protected abstract void setElectricityStats();
 
@@ -427,10 +447,122 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
         if (aMetaTileEntity == null) return false;
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_DataAccess) {
-            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture((byte) aBaseCasingIndex);
-            return mDataAccessHatches.add((GT_MetaTileEntity_Hatch_DataAccess) aMetaTileEntity);
+            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
+            if (!mDataAccessHatches.contains(aMetaTileEntity)) {
+                mDataAccessHatches.add((GT_MetaTileEntity_Hatch_DataAccess) aMetaTileEntity);
+            }
+            return true;
         }
         return false;
+    }
+
+    /** Keep the legacy combined input-voltage check, but select a sufficient hatch during construction. */
+    private static final class DrillerEnergy implements IHatchElement {
+        private final int tier;
+
+        private DrillerEnergy(int tier) {
+            this.tier = tier;
+        }
+
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            return HatchElement.Energy.matches(tile);
+        }
+
+        @Override
+        public boolean matchesForPlacement(IMetaTileEntity tile) {
+            if (!matches(tile)) return false;
+            long voltage = ((GT_MetaTileEntity_Hatch) tile).maxEUInput();
+            if (tile instanceof GT_MetaTileEntity_Hatch_EnergyMulti) {
+                voltage *= ((GT_MetaTileEntity_Hatch_EnergyMulti) tile).Amp;
+            }
+            return GT_Utility.getTier(voltage) >= tier;
+        }
+
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            return GT_Utility.getTier(machine.getMaxInputVoltage()) >= tier ? HatchElement.Energy.count(machine) : 0;
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            return HatchElement.Energy.add(machine, tile, texture);
+        }
+
+        @Override
+        public String getDescription() {
+            return StatCollector.translateToLocal("gt.tooltip.hatch.energy") + " (" + VN[tier] + "+)";
+        }
+    }
+
+    protected enum DrillerHatch implements IHatchElement {
+        FLUID_INPUT,
+        FLUID_OUTPUT,
+        ITEM_OUTPUT,
+        DATA;
+
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            switch (this) {
+                case FLUID_INPUT:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
+                case FLUID_OUTPUT:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Output;
+                case ITEM_OUTPUT:
+                    return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
+                case DATA:
+                    return tile instanceof GT_MetaTileEntity_Hatch_DataAccess;
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            switch (this) {
+                case FLUID_INPUT:
+                    return machine.mInputHatches.size() + machine.mQuadrInputHatches.size() + machine.mInputBusHatches.size();
+                case FLUID_OUTPUT:
+                    return machine.mOutputHatches.size();
+                case ITEM_OUTPUT:
+                    return machine.mOutputBusses.size();
+                case DATA:
+                    return ((GT_MetaTileEntity_DrillerBase) machine).mDataAccessHatches.size();
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            switch (this) {
+                case FLUID_INPUT:
+                    return machine.addInputToMachineList(tile, texture);
+                case FLUID_OUTPUT:
+                case ITEM_OUTPUT:
+                    return machine.addOutputToMachineList(tile, texture);
+                case DATA:
+                    return ((GT_MetaTileEntity_DrillerBase) machine).addDataAccessToMachineList(tile, texture);
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public String getDescription() {
+            switch (this) {
+                case FLUID_INPUT:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.input_hatch");
+                case FLUID_OUTPUT:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.output_hatch");
+                case ITEM_OUTPUT:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.output_bus");
+                case DATA:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.data_access");
+                default:
+                    throw new AssertionError(this);
+            }
+        }
     }
 
 }
