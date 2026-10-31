@@ -1,22 +1,33 @@
 package gregtech.common.tileentities.machines.multi;
 
-import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.api.structure.StructureUtility.transpose;
 
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.Casings;
+import gregtech.api.enums.HatchElement;
+import gregtech.api.enums.HeatingCoil;
+import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.*;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
+import net.minecraft.world.World;
+import space.impact.api.alignment.constructable.ISurvivalConstructable;
+import space.impact.api.hint.HintColor;
+import space.impact.api.structure.IStructureDefinition;
+import space.impact.api.structure.ISurvivalBuildEnvironment;
+import space.impact.api.structure.StructureDefinition;
+
 import java.util.ArrayList;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,10 +36,20 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class GT_MetaTileEntity_MultiFurnace
-        extends GT_MetaTileEntity_MultiBlockBase {
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_MultiFurnace>
+        implements ISurvivalConstructable {
+    private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
+    private static final HintColor MUFFLER_HINT = HintColor.ORANGE;
+    private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, FurnaceHatch.INPUT_BUS, FurnaceHatch.OUTPUT_BUS)
+            .build();
+    private static final StructureRequirements EXHAUST = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
+            .atLeast(FurnaceHatch.MUFFLER).build();
+    private static IStructureDefinition<GT_MetaTileEntity_MultiFurnace> structureDefinition;
+    private HeatingCoil checkedCoil;
     private int mLevel = 0;
     private int mCostDiscount = 1;
-    private static final int CASING_INDEX = 11;
 
     public GT_MetaTileEntity_MultiFurnace(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -42,30 +63,36 @@ public class GT_MetaTileEntity_MultiFurnace
         return new GT_MetaTileEntity_MultiFurnace(this.mName);
     }
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Multi Smelter",
-                "Smelts up to 8-128 Items at once",
-                "Size(WxHxD): 3x3x3 (Hollow), Controller (Front middle at bottom)",
-                "8x Heating Coils (Middle layer, hollow)",
-                "1x Input Bus (One of bottom)",
-                "1x Output Bus (One of bottom)",
-                "1x Maintenance Hatch (One of bottom)",
-                "1x Muffler Hatch (Top middle)",
-                "1x Energy Hatch (One of bottom)",
-                "Heat Proof Machine Casings for the rest",
-                "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
+    @Override
+    protected MultiblockTooltipBuilder createTooltip() {
+        return new MultiblockTooltipBuilder(mName)
+                .addMachineType("Multi Smelter")
+                .addInfo("Smelts 8 to 256 items at once, depending on the heating coils")
+                .addInfo("Higher coil tiers increase parallel processing or reduce energy consumption")
+                .addPollutionAmount(getPollutionPerTick(null) * 20)
+                .beginStructureBlock(3, 3, 3, true)
+                .addController("Front center of the bottom layer")
+                .addOtherStructurePart(Casings.HEAT_PROOF, "Top layer, except the center", 8)
+                .addRequirements(BOTTOM, "Bottom layer, replacing heat-proof casings", BOTTOM_HINT)
+                .addRequirements(EXHAUST, "Top center", MUFFLER_HINT)
+                .addOtherStructurePart(8, "Heating Coils", "Middle layer, surrounding the empty center")
+                .addAir("Center of the middle layer")
+                .addStructureInfo("All eight heating coils must have the same tier.")
+                .addStructureInfo("Item input and output buses are required; IMPACT combined inputs and multi-amp energy hatches are accepted.")
+                .addMasterChannel("Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .toolTipFinisher();
     }
-    
+
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        if (aSide != aFacing) return new ITexture[]{casingTexturePages[0][CASING_INDEX]};
+        if (aSide != aFacing) return new ITexture[]{Casings.HEAT_PROOF.getTexture()};
         if (aActive) return new ITexture[]{
-                casingTexturePages[0][CASING_INDEX],
+                Casings.HEAT_PROOF.getTexture(),
                 TextureFactory.of(OVERLAY_FRONT_MULTI_SMELTER_ACTIVE),
                 TextureFactory.builder().addIcon(OVERLAY_FRONT_MULTI_SMELTER_ACTIVE_GLOW).glow().build()};
         return new ITexture[]{
-                casingTexturePages[0][CASING_INDEX],
+                Casings.HEAT_PROOF.getTexture(),
                 TextureFactory.of(OVERLAY_FRONT_MULTI_SMELTER),
                 TextureFactory.builder().addIcon(OVERLAY_FRONT_MULTI_SMELTER_GLOW).glow().build()};
     }
@@ -80,10 +107,6 @@ public class GT_MetaTileEntity_MultiFurnace
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
-    }
-
-    public boolean isFacingValid(byte aFacing) {
-        return aFacing > 1;
     }
 
     public boolean checkRecipe(ItemStack aStack) {
@@ -119,102 +142,157 @@ public class GT_MetaTileEntity_MultiFurnace
         return false;
     }
 
-    private boolean checkMachineFunction(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
-        int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-
-        this.mLevel = 0;
-        this.mCostDiscount = 1;
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, 1, zDir)) {
+    @Override
+    public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
+        checkedCoil = null;
+        mLevel = 0;
+        mCostDiscount = 1;
+        if (!checkPiece(STRUCTURE_PIECE, 1, 2, 0) || checkedCoil == null
+                || !BOTTOM.isSatisfied(this, 0) || !EXHAUST.isSatisfied(this, 0)) {
             return false;
         }
-        addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, 2, zDir), 11);
-        replaceDeprecatedCoils(aBaseMetaTileEntity);
-        byte tUsedMeta = aBaseMetaTileEntity.getMetaIDOffset(xDir + 1, 1, zDir);
-        switch (tUsedMeta) {
-            case 0:
-                this.mLevel = 1;
-                this.mCostDiscount = 1;
-                break;
-            case 1:
-                this.mLevel = 2;
-                this.mCostDiscount = 1;
-                break;
-            case 2:
-                this.mLevel = 4;
-                this.mCostDiscount = 1;
-                break;
-            case 3:
-                this.mLevel = 8;
-                this.mCostDiscount = 1;
-                break;
-            case 4:
-                this.mLevel = 16;
-                this.mCostDiscount = 2;
-                break;
-            case 5:
-                this.mLevel = 16;
-                this.mCostDiscount = 4;
-                break;
-            case 6:
-                this.mLevel = 16;
-                this.mCostDiscount = 8;
-                break;
-            case 7:
-                this.mLevel = 16;
-                this.mCostDiscount = 16;
-                break;
-            case 8:
-                this.mLevel = 16;
-                this.mCostDiscount = 24;
-                break;
-            case 12:
-                this.mLevel = 32;
-                this.mCostDiscount = 32;
-                break;
-            default:
-                return false;
-        }
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                if ((i != 0) || (j != 0)) {
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 1, zDir + j) != GregTech_API.sBlockCasings5) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 1, zDir + j) != tUsedMeta) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 2, zDir + j) != GregTech_API.sBlockCasings1) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 2, zDir + j) != 11) {
-                        return false;
-                    }
-                }
-            }
-        }
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                if ((xDir + i != 0) || (zDir + j != 0)) {
-                    IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
-                    if ((!addMaintenanceToMachineList(tTileEntity, 11)) && (!addInputToMachineList(tTileEntity, 11)) && (!addOutputToMachineList(tTileEntity, 11)) && (!addEnergyInputToMachineList(tTileEntity, 11))) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != GregTech_API.sBlockCasings1) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != 11) {
-                            return false;
-                        }
-                    }
-                }
-            }
+        mLevel = checkedCoil.getSmeltingLevel();
+        mCostDiscount = checkedCoil.getSmeltingDiscount();
+        if (base.isServerSide()) {
+            replaceDeprecatedCoils(base);
         }
         return true;
     }
-        public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack){
-        boolean result= this.checkMachineFunction(aBaseMetaTileEntity,aStack);
-              if (!result) this.mLevel=0;
-              return result;
+
+    @Override
+    public void construct(ItemStack trigger, boolean hintsOnly) {
+        buildPiece(STRUCTURE_PIECE, trigger, hintsOnly, 1, 2, 0);
+    }
+
+    @Override
+    public int survivalConstruct(ItemStack trigger, int elementBudget, ISurvivalBuildEnvironment environment) {
+        return survivalBuildPiece(STRUCTURE_PIECE, trigger, 1, 2, 0, elementBudget, environment);
+    }
+
+    @Override
+    public IStructureDefinition<GT_MetaTileEntity_MultiFurnace> getStructureDefinition() {
+        if (structureDefinition == null) {
+            structureDefinition = StructureDefinition.<GT_MetaTileEntity_MultiFurnace>builder()
+                    .addShape(STRUCTURE_PIECE, transpose(new String[][]{
+                            {"CCC", "CMC", "CCC"},
+                            {"HHH", "H-H", "HHH"},
+                            {"B~B", "BBB", "BBB"}
+                    }))
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addElement('C', Casings.HEAT_PROOF.asElement())
+                    .addElement('B', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiFurnace.class)
+                            .buildAndChain(BOTTOM).withHint(BOTTOM_HINT))
+                    .addElement('M', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiFurnace.class)
+                            .hint(MUFFLER_HINT).build(EXHAUST))
+                    .addElement('H', GTStructureUtility.ofHeatingCoil(
+                            GT_MetaTileEntity_MultiFurnace::checkCoil, GT_MetaTileEntity_MultiFurnace::constructionCoil))
+                    .build();
         }
+        return structureDefinition;
+    }
+
+    private boolean checkCoil(HeatingCoil coil) {
+        if (checkedCoil == null) {
+            checkedCoil = coil;
+        }
+        return checkedCoil == coil;
+    }
+
+    /** Pure world lookup, shared by previews, conflict checks and construction. */
+    private HeatingCoil constructionCoil(ItemStack trigger) {
+        World world = getBaseMetaTileEntity().getWorld();
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        ForgeDirection front = getExtendedFacing().getDirection();
+        int centerX = base.getXCoord() - front.offsetX;
+        int centerZ = base.getZCoord() - front.offsetZ;
+        for (int x = centerX - 1; x <= centerX + 1; x++) {
+            for (int z = centerZ - 1; z <= centerZ + 1; z++) {
+                if (x == centerX && z == centerZ) {
+                    continue;
+                }
+                HeatingCoil coil = HeatingCoil.at(world, x, base.getYCoord() + 1, z);
+                if (coil != null) {
+                    return coil;
+                }
+            }
+        }
+        int tier = trigger == null ? 1 : trigger.stackSize;
+        return HeatingCoil.fromTier(tier);
+    }
+
+    private enum FurnaceHatch implements IHatchElement {
+        INPUT_BUS,
+        OUTPUT_BUS,
+        MUFFLER;
+
+        @Override
+        public boolean matches(IMetaTileEntity tile) {
+            switch (this) {
+                case INPUT_BUS:
+                    return HatchElement.Input.matches(tile);
+                case OUTPUT_BUS:
+                    return HatchElement.Output.matches(tile);
+                case MUFFLER:
+                    return tile instanceof GT_MetaTileEntity_Hatch_Muffler;
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean matchesForPlacement(IMetaTileEntity tile) {
+            switch (this) {
+                case INPUT_BUS:
+                    return tile instanceof GT_MetaTileEntity_Hatch_InputBus || tile instanceof GTMTE_BusHatch_Input;
+                case OUTPUT_BUS:
+                    return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
+                default:
+                    return matches(tile);
+            }
+        }
+
+        @Override
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            switch (this) {
+                case INPUT_BUS:
+                    return machine.mInputBusses.size() + machine.mInputBusHatches.size();
+                case OUTPUT_BUS:
+                    return machine.mOutputBusses.size();
+                case MUFFLER:
+                    return machine.mMufflerHatches.size();
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            switch (this) {
+                case INPUT_BUS:
+                    return machine.addInputToMachineList(tile, texture);
+                case OUTPUT_BUS:
+                    return machine.addOutputToMachineList(tile, texture);
+                case MUFFLER:
+                    return machine.addMufflerToMachineList(tile, texture);
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+
+        @Override
+        public String getDescription() {
+            switch (this) {
+                case INPUT_BUS:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.input_bus");
+                case OUTPUT_BUS:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.output_bus");
+                case MUFFLER:
+                    return StatCollector.translateToLocal("gt.tooltip.hatch.muffler");
+                default:
+                    throw new AssertionError(this);
+            }
+        }
+    }
 
     public int getMaxEfficiency(ItemStack aStack) {
         return 10000;
