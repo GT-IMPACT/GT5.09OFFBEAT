@@ -2,6 +2,7 @@ package gregtech.api.metatileentity.implementations;
 
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
+import gregtech.api.gui.GT_Container_ProcessingMachine;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
@@ -95,7 +96,7 @@ public class GT_AdvancedProcessingTest {
     }
 
     @Test
-    public void crackerReadsCircuitsFromBusesAndPreservesFluidZones() throws Throwable {
+    public void crackerReadsCircuitsFromControllerAndBusesAndPreservesFluidZones() throws Throwable {
         run("crackerInputs");
     }
 
@@ -444,33 +445,58 @@ public class GT_AdvancedProcessingTest {
     }
 
     private static void crackerInputs() throws Exception {
-        try (Scenario scenario = new Scenario("OilCracker", 1)) {
-            RecipeFixture f = scenario.recipe;
-            FluidStack oil = new FluidStack(fluid("cracker_feedstock"), 100);
-            FluidStack steam = new FluidStack(fluid("steam"), 100);
-            GT_Recipe recipe = f.map.addRecipe(false, new ItemStack[] { new ItemStack(Items.stick, 0) }, null, null,
-                    null, new FluidStack[] { oil, steam }, new FluidStack[] { product(75) }, 40, 24, 0);
-            assertNotNull(recipe);
-            GT_MetaTileEntity_Hatch_Input feedstock = f.fixture.liquid(oil.copy());
-            ((TileEntity) feedstock.getBaseMetaTileEntity()).xCoord = 2;
-            GT_MetaTileEntity_Hatch_Input reagent = f.fixture.liquid(steam.copy());
-            scenario.machine.mInventory[1] = new ItemStack(Items.stick);
-            assertFalse(scenario.machine.checkRecipe(null));
-            assertEquals(100, feedstock.mFluid.amount);
-            ItemStack circuit = new ItemStack(Items.stick);
-            f.fixture.items(circuit);
-            feedstock.mFluid = steam.copy();
-            reagent.mFluid = oil.copy();
-            assertFalse(scenario.machine.checkRecipe(null));
-            assertEquals(100, feedstock.mFluid.amount);
-            assertEquals(100, reagent.mFluid.amount);
-            feedstock.mFluid = oil.copy();
-            reagent.mFluid = steam.copy();
-            scenario.machine.setProcessingModes(ProcessingLogic.SEPARATE_INPUTS);
-            assertTrue(scenario.machine.checkRecipe(null));
-            assertEquals(1, circuit.stackSize);
-            assertEquals(1, scenario.machine.mInventory[1].stackSize);
-            assertEquals(75, scenario.machine.mOutputFluids[0].amount);
+        for (boolean controller : new boolean[] { false, true }) {
+            for (boolean separated : new boolean[] { false, true }) {
+                try (Scenario scenario = new Scenario("OilCracker", 1)) {
+                    RecipeFixture f = scenario.recipe;
+                    FluidStack oil = new FluidStack(fluid("cracker_feedstock"), 100);
+                    FluidStack steam = new FluidStack(fluid("steam"), 100);
+                    GT_Recipe recipe = f.map.addRecipe(
+                            false,
+                            new ItemStack[] { new ItemStack(Items.stick, 0) },
+                            null,
+                            null,
+                            null,
+                            new FluidStack[] { oil, steam },
+                            new FluidStack[] { product(75) },
+                            40,
+                            24,
+                            0
+                    );
+                    assertNotNull(recipe);
+                    GT_MetaTileEntity_Hatch_Input feedstock = f.fixture.liquid(oil.copy());
+                    ((TileEntity) feedstock.getBaseMetaTileEntity()).xCoord = 2;
+                    GT_MetaTileEntity_Hatch_Input reagent = f.fixture.liquid(steam.copy());
+                    scenario.machine.setProcessingModes(separated ? ProcessingLogic.SEPARATE_INPUTS : 0);
+                    assertFalse(scenario.machine.checkRecipe(null));
+                    assertEquals(100, feedstock.mFluid.amount);
+                    assertEquals(100, reagent.mFluid.amount);
+
+                    ItemStack circuit = new ItemStack(Items.stick);
+                    if (controller) {
+                        GT_StructureIntegrationTest.TestPlayer player =
+                                new GT_StructureIntegrationTest.TestPlayer(f.fixture.world);
+                        GT_Container_ProcessingMachine container = (GT_Container_ProcessingMachine)
+                                scenario.machine.getServerGUI(0, player.inventory, f.fixture.tile);
+                        assertEquals(1, container.getSlotCount());
+                        container.getSlot(container.getSlotStartIndex()).putStack(circuit);
+                        assertSame(circuit, scenario.machine.mInventory[1]);
+                    } else {
+                        f.fixture.items(circuit);
+                    }
+
+                    feedstock.mFluid = steam.copy();
+                    reagent.mFluid = oil.copy();
+                    assertFalse(scenario.machine.checkRecipe(null));
+                    assertEquals(100, feedstock.mFluid.amount);
+                    assertEquals(100, reagent.mFluid.amount);
+                    feedstock.mFluid = oil.copy();
+                    reagent.mFluid = steam.copy();
+                    assertTrue(scenario.machine.checkRecipe(null));
+                    assertEquals(1, circuit.stackSize);
+                    assertEquals(75, scenario.machine.mOutputFluids[0].amount);
+                }
+            }
         }
     }
 

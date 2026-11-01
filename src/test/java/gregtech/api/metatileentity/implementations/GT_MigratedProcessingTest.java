@@ -273,7 +273,7 @@ public class GT_MigratedProcessingTest {
                     for (int index = 0; index < GT_Container_ProcessingMachine.CONTROL_COUNT; index++) {
                         assertTrue(container.getSlot(index) instanceof GT_Slot_Holo);
                     }
-                    boolean supportsController = model.equals("LargeChemicalReactor");
+                    boolean supportsController = model.equals("LargeChemicalReactor") || model.equals("OilCracker");
                     int controllerSlots = supportsController ? 1 : 0;
                     assertEquals(model, supportsController, restored.hasControllerSlotInGui());
                     assertEquals(42 + controllerSlots, container.inventorySlots.size());

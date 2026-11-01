@@ -268,6 +268,11 @@ public class GT_MetaTileEntity_OilCracker extends
     }
 
     @Override
+    protected boolean usesControllerSlotAsRecipeInput() {
+        return true;
+    }
+
+    @Override
     public int getMaxEfficiency(ItemStack aStack) {
         return 10000;
     }
