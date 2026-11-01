@@ -2,6 +2,7 @@ package gregtech.api.metatileentity.implementations;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.gui.GT_Container_ProcessingMachine;
+import gregtech.api.gui.GT_ProcessingOutputSummary;
 import gregtech.api.gui.GT_Slot_Holo;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
@@ -1000,6 +1001,43 @@ public class GT_SharedProcessingTest {
                 GregTech_API.sPostloadFinished = f.previousPostload;
             }
         }
+    }
+
+    @Test
+    public void displayedOutputsCombineIdenticalStacksWithoutChangingDelivery() throws Throwable {
+        run("outputSummary");
+    }
+
+    private static void outputSummary() {
+        ItemStack first = new ItemStack(Items.iron_ingot, Integer.MAX_VALUE);
+        ItemStack second = first.copy();
+        ItemStack tagged = new ItemStack(Items.iron_ingot, 3);
+        tagged.setTagCompound(new NBTTagCompound());
+        tagged.getTagCompound().setString("variant", "special");
+        ItemStack otherMetadata = new ItemStack(Items.iron_ingot, 2, 1);
+        List<GT_ProcessingOutputSummary.Entry<ItemStack>> items = GT_ProcessingOutputSummary.items(
+                new ItemStack[] { first, second, tagged, tagged.copy(), otherMetadata, null,
+                        new ItemStack(Items.iron_ingot, 0) });
+        assertEquals(3, items.size());
+        assertEquals(2L * Integer.MAX_VALUE, items.get(0).amount);
+        assertEquals(6, items.get(1).amount);
+        assertEquals(2, items.get(2).amount);
+        assertSame(first, items.get(0).stack);
+        assertEquals(Integer.MAX_VALUE, first.stackSize);
+        assertEquals(Integer.MAX_VALUE, second.stackSize);
+        assertEquals(3, tagged.stackSize);
+
+        FluidStack water = new FluidStack(fluid("summary_water"), Integer.MAX_VALUE);
+        FluidStack taggedWater = new FluidStack(water.getFluid(), 5);
+        taggedWater.tag = new NBTTagCompound();
+        taggedWater.tag.setString("variant", "special");
+        List<GT_ProcessingOutputSummary.Entry<FluidStack>> fluids = GT_ProcessingOutputSummary.fluids(
+                new FluidStack[] { water, water.copy(), taggedWater, taggedWater.copy(), null });
+        assertEquals(2, fluids.size());
+        assertEquals(2L * Integer.MAX_VALUE, fluids.get(0).amount);
+        assertEquals(10, fluids.get(1).amount);
+        assertEquals(Integer.MAX_VALUE, water.amount);
+        assertEquals(5, taggedWater.amount);
     }
 
     private static void optionalControllerSlot() {

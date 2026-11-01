@@ -1,6 +1,7 @@
 package gregtech.api.metatileentity.implementations;
 
 import gregtech.api.gui.GT_Container_ProcessingMachine;
+import gregtech.api.gui.GT_ProcessingOutputSummary;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_HeatExchanger;
@@ -17,6 +18,7 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 
 import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.*;
 import static org.junit.Assert.*;
@@ -127,6 +129,12 @@ public class GT_FurnaceAndExchangerProcessingTest {
             assertEquals(separate ? 4 : 8, s.machine.getCurrentOperations());
             assertEquals(separate ? 4 : 0, iron.stackSize + gold.stackSize);
             assertEquals(512, s.machine.mMaxProgresstime);
+            List<GT_ProcessingOutputSummary.Entry<ItemStack>> displayed =
+                    GT_ProcessingOutputSummary.items(s.machine.mOutputItems);
+            assertEquals(separate ? 1 : 2, displayed.size());
+            for (GT_ProcessingOutputSummary.Entry<ItemStack> entry : displayed) {
+                assertEquals(4, entry.amount);
+            }
         }
     }
 

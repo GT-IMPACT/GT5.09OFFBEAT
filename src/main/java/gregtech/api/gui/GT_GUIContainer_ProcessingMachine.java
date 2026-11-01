@@ -22,8 +22,6 @@ import org.lwjgl.opengl.GL11;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -209,17 +207,11 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         }
         // Progress and outputs arrive separately; an old output snapshot must not be shown while idle.
         if (container.mMaxProgressTime > 0) {
-            List<ItemStack> items = new ArrayList<>(Arrays.asList(container.outputItems));
-            items.removeIf(item -> item == null || item.stackSize <= 0);
-            items.sort(Comparator.comparingInt((ItemStack item) -> item.stackSize).reversed());
-            for (ItemStack item : items) {
-                lines.add(outputLine(item.getDisplayName(), item.stackSize, false));
+            for (GT_ProcessingOutputSummary.Entry<ItemStack> item : GT_ProcessingOutputSummary.items(container.outputItems)) {
+                lines.add(outputLine(item.stack.getDisplayName(), item.amount, false));
             }
-            List<FluidStack> fluids = new ArrayList<>(Arrays.asList(container.outputFluids));
-            fluids.removeIf(fluid -> fluid == null || fluid.amount <= 0);
-            fluids.sort(Comparator.comparingInt((FluidStack fluid) -> fluid.amount).reversed());
-            for (FluidStack fluid : fluids) {
-                lines.add(outputLine(fluid.getLocalizedName(), fluid.amount, true));
+            for (GT_ProcessingOutputSummary.Entry<FluidStack> fluid : GT_ProcessingOutputSummary.fluids(container.outputFluids)) {
+                lines.add(outputLine(fluid.stack.getLocalizedName(), fluid.amount, true));
             }
         }
         List<ScreenLine> wrapped = new ArrayList<>();
