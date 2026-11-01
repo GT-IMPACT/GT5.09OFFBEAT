@@ -1,45 +1,45 @@
 package gregtech.common.tileentities.machines.multi;
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
-import static space.impact.structures.structure.StructureUtility.transpose;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.Map;
-
-import gregtech.GT_Mod;
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_Container_MultiMachine;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.logic.ProcessingInputs;
+import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
-import gregtech.common.gui.GT_GUIContainer_FusionReactor;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
 import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
 
+import static gregtech.api.enums.Textures.BlockIcons.*;
+import static space.impact.structures.structure.StructureUtility.transpose;
+
 public abstract class GT_MetaTileEntity_FusionComputer
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_FusionComputer>
+        extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_FusionComputer>
         implements ISurvivalConstructable {
 
     private static final String STRUCTURE_PIECE = "main";
@@ -52,6 +52,8 @@ public abstract class GT_MetaTileEntity_FusionComputer
 
     public GT_Recipe mLastRecipe;
     public int mEUStore;
+    private boolean continuingReaction;
+    private long startupEnergy;
 
     public GT_MetaTileEntity_FusionComputer(int aID, String aName, String aNameRegional, int tier) {
         super(aID, aName, aNameRegional);
@@ -63,19 +65,106 @@ public abstract class GT_MetaTileEntity_FusionComputer
         enabledMaintenance = false;
     }
 
+    @Override
+    public GT_Recipe.GT_Recipe_Map getRecipeMap() {
+        return GT_Recipe.GT_Recipe_Map.sFusionRecipes;
+    }
+
+    @Override
+    public int getSupportedProcessingModes() {
+        return ProcessingLogic.BATCH | ProcessingLogic.PROTECT_FLUIDS | ProcessingLogic.LOCK_RECIPE;
+    }
+
+    @Override
+    protected ProcessingLogic createProcessingLogic() {
+        return new ProcessingLogic()
+                .setRecipeMapSupplier(this::getRecipeMap)
+                .setRecipeValidator(this::validateFusionRecipe)
+                .setCalculatorFactory(recipe -> {
+                    int multiplier = overclock(recipe.mSpecialValue, recipe.mDuration, recipe.mEUt);
+                    return new OverclockCalculator().setMaxOverclocks(0)
+                            .setEUtModifier(multiplier).setDurationModifier(1.0 / multiplier);
+                });
+    }
+
+    private CheckRecipeResult validateFusionRecipe(GT_Recipe recipe) {
+        if (recipe.mSpecialValue < 0 || recipe.mSpecialValue > maxEUStore()) {
+            return CheckRecipeResult.INSUFFICIENT_STARTUP_CAPACITY;
+        }
+        int multiplier = overclock(recipe.mSpecialValue, recipe.mDuration, recipe.mEUt);
+        if (multiplier == 0) {
+            return CheckRecipeResult.INSUFFICIENT_POWER;
+        }
+        long startup = Math.max(0, recipe.mSpecialValue - (long) recipe.mEUt * multiplier);
+        if (!continuingReaction && getBaseMetaTileEntity().getStoredEU() < startup) {
+            return CheckRecipeResult.INSUFFICIENT_STARTUP_ENERGY;
+        }
+        startupEnergy = continuingReaction ? 0 : startup;
+        return CheckRecipeResult.SUCCESS;
+    }
+
+    @Override
+    protected List<ProcessingInputs> collectProcessingInputs() {
+        List<ProcessingInputs> guarded = new ArrayList<>();
+        for (ProcessingInputs inputs : super.collectProcessingInputs()) {
+            guarded.add(inputs.withCommitGuard(() -> getBaseMetaTileEntity().getStoredEU() >= startupEnergy));
+        }
+        return guarded;
+    }
+
+    @Override
+    protected void startCycle(ProcessingLogic.Result result, int efficiency) {
+        if (!continuingReaction) {
+            long startup = Math.max(0, result.recipe.mSpecialValue - result.eut);
+            getBaseMetaTileEntity().decreaseStoredEnergyUnits(startup, false);
+        }
+        super.startCycle(result, 10000);
+        mLastRecipe = result.recipe;
+        mEUStore = (int) getBaseMetaTileEntity().getStoredEU();
+        mRunningOnLoad = false;
+        turnCasingActive(true);
+    }
+
+    @Override
+    protected void completeRecipe() {
+        continuingReaction = true;
+        try {
+            super.completeRecipe();
+        } finally {
+            continuingReaction = false;
+            turnCasingActive(mMaxProgresstime > 0 && !isWaitingForOutput());
+        }
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound tag) {
+        super.loadNBTData(tag);
+        if (!tag.hasKey("processing")) {
+            lEUt = -Math.abs((long) tag.getInteger("mEUt"));
+            mEUt = (int) lEUt;
+        }
+        continuingReaction = false;
+        mLastRecipe = null;
+    }
+
     public abstract int tier();
+
+    @Override
+    public long getProcessingEnergyCapacity() {
+        return maxEUStore();
+    }
+
+    @Override
+    public long getProcessingStoredEnergy() {
+        return getBaseMetaTileEntity().getStoredEU();
+    }
 
     @Override
     public abstract long maxEUStore();
 
     @Override
-    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_Container_MultiMachine(aPlayerInventory, aBaseMetaTileEntity);
-    }
-
-    @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_FusionReactor(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "FusionComputer.png", GT_Recipe.GT_Recipe_Map.sFusionRecipes.mNEIName);
+    public Object getClientGUI(int id, InventoryPlayer inventory, IGregTechTileEntity base) {
+        return new GT_GUIContainer_ProcessingMachine(inventory, base, getLocalName(), "FusionComputer.png");
     }
 
     public abstract MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity);
@@ -363,61 +452,6 @@ public abstract class GT_MetaTileEntity_FusionComputer
         return multiplier;
     }
 
-    @Override
-    public boolean checkRecipe(ItemStack aStack) {
-        ArrayList<FluidStack> tFluidList = getStoredFluids();
-        int tFluidList_sS = tFluidList.size();
-        for (int i = 0; i < tFluidList_sS - 1; i++) {
-            for (int j = i + 1; j < tFluidList_sS; j++) {
-                if (GT_Utility.areFluidsEqual(tFluidList.get(i), tFluidList.get(j))) {
-                    if ((tFluidList.get(i)).amount >= (tFluidList.get(j)).amount) {
-                        tFluidList.remove(j--);
-                        tFluidList_sS = tFluidList.size();
-                    } else {
-                        tFluidList.remove(i--);
-                        tFluidList_sS = tFluidList.size();
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (tFluidList.size() > 1) {
-            FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
-            GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFusionRecipes.findRecipe(this.getBaseMetaTileEntity(), this.mLastRecipe, false, GT_Values.V[15], tFluids);
-
-            if (tRecipe == null || maxEUStore() < tRecipe.mSpecialValue) {
-                turnCasingActive(false);
-                this.mLastRecipe = null;
-                return false;
-            }
-            int overclock = overclock(tRecipe.mSpecialValue, tRecipe.mDuration, tRecipe.mEUt);
-            if (overclock == 0) {
-                turnCasingActive(false);
-                this.mLastRecipe = null;
-                return false;
-            }
-            if (mRunningOnLoad || tRecipe.isRecipeInputEqual(true, tFluids)) {
-                updateSlots();
-                this.mLastRecipe = tRecipe;
-                this.mEUt = this.mLastRecipe.mEUt * overclock;
-                this.mMaxProgresstime = this.mLastRecipe.mDuration / overclock;
-                this.mEfficiencyIncrease = 10000;
-                this.mOutputFluids = this.mLastRecipe.mFluidOutputs;
-                turnCasingActive(true);
-                mRunningOnLoad = false;
-                mWrench = true;
-                mScrewdriver = true;
-                mSoftHammer = true;
-                mHardHammer = true;
-                mSolderingTool = true;
-                mCrowbar = true;
-                return true;
-            }
-        }
-        return false;
-    }
-
     public abstract int tierOverclock();
 
     protected long getEnergyInputPerHatch() {
@@ -444,109 +478,59 @@ public abstract class GT_MetaTileEntity_FusionComputer
     }
 
     @Override
-    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        if (aBaseMetaTileEntity.isServerSide()) {
-            if (mEfficiency < 0)
-                mEfficiency = 0;
+    public void onPostTick(IGregTechTileEntity base, long tick) {
+        if (base.isServerSide()) {
             if (mRunningOnLoad) {
-                setupMachine(aBaseMetaTileEntity, mInventory[1]);
-                if (mMachine) {
-                    this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
-                    checkRecipe(mInventory[1]);
-                }
+                setupMachine(base, mInventory[1]);
+                mRunningOnLoad = false;
             }
-            if (--mUpdate == 0 || --mStartUpCheck == 0) {
-                setupMachine(aBaseMetaTileEntity, mInventory[1]);
+            if (mMachine && mStartUpCheck < 0) {
+                chargeReactorBuffer(base);
             }
-            if (mStartUpCheck < 0) {
-                if (mMachine) {
-                    if (this.mEnergyHatches != null) {
-                        long energyInput = getEnergyInputPerHatch();
-                        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches)
-                            if (isValidMetaTileEntity(tHatch)) {
-                                if (aBaseMetaTileEntity.getStoredEU() + energyInput <= maxEUStore()
-                                        && tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(energyInput, false)) {
-                                    aBaseMetaTileEntity.increaseStoredEnergyUnits(energyInput, true);
-                                }
-                            }
-                    }
-                    if (getRepairStatus() > 0) {
-                        if (mMaxProgresstime > 0) {
-                            if (aBaseMetaTileEntity.getStoredEU() < mEUt
-                                    || !aBaseMetaTileEntity.decreaseStoredEnergyUnits(mEUt, false)) {
-                                stopMachine();
-                            }
-                            if (mMaxProgresstime > 0 && ++mProgresstime >= mMaxProgresstime) {
-                                if (mOutputItems != null)
-                                    for (ItemStack tStack : mOutputItems) if (tStack != null) addOutput(tStack);
-                                if (mOutputFluids != null)
-                                    for (FluidStack tStack : mOutputFluids) if (tStack != null) addOutput(tStack);
-                                mEfficiency = Math.max(0, Math.min(mEfficiency + mEfficiencyIncrease, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
-                                mOutputItems = null;
-                                mProgresstime = 0;
-                                mMaxProgresstime = 0;
-                                mEfficiencyIncrease = 0;
-                                if (mOutputFluids != null && mOutputFluids.length > 0) {
-                                    try {
-                                        GT_Mod.achievements.issueAchivementHatchFluid(aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), mOutputFluids[0]);
-                                    } catch (Exception e) {
-                                    }
-                                }
-                                this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
-                                if (aBaseMetaTileEntity.isAllowedToWork())
-                                    checkRecipe(mInventory[1]);
-                            }
-                        } else {
-                            if (aTick % 100 == 0 || aBaseMetaTileEntity.hasWorkJustBeenEnabled() || aBaseMetaTileEntity.hasInventoryBeenModified()) {
-                                turnCasingActive(mMaxProgresstime > 0);
-                                if (aBaseMetaTileEntity.isAllowedToWork()) {
-                                    this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
-                                    if (checkRecipe(mInventory[1])) {
-                                        if (this.mEUStore < this.mLastRecipe.mSpecialValue - this.mEUt) {
-                                            mMaxProgresstime = 0;
-                                            turnCasingActive(false);
-                                        }
-                                        aBaseMetaTileEntity.decreaseStoredEnergyUnits(this.mLastRecipe.mSpecialValue - this.mEUt, true);
-                                    }
-                                }
-                                if (mMaxProgresstime <= 0)
-                                    mEfficiency = Math.max(0, mEfficiency - 1000);
-                            }
-                        }
-                    } else {
-                        this.mLastRecipe = null;
-                        stopMachine();
-                    }
-                } else {
-                    turnCasingActive(false);
-                    this.mLastRecipe = null;
-                    stopMachine();
-                }
-            }
-            aBaseMetaTileEntity.setErrorDisplayID((aBaseMetaTileEntity.getErrorDisplayID() & ~127) | (mWrench ? 0 : 1) | (mScrewdriver ? 0 : 2) | (mSoftHammer ? 0 : 4) | (mHardHammer ? 0 : 8)
-                    | (mSolderingTool ? 0 : 16) | (mCrowbar ? 0 : 32) | (mMachine ? 0 : 64));
-            this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
-            aBaseMetaTileEntity.setActive(mMaxProgresstime > 0);
+        }
+        super.onPostTick(base, tick);
+        if (base.isServerSide()) {
+            mEUStore = (int) base.getStoredEU();
+            turnCasingActive(mMaxProgresstime > 0 && !isWaitingForOutput());
         }
     }
 
     @Override
-    public boolean onRunningTick(ItemStack aStack) {
-        if (mEUt < 0) {
-            if (!drainEnergyInput(((long) -mEUt * 10000) / Math.max(1000, mEfficiency))) {
-                this.mLastRecipe = null;
-                stopMachine();
-                return false;
-            }
+    public boolean onRunningTick(ItemStack stack) {
+        if (isWaitingForOutput()) {
+            return true;
         }
-        if (this.mEUStore <= 0) {
-            this.mLastRecipe = null;
-            stopMachine();
-            return false;
+        long required = -lEUt;
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        if (required >= 0 && base.getStoredEU() >= required
+                && base.decreaseStoredEnergyUnits(required, false)) {
+            return true;
         }
-        return true;
+        stopProcessing(CheckRecipeResult.INSUFFICIENT_POWER);
+        return false;
     }
 
+    @Override
+    public void stopMachine() {
+        if (!isWaitingForOutput()) {
+            mLastRecipe = null;
+            mOutputFluids = null;
+        }
+        super.stopMachine();
+        turnCasingActive(false);
+    }
+
+    private void chargeReactorBuffer(IGregTechTileEntity base) {
+        long input = getEnergyInputPerHatch();
+        for (GT_MetaTileEntity_Hatch_Energy hatch : mEnergyHatches) {
+            if (isValidMetaTileEntity(hatch) && base.getStoredEU() <= maxEUStore() - input
+                    && hatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(input, false)) {
+                base.increaseStoredEnergyUnits(input, true);
+            }
+        }
+    }
+
+    @Override
     public boolean drainEnergyInput(long aEU) {
         return false;
     }
@@ -604,7 +588,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
 
         return new String[]{
                 EnumChatFormatting.BLUE + "Fusion Reactor MK " + EnumChatFormatting.RESET + tier,
-                StatCollector.translateToLocal("GT5U.fusion.req") + ": " + EnumChatFormatting.RED + mEUt + EnumChatFormatting.RESET + " EU/t",
+                StatCollector.translateToLocal("GT5U.fusion.req") + ": " + EnumChatFormatting.RED + (-lEUt) + EnumChatFormatting.RESET + " EU/t",
                 StatCollector.translateToLocal("GT5U.multiblock.energy") + ": " + EnumChatFormatting.GREEN + mEUStore + EnumChatFormatting.RESET + " EU / " + EnumChatFormatting.YELLOW + maxEUStore() + EnumChatFormatting.RESET + " EU",
                 StatCollector.translateToLocal("GT5U.fusion.plasma") + ": " + EnumChatFormatting.YELLOW + plasmaOut + EnumChatFormatting.RESET + " L/t"};
     }

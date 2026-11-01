@@ -203,6 +203,15 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return getProcessingLogic().getAvailableParallel();
     }
 
+    /** Zero capacity hides the optional internal energy buffer readout. */
+    public long getProcessingEnergyCapacity() {
+        return 0;
+    }
+
+    public long getProcessingStoredEnergy() {
+        return 0;
+    }
+
     public int getCurrentParallel() {
         return currentParallel;
     }
@@ -553,6 +562,11 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         currentParallel = 0;
         currentOperations = 0;
         super.stopMachine();
+    }
+
+    protected void stopProcessing(CheckRecipeResult reason) {
+        stopMachine();
+        processingResult = reason;
     }
 
     @Override

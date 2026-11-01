@@ -65,6 +65,8 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
     public int activeRecipeMapIndex;
     public boolean allowedToWork;
     public long eut;
+    public long storedEnergy;
+    public long energyCapacity;
     public CheckRecipeResult result = CheckRecipeResult.NONE;
     public ItemStack[] outputItems = new ItemStack[0];
     public FluidStack[] outputFluids = new FluidStack[0];
@@ -314,6 +316,12 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
 
     private NBTTagCompound outputSnapshot() {
         NBTTagCompound outputs = new NBTTagCompound();
+        storedEnergy = machine().getProcessingStoredEnergy();
+        energyCapacity = machine().getProcessingEnergyCapacity();
+        if (energyCapacity > 0) {
+            outputs.setLong("storedEnergy", storedEnergy);
+            outputs.setLong("energyCapacity", energyCapacity);
+        }
         ProcessingPersistence.writeItems(outputs, "items", machine().mOutputItems);
         ProcessingPersistence.writeFluids(outputs, "fluids", machine().mOutputFluids);
         return outputs;
@@ -327,6 +335,8 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
 
     public void receiveOutputs(NBTTagCompound outputs) {
         if (mTileEntity.isClientSide()) {
+            storedEnergy = outputs.getLong("storedEnergy");
+            energyCapacity = outputs.getLong("energyCapacity");
             outputItems = ProcessingPersistence.readItems(outputs, "items");
             outputFluids = ProcessingPersistence.readFluids(outputs, "fluids");
             receivedOutputs = true;

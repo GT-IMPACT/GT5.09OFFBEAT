@@ -1294,3 +1294,8 @@ gt.processing.result.low_gravity_required=Требуется низкая гра
 
 gt.processing.generation=Мощность до учёта КПД: %s EU/t
 gt.processing.nei=Открыть рецепты в NEI
+
+gt.processing.result.insufficient_startup_capacity=Недостаточная ёмкость энергохранилища
+gt.processing.result.insufficient_startup_energy=Недостаточно энергии для запуска
+gt.processing.stored_energy=Энергия: %s EU
+gt.processing.energy_capacity=Ёмкость: %s EU

@@ -197,6 +197,12 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         if (container.mMaxProgressTime > 0) {
             lines.add(new ScreenLine(currentProgress(container)));
         }
+        if (container.energyCapacity > 0) {
+            lines.add(new ScreenLine(StatCollector.translateToLocalFormatted("gt.processing.stored_energy",
+                    GT_Utility.formatNumbers(container.storedEnergy))));
+            lines.add(new ScreenLine(StatCollector.translateToLocalFormatted("gt.processing.energy_capacity",
+                    GT_Utility.formatNumbers(container.energyCapacity))));
+        }
         if (container.eut > 0) {
             lines.add(new ScreenLine(EnumChatFormatting.GREEN
                     + StatCollector.translateToLocalFormatted("gt.processing.generation", container.eut)));
@@ -231,6 +237,8 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         case NO_RECIPE:
         case INSUFFICIENT_VOLTAGE:
         case INSUFFICIENT_POWER:
+        case INSUFFICIENT_STARTUP_CAPACITY:
+        case INSUFFICIENT_STARTUP_ENERGY:
         case ITEM_OUTPUT_FULL:
         case FLUID_OUTPUT_FULL:
         case INPUT_CHANGED:

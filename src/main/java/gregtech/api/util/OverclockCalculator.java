@@ -14,6 +14,16 @@ public final class OverclockCalculator {
     private int machineHeat;
     private boolean heatDiscount;
     private boolean heatOC;
+    private int maxOverclocks = Integer.MAX_VALUE;
+
+    /** Allows machines with their own bounded overclock policy to disable further steps. */
+    public OverclockCalculator setMaxOverclocks(int limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("Negative overclock limit");
+        }
+        maxOverclocks = limit;
+        return this;
+    }
 
     public OverclockCalculator setOverclock(double timeReduction, double powerIncrease) {
         if (!Double.isFinite(timeReduction) || !Double.isFinite(powerIncrease) || timeReduction <= 1
@@ -64,7 +74,7 @@ public final class OverclockCalculator {
                 ? (int) Math.min(Integer.MAX_VALUE, Math.max(0L, (long) machineHeat - recipeHeat) / 1800)
                 : 0;
         int clocks = 0;
-        while (controlPower <= availablePower / powerIncrease) {
+        while (clocks < maxOverclocks && controlPower <= availablePower / powerIncrease) {
             controlPower *= powerIncrease;
             energy *= powerIncrease;
             ticks /= clocks++ < heatClocks ? 4 : timeReduction;

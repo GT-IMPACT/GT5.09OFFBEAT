@@ -37,17 +37,26 @@ public final class ProcessingInputs {
     }
 
     private ProcessingInputs(ProcessingInputs source) {
+        this(source, source.sourceUnchanged);
+    }
+
+    private ProcessingInputs(ProcessingInputs source, BooleanSupplier sourceUnchanged) {
         originals = source.originals;
         originalFluids = source.originalFluids;
         beforeItems = source.beforeItems;
         beforeFluids = source.beforeFluids;
-        sourceUnchanged = source.sourceUnchanged;
+        this.sourceUnchanged = sourceUnchanged;
         items = copyItems(source.items);
         fluids = copyFluids(source.fluids);
     }
 
     public ProcessingInputs copy() {
         return new ProcessingInputs(this);
+    }
+
+    /** Recheck a machine resource immediately before committing any inventory changes. */
+    public ProcessingInputs withCommitGuard(BooleanSupplier guard) {
+        return new ProcessingInputs(this, () -> sourceUnchanged.getAsBoolean() && guard.getAsBoolean());
     }
 
     private static <T> List<T> unique(Collection<T> values) {

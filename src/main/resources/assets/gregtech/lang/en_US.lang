@@ -1595,3 +1595,8 @@ gt.processing.result.low_gravity_required=Low gravity required
 
 gt.processing.generation=Output before efficiency: %s EU/t
 gt.processing.nei=Open recipes in NEI
+
+gt.processing.result.insufficient_startup_capacity=Insufficient energy storage capacity
+gt.processing.result.insufficient_startup_energy=Not enough energy to start
+gt.processing.stored_energy=Stored: %s EU
+gt.processing.energy_capacity=Capacity: %s EU

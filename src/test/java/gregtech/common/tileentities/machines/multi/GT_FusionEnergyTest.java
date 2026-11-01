@@ -7,15 +7,13 @@ import com.google.gson.JsonParser;
 import cpw.mods.fml.relauncher.FMLRelaunchLog;
 import cpw.mods.fml.relauncher.Side;
 import gregtech.api.GregTech_API;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.GameRuntime;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
 import net.minecraft.init.Bootstrap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -26,31 +24,20 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
 public class GT_FusionEnergyTest {
     @Test
-    public void fusionEnergyTransferAndStarvation() throws Exception {
-        ClassLoader previous = Thread.currentThread().getContextClassLoader();
-        LaunchClassLoader previousLaunch = Launch.classLoader;
-        java.util.Map<String, Object> previousBlackboard = Launch.blackboard;
-        try (LaunchClassLoader loader = new LaunchClassLoader(((URLClassLoader) getClass().getClassLoader()).getURLs())) {
-            Launch.classLoader = loader;
-            Launch.blackboard = new HashMap<>();
-            Thread.currentThread().setContextClassLoader(loader);
-            loader.loadClass("cpw.mods.fml.common.Loader").getMethod("injectData", Object[].class)
-                .invoke(null, (Object) new Object[]{"7", "99", "40", "1614", "1.7.10", "9.05",
-                    new File("."), new ArrayList<String>()});
-            loader.loadClass(getClass().getName()).getMethod("runChecks").invoke(null);
-        } finally {
-            Thread.currentThread().setContextClassLoader(previous);
-            Launch.classLoader = previousLaunch;
-            Launch.blackboard = previousBlackboard;
+    public void fusionEnergyTransferAndStarvation() throws Throwable {
+        try (GameRuntime runtime = new GameRuntime()) {
+            runtime.run(getClass(), "all", "");
         }
+    }
+
+    public static void runScenario(String scenario, String model) throws Exception {
+        runChecks();
     }
 
     public static void runChecks() throws Exception {
@@ -88,7 +75,8 @@ public class GT_FusionEnergyTest {
         GT_MetaTileEntity_FusionComputer reactor = reactors[4];
         EnergyTile tile = prepare(reactor, 16, 1000000);
         reactor.mMaxProgresstime = 20;
-        reactor.mEUt = 786432;
+        reactor.mEUt = -786432;
+        reactor.lEUt = -786432;
         reactor.mEUStore = 0; // A stale snapshot must not stop a powered reactor.
         reactor.onPostTick(tile.entity, 1);
         assertEquals(1000000 + 16 * 131072 - 786432, tile.energy);
@@ -170,7 +158,7 @@ public class GT_FusionEnergyTest {
 
     private static void checkRecipeInputs() {
         TestFusionComputer reactor = new TestFusionComputer();
-        prepare(reactor, 1, 0);
+        EnergyTile tile = prepare(reactor, 1, 40000000);
         Fluid first = new Fluid("fusion_test_first");
         Fluid second = new Fluid("fusion_test_second");
         Fluid output = new Fluid("fusion_test_output");
@@ -191,7 +179,8 @@ public class GT_FusionEnergyTest {
         recipe.mEUt = 32768;
         reactor.mLastRecipe = recipe;
         assertTrue(reactor.checkRecipe(null));
-        assertEquals(32768, reactor.mEUt);
+        assertEquals(-32768, reactor.mEUt);
+        assertEquals(32768, tile.energy);
         assertEquals(32, reactor.mMaxProgresstime);
         assertEquals(16, reactor.fluids.get(0).amount);
         assertEquals(32, reactor.fluids.get(1).amount);
@@ -238,6 +227,7 @@ public class GT_FusionEnergyTest {
                         case "getMetaTileEntity": return machine;
                         case "isServerSide": return true;
                         case "getStoredEU": return energy;
+                        case "getInputVoltage": return machine.maxEUInput();
                         case "increaseStoredEnergyUnits": energy += (Long) args[0]; return true;
                         case "decreaseStoredEnergyUnits":
                             long amount = (Long) args[0];
