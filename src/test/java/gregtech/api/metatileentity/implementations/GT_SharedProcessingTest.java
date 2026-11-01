@@ -980,8 +980,8 @@ public class GT_SharedProcessingTest {
                 assertEquals(controllerIndex, container.getShiftClickStartIndex());
                 Slot controller = container.getSlot(controllerIndex);
                 assertFalse(controller instanceof GT_Slot_Holo);
-                assertEquals(241, controller.xDisplayPosition);
-                assertEquals(214, controller.yDisplayPosition);
+                assertEquals(231, controller.xDisplayPosition);
+                assertEquals(210, controller.yDisplayPosition);
                 scenario.machine.mInventory[1] = new ItemStack(Items.stick, 5);
                 assertEquals(5, container.transferStackInSlot(player, controllerIndex).stackSize);
                 assertNull(scenario.machine.mInventory[1]);

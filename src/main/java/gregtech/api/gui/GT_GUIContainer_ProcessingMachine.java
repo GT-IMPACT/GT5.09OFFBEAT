@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static gregtech.api.gui.GT_Container_ProcessingMachine.CONTROL_COUNT;
+import static gregtech.api.gui.GT_Container_ProcessingMachine.CONTROLLER_FRAME_SIZE;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.POWER_SLOT;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.RECIPE_MAP_SLOT;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.GUI_WIDTH;
@@ -39,6 +40,8 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
             176, 166, 4);
     private static final UITexture SCREEN = AdaptableUITexture.of("gregtech", "gui/picture/screen_black", 16, 16, 2);
     private static final UITexture ITEM_SLOT = texture("slot/item_standard");
+    private static final UITexture CONTROLLER_SLOT = AdaptableUITexture.of("gregtech", "gui/slot/item_standard",
+            18, 18, 1);
     private static final UITexture BUTTON = AdaptableUITexture.of("gregtech", "gui/button/standard", 18, 18, 1);
     private static final UITexture BUTTON_PRESSED = AdaptableUITexture.of("gregtech", "gui/button/standard_pressed", 18,
             18, 1);
@@ -269,7 +272,13 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         for (int index = 0; index < container.inventorySlots.size(); index++) {
             if (index >= controls) {
                 Slot slot = container.getSlot(index);
-                ITEM_SLOT.draw(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 18, 18);
+                if (index == controls && container.getSlotCount() > 0) {
+                    int padding = (CONTROLLER_FRAME_SIZE - 16) / 2;
+                    CONTROLLER_SLOT.draw(guiLeft + slot.xDisplayPosition - padding,
+                            guiTop + slot.yDisplayPosition - padding, CONTROLLER_FRAME_SIZE, CONTROLLER_FRAME_SIZE);
+                } else {
+                    ITEM_SLOT.draw(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 18, 18);
+                }
             }
         }
         for (int index = 0; index < controls; index++) {

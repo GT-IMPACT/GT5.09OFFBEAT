@@ -50,8 +50,10 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
     private static final int CONTROL_BANK_WIDTH = 36;
     private static final int LEFT_CONTROL_X = GUI_BORDER
             + (PLAYER_INVENTORY_X - 1 - GUI_BORDER - CONTROL_BANK_WIDTH) / 2 + 1;
-    public static final int CONTROLLER_X = GUI_WIDTH - LEFT_CONTROL_X - 16;
-    public static final int CONTROLLER_Y = PLAYER_INVENTORY_Y + 58;
+    private static final int RIGHT_CONTROL_X = GUI_WIDTH - LEFT_CONTROL_X - 16;
+    public static final int CONTROLLER_FRAME_SIZE = 26;
+    public static final int CONTROLLER_X = (PLAYER_INVENTORY_X - 1 + 162 + GUI_WIDTH - GUI_BORDER - 16) / 2;
+    public static final int CONTROLLER_Y = PLAYER_INVENTORY_Y + 58 + 17 - (CONTROLLER_FRAME_SIZE + 16) / 2;
     private static final int[] VOIDING_PROTECTION = { PROTECT_ITEMS | PROTECT_FLUIDS, PROTECT_FLUIDS, PROTECT_ITEMS,
             0 };
 
@@ -109,9 +111,9 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
     private int controlX(int slot) {
         switch (slot) {
         case VOIDING_SLOT:
-            return CONTROLLER_X - (isControlVisible(SEPARATION_SLOT) ? 18 : 9);
+            return RIGHT_CONTROL_X - (isControlVisible(SEPARATION_SLOT) ? 18 : 9);
         case SEPARATION_SLOT:
-            return CONTROLLER_X;
+            return RIGHT_CONTROL_X;
         case BATCH_SLOT:
         case RECIPE_MAP_SLOT:
             return LEFT_CONTROL_X + 18;
