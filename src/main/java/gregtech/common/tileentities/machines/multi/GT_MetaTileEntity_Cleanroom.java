@@ -3,7 +3,9 @@ package gregtech.common.tileentities.machines.multi;
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.HatchElement;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.logic.TimedProcessingLogic;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -44,7 +46,7 @@ import static space.impact.structures.structure.StructureUtility.onElementPass;
 import static space.impact.structures.structure.StructureUtility.transpose;
 
 public class GT_MetaTileEntity_Cleanroom
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_Cleanroom>
+        extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_Cleanroom>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "room";
     private static final HintColor HATCH_HINT = HintColor.BLUE;
@@ -95,16 +97,30 @@ public class GT_MetaTileEntity_Cleanroom
                 .toolTipFinisher();
     }
 
-	@Override
-	public boolean checkRecipe(ItemStack aStack) {
-    	int tierHatch = 0;
-    	for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) tierHatch = tHatch.mTier;
-    	for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : mEnergyHatchesMulti) tierHatch = tHatch.mTier;
-		mEfficiencyIncrease = 100 * tierHatch;
-		mMaxProgresstime = 100;
-		mEUt = -4;
-		return true;
-	}
+    @Override
+    protected ProcessingLogic createProcessingLogic() {
+        return new TimedProcessingLogic(4, () -> 100);
+    }
+
+    @Override
+    public int getSupportedProcessingModes() {
+        return 0;
+    }
+
+    @Override
+    protected void startCycle(ProcessingLogic.Result result, int efficiency) {
+        int cleanliness = mEfficiency;
+        super.startCycle(result, efficiency);
+        mEfficiency = cleanliness;
+        int tier = 0;
+        for (GT_MetaTileEntity_Hatch_Energy hatch : mEnergyHatches) {
+            tier = hatch.mTier;
+        }
+        for (GT_MetaTileEntity_Hatch_EnergyMulti hatch : mEnergyHatchesMulti) {
+            tier = hatch.mTier;
+        }
+        mEfficiencyIncrease = 100 * tier;
+    }
 
     @Override
     public boolean checkMachine(IGregTechTileEntity base, ItemStack stack) {
@@ -442,7 +458,7 @@ public class GT_MetaTileEntity_Cleanroom
 
 	@Override
 	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-		return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, this.getLocalName(), "MultiblockDisplay.png");
+		return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "MultiblockDisplay.png");
 	}
 
 	@Override

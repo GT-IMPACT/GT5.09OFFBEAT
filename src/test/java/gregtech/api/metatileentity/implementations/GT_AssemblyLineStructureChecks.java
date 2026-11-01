@@ -290,6 +290,7 @@ final class GT_AssemblyLineStructureChecks {
         assertEquals(-8, f.machine.mEUt);
         assertEquals(40, f.machine.mMaxProgresstime);
         assertSame(Items.emerald, f.machine.mOutputItems[0].getItem());
+        f.machine.stopMachine();
         NBTTagCompound tooLong = recipe();
         tooLong.setTag("14", new ItemStack(Items.apple).writeToNBT(new NBTTagCompound()));
         f.machine.mInventory[1] = stick(tooLong);
@@ -369,7 +370,7 @@ final class GT_AssemblyLineStructureChecks {
     }
 
     private static final class Line {
-        final TestWorld world = new TestWorld();
+        final TestWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
         final TestPlayer player = new TestPlayer(world);
         final GT_MetaTileEntity_AssemblyLine machine = new GT_MetaTileEntity_AssemblyLine("multimachine.assemblyline");
         final ForgeDirection facing;

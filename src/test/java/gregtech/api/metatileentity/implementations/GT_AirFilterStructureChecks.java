@@ -288,7 +288,7 @@ final class GT_AirFilterStructureChecks {
     }
 
     private static final class Filter {
-        final TestWorld world = new TestWorld();
+        final TestWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
         final TestPlayer player = new TestPlayer(world);
         final GT_MetaTileEntity_AirFilter machine = new GT_MetaTileEntity_AirFilter("multimachine.airfilter");
         final List<int[]> bottom = new ArrayList<>();

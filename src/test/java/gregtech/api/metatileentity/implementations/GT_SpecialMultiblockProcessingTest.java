@@ -252,6 +252,12 @@ public class GT_SpecialMultiblockProcessingTest {
                         net.minecraft.world.chunk.Chunk chunk = f.world.getChunkFromChunkCoords(x, z);
                         GT_Pollution.addPollution(chunk, 10000 - GT_Pollution.getPollution(chunk));
                     }
+                    if (tier == 0 && !polluted) {
+                        assertFalse("An 8 EU/t supply cannot run the 32 EU/t idle cycle", machine.checkRecipe(null));
+                        assertEquals(2, filter.stackSize);
+                        assertEquals(10000, GT_Pollution.getPollution(f.world.getChunkFromChunkCoords(0, 0)));
+                        continue;
+                    }
                     assertTrue(machine.checkRecipe(null));
                     assertEquals(200, machine.mMaxProgresstime);
                     assertEquals(polluted ? tier == 0 ? -1 : -(int) (GT_Values.V[tier] * 3 / 4) : -32, machine.mEUt);
@@ -260,7 +266,7 @@ public class GT_SpecialMultiblockProcessingTest {
                         assertEquals(10000 - reduction, GT_Pollution.getPollution(f.world.getChunkFromChunkCoords(x, z)));
                     assertEquals(polluted && consumable ? 1 : 2, filter.stackSize);
                     if (polluted && consumable) assertSame(Items.book, machine.mOutputItems[0].getItem());
-                    else assertNull(machine.mOutputItems);
+                    else assertEquals(0, machine.mOutputItems.length);
                 }
         } finally { GT_Mod.gregtechproxy.mPollution = previousPollution; }
     }
@@ -298,16 +304,10 @@ public class GT_SpecialMultiblockProcessingTest {
 
     private static void assemblyLine(String ignored) throws Exception {
         ItemList.Tool_DataStick.set(new ItemStack(Items.paper));
-        int[] lowEnergy = {8, 8, 32, 128, 512, 2048, 8192, 32768, 131072, 524288,
-                2097152, 8388608, 33554432, 134217728, 536870912, -2147483648};
-        int[] highEnergy = {24, 24, 96, 384, 1536, 6144, 24576, 98304, 393216, 1572864,
-                6291456, 25165824, 100663296, 402653184, 1610612736, 1610612736};
         for (int tier = 0; tier < GT_Values.V.length; tier++) for (int amps : new int[]{0, 1, 4, 16, 64})
             for (int eut : new int[]{8, 24}) {
                 long voltage = GT_Values.V[tier] * (amps == 0 ? 1 : amps);
-                if (voltage > GT_Values.V[15]) continue;
-                int effectiveTier = 0;
-                while (voltage > GT_Values.V[effectiveTier]) effectiveTier++;
+
                 GT_MetaTileEntity_AssemblyLine machine = new GT_MetaTileEntity_AssemblyLine("test");
                 Fixture f = new Fixture(machine, tier);
                 if (amps != 0) {
@@ -323,11 +323,23 @@ public class GT_SpecialMultiblockProcessingTest {
                 recipe.setInteger("time", 80); recipe.setInteger("eu", eut);
                 machine.mInventory[1] = new ItemStack(Items.paper);
                 machine.mInventory[1].setTagCompound(recipe);
-                assertTrue(machine.checkRecipe(null));
-                int expectedEnergy = (eut == 8 ? lowEnergy : highEnergy)[effectiveTier];
-                assertEquals(expectedEnergy > 0 ? -expectedEnergy : expectedEnergy, machine.mEUt);
-                int[] duration = {80, 80, 40, 20, 10, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-                assertEquals(duration[effectiveTier], machine.mMaxProgresstime);
+                String context = "tier=" + tier + " amps=" + amps + " eut=" + eut;
+                if (eut > voltage) {
+                    assertFalse(context, machine.checkRecipe(null));
+                    assertEquals(3, ingredient.stackSize);
+                    continue;
+                }
+                assertTrue(context, machine.checkRecipe(null));
+                // Shared 4x EU / 2x speed overclock, with long power and a strict one-operation limit.
+                long expectedEnergy = eut;
+                double duration = 80;
+                for (long control = 32; control <= voltage / 4; control *= 4) {
+                    expectedEnergy *= 4;
+                    duration /= 2;
+                }
+                assertEquals(context, -expectedEnergy, machine.lEUt);
+                assertEquals(context, Math.max(1, (int) duration), machine.mMaxProgresstime);
+                assertEquals(1, machine.getCurrentParallel());
                 assertEquals(1, ingredient.stackSize);
                 assertSame(Items.emerald, machine.mOutputItems[0].getItem());
             }

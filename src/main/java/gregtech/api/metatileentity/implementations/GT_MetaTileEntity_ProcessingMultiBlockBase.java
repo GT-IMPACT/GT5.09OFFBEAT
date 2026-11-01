@@ -9,6 +9,7 @@ import gregtech.api.logic.ProcessingOutputs;
 import gregtech.api.logic.ProcessingPersistence;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
+import gregtech.api.util.GT_Recipe.GT_Recipe_Map_NonGTRecipes;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -191,9 +192,11 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return ProcessingLogic.ALL_MODES;
     }
 
-    /** Fuel machines may expose a display-only map without filtering their input hatches. */
+    /** Override for display-only maps with their own registered NEI handler. */
     public GT_Recipe_Map getRecipeMapForNEI() {
-        return getRecipeMap();
+        GT_Recipe_Map map = getRecipeMap();
+        return map != null && (map.mNEIAllowed || map instanceof GT_Recipe_Map_NonGTRecipes)
+                ? map : null;
     }
 
     public int getAvailableParallel() {

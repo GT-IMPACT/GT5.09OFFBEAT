@@ -2,17 +2,20 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.logic.TimedProcessingLogic;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingMultiBlockBase;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.common.GT_Pollution;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -46,7 +49,7 @@ import static gregtech.api.enums.Textures.BlockIcons.*;
 import static space.impact.structures.structure.StructureUtility.transpose;
 
 public class GT_MetaTileEntity_Charcoal_Pit
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_Charcoal_Pit>
+        extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_Charcoal_Pit>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "pit";
     private static final int[][] NEIGHBORS = {{1, 0, 0}, {-1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, -1}};
@@ -108,8 +111,8 @@ public class GT_MetaTileEntity_Charcoal_Pit
     }
 
     @Override
-    public boolean onRightclick(IGregTechTileEntity base, EntityPlayer player) {
-        return true;
+    public Object getClientGUI(int id, InventoryPlayer inventory, IGregTechTileEntity base) {
+        return new GT_GUIContainer_ProcessingMachine(inventory, base, getLocalName(), "MultiblockDisplay.png");
     }
 
     @Override
@@ -117,48 +120,49 @@ public class GT_MetaTileEntity_Charcoal_Pit
         return true;
     }
 
-    public boolean checkRecipe(ItemStack aStack) {
-        if (!checkPitAndProcess()) {
-            this.mEfficiency = 0;
-            this.mEfficiencyIncrease = 0;
-            this.mMaxProgresstime = 0;
-            running = false;
-            return false;
-        }
-
-        if (mEfficiency == 0) {
-            this.mEfficiency = 10000;
-            this.mEfficiencyIncrease = 10000;
-            this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
-            GT_Pollution.addPollution(getBaseMetaTileEntity(), mMaxProgresstime*10);
-            return true;
-        } else {
-            this.mEfficiency = 0;
-            this.mEfficiencyIncrease = 0;
-            this.mMaxProgresstime = 0;
-        }
-        return false;
+    @Override
+    protected ProcessingLogic createProcessingLogic() {
+        return new TimedProcessingLogic(0, this::prepareBurn);
     }
 
-    /** Recipe processing is the only path allowed to turn logs into charcoal. */
-    private boolean checkPitAndProcess() {
+    @Override
+    public int getSupportedProcessingModes() {
+        return 0;
+    }
+
+    private int prepareBurn() {
         PitLayout detected = detectLayout();
         if (detected == null || !checkLayout(detected)) {
-            return false;
+            return 0;
         }
+        return Math.max(1, (int) Math.sqrt(detected.logs.size() * 240000L));
+    }
+
+    @Override
+    protected void startCycle(ProcessingLogic.Result result, int efficiency) {
+        super.startCycle(result, 10000);
+        running = true;
+        GT_Pollution.addPollution(getBaseMetaTileEntity(), mMaxProgresstime * 10);
+    }
+
+    /** Structure checks never produce charcoal; only a finished, still-sealed burn does. */
+    @Override
+    protected void completeRecipe() {
         if (running) {
+            PitLayout detected = detectLayout();
+            if (detected == null || !checkLayout(detected)) {
+                stopMachine();
+                return;
+            }
             World world = getBaseMetaTileEntity().getWorld();
             for (Position log : detected.logs) {
-                int[] p = worldPosition(log);
-                world.setBlock(p[0], p[1], p[2], Casings.BRITTLE_CHARCOAL.getBlock(),
+                int[] position = worldPosition(log);
+                world.setBlock(position[0], position[1], position[2], Casings.BRITTLE_CHARCOAL.getBlock(),
                         Casings.BRITTLE_CHARCOAL.getMetadata(), 3);
             }
             running = false;
-            return false;
         }
-        mMaxProgresstime = (int) Math.sqrt(detected.logs.size() * 240000);
-        running = true;
-        return true;
+        super.completeRecipe();
     }
 
     @Override

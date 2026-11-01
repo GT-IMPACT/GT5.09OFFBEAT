@@ -202,13 +202,22 @@ final class GT_CharcoalPitStructureChecks {
         for (int[] p : logs) {
             f.assertBlock(f.pos(p[0], p[1], p[2]), Blocks.log, 0);
         }
-        f.machine.mMaxProgresstime = 0; // The base calls checkRecipe again after completing the timer.
-        assertFalse(f.machine.checkRecipe(null));
+        finishBurn(f);
         for (int[] p : logs) {
             f.assertBlock(f.pos(p[0], p[1], p[2]), Casings.BRITTLE_CHARCOAL.getBlock(), 4);
         }
         f.assertBlock(unrelated, Blocks.log, 0);
         assertEquals(pollution + duration * 10, GT_Pollution.getPollution(f.controller));
+    }
+
+    private static void finishBurn(Pit pit) {
+        pit.controller.disableWorking();
+        pit.machine.mStartUpCheck = -1;
+        pit.machine.mUpdate = 1000;
+        pit.machine.mMachine = true;
+        pit.machine.mProgresstime = pit.machine.mMaxProgresstime - 1;
+        pit.machine.onPostTick(pit.controller, 101);
+        assertEquals(0, pit.machine.mMaxProgresstime);
     }
 
     private static void seal(Pit f, List<int[]> logs) {
@@ -276,8 +285,7 @@ final class GT_CharcoalPitStructureChecks {
         assertTrue(restored.recheck());
         assertEquals(duration, restored.machine.mMaxProgresstime);
         assertEquals(f.machine.getExtendedFacing(), restored.machine.getExtendedFacing());
-        restored.machine.mMaxProgresstime = 0;
-        assertFalse(restored.machine.checkRecipe(null));
+        finishBurn(restored);
         for (int[] p : restored.logs) {
             restored.assertBlock(p, Casings.BRITTLE_CHARCOAL.getBlock(), 4);
         }
@@ -285,9 +293,9 @@ final class GT_CharcoalPitStructureChecks {
         Pit legacy = new Pit(facing, 1, 2, 1);
         legacy.fill();
         nbt.removeTag("charcoalPitRunning");
+        nbt.removeTag("processing");
         legacy.machine.loadNBTData(nbt);
-        legacy.machine.mMaxProgresstime = 0;
-        assertFalse("Legacy in-flight NBT still finishes the batch", legacy.machine.checkRecipe(null));
+        finishBurn(legacy);
         legacy.assertBlock(legacy.logs.get(0), Casings.BRITTLE_CHARCOAL.getBlock(), 4);
         f.clear(f.soil.get(0));
         assertFalse(f.recheck());

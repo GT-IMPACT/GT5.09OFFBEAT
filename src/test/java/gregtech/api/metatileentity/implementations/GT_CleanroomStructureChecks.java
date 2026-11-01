@@ -375,7 +375,7 @@ final class GT_CleanroomStructureChecks {
     }
 
     private static final class Room {
-        final TestWorld world = new TestWorld();
+        final TestWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
         final TestPlayer player = new TestPlayer(world);
         final GT_MetaTileEntity_Cleanroom machine = new GT_MetaTileEntity_Cleanroom("multimachine.cleanroom");
         final ForgeDirection facing;

@@ -147,7 +147,7 @@ public class GT_StructureIntegrationTest {
             // initialization.
             Class<?> airFilter = Class.forName(
                     "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AirFilter", false, server);
-            assertEquals("gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase",
+            assertEquals("gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingMultiBlockBase",
                     airFilter.getSuperclass().getName());
             Class<?> builder = Class.forName("gregtech.api.util.MultiblockTooltipBuilder", true, server);
             Object tooltip = builder.getConstructor().newInstance();
