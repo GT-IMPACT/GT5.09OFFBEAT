@@ -145,7 +145,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
 
     protected final ProcessingLogic getProcessingLogic() {
         if (processingLogic == null) {
-            processingLogic = createProcessingLogic().setMaxParallelSupplier(this::getMaxParallelRecipes);
+            processingLogic = createProcessingLogic();
         }
         return processingLogic;
     }

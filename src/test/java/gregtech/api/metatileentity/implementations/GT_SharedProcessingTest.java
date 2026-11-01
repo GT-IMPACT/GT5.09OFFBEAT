@@ -1444,7 +1444,9 @@ public class GT_SharedProcessingTest {
 
         @Override
         protected ProcessingLogic createProcessingLogic() {
-            return super.createProcessingLogic().setSubTickParallelBypassesLimit(bypass);
+            return super.createProcessingLogic()
+                    .setMaxParallelSupplier(this::getMaxParallelRecipes)
+                    .setSubTickParallelBypassesLimit(bypass);
         }
 
         ProcessingLogic logic() {
