@@ -284,7 +284,7 @@ final class GT_PrimitiveBlastStructureChecks {
     }
 
     private static final class Furnace {
-        final TestWorld world = new TestWorld();
+        final TestWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
         final TestPlayer player = new TestPlayer(world);
         final GT_MetaTileEntity_PrimitiveBlastFurnace machine;
         final TestTile controller;

@@ -20,7 +20,7 @@ import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Mult
  * Shared simulation and delivery rules. Delivery subtracts only what the
  * destination accepted.
  */
-public final class ProcessingOutputs {
+public final class ProcessingOutputs implements ProcessingOutputAccess {
     @FunctionalInterface
     public interface FluidOutputFilter {
         boolean accepts(GT_MetaTileEntity_Hatch_Output hatch, FluidStack fluid, int outputIndex);

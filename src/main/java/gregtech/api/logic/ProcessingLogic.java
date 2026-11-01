@@ -36,6 +36,7 @@ public class ProcessingLogic {
     private double timeReduction = 2;
     private double powerIncrease = 4;
     private boolean subTickParallelBypassesLimit = false;
+    private boolean powerRequired = true;
     private int itemOutputLimit = Integer.MAX_VALUE;
     private GT_Recipe.GT_Recipe_Map lastMap;
     private GT_Recipe cachedRecipe;
@@ -54,6 +55,12 @@ public class ProcessingLogic {
 
     public ProcessingLogic setSubTickParallelBypassesLimit(boolean enabled) {
         subTickParallelBypassesLimit = enabled;
+        return this;
+    }
+
+    /** A machine without power may execute only zero-EU recipes. */
+    public ProcessingLogic setPowerRequired(boolean required) {
+        powerRequired = required;
         return this;
     }
 
@@ -208,7 +215,11 @@ public class ProcessingLogic {
         if (!validation.wasSuccessful()) {
             return Result.failure(validation);
         }
-        if (request.voltage <= 0 || (request.voltage <= Long.MAX_VALUE / 4 && recipe.mEUt > request.voltage * 4)) {
+        if (!powerRequired && recipe.mEUt != 0) {
+            return Result.failure(CheckRecipeResult.INSUFFICIENT_POWER);
+        }
+        if (powerRequired && (request.voltage <= 0
+                || (request.voltage <= Long.MAX_VALUE / 4 && recipe.mEUt > request.voltage * 4))) {
             return Result.failure(CheckRecipeResult.INSUFFICIENT_VOLTAGE);
         }
         try {
@@ -228,7 +239,7 @@ public class ProcessingLogic {
             return Result.failure(CheckRecipeResult.INSUFFICIENT_HEAT);
         }
         long recipePower = calculator.recipePower(recipe.mEUt);
-        if (recipePower > power || power <= 0) {
+        if (recipePower > power || powerRequired && power <= 0) {
             return Result.failure(CheckRecipeResult.INSUFFICIENT_POWER);
         }
         int normalLimit = (int) Math.min(availableParallel, recipePower == 0 ? Integer.MAX_VALUE : power / recipePower);
@@ -339,15 +350,15 @@ public class ProcessingLogic {
         public final long amperage;
         public final int modes;
         public final int efficiency;
-        public final ProcessingOutputs outputs;
+        public final ProcessingOutputAccess outputs;
         public final IntUnaryOperator random;
 
-        public Request(List<ProcessingInputs> inputs, long voltage, long amperage, int modes, ProcessingOutputs outputs,
+        public Request(List<ProcessingInputs> inputs, long voltage, long amperage, int modes, ProcessingOutputAccess outputs,
                 IntUnaryOperator random) {
             this(inputs, voltage, amperage, modes, outputs, random, 10000);
         }
 
-        public Request(List<ProcessingInputs> inputs, long voltage, long amperage, int modes, ProcessingOutputs outputs,
+        public Request(List<ProcessingInputs> inputs, long voltage, long amperage, int modes, ProcessingOutputAccess outputs,
                 IntUnaryOperator random, int efficiency) {
             this.inputs = inputs;
             this.voltage = voltage;

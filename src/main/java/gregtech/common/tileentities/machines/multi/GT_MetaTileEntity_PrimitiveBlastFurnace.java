@@ -7,6 +7,11 @@ import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.ISecondaryDescribable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.logic.InventoryProcessingOutputs;
+import gregtech.api.logic.ProcessingInputs;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.util.OverclockCalculator;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GTWaila;
 import gregtech.api.util.GT_Recipe;
@@ -47,6 +52,8 @@ import space.impact.structures.structure.StructureDefinition;
 import space.impact.structures.structure.StructureUtility;
 
 import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
 import static space.impact.structures.structure.StructureUtility.transpose;
@@ -64,6 +71,9 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
     public boolean mMachine = false;
 
     public ItemStack[] mOutputItems = new ItemStack[OUTPUT_SLOTS];
+    private ProcessingLogic processingLogic;
+    private CheckRecipeResult processingResult = CheckRecipeResult.NONE;
+    private boolean waitingForOutput;
 
     @Deprecated
     public ItemStack mOutputItem1;
@@ -156,6 +166,10 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
     public void saveNBTData(NBTTagCompound aNBT) {
         aNBT.setInteger("mProgresstime", this.mProgresstime);
         aNBT.setInteger("mMaxProgresstime", this.mMaxProgresstime);
+        aNBT.setBoolean("waitingForOutput", waitingForOutput);
+        for (int i = 0; i < OUTPUT_SLOTS; i++) {
+            aNBT.removeTag("mOutputItem" + i);
+        }
         if (this.mOutputItems != null) {
             for (int i = 0; i < mOutputItems.length; i++) {
                 if (this.mOutputItems[i] != null) {
@@ -172,6 +186,12 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
         this.mUpdate = 5;
         this.mProgresstime = aNBT.getInteger("mProgresstime");
         this.mMaxProgresstime = aNBT.getInteger("mMaxProgresstime");
+        waitingForOutput = mMaxProgresstime > 0 && aNBT.getBoolean("waitingForOutput");
+        processingResult = waitingForOutput ? CheckRecipeResult.WAITING_FOR_OUTPUT
+                : mMaxProgresstime > 0 ? CheckRecipeResult.SUCCESS : CheckRecipeResult.NONE;
+        if (processingLogic != null) {
+            processingLogic.clearRecipeCache();
+        }
         this.mOutputItems = new ItemStack[OUTPUT_SLOTS];
         for (int i = 0; i < OUTPUT_SLOTS; i++) {
             this.mOutputItems[i] = GT_Utility.loadItem(aNBT, "mOutputItem" + i);
@@ -416,11 +436,10 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
             }
             if (this.mMachine) {
                 if (this.mMaxProgresstime > 0) {
-                    if (++this.mProgresstime >= this.mMaxProgresstime) {
-                        addOutputProducts();
-                        this.mOutputItems = null;
-                        this.mProgresstime = 0;
-                        this.mMaxProgresstime = 0;
+                    if (!waitingForOutput && mProgresstime < mMaxProgresstime) {
+                        mProgresstime++;
+                    }
+                    if (mProgresstime >= mMaxProgresstime && completeRecipe()) {
                         GT_Mod.achievements.issueAchievement(
                                 aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), "steel");
                     }
@@ -428,14 +447,14 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
                     checkRecipe();
                 }
             }
-            if (this.mMaxProgresstime > 0 && (aTimer % 20L == 0L)) {
+            if (this.mMaxProgresstime > 0 && !waitingForOutput && (aTimer % 20L == 0L)) {
                 GT_Pollution.addPollution(this.getBaseMetaTileEntity().getWorld(),
                         new ChunkPosition(this.getBaseMetaTileEntity().getXCoord(), this.getBaseMetaTileEntity().getYCoord(),
                                 this.getBaseMetaTileEntity().getZCoord()),
                         setPollut());
             }
 
-            aBaseMetaTileEntity.setActive((this.mMaxProgresstime > 0) && (this.mMachine));
+            aBaseMetaTileEntity.setActive(mMaxProgresstime > 0 && mMachine && !waitingForOutput);
             if (aBaseMetaTileEntity.isActive()) {
                 if (aBaseMetaTileEntity.getAir(aBaseMetaTileEntity.getOffsetX(aBaseMetaTileEntity.getBackFacing(), 1),
                         aBaseMetaTileEntity.getYCoord(), aBaseMetaTileEntity.getOffsetZ(aBaseMetaTileEntity.getBackFacing(), 1))) {
@@ -474,60 +493,101 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
 
     public abstract int setPollut();
 
-    private void addOutputProducts() {
-        if (this.mOutputItems == null) {
-            return;
-        }
-        int limit = Math.min(mOutputItems.length, OUTPUT_SLOTS);
-        for (int i = 0; i < limit; i++) {
-            int absi = INPUT_SLOTS + i;
-            if (this.mInventory[absi] == null) {
-                this.mInventory[absi] = GT_Utility.copy(this.mOutputItems[i]);
-            } else if (GT_Utility.areStacksEqual(this.mInventory[absi], this.mOutputItems[i])) {
-                this.mInventory[absi].stackSize = Math.min(this.mInventory[absi].getMaxStackSize(),
-                        this.mInventory[absi].stackSize + this.mOutputItems[i].stackSize);
-            }
-        }
+    protected ProcessingLogic createProcessingLogic() {
+        return new ProcessingLogic()
+                .setRecipeMapSupplier(() -> GT_Recipe.GT_Recipe_Map.sPrimitiveBlastRecipes)
+                .setPowerRequired(false)
+                .setItemOutputLimit(OUTPUT_SLOTS)
+                .setCalculatorSupplier(() -> new OverclockCalculator()
+                        .setMaxOverclocks(0)
+                        .setDurationModifier(1.0 / getTier()));
     }
 
-    private boolean spaceForOutput(ItemStack outputStack, int relativeOutputSlot) {
-        int absoluteSlot = relativeOutputSlot + INPUT_SLOTS;
-        if (this.mInventory[absoluteSlot] == null || outputStack == null) {
-            return true;
+    protected final ProcessingLogic getProcessingLogic() {
+        if (processingLogic == null) {
+            processingLogic = createProcessingLogic();
         }
-        return ((this.mInventory[absoluteSlot].stackSize + outputStack.stackSize <= this.mInventory[absoluteSlot].getMaxStackSize()) && (GT_Utility.areStacksEqual(this.mInventory[absoluteSlot], outputStack)));
+        return processingLogic;
+    }
+
+    public CheckRecipeResult getProcessingResult() {
+        return processingResult;
+    }
+
+    public boolean isWaitingForOutput() {
+        return waitingForOutput;
+    }
+
+    private InventoryProcessingOutputs processingOutputs() {
+        return new InventoryProcessingOutputs(getBaseMetaTileEntity(), INPUT_SLOTS, OUTPUT_SLOTS);
+    }
+
+    private boolean completeRecipe() {
+        long before = pendingItemCount();
+        if (!processingOutputs().deliver(mOutputItems)) {
+            boolean changed = !waitingForOutput || before != pendingItemCount();
+            waitingForOutput = true;
+            processingResult = CheckRecipeResult.WAITING_FOR_OUTPUT;
+            if (changed) {
+                markStorageDirty();
+            }
+            return false;
+        }
+        mOutputItems = null;
+        mProgresstime = 0;
+        mMaxProgresstime = 0;
+        waitingForOutput = false;
+        processingResult = CheckRecipeResult.NONE;
+        markStorageDirty();
+        return true;
+    }
+
+    private long pendingItemCount() {
+        long count = 0;
+        if (mOutputItems != null) {
+            for (ItemStack item : mOutputItems) {
+                if (item != null) {
+                    count += Math.max(0, item.stackSize);
+                }
+            }
+        }
+        return count;
     }
 
     private boolean checkRecipe() {
-        if (!this.mMachine) {
+        if (mMaxProgresstime > 0 || waitingForOutput) {
             return false;
         }
-        ItemStack[] inputs = new ItemStack[INPUT_SLOTS];
-        System.arraycopy(mInventory, 0, inputs, 0, INPUT_SLOTS);
-        GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sPrimitiveBlastRecipes.findRecipe(getBaseMetaTileEntity(), false, 0, null, inputs);
-        if (recipe == null) {
-            this.mOutputItems = null;
+        if (!mMachine) {
+            processingResult = CheckRecipeResult.MACHINE_CONDITION;
             return false;
         }
-        for (int i = 0; i < OUTPUT_SLOTS; i++) {
-            if (!spaceForOutput(recipe.getOutput(i), i)) {
-                this.mOutputItems = null;
-                return false;
+        ItemStack[] originals = Arrays.copyOf(mInventory, INPUT_SLOTS);
+        ProcessingInputs inputs = new ProcessingInputs(Arrays.asList(originals), Collections.emptyList(), () -> {
+            for (int i = 0; i < INPUT_SLOTS; i++) {
+                if (mInventory[i] != originals[i]) {
+                    return false;
+                }
             }
-        }
-
-        if (!recipe.isRecipeInputEqual(true, null, inputs)) {
-            this.mOutputItems = null;
+            return mMachine;
+        });
+        ProcessingLogic.Request request = new ProcessingLogic.Request(Collections.singletonList(inputs), 0, 0,
+                ProcessingLogic.PROTECT_ITEMS | ProcessingLogic.PROTECT_FLUIDS, processingOutputs(),
+                bound -> getBaseMetaTileEntity().getRandomNumber(bound));
+        ProcessingLogic.Result result = getProcessingLogic().process(request);
+        processingResult = result.status;
+        if (!result.status.wasSuccessful()) {
             return false;
         }
         for (int i = 0; i < INPUT_SLOTS; i++) {
-            if (mInventory[i] != null && mInventory[i].stackSize == 0) {
+            if (mInventory[i] != null && mInventory[i].stackSize <= 0) {
                 mInventory[i] = null;
             }
         }
-
-        this.mMaxProgresstime = recipe.mDuration/getTier();
-        this.mOutputItems = recipe.mOutputs;
+        mProgresstime = 0;
+        mMaxProgresstime = result.duration;
+        mOutputItems = result.items;
+        markStorageDirty();
         return true;
     }
 
