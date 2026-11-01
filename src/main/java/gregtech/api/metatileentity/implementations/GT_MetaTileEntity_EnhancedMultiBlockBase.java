@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import gregtech.GT_Mod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -169,7 +170,8 @@ public abstract class GT_MetaTileEntity_EnhancedMultiBlockBase<T extends GT_Meta
 
     @Override
     public String[] getStructureDescription(ItemStack trigger) {
-        return getTooltip() == null ? getDescription() : getTooltip().getStructureHint();
+        String[] description = getTooltip() == null ? getDescription() : getTooltip().getStructureHint();
+        return GT_Mod.gregtechproxy == null ? description : GT_Mod.gregtechproxy.formatStructureChat(description);
     }
 
     @SuppressWarnings("unchecked")

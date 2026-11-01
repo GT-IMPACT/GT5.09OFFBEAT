@@ -28,6 +28,8 @@ import ic2.api.tile.IWrenchable;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,6 +43,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.input.Keyboard;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.*;
 
 // Referenced classes of package gregtech.common:
@@ -239,6 +243,28 @@ public class GT_Client extends GT_Proxy implements Runnable {
 
     public EntityPlayer getThePlayer() {
         return Minecraft.getMinecraft().thePlayer;
+    }
+
+    @Override
+    public String[] formatStructureChat(String[] description) {
+        Minecraft minecraft = Minecraft.getMinecraft();
+        FontRenderer font = minecraft.fontRenderer;
+        GuiNewChat chat = minecraft.ingameGUI.getChatGUI();
+        int width = (int) (chat.func_146228_f() / chat.func_146244_h());
+        List<String> lines = new ArrayList<>();
+        for (String line : description) {
+            int indentLength = 0;
+            while (indentLength < line.length() && line.charAt(indentLength) == ' ') {
+                indentLength++;
+            }
+            String indent = line.substring(0, indentLength);
+            // Vanilla chat loses inline colors and indentation when it wraps a ChatComponentText.
+            int textWidth = Math.max(1, width - font.getStringWidth(indent));
+            for (Object part : font.listFormattedStringToWidth(line.substring(indentLength), textWidth)) {
+                lines.add(indent + part);
+            }
+        }
+        return lines.toArray(new String[0]);
     }
 
     public int addArmor(String aPrefix) {
