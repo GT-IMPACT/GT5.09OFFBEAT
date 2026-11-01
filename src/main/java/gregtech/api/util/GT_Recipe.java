@@ -337,6 +337,19 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, supplied), required, true);
     }
 
+    /** Uses the same unification and special NBT rules as the legacy input consumer. */
+    public boolean matchesProcessingInput(ItemStack supplied, ItemStack required) {
+        if (!isInputStackEqual(supplied, required)) {
+            return false;
+        }
+        if (GTppRecipeHelper && (GT_Utility.areStacksEqual(supplied, Ic2Items.FluidCell, true)
+                || GT_Utility.areStacksEqual(supplied, ItemList.Tool_DataStick.get(1L), true)
+                || GT_Utility.areStacksEqual(supplied, ItemList.Tool_DataOrb.get(1L), true))) {
+            return GT_Utility.areStacksEqual(supplied, required, false);
+        }
+        return true;
+    }
+
     public ItemStack getOutput(int aIndex) {
         if (aIndex < 0 || aIndex >= mOutputs.length) return null;
         return GT_Utility.copy(mOutputs[aIndex]);
@@ -1073,6 +1086,39 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
 
             // And nothing has been found.
             return null;
+        }
+
+        /** Indexed candidates for the transactional multiblock processor; legacy lookup is unchanged. */
+        public Collection<GT_Recipe> findProcessingCandidates(FluidStack[] fluids, ItemStack[] items) {
+            Set<GT_Recipe> candidates = new LinkedHashSet<>();
+            for (ItemStack stack : items) {
+                if (stack == null) {
+                    continue;
+                }
+                for (ItemStack key : new ItemStack[]{stack, GT_OreDictUnificator.get(false, stack)}) {
+                    if (key == null) {
+                        continue;
+                    }
+                    for (boolean wildcard : new boolean[]{false, true}) {
+                        Collection<GT_Recipe> matches = mRecipeItemRegistry.get(new GT_ItemStack(key, wildcard));
+                        if (matches != null) {
+                            candidates.addAll(matches);
+                        }
+                    }
+                }
+            }
+            if (mMinimalInputItems == 0) {
+                for (FluidStack fluid : fluids) {
+                    if (fluid == null) {
+                        continue;
+                    }
+                    Collection<GT_Recipe> matches = mRecipeFluidMap.get(fluid.getFluid());
+                    if (matches != null) {
+                        candidates.addAll(matches);
+                    }
+                }
+            }
+            return candidates;
         }
 
         protected GT_Recipe addToItemMap(GT_Recipe aRecipe) {

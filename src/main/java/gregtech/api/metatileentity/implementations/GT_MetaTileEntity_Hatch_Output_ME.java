@@ -93,6 +93,12 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
         return getTexturesActive(aBaseTexture);
     }
 
+    /** Strict capacity for transactional processing, including cell filters and buffered output. */
+    public long getProcessingCapacity(FluidStack stack) {
+        return GregTech_API.mAE2 && stack != null && canStore(stack)
+                ? Math.max(0, storage.getCapacity() - getMEOutputAmount()) : 0;
+    }
+
     @Override
     public int fill(FluidStack aFluid, boolean doFill) {
         if (!GregTech_API.mAE2 || aFluid == null || aFluid.getFluid() == null || aFluid.amount <= 0) return 0;

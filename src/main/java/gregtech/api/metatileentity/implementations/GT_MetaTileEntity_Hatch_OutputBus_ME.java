@@ -96,6 +96,12 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
         if (proxy != null) proxy.onReady();
     }
 
+    /** Strict capacity for transactional processing; does not use the legacy per-tick overflow allowance. */
+    public long getProcessingCapacity(ItemStack stack) {
+        return GregTech_API.mAE2 && stack != null && canStore(stack)
+                ? Math.max(0, storage.getCapacity() - getMEOutputAmount()) : 0;
+    }
+
     @Override
     public boolean storeAll(ItemStack aStack) {
         if (!GregTech_API.mAE2 || aStack == null || aStack.stackSize <= 0) return false;
