@@ -42,7 +42,7 @@ public class GT_MetaTileEntity_OilCracker extends
     private static final String INPUT_LEFT = "input_left";
     private static final String INPUT_RIGHT = "input_right";
     private static final HintColor INPUT_HINT = HintColor.BLUE;
-    private static final HintColor REAGENT_HINT = HintColor.PURPLE;
+    private static final HintColor REAGENT_HINT = HintColor.LIGHT_BLUE;
     private static final HintColor OUTPUT_HINT = HintColor.ORANGE;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 18)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy).build();

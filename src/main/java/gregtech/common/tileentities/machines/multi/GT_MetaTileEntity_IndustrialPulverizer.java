@@ -18,6 +18,7 @@ import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.IStructureElement;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
@@ -35,6 +36,7 @@ public class GT_MetaTileEntity_IndustrialPulverizer
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_IndustrialPulverizer>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor SHELL_HINT = HintColor.GREEN;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.SOLID_STEEL, 8)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output).build();
     private static IStructureDefinition<GT_MetaTileEntity_IndustrialPulverizer> structureDefinition;
@@ -62,7 +64,7 @@ public class GT_MetaTileEntity_IndustrialPulverizer
                 .addInfo("Does not lose efficiency when overclocked")
                 .beginStructureBlock(3, 3, 3, false)
                 .addController("Front center")
-                .addRequirements(SHELL, "Any outer casing position, except the pipe")
+                .addRequirements(SHELL, "Any outer casing position, except the pipe", SHELL_HINT)
                 .addOtherStructurePart(Casings.STEEL_GEARBOX, "Center of the structure", 1)
                 .addOtherStructurePart(Casings.STEEL_PIPE, "Any of the five faces adjacent to the gearbox, except the controller", 1)
                 .addStructureInfo("At least one steel pipe casing must touch the gearbox; additional pipes at these five positions are allowed.")
@@ -135,7 +137,7 @@ public class GT_MetaTileEntity_IndustrialPulverizer
         if (structureDefinition == null) {
             IStructureElement<GT_MetaTileEntity_IndustrialPulverizer> shell =
                     GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_IndustrialPulverizer.class)
-                            .buildAndChain(SHELL, machine -> ++machine.casingCount);
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT);
             structureDefinition = StructureDefinition.<GT_MetaTileEntity_IndustrialPulverizer>builder()
                     .addShape(STRUCTURE_PIECE, transpose(new String[][]{
                             {"CCC", "CPC", "CCC"},

@@ -15,6 +15,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.MultiblockTooltipBuilder;
@@ -45,10 +46,10 @@ public class GT_MetaTileEntity_AssemblyLine
         implements ISurvivalConstructable {
     private static final int MIN_LENGTH = 5;
     private static final int MAX_LENGTH = 16;
-    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
+    private static final HintColor BOTTOM_HINT = HintColor.LIGHT_BLUE;
     private static final HintColor ENERGY_HINT = HintColor.YELLOW;
-    private static final HintColor INPUT_HINT = HintColor.ORANGE;
-    private static final HintColor OUTPUT_HINT = HintColor.GREEN;
+    private static final HintColor INPUT_HINT = HintColor.BLUE;
+    private static final HintColor OUTPUT_HINT = HintColor.ORANGE;
     private static final HintColor DATA_HINT = HintColor.PURPLE;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
             .atLeast(HatchElement.Maintenance)
@@ -102,7 +103,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 .addStructureHint("Fluid Input (optional, single-fluid)", BOTTOM_HINT)
                 .addStructureHint("Data Access Hatch (optional, next to controller)", DATA_HINT)
                 .addStructureInfo("Power: 1-8 basic OR 1 multi-amp; no mixing or lasers")
-                .addMasterChannel("Length: channel + 4 (5-16)")
+                .addSubChannel(GTStructureChannels.LENGTH, "Length: channel + 4 (5-16)")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Auto-place required hatches")
                 .toolTipFinisher();
     }
@@ -240,7 +241,7 @@ public class GT_MetaTileEntity_AssemblyLine
     }
 
     private static int constructionLength(ItemStack trigger) {
-        return Math.max(MIN_LENGTH, Math.min(MAX_LENGTH - 4, trigger.stackSize) + 4);
+        return Math.max(MIN_LENGTH, Math.min(MAX_LENGTH - 4, GTStructureChannels.getValue(trigger, GTStructureChannels.LENGTH)) + 4);
     }
 
     @Override
@@ -265,6 +266,7 @@ public class GT_MetaTileEntity_AssemblyLine
             StructureDefinition.Builder<GT_MetaTileEntity_AssemblyLine> builder = StructureDefinition
                     .<GT_MetaTileEntity_AssemblyLine>builder()
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addChannel(GTStructureChannels.LENGTH, 1, MAX_LENGTH - 4)
                     .addElement('B', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
                             .allow(LineHatch.FLUID_INPUT)
                             .buildAndChain(BOTTOM)

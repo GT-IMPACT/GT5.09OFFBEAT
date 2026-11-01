@@ -49,8 +49,9 @@ public class GT_MetaTileEntity_HeatExchanger
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_HeatExchanger>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
-    private static final HintColor HOT_HINT = HintColor.RED;
-    private static final HintColor COLD_HINT = HintColor.BLUE;
+    private static final HintColor SHELL_HINT = HintColor.GREEN;
+    private static final HintColor HOT_HINT = HintColor.BLUE;
+    private static final HintColor COLD_HINT = HintColor.ORANGE;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.STABLE_TITANIUM, 20)
             .atLeast(HatchElement.Maintenance, ExchangerHatch.WATER, ExchangerHatch.STEAM).build();
     private static final StructureRequirements HOT_INPUT = StructureRequirements.builder(Casings.STABLE_TITANIUM, 0)
@@ -84,7 +85,7 @@ public class GT_MetaTileEntity_HeatExchanger
                 .addInfo("Running without distilled water causes an explosion")
                 .beginStructureBlock(3, 4, 3, false)
                 .addController("Front center of the bottom layer")
-                .addRequirements(SHELL, "Any outer casing position")
+                .addRequirements(SHELL, "Any outer casing position", SHELL_HINT)
                 .addRequirements(HOT_INPUT, "Bottom center", HOT_HINT)
                 .addRequirements(COLD_OUTPUT, "Top center", COLD_HINT)
                 .addOtherStructurePart(Casings.TITANIUM_PIPE, "Vertical column between the hot input and cold output", 2)
@@ -267,7 +268,7 @@ public class GT_MetaTileEntity_HeatExchanger
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_HeatExchanger.class)
                             .preferForPlacement(tile -> tile instanceof GTMTE_BusHatch_Input)
-                            .buildAndChain(SHELL, machine -> ++machine.casingCount))
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT))
                     .addElement('P', Casings.TITANIUM_PIPE.asElement())
                     .addElement('I', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_HeatExchanger.class)
                             .hint(HOT_HINT).build(HOT_INPUT))

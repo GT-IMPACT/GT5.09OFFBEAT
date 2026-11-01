@@ -40,7 +40,7 @@ public class GT_MetaTileEntity_DieselEngine
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_DieselEngine>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
-    private static final HintColor SIDE_HINT = HintColor.BLUE;
+    private static final HintColor SIDE_HINT = HintColor.GREEN;
     private static final HintColor MUFFLER_HINT = HintColor.ORANGE;
     private static final HintColor DYNAMO_HINT = HintColor.YELLOW;
     private IStructureDefinition<GT_MetaTileEntity_DieselEngine> structureDefinition;

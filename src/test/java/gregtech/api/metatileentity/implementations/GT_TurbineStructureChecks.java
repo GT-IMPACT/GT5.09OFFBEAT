@@ -165,7 +165,7 @@ final class GT_TurbineStructureChecks {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(f.machine.getCasingType().getBlock(), hints.hintBlocks.get(key));
             if (f.sides.contains(p)) {
-                assertSame(HintColor.BLUE, hints.hintFrames.get(key));
+                assertSame(HintColor.GREEN, hints.hintFrames.get(key));
             } else {
                 assertFalse("Fixed casings have no hatch markers", hints.hintFrames.containsKey(key));
             }
@@ -292,7 +292,7 @@ final class GT_TurbineStructureChecks {
             String marker = EnumChatFormatting.YELLOW + "■" + EnumChatFormatting.RESET + " - ";
             assertTrue(structure.contains(marker));
             assertTrue(hint.contains(marker));
-            assertTrue(structure.contains(EnumChatFormatting.BLUE + "■" + EnumChatFormatting.RESET + " - "));
+            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " - "));
             assertEquals("Separate legends for the side positions and rear dynamo", 2,
                     structure.split("■", -1).length - 1);
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));

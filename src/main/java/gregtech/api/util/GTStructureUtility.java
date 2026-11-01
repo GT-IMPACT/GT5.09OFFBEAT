@@ -33,7 +33,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 public final class GTStructureUtility {
-    public static final String HATCH_CHANNEL = "gt_hatch";
+    public static final String HATCH_CHANNEL = GTStructureChannels.HATCH;
 
     private GTStructureUtility() {
     }

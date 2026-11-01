@@ -141,7 +141,7 @@ final class GT_AirFilterStructureChecks {
         assertEquals(changes, f.world.changes);
         assertEquals(8, f.machine.mMufflerHatches.size());
         for (int[] p : f.bottom) {
-            assertHint(p, Casings.AIR_FILTER_TURBINE, HintColor.BLUE, hints);
+            assertHint(p, Casings.AIR_FILTER_TURBINE, HintColor.GREEN, hints);
         }
         for (int[] p : f.mufflers) {
             assertHint(p, Casings.AIR_FILTER_TURBINE, HintColor.ORANGE, hints);
@@ -265,7 +265,7 @@ final class GT_AirFilterStructureChecks {
             assertTrue(structure.contains(language.equals("en_US") ? "Two full" : "Два полных"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE, EnumChatFormatting.GOLD}) {
+            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.GOLD}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));

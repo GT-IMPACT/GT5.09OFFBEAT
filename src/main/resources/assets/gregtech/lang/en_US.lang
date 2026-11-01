@@ -1600,3 +1600,11 @@ gt.processing.stored_energy=Stored: %s EU
 gt.processing.energy_capacity=Capacity: %s EU
 TileEntity_DESCRIPTION_multimachine.multifurnace_Structure_Index_0=8 fixed casings in the top layer; unused hatch positions in the bottom layer also require heat-proof casings
 TileEntity_DESCRIPTION_multimachine.cleanroom_Location_Index_2=Roof interior, except the controller; (width - 2) x (depth - 2) - 1 blocks (0-168)
+
+gt.structure.channel.width=Structure width; see the controller tooltip for the size formula
+gt.structure.channel.depth=Structure depth; see the controller tooltip for the size formula
+gt.structure.channel.height=Structure height or vertical layers; see the controller tooltip for the size formula
+gt.structure.channel.length=Structure length or repeated sections; see the controller tooltip for the size formula
+gt.structure.channel.coil=Coil tier; existing coils may determine the tier when completing a structure
+gt.structure.channel.tier=Structure component tier
+gt.structure.channel.variant=Structure variant; see the controller tooltip for the available variants

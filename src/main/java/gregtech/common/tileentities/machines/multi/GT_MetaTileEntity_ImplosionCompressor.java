@@ -19,6 +19,7 @@ import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import net.minecraft.util.StatCollector;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
@@ -36,6 +37,7 @@ public class GT_MetaTileEntity_ImplosionCompressor
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_ImplosionCompressor>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor SHELL_HINT = HintColor.GREEN;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.SOLID_STEEL, 16)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, ImplosionHatch.INPUT_BUS, ImplosionHatch.OUTPUT_BUS,
                     ImplosionHatch.MUFFLER)
@@ -63,7 +65,7 @@ public class GT_MetaTileEntity_ImplosionCompressor
                 .addPollutionAmount(getPollutionPerTick(null) * 20)
                 .beginStructureBlock(3, 3, 3, true)
                 .addController("Front center")
-                .addRequirements(SHELL, "Any casing position")
+                .addRequirements(SHELL, "Any casing position", SHELL_HINT)
                 .addAir("Center of the structure")
                 .addStructureInfo("Item input and output buses are required; fluid-only hatches do not satisfy these requirements.")
                 .addStructureInfo("IMPACT combined item/fluid inputs and multi-amp energy hatches are accepted.")
@@ -152,7 +154,7 @@ public class GT_MetaTileEntity_ImplosionCompressor
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_ImplosionCompressor.class)
                             .buildAndChain(SHELL, ofChain(Casings.SOLID_STEEL.asElement(),
-                                    Casings.EXPLOSION_HAZARD_SIGN.asElement()), machine -> ++machine.casingCount))
+                                    Casings.EXPLOSION_HAZARD_SIGN.asElement()), machine -> ++machine.casingCount).withHint(SHELL_HINT))
                     .build();
         }
         return structureDefinition;

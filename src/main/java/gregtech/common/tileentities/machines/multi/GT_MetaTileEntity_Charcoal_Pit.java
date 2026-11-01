@@ -13,6 +13,7 @@ import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.common.GT_Pollution;
 import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.GTStructureChannels;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -83,9 +84,9 @@ public class GT_MetaTileEntity_Charcoal_Pit
                 .addStructureInfo("Blueprint logs: up to 11 x 5 x 11; size includes cover")
                 .addStructureInfo("Bricks below every log column; dirt or grass on sides and top")
                 .addStructureInfo("No gaps; connected irregular piles are also accepted")
-                .addSubChannel("width", "Log width = 2 x value - 1")
-                .addSubChannel("depth", "Log depth = 2 x value - 1")
-                .addSubChannel("height", "Log layers: 1-5")
+                .addSubChannel(GTStructureChannels.WIDTH, "Log width = 2 x value - 1")
+                .addSubChannel(GTStructureChannels.DEPTH, "Log depth = 2 x value - 1")
+                .addSubChannel(GTStructureChannels.HEIGHT, "Log layers: 1-5")
                 .toolTipFinisher();
     }
 
@@ -239,9 +240,9 @@ public class GT_MetaTileEntity_Charcoal_Pit
     }
 
     private static PitLayout constructionLayout(ItemStack trigger) {
-        int halfWidth = Math.max(1, Math.min(6, ChannelDataAccessor.getChannelData(trigger, "width"))) - 1;
-        int halfDepth = Math.max(1, Math.min(6, ChannelDataAccessor.getChannelData(trigger, "depth"))) - 1;
-        int height = Math.max(1, Math.min(5, ChannelDataAccessor.getChannelData(trigger, "height")));
+        int halfWidth = Math.max(1, Math.min(6, ChannelDataAccessor.getChannelData(trigger, GTStructureChannels.WIDTH))) - 1;
+        int halfDepth = Math.max(1, Math.min(6, ChannelDataAccessor.getChannelData(trigger, GTStructureChannels.DEPTH))) - 1;
+        int height = Math.max(1, Math.min(5, ChannelDataAccessor.getChannelData(trigger, GTStructureChannels.HEIGHT)));
         return rectangularLayout(halfWidth, height, halfDepth);
     }
 
@@ -425,9 +426,9 @@ public class GT_MetaTileEntity_Charcoal_Pit
             }
             definition = StructureDefinition.<GT_MetaTileEntity_Charcoal_Pit>builder()
                     .addShape(STRUCTURE_PIECE, transpose(shape))
-                    .addChannel("width", 1, 6)
-                    .addChannel("depth", 1, 6)
-                    .addChannel("height", 1, 5)
+                    .addChannel(GTStructureChannels.WIDTH, 1, 6)
+                    .addChannel(GTStructureChannels.DEPTH, 1, 6)
+                    .addChannel(GTStructureChannels.HEIGHT, 1, 5)
                     .addElement('L', naturalBlock(Blocks.log, GT_MetaTileEntity_Charcoal_Pit::isWoodLog,
                             "gt.structure.missing_logs"))
                     .addElement('S', naturalBlock(Blocks.dirt, (block, meta) -> block == Blocks.dirt || block == Blocks.grass,

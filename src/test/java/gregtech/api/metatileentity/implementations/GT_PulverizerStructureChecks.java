@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringTranslate;
 import net.minecraftforge.common.util.ForgeDirection;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.alignment.constructable.ChannelDataAccessor;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
@@ -133,12 +134,14 @@ final class GT_PulverizerStructureChecks {
         assertEquals(26, hints.hints);
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputBusses.size());
-        assertTrue("Hatches can go anywhere in the casing shell: no color restriction", hints.hintFrames.isEmpty());
+        assertEquals("Combined hatch positions need green frames", 24, hints.hintFrames.size());
+        assertTrue(hints.hintFrames.values().stream().allMatch(color -> color == HintColor.GREEN));
         for (int[] p : f.positions) {
             int metadata = p == f.center ? 3 : p == pipe ? 13 : 0;
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(Casings.SOLID_STEEL.getBlock(), hints.hintBlocks.get(key));
             assertEquals(metadata, hints.hintMetadata.get(key).intValue());
+            assertEquals(metadata == 0, hints.hintFrames.containsKey(key));
         }
         Pulverizer independent = new Pulverizer(facing);
         independent.machine.construct(new ItemStack(Items.stick), false);
@@ -265,7 +268,7 @@ final class GT_PulverizerStructureChecks {
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(hint.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            assertFalse(structure.contains("■"));
+            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " - "));
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
             assertFalse(structure.contains("gt.tooltip."));
         }

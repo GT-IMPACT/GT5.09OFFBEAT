@@ -1299,3 +1299,11 @@ gt.processing.stored_energy=Энергия: %s EU
 gt.processing.energy_capacity=Ёмкость: %s EU
 TileEntity_DESCRIPTION_multimachine.multifurnace_Structure_Index_0=8 обязательных корпусов в верхнем слое; свободные места люков в нижнем слое также заполняются жаропрочными корпусами
 TileEntity_DESCRIPTION_multimachine.cleanroom_Location_Index_2=Внутренняя часть крыши, кроме контроллера; (ширина - 2) x (глубина - 2) - 1 блоков (0-168)
+
+gt.structure.channel.width=Ширина структуры; формула размера указана в описании контроллера
+gt.structure.channel.depth=Глубина структуры; формула размера указана в описании контроллера
+gt.structure.channel.height=Высота структуры или число вертикальных слоёв; формула указана в описании контроллера
+gt.structure.channel.length=Длина структуры или число секций; формула указана в описании контроллера
+gt.structure.channel.coil=Уровень катушек; при достройке может определяться уже установленными катушками
+gt.structure.channel.tier=Уровень компонентов структуры
+gt.structure.channel.variant=Вариант структуры; доступные варианты указаны в описании контроллера

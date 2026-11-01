@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringTranslate;
 import net.minecraftforge.common.util.ForgeDirection;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.alignment.constructable.ChannelDataAccessor;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
@@ -128,7 +129,8 @@ final class GT_ImplosionStructureChecks {
         assertEquals(26, hints.hints);
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputBusses.size());
-        assertTrue("Hatches are allowed throughout the shell", hints.hintFrames.isEmpty());
+        assertEquals("Combined hatch positions need green frames", f.shell.size(), hints.hintFrames.size());
+        assertTrue(hints.hintFrames.values().stream().allMatch(color -> color == HintColor.GREEN));
         for (int[] p : f.shell) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(Casings.SOLID_STEEL.getBlock(), hints.hintBlocks.get(key));
@@ -248,7 +250,7 @@ final class GT_ImplosionStructureChecks {
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick))).contains("gt_hatch"));
-            assertFalse(structure.contains("■"));
+            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " - "));
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
         }
     }

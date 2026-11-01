@@ -14,7 +14,7 @@ import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
 import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
-import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.common.GT_DummyWorld;
 import gregtech.common.GT_Network;
 import gregtech.common.GT_Proxy;
@@ -53,7 +53,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import space.impact.structures.ImpactStructures;
 
 import java.io.*;
 import java.util.*;
@@ -586,8 +585,7 @@ public class GT_Mod implements IGT_Mod {
         if (GregTech_API.sLoadStarted) {
             return;
         }
-        ImpactStructures.registerChannelDescription(
-                GTStructureUtility.HATCH_CHANNEL, MODID, "gt.structure.hatch_channel");
+        GTStructureChannels.registerDescriptions();
         try {
             for (Runnable tRunnable : GregTech_API.sBeforeGTLoad) {
                 tRunnable.run();

@@ -189,7 +189,7 @@ final class GT_DrillerStructureChecks {
         for (int[] p : f.base) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(f.machine.getCasingType().getBlock(), hints.hintBlocks.get(key));
-            assertSame(HintColor.BLUE, hints.hintFrames.get(key));
+            assertSame(HintColor.GREEN, hints.hintFrames.get(key));
         }
         for (short[] tint : hints.frameTints.values()) assertArrayEquals(MATERIALS[MATERIAL_INDEX[model]].mRGBa, tint);
         assertEquals(changes, f.world.changes);
@@ -284,7 +284,7 @@ final class GT_DrillerStructureChecks {
             assertFalse(structure.contains("gt.tooltip"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("ru_RU") ? "3 × 7 × 3" : "3 x 7 x 3"));
             assertTrue(structure.contains("gt_hatch"));
-            assertTrue(structure.contains("\u00a79\u25a0\u00a7r - "));
+            assertTrue(structure.contains("\u00a72\u25a0\u00a7r - "));
             assertTrue("Compact structure tooltip", f.machine.getSecondaryDescription().length <= 15);
             assertTrue("Compact information tooltip including separator", f.machine.getPrimaryDescription().length <= 7);
             if (language.equals("en_US")) {

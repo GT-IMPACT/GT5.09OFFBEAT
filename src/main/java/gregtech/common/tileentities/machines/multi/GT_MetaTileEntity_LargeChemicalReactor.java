@@ -12,6 +12,7 @@ import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.IStructureElement;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
@@ -35,6 +36,7 @@ public class GT_MetaTileEntity_LargeChemicalReactor
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_LargeChemicalReactor>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor SHELL_HINT = HintColor.GREEN;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.CHEMICALLY_INERT, 8)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output).build();
     private static IStructureDefinition<GT_MetaTileEntity_LargeChemicalReactor> structureDefinition;
@@ -62,7 +64,7 @@ public class GT_MetaTileEntity_LargeChemicalReactor
                 .addInfo("Accepts fluids instead of fluid cells")
                 .beginStructureBlock(3, 3, 3, false)
                 .addController("Front center")
-                .addRequirements(SHELL, "Any outer casing position, except the coil")
+                .addRequirements(SHELL, "Any outer casing position, except the coil", SHELL_HINT)
                 .addOtherStructurePart(Casings.PTFE_PIPE, "Center of the structure", 1)
                 .addOtherStructurePart(Casings.CUPRONICKEL_COIL,
                         "Any of the five faces adjacent to the PTFE pipe, except the controller", 1)
@@ -146,7 +148,7 @@ public class GT_MetaTileEntity_LargeChemicalReactor
         if (structureDefinition == null) {
             IStructureElement<GT_MetaTileEntity_LargeChemicalReactor> shell =
                     GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeChemicalReactor.class)
-                            .buildAndChain(SHELL, machine -> ++machine.casingCount);
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT);
             structureDefinition = StructureDefinition.<GT_MetaTileEntity_LargeChemicalReactor>builder()
                     .addShape(STRUCTURE_PIECE, transpose(new String[][]{
                             {"CCC", "CHC", "CCC"},

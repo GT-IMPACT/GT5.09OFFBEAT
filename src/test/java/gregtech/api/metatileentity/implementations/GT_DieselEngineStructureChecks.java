@@ -175,7 +175,7 @@ final class GT_DieselEngineStructureChecks {
         for (int[] p : f.sides) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(f.machine.getCasingType().getBlock(), hints.hintBlocks.get(key));
-            assertSame(HintColor.BLUE, hints.hintFrames.get(key));
+            assertSame(HintColor.GREEN, hints.hintFrames.get(key));
         }
         for (int[] p : f.intakes) {
             assertHint(f.machine.getIntakeType(), p, hints);
@@ -347,7 +347,7 @@ final class GT_DieselEngineStructureChecks {
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE,
+            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN,
                     EnumChatFormatting.GOLD, EnumChatFormatting.YELLOW}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));

@@ -12,6 +12,7 @@ import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
@@ -31,6 +32,7 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_MultiblockCentrifuge>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor SHELL_HINT = HintColor.GREEN;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 8)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output).build();
     private static IStructureDefinition<GT_MetaTileEntity_MultiblockCentrifuge> structureDefinition;
@@ -56,7 +58,7 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
                 .addInfo("Processes all Centrifuge recipes")
                 .beginStructureBlock(3, 3, 3, false)
                 .addController("Front center")
-                .addRequirements(SHELL, "Any outer casing position")
+                .addRequirements(SHELL, "Any outer casing position", SHELL_HINT)
                 .addOtherStructurePart(Casings.MOTOR, "Center of the structure", 1)
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
@@ -124,7 +126,7 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
                     }))
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiblockCentrifuge.class)
-                            .buildAndChain(SHELL, machine -> ++machine.casingCount))
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT))
                     .addElement('M', Casings.MOTOR.asElement())
                     .build();
         }

@@ -16,6 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.alignment.constructable.ChannelDataAccessor;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
@@ -137,7 +138,8 @@ final class GT_HeatExchangerStructureChecks {
         assertEquals(changes, f.world.changes);
         assertSame(hot, field(f.machine, "mInputHotFluidHatch"));
         assertSame(cold, field(f.machine, "mOutputColdFluidHatch"));
-        assertTrue("No frames on unrestricted shell hatch positions", hints.hintFrames.isEmpty());
+        assertEquals("Combined hatch positions need green frames", f.shell.size(), hints.hintFrames.size());
+        assertTrue(hints.hintFrames.values().stream().allMatch(color -> color == HintColor.GREEN));
         for (int[] p : f.shell) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(Casings.STABLE_TITANIUM.getBlock(), hints.hintBlocks.get(key));
@@ -310,12 +312,12 @@ final class GT_HeatExchangerStructureChecks {
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("20"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.RED, EnumChatFormatting.BLUE}) {
+            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.BLUE, EnumChatFormatting.GOLD}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hint.contains(marker));
             }
-            assertEquals(2, structure.split("■", -1).length - 1);
+            assertEquals(3, structure.split("■", -1).length - 1);
             assertFalse(structure.contains("gt.tooltip."));
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
         }

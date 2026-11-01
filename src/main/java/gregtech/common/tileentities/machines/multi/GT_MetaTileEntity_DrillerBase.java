@@ -52,7 +52,7 @@ public abstract class GT_MetaTileEntity_DrillerBase
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_DrillerBase>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
-    private static final HintColor BASE_HINT = HintColor.BLUE;
+    private static final HintColor BASE_HINT = HintColor.GREEN;
     private IStructureDefinition<GT_MetaTileEntity_DrillerBase> structureDefinition;
     private StructureRequirements baseRequirements;
     private static final ItemStack miningPipe = GT_ModHandler.getIC2Item("miningPipe", 0);
@@ -367,6 +367,7 @@ public abstract class GT_MetaTileEntity_DrillerBase
     public IStructureDefinition<GT_MetaTileEntity_DrillerBase> getStructureDefinition() {
         if (structureDefinition == null) {
             structureDefinition = StructureDefinition.<GT_MetaTileEntity_DrillerBase>builder()
+                    .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addShape(STRUCTURE_PIECE, transpose(new String[][]{
                             {"   ", " F ", "   "},
                             {"   ", " F ", "   "},

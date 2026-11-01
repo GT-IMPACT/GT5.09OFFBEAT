@@ -210,6 +210,7 @@ public class GT_StructureIntegrationTest {
         checkConstructionConflicts();
         checkCasings();
         checkTooltips();
+        GT_StructureChannelChecks.run();
         checkSharedRequirements();
         GT_FusionStructureChecks.run(hatchItem, hintProxy);
         GT_BoilerStructureChecks.run(hatchItem, hintProxy);
@@ -761,6 +762,8 @@ public class GT_StructureIntegrationTest {
         creative.machine.construct(trigger, true);
         assertEquals(26, hintProxy.hints);
         assertEquals("Shell hints use the casing block and metadata", 25, hintProxy.casingHints);
+        assertEquals(25, hintProxy.hintFrames.size());
+        assertTrue(hintProxy.hintFrames.values().stream().allMatch(color -> color == HintColor.GREEN));
         assertEquals(changes, creative.world.changes);
         assertEquals(inputs, HatchElement.Input.count(creative.machine));
         creative.machine.construct(trigger, false);
@@ -912,6 +915,7 @@ public class GT_StructureIntegrationTest {
                 // An active client hologram marks the same conflicts without marking missing
                 // casings as errors.
                 hintProxy.errorPositions.clear();
+                hintProxy.hintFrames.clear();
                 hintProxy.player = f.player;
                 f.world.isRemote = true;
                 try {

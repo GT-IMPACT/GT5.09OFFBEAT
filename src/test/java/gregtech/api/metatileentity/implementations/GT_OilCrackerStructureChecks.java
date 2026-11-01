@@ -141,7 +141,7 @@ final class GT_OilCrackerStructureChecks {
         assertEquals(inputs, f.machine.mInputHatches.size());
         assertEquals(25, hints.hintFrames.size());
         assertHintGroup(f.input, HintColor.BLUE, hints);
-        assertHintGroup(f.middle, HintColor.PURPLE, hints);
+        assertHintGroup(f.middle, HintColor.LIGHT_BLUE, hints);
         assertHintGroup(f.output, HintColor.ORANGE, hints);
         for (int[] p : f.coils) {
             String key = TestWorld.key(p[0], p[1], p[2]);
@@ -308,7 +308,7 @@ final class GT_OilCrackerStructureChecks {
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE,
-                    EnumChatFormatting.DARK_PURPLE, EnumChatFormatting.GOLD}) {
+                    EnumChatFormatting.AQUA, EnumChatFormatting.GOLD}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));

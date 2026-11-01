@@ -146,10 +146,10 @@ final class GT_BlastFurnaceStructureChecks {
         assertEquals(outputs, f.machine.mOutputHatches.size());
         assertEquals(HEAT[tier] - 100, heat(f.machine));
         for (int[] p : f.bottom) {
-            assertSame(HintColor.BLUE, hints.hintFrames.get(TestWorld.key(p[0], p[1], p[2])));
+            assertSame(HintColor.GREEN, hints.hintFrames.get(TestWorld.key(p[0], p[1], p[2])));
         }
         for (int[] p : f.top) {
-            assertSame(HintColor.YELLOW, hints.hintFrames.get(TestWorld.key(p[0], p[1], p[2])));
+            assertSame(HintColor.ORANGE, hints.hintFrames.get(TestWorld.key(p[0], p[1], p[2])));
         }
         for (int[] p : f.coils) {
             String key = TestWorld.key(p[0], p[1], p[2]);
@@ -369,8 +369,8 @@ final class GT_BlastFurnaceStructureChecks {
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "16 Heating Coils" : "16 Нагревательные катушки"));
             assertTrue(structure.contains("gt_hatch"));
-            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE,
-                    EnumChatFormatting.YELLOW, EnumChatFormatting.GOLD}) {
+            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN,
+                    EnumChatFormatting.GOLD, EnumChatFormatting.RED}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hint.contains(marker));

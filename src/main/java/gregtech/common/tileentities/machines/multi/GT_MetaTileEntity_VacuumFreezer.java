@@ -23,6 +23,7 @@ import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
+import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
@@ -31,6 +32,7 @@ public class GT_MetaTileEntity_VacuumFreezer
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_VacuumFreezer>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
+    private static final HintColor SHELL_HINT = HintColor.GREEN;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.FROST_PROOF, 16)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output).build();
     private static IStructureDefinition<GT_MetaTileEntity_VacuumFreezer> structureDefinition;
@@ -55,7 +57,7 @@ public class GT_MetaTileEntity_VacuumFreezer
                 .addInfo("Super cools hot ingots and cells")
                 .beginStructureBlock(3, 3, 3, true)
                 .addController("Front face, centered")
-                .addRequirements(SHELL, "Any casing position")
+                .addRequirements(SHELL, "Any casing position", SHELL_HINT)
                 .addAir("Center of the structure")
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
@@ -132,7 +134,7 @@ public class GT_MetaTileEntity_VacuumFreezer
                     }))
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_VacuumFreezer.class)
-                            .buildAndChain(SHELL, machine -> ++machine.casingCount))
+                            .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT))
                     .build();
         }
         return structureDefinition;

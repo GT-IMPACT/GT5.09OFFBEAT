@@ -141,7 +141,7 @@ final class GT_MultiFurnaceStructureChecks {
         assertEquals(LEVELS[tier], value(f.machine, "mLevel"));
         for (int[] p : f.bottom) {
             String key = TestWorld.key(p[0], p[1], p[2]);
-            assertSame(HintColor.BLUE, hints.hintFrames.get(key));
+            assertSame(HintColor.GREEN, hints.hintFrames.get(key));
             assertSame(Casings.HEAT_PROOF.getBlock(), hints.hintBlocks.get(key));
             assertEquals(11, hints.hintMetadata.get(key).intValue());
         }
@@ -302,7 +302,7 @@ final class GT_MultiFurnaceStructureChecks {
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "8 Heating Coils" : "8 Нагревательные катушки"));
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("10"));
-            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE, EnumChatFormatting.GOLD}) {
+            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.GOLD}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hint.contains(marker));

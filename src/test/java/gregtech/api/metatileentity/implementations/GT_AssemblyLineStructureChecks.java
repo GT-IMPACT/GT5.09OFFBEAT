@@ -7,6 +7,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AssemblyLine;
 import ic2.core.Ic2Items;
 import net.minecraft.init.Blocks;
@@ -190,8 +191,8 @@ final class GT_AssemblyLineStructureChecks {
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputBusses.size());
         for (int slice = 0; slice < f.length; slice++) {
-            f.assertHint(slice, -2, 0, Casings.SOLID_STEEL, HintColor.BLUE, hints);
-            f.assertHint(slice, -2, 2, Casings.SOLID_STEEL, HintColor.BLUE, hints);
+            f.assertHint(slice, -2, 0, Casings.SOLID_STEEL, HintColor.LIGHT_BLUE, hints);
+            f.assertHint(slice, -2, 2, Casings.SOLID_STEEL, HintColor.LIGHT_BLUE, hints);
             f.assertHint(slice, 1, 1, Casings.SOLID_STEEL, HintColor.YELLOW, hints);
         }
         f.assertHint(1, 0, 0, Casings.GRATE, HintColor.PURPLE, hints);
@@ -354,8 +355,8 @@ final class GT_AssemblyLineStructureChecks {
             assertTrue(structure.contains(language.equals("en_US") ? "no mixing or lasers" : "без смешивания и лазеров"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            for (HintColor color : new HintColor[]{HintColor.BLUE, HintColor.YELLOW, HintColor.ORANGE,
-                    HintColor.GREEN, HintColor.PURPLE}) {
+            for (HintColor color : new HintColor[]{HintColor.LIGHT_BLUE, HintColor.YELLOW, HintColor.ORANGE,
+                    HintColor.BLUE, HintColor.PURPLE}) {
                 String marker = GTStructureUtility.getHintTextColor(color) + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));
@@ -429,6 +430,8 @@ final class GT_AssemblyLineStructureChecks {
             ItemStack trigger = new ItemStack(Items.stick, length - 4);
             if (channel) {
                 ChannelDataAccessor.setChannelData(trigger, GTStructureUtility.HATCH_CHANNEL, 1);
+                ChannelDataAccessor.setChannelData(trigger, GTStructureChannels.LENGTH, length - 4);
+                trigger.stackSize = 64;
             }
             return trigger;
         }

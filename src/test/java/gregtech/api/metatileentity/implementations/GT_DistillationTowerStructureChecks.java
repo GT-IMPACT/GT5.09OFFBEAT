@@ -4,6 +4,7 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.util.GT_Recipe;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DistillationTower;
 import net.minecraft.init.Blocks;
@@ -153,7 +154,7 @@ final class GT_DistillationTowerStructureChecks {
                 String key = TestWorld.key(p[0], p[1], p[2]);
                 assertSame(Casings.CLEAN_STAINLESS_STEEL.getBlock(), hints.hintBlocks.get(key));
                 assertEquals(1, hints.hintMetadata.get(key).intValue());
-                assertSame(y == 0 ? HintColor.BLUE : HintColor.ORANGE, hints.hintFrames.get(key));
+                assertSame(y == 0 ? HintColor.GREEN : HintColor.ORANGE, hints.hintFrames.get(key));
             }
         }
         Tower independent = new Tower(facing, height);
@@ -285,7 +286,7 @@ final class GT_DistillationTowerStructureChecks {
                     ? "Output buses are optional" : "Выходные шины необязательны"));
             assertTrue(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE, EnumChatFormatting.GOLD}) {
+            for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.GOLD}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " - ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));
@@ -336,6 +337,8 @@ final class GT_DistillationTowerStructureChecks {
             ItemStack trigger = new ItemStack(Items.stick, height - 2);
             if (channel) {
                 ChannelDataAccessor.setChannelData(trigger, GTStructureUtility.HATCH_CHANNEL, 1);
+                ChannelDataAccessor.setChannelData(trigger, GTStructureChannels.HEIGHT, height - 2);
+                trigger.stackSize = 64;
             }
             return trigger;
         }

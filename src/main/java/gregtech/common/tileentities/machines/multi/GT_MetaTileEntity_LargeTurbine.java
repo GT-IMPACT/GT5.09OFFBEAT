@@ -35,7 +35,7 @@ import net.minecraftforge.fluids.FluidStack;
 public abstract class GT_MetaTileEntity_LargeTurbine extends
         GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_LargeTurbine> implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
-    private static final HintColor SIDE_HINT = HintColor.BLUE;
+    private static final HintColor SIDE_HINT = HintColor.GREEN;
     private static final HintColor DYNAMO_HINT = HintColor.YELLOW;
     private IStructureDefinition<GT_MetaTileEntity_LargeTurbine> structureDefinition;
     private StructureRequirements shell;

@@ -19,6 +19,7 @@ import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import net.minecraft.world.World;
@@ -39,7 +40,7 @@ public class GT_MetaTileEntity_MultiFurnace
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_MultiFurnace>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
-    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
+    private static final HintColor BOTTOM_HINT = HintColor.GREEN;
     private static final HintColor MUFFLER_HINT = HintColor.ORANGE;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, FurnaceHatch.INPUT_BUS, FurnaceHatch.OUTPUT_BUS)
@@ -80,7 +81,7 @@ public class GT_MetaTileEntity_MultiFurnace
                 .addAir("Center of the middle layer")
                 .addStructureInfo("All eight heating coils must have the same tier.")
                 .addStructureInfo("Item input and output buses are required; IMPACT combined inputs and multi-amp energy hatches are accepted.")
-                .addMasterChannel("Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
+                .addSubChannel(GTStructureChannels.COIL, "Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
                 .toolTipFinisher();
     }
@@ -157,6 +158,7 @@ public class GT_MetaTileEntity_MultiFurnace
                             {"B~B", "BBB", "BBB"}
                     }))
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addChannel(GTStructureChannels.COIL, 1, 10)
                     .addElement('C', Casings.HEAT_PROOF.asElement())
                     .addElement('B', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiFurnace.class)
                             .buildAndChain(BOTTOM).withHint(BOTTOM_HINT))
@@ -194,7 +196,7 @@ public class GT_MetaTileEntity_MultiFurnace
                 }
             }
         }
-        int tier = trigger == null ? 1 : trigger.stackSize;
+        int tier = GTStructureChannels.getValue(trigger, GTStructureChannels.COIL);
         return HeatingCoil.fromTier(tier);
     }
 

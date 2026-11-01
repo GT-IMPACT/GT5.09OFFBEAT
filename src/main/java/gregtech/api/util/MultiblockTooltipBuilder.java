@@ -16,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import space.impact.structures.hint.HintColor;
+import space.impact.structures.structure.IChannelDefinition;
+import space.impact.structures.structure.IStructureDefinition;
 
 /**
  * Fluent multiblock descriptions. Create after registration and rebuild after a
@@ -30,6 +32,7 @@ public class MultiblockTooltipBuilder {
     private final Map<HintColor, LinkedHashSet<String>> coloredHints = new LinkedHashMap<>();
     private final String machineName;
     private final Map<String, Map<String, String>> translatedText = new LinkedHashMap<>();
+    private final LinkedHashSet<String> describedChannels = new LinkedHashSet<>();
     private boolean finished;
 
     /**
@@ -385,9 +388,25 @@ public class MultiblockTooltipBuilder {
     }
 
     public MultiblockTooltipBuilder addSubChannel(String channel, String description) {
+        checkOpen();
+        describedChannels.add(channel);
         String text = tr("channel", channel, text("Channel", description));
         line(hints, text);
         return line(structure, "   " + text);
+    }
+
+    /** Adds registered descriptions and bounds for channels not already described by this tooltip. */
+    public MultiblockTooltipBuilder addStructureChannels(IStructureDefinition<?> definition) {
+        checkOpen();
+        for (IChannelDefinition channel : definition.getChannelDefinitions()) {
+            if (describedChannels.contains(channel.getChannel())) continue;
+            String range = channel.getMaximumValue() == Integer.MAX_VALUE
+                    ? channel.getMinimumValue() + "+"
+                    : channel.getMinimumValue() + "-" + channel.getMaximumValue();
+            addSubChannel(channel.getChannel(), GTStructureChannels.getDescription(channel.getChannel())
+                    + " (" + range + ")");
+        }
+        return this;
     }
 
     public MultiblockTooltipBuilder addMasterChannel(String effect) {

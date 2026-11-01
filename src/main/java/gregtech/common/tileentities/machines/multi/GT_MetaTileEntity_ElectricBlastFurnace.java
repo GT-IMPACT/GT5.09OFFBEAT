@@ -20,6 +20,7 @@ import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import net.minecraft.world.World;
@@ -46,9 +47,9 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_ElectricBlastFurnace>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
-    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
-    private static final HintColor RECOVERY_HINT = HintColor.YELLOW;
-    private static final HintColor MUFFLER_HINT = HintColor.ORANGE;
+    private static final HintColor BOTTOM_HINT = HintColor.GREEN;
+    private static final HintColor RECOVERY_HINT = HintColor.ORANGE;
+    private static final HintColor MUFFLER_HINT = HintColor.RED;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, BlastHatch.BOTTOM_OUTPUT)
             .build();
@@ -95,7 +96,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 .addStructureInfo("Top gas output hatches do not replace the required bottom output hatch or bus.")
                 .addStructureInfo("Fill unused bottom and top positions with heat-proof casings.")
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addMasterChannel("Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
+                .addSubChannel(GTStructureChannels.COIL, "Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
                 .toolTipFinisher();
     }
@@ -217,6 +218,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                             {"B~B", "BBB", "BBB"}
                     }))
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addChannel(GTStructureChannels.COIL, 1, 10)
                     .addElement('B', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_ElectricBlastFurnace.class)
                             .buildAndChain(BOTTOM).withHint(BOTTOM_HINT))
                     .addElement('T', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_ElectricBlastFurnace.class)
@@ -257,7 +259,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 }
             }
         }
-        return HeatingCoil.fromTier(trigger == null ? 1 : trigger.stackSize);
+        return HeatingCoil.fromTier(GTStructureChannels.getValue(trigger, GTStructureChannels.COIL));
     }
 
     private enum BlastHatch implements IHatchElement {

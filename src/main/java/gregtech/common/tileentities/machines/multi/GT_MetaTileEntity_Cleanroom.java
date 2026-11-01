@@ -14,6 +14,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.MultiblockTooltipBuilder;
@@ -91,9 +92,9 @@ public class GT_MetaTileEntity_Cleanroom
                 .addStructureInfo("Up to 2 reinforced doors and 20 hulls / diode cables")
                 .addStructureInfo("Glass: up to %s%% of the plascrete count", GT_Values.cleanroomGlass)
                 .addStructureInfo("Exactly one maintenance and one energy hatch")
-                .addSubChannel("width", "Width = 2 x value + 1")
-                .addSubChannel("depth", "Depth = 2 x value + 1")
-                .addSubChannel("height", "Height = value + 3")
+                .addSubChannel(GTStructureChannels.WIDTH, "Width = 2 x value + 1")
+                .addSubChannel(GTStructureChannels.DEPTH, "Depth = 2 x value + 1")
+                .addSubChannel(GTStructureChannels.HEIGHT, "Height = value + 3")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Auto-place required hatches")
                 .toolTipFinisher();
     }
@@ -202,9 +203,9 @@ public class GT_MetaTileEntity_Cleanroom
     }
 
     private static RoomSize constructionSize(ItemStack trigger) {
-        int width = Math.max(1, Math.min(7, ChannelDataAccessor.getChannelData(trigger, "width")));
-        int depth = Math.max(1, Math.min(7, ChannelDataAccessor.getChannelData(trigger, "depth")));
-        int height = Math.max(1, Math.min(12, ChannelDataAccessor.getChannelData(trigger, "height"))) + 3;
+        int width = Math.max(1, Math.min(7, ChannelDataAccessor.getChannelData(trigger, GTStructureChannels.WIDTH)));
+        int depth = Math.max(1, Math.min(7, ChannelDataAccessor.getChannelData(trigger, GTStructureChannels.DEPTH)));
+        int height = Math.max(1, Math.min(12, ChannelDataAccessor.getChannelData(trigger, GTStructureChannels.HEIGHT))) + 3;
         return new RoomSize(width, height, depth);
     }
 
@@ -253,9 +254,9 @@ public class GT_MetaTileEntity_Cleanroom
             }
             return StructureDefinition.<GT_MetaTileEntity_Cleanroom>builder()
                     .addShape(STRUCTURE_PIECE, transpose(shape))
-                    .addChannel("width", 1, 7)
-                    .addChannel("depth", 1, 7)
-                    .addChannel("height", 1, 12)
+                    .addChannel(GTStructureChannels.WIDTH, 1, 7)
+                    .addChannel(GTStructureChannels.DEPTH, 1, 7)
+                    .addChannel(GTStructureChannels.HEIGHT, 1, 12)
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('P', onElementPass(machine -> ++machine.plascreteCount, Casings.PLASCRETE.asElement()))
                     .addElement('F', Casings.FILTER.asElement())

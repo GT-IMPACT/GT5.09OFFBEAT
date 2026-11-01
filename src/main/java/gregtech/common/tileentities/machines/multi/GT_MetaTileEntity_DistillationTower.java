@@ -9,6 +9,7 @@ import gregtech.api.enums.Casings;
 import gregtech.api.enums.HatchElement;
 import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import net.minecraft.util.StatCollector;
@@ -38,7 +39,7 @@ public class GT_MetaTileEntity_DistillationTower
         implements ISurvivalConstructable {
     private static final int MIN_HEIGHT = 3;
     private static final int MAX_HEIGHT = 12;
-    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
+    private static final HintColor BOTTOM_HINT = HintColor.GREEN;
     private static final HintColor OUTPUT_HINT = HintColor.ORANGE;
     private static final StructureRequirements COMMON = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy).build();
@@ -104,7 +105,7 @@ public class GT_MetaTileEntity_DistillationTower
                 .addStructureInfo("Each upper layer needs its own fluid output hatch; output buses do not count toward this requirement.")
                 .addStructureInfo("Output buses are optional on any layer; bottom fluid outputs do not replace the required upper outlets.")
                 .addStructureInfo("Compatible IMPACT fluid and combined inputs and multi-amp energy hatches are accepted.")
-                .addMasterChannel("Total height = channel value + 2, from 3 to 12 blocks")
+                .addSubChannel(GTStructureChannels.HEIGHT, "Total height = channel value + 2, from 3 to 12 blocks")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
                 .toolTipFinisher();
     }
@@ -185,7 +186,7 @@ public class GT_MetaTileEntity_DistillationTower
     }
 
     private static int constructionHeight(ItemStack trigger) {
-        return Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT - 2, trigger.stackSize) + 2);
+        return Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT - 2, GTStructureChannels.getValue(trigger, GTStructureChannels.HEIGHT)) + 2);
     }
 
     @Override
@@ -206,6 +207,7 @@ public class GT_MetaTileEntity_DistillationTower
             StructureDefinition.Builder<GT_MetaTileEntity_DistillationTower> builder = StructureDefinition
                     .<GT_MetaTileEntity_DistillationTower>builder()
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
+                    .addChannel(GTStructureChannels.HEIGHT, 1, MAX_HEIGHT - 2)
                     .addElement('A', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_DistillationTower.class)
                             .allow(HatchElement.Output)
                             .buildAndChain(BOTTOM, machine -> ++machine.casingCount).withHint(BOTTOM_HINT));

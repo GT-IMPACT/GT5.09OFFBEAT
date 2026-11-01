@@ -54,7 +54,7 @@ public class GT_MetaTileEntity_AirFilter
         extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_AirFilter>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
-    private static final HintColor BOTTOM_HINT = HintColor.BLUE;
+    private static final HintColor BOTTOM_HINT = HintColor.GREEN;
     private static final HintColor MUFFLER_HINT = HintColor.ORANGE;
     private static final StructureRequirements BOTTOM = StructureRequirements
             .builder(Casings.AIR_FILTER_TURBINE, 0)
