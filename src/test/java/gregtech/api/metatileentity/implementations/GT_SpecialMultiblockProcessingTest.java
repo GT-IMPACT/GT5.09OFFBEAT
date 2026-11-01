@@ -176,14 +176,9 @@ public class GT_SpecialMultiblockProcessingTest {
 
     private static void driller(String model) throws Exception {
         boolean oil = model.startsWith("Oil");
-        int[] oilEnergy = {-7, -28, -112, -448, -1792, -7168, -28672, -114688,
-                -458752, -1835008, -7340032, -29360128, -117440512, -469762048, -1879048192, 1073741824};
-        int[] fillerEnergy = {-24, -24, -96, -384, -1536, -6144, -24576, -98304,
-                -393216, -1572864, -6291456, -25165824, -100663296, -402653184, -1610612736, -2147483648};
         int[] downward = {40, 40, 20, 10, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] upward = {120, 120, 60, 30, 15, 7, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        Method stats = (oil ? GT_MetaTileEntity_OilDrillBase.class : GT_MetaTileEntity_ConcreteBackfillerBase.class)
-                .getDeclaredMethod("setElectricityStats");
+        Method stats = GT_MetaTileEntity_DrillerBase.class.getDeclaredMethod("setElectricityStats");
         stats.setAccessible(true);
         Method enough = GT_MetaTileEntity_DrillerBase.class.getDeclaredMethod("isEnergyEnough");
         enough.setAccessible(true);
@@ -193,7 +188,9 @@ public class GT_SpecialMultiblockProcessingTest {
             Fixture f = new Fixture(machine, tier);
             setField(machine, "workState", state);
             stats.invoke(machine);
-            assertEquals(model + " tier=" + tier, (oil ? oilEnergy : fillerEnergy)[tier], machine.mEUt);
+            long expectedEUt = oil ? -(7L << (tier * 2)) : -(6L << (Math.max(1, tier) * 2));
+            assertEquals(model + " tier=" + tier, expectedEUt, machine.lEUt);
+            assertEquals((int) Math.max(Integer.MIN_VALUE, expectedEUt), machine.mEUt);
             assertEquals(oil ? 20 : state == 2 ? upward[tier] : downward[tier], machine.mMaxProgresstime);
             assertEquals(10000, machine.mEfficiency);
             long required = 512 + GT_Values.V[tier] * 4;
@@ -210,10 +207,10 @@ public class GT_SpecialMultiblockProcessingTest {
         Fixture f = new Fixture(machine, 1);
         GT_MetaTileEntity_Hatch_EnergyMulti multi = new GT_MetaTileEntity_Hatch_EnergyMulti("test", 1, 4, "test", null);
         f.attach(multi); machine.mEnergyHatchesMulti.add(multi);
-        f.machine.mEnergyHatches.get(0).setEUVar(576); multi.setEUVar(575);
+        f.machine.mEnergyHatches.get(0).setEUVar(384); multi.setEUVar(383);
         assertEquals(160, machine.getMaxInputVoltage());
         assertFalse((boolean) enough.invoke(machine));
-        multi.setEUVar(576);
+        multi.setEUVar(384);
         assertTrue((boolean) enough.invoke(machine));
     }
 

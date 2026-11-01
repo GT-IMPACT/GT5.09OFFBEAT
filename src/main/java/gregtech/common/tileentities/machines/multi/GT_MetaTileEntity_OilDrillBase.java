@@ -1,20 +1,18 @@
 package gregtech.common.tileentities.machines.multi;
 
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.util.GT_Utility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import space.gtimpact.virtual_world.api.VirtualAPI;
 import space.gtimpact.virtual_world.api.core.WorldPos;
 import space.gtimpact.virtual_world.api.services.mining.fluids.FluidExtractionResult;
+import space.gtimpact.virtual_world.api.services.scanning.fluids.FluidVeinResult;
 
 import static gregtech.common.GT_UndergroundOil.DIVIDER;
 
@@ -53,8 +51,8 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
 
 
     @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "DrillingRig.png");
+    public int getSupportedProcessingModes() {
+        return ProcessingLogic.PROTECT_ITEMS | ProcessingLogic.PROTECT_FLUIDS;
     }
 
     protected abstract int getRangeInChunks();
@@ -65,103 +63,76 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     }
 
     @Override
-    protected void setElectricityStats() {
-        this.mEfficiency = getCurrentEfficiency(null);
-        this.mEfficiencyIncrease = 10000;
-        int tier = Math.max(0, GT_Utility.getTier(getMaxInputVoltage()));
-        this.mEUt = -7 << (tier << 1);
-        this.mMaxProgresstime = 20;
+    protected long getDrillingEUt() {
+        return 7L << (getDrillingTier() * 2);
     }
 
     @Override
-    protected boolean workingAtBottom(ItemStack aStack, int xDrill, int yDrill, int zDrill, int xPipe, int zPipe, int yHead, int oldYHead) {
-        switch (tryLowerPipeState(true)) {
+    protected int getDrillingDuration() {
+        return 20;
+    }
+
+    @Override
+    protected CheckRecipeResult prepareAtBottom(DrillingPlan plan) {
+        switch (plan.lowerPipe(true)) {
             case 0:
-                workState = STATE_DOWNWARD;
-                setElectricityStats();
-                return true;
+                plan.nextState = STATE_DOWNWARD;
+                return CheckRecipeResult.SUCCESS;
             case 3:
-                workState = STATE_UPWARD;
-                return true;
+                plan.nextState = STATE_UPWARD;
+                return CheckRecipeResult.SUCCESS;
+            default:
+                break;
         }
-
-        if (reachingVoidOrBedrock() && tryFillChunkList()) {
-
-            float speed = .5F + (GT_Utility.getTier(getMaxInputVoltage()) - getMinTier()) * .25F;
-
-            FluidStack tFluid = pumpOil(speed);
-
-            if (tFluid != null && tFluid.amount > getTotalConfigValue()) {
-
-                this.mOutputFluids = new FluidStack[]{tFluid};
-                return true;
-            }
-        }
-
-        workState = STATE_UPWARD;
-
-        return true;
-    }
-
-    private FluidExtractionResult extractFluidFromVirtualUndergroundVein(int amount) {
-        IGregTechTileEntity te = getBaseMetaTileEntity();
-        return VirtualAPI.INSTANCE.getMining().extractFluidAtBlock(
-                te.getWorld().provider.dimensionId,
-                new WorldPos(te.getXCoord(), te.getZCoord()),
-                amount
-        );
-    }
-
-    private boolean tryFillChunkList() {
-        FluidStack tFluid;
-
-        if (mOilId <= 0) {
-
-            FluidExtractionResult result = extractFluidFromVirtualUndergroundVein(0);
-
-            if (result != null) {
-
-                tFluid = result.getFluid().getFluid();
-                if (tFluid != null) {
-                    mOilId = tFluid.getFluidID();
+        if (reachingVoidOrBedrock()) {
+            OilReserve reserve = readOilReserve();
+            if (reserve != null && reserve.remaining > 1 && (mOilId <= 0 || mOilId == reserve.fluid.getFluidID())) {
+                float speed = .5F + (getDrillingTier() - getMinTier()) * .25F;
+                double amount = Math.floor(Math.max(reserve.remaining - 1, 1000.0) * speed / DIVIDER
+                        * ((double) getRangeInChunks() * 16 * speed * 1.2F));
+                if (amount > Integer.MAX_VALUE) {
+                    return CheckRecipeResult.OUTPUT_OVERFLOW;
                 }
-
-                return result.getRemainingVolume() > 0;
-            }
-        }
-
-        return mOilId > 0;
-    }
-
-    private FluidStack pumpOil(float speed) {
-        if (mOilId <= 0) return null;
-
-        FluidStack tFluid, tOil;
-
-        tOil = new FluidStack(FluidRegistry.getFluid(mOilId), 0);
-
-        FluidExtractionResult result = extractFluidFromVirtualUndergroundVein(1);
-
-        if (result != null) {
-
-            int rateExtract = getRangeInChunks();
-            int veinSize = result.getRemainingVolume();
-
-            if (veinSize <= 0) {
-                return null;
-            }
-
-            int fluidExtracted = (int) Math.floor(Math.max(veinSize, 1000.0) * (double) speed / DIVIDER * ((double) rateExtract * 16 * speed * 1.2F));
-
-            FluidStack fluid = result.getFluid().getFluid();
-            if (fluid != null) {
-                tFluid = new FluidStack(fluid, fluidExtracted);
-                if (tOil.isFluidEqual(tFluid)) {
-                    tOil.amount += tFluid.amount;
+                if (amount > 0 && amount > getTotalConfigValue()) {
+                    plan.fluids = new FluidStack[]{new FluidStack(reserve.fluid, (int) amount)};
+                    plan.commitResource = () -> consumeOilReserve(reserve);
+                    plan.afterCommit = () -> mOilId = reserve.fluid.getFluidID();
+                    return CheckRecipeResult.SUCCESS;
                 }
             }
         }
+        plan.nextState = STATE_UPWARD;
+        return CheckRecipeResult.SUCCESS;
+    }
 
-        return tOil.amount == 0 ? null : tOil;
+    protected OilReserve readOilReserve() {
+        IGregTechTileEntity tile = getBaseMetaTileEntity();
+        FluidVeinResult result = VirtualAPI.INSTANCE.getMining().getFluidVeinStateAtBlock(
+                tile.getWorld().provider.dimensionId, new WorldPos(tile.getXCoord(), tile.getZCoord()));
+        if (result == null || result.getFluid().getFluid() == null) {
+            return null;
+        }
+        return new OilReserve(result.getFluid().getFluid(), result.getRemainingVolume());
+    }
+
+    protected boolean consumeOilReserve(OilReserve expected) {
+        OilReserve current = readOilReserve();
+        if (current == null || current.remaining != expected.remaining || !current.fluid.isFluidEqual(expected.fluid)) {
+            return false;
+        }
+        IGregTechTileEntity tile = getBaseMetaTileEntity();
+        FluidExtractionResult result = VirtualAPI.INSTANCE.getMining().extractFluidAtBlock(
+                tile.getWorld().provider.dimensionId, new WorldPos(tile.getXCoord(), tile.getZCoord()), 1);
+        return result != null && result.getExtractedVolume() == 1;
+    }
+
+    protected static final class OilReserve {
+        public final FluidStack fluid;
+        public final int remaining;
+
+        public OilReserve(FluidStack fluid, int remaining) {
+            this.fluid = fluid.copy();
+            this.remaining = remaining;
+        }
     }
 }

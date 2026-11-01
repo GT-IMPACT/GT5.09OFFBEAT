@@ -2,14 +2,12 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.util.GT_Utility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTileEntity_DrillerBase {
 
@@ -33,8 +31,17 @@ public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTi
     }
 
     @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "DrillingRig.png");
+    public void saveNBTData(NBTTagCompound tag) {
+        super.saveNBTData(tag);
+        tag.setInteger("backfillX", mLastXOff);
+        tag.setInteger("backfillZ", mLastZOff);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound tag) {
+        super.loadNBTData(tag);
+        mLastXOff = tag.getInteger("backfillX");
+        mLastZOff = tag.getInteger("backfillZ");
     }
 
     protected abstract int getRadius();
@@ -45,66 +52,62 @@ public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTi
     }
 
     @Override
-    protected void setElectricityStats() {
-        this.mEfficiency = getCurrentEfficiency(null);
-        this.mEfficiencyIncrease = 10000;
-        int tier = Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
-        this.mEUt = -6 * (1 << (tier << 1));
-        this.mMaxProgresstime = (workState == STATE_UPWARD ? 240 : 80) / (1 << tier);
-        this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+    protected long getDrillingEUt() {
+        return 6L << (Math.max(1, getDrillingTier()) * 2);
     }
 
     @Override
-    protected boolean workingUpward(ItemStack aStack, int xDrill, int yDrill, int zDrill, int xPipe, int zPipe, int yHead, int oldYHead) {
-        if (isRefillableBlock(xPipe, yHead - 1, zPipe))
-            return tryRefillBlock(xPipe, yHead - 1, zPipe);
-        int radius = getRadius();
-        if (mLastXOff == 0 && mLastZOff == 0) {
-            mLastXOff = - radius;
-            mLastZOff = - radius;
+    protected int getDrillingDuration() {
+        int tier = Math.max(1, getDrillingTier());
+        return Math.max(1, (workState == STATE_UPWARD ? 240 : 80) / (1 << tier));
+    }
+
+    @Override
+    protected CheckRecipeResult prepareUpward(DrillingPlan plan) {
+        if (isRefillableBlock(plan.pipeX, plan.headY - 1, plan.pipeZ)) {
+            return prepareRefill(plan, plan.pipeX, plan.headY - 1, plan.pipeZ);
         }
-        if (yHead != yDrill) {
-            for (int i = mLastXOff; i <= radius; i++) {
-                for (int j = (i == mLastXOff ? mLastZOff : - radius); j <= radius; j++) {
-                    if (isRefillableBlock(xPipe + i, yHead, zPipe + j)){
-                        mLastXOff = i;
-                        mLastZOff = j;
-                        return tryRefillBlock(xPipe + i, yHead, zPipe + j);
+        int radius = getRadius();
+        int startX = Math.max(-radius, Math.min(radius, mLastXOff));
+        int startZ = Math.max(-radius, Math.min(radius, mLastZOff));
+        if (startX == 0 && startZ == 0) {
+            startX = -radius;
+            startZ = -radius;
+        }
+        if (plan.headY != plan.drillY) {
+            for (int x = startX; x <= radius; x++) {
+                for (int z = x == startX ? startZ : -radius; z <= radius; z++) {
+                    if (isRefillableBlock(plan.pipeX + x, plan.headY, plan.pipeZ + z)) {
+                        final int nextX = x;
+                        final int nextZ = z;
+                        plan.afterCommit = () -> {
+                            mLastXOff = nextX;
+                            mLastZOff = nextZ;
+                        };
+                        return prepareRefill(plan, plan.pipeX + x, plan.headY, plan.pipeZ + z);
                     }
                 }
             }
         }
-
-        if (tryPickPipe()) {
+        plan.afterCommit = () -> {
             mLastXOff = 0;
             mLastZOff = 0;
-            return true;
-        } else {
-            workState = STATE_DOWNWARD;
-            stopMachine();
-            return false;
+        };
+        return super.prepareUpward(plan);
+    }
+
+    private boolean isRefillableBlock(int x, int y, int z) {
+        IGregTechTileEntity tile = getBaseMetaTileEntity();
+        return tile.getBlock(x, y, z).isAir(tile.getWorld(), x, y, z)
+                && !tile.getBlock(x, y, z).getMaterial().isSolid()
+                && mayPlaceBlock(x, y, z, GregTech_API.sBlockConcretes, 8);
+    }
+
+    private CheckRecipeResult prepareRefill(DrillingPlan plan, int x, int y, int z) {
+        if (!plan.inputs.consumeFluid(Materials.Concrete.getMolten(144L))) {
+            return CheckRecipeResult.NO_RECIPE;
         }
+        plan.world.setBlock(x, y, z, GregTech_API.sBlockConcretes, 8);
+        return CheckRecipeResult.SUCCESS;
     }
-
-    private boolean isRefillableBlock(int aX, int aY, int aZ){
-        IGregTechTileEntity aBaseTile = getBaseMetaTileEntity();
-        if (!aBaseTile.getBlock(aX, aY, aZ).isAir(aBaseTile.getWorld(), aX, aY, aZ) || aBaseTile.getBlock(aX, aY, aZ).getMaterial().isSolid()) return false;
-        if (!GT_Utility.setBlockByFakePlayer(getFakePlayer(aBaseTile), aX, aY, aZ, GregTech_API.sBlockConcretes, 8, true)) return false;
-        return true;
-    }
-
-    private boolean tryRefillBlock(int aX, int aY, int aZ) {
-        if (!tryConsumeFluid()) return false;
-        getBaseMetaTileEntity().getWorld().setBlock(aX, aY, aZ, GregTech_API.sBlockConcretes, 8, 3);
-        return true;
-    }
-
-    private boolean tryConsumeFluid() {
-        if (!depleteInput(Materials.Concrete.getMolten(144L))){
-            mMaxProgresstime = 0;
-            return false;
-        }
-        return true;
-    }
-
 }

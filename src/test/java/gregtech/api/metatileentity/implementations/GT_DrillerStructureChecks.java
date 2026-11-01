@@ -138,6 +138,8 @@ final class GT_DrillerStructureChecks {
         }
         f.putHatch(f.base.get(1), 'E', TIERS[model] - 1);
         assertFalse("Below minimum input voltage", f.recheck());
+        f.putHatch(f.base.get(1), 'A', TIERS[model] - 1);
+        assertFalse("Multi-amp hatch cannot replace the required voltage tier", f.recheck());
         f.putHatch(f.base.get(1), 'A', TIERS[model]);
         assertTrue("Multi-amp energy works", f.recheck());
         if (model >= 3) {

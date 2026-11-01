@@ -169,7 +169,7 @@ public final class ProcessingInputs {
         return true;
     }
 
-    public boolean commit() {
+    public boolean isUnchanged() {
         if (!sourceUnchanged.getAsBoolean()) {
             return false;
         }
@@ -182,6 +182,13 @@ public final class ProcessingInputs {
             if (!originalFluids[i].isFluidStackIdentical(beforeFluids[i])) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    public boolean commit() {
+        if (!isUnchanged()) {
+            return false;
         }
         for (int i = 0; i < originals.length; i++) {
             originals[i].stackSize = items[i].stackSize;
