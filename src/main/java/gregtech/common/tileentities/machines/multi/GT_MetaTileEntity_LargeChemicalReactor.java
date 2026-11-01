@@ -71,7 +71,7 @@ public class GT_MetaTileEntity_LargeChemicalReactor
                 .addStructureInfo("At least one cupronickel coil must touch the PTFE pipe; additional cupronickel coils at these five positions are allowed.")
                 .addStructureInfo("Construction keeps existing coils, or places one in a free position next to the PTFE pipe.")
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the chemical reactor shell.")
                 .toolTipFinisher();
     }
 
@@ -148,6 +148,7 @@ public class GT_MetaTileEntity_LargeChemicalReactor
         if (structureDefinition == null) {
             IStructureElement<GT_MetaTileEntity_LargeChemicalReactor> shell =
                     GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeChemicalReactor.class)
+                            .autoPlace(HatchElement.InputBus, HatchElement.InputHatch, HatchElement.OutputBus, HatchElement.OutputHatch)
                             .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT);
             structureDefinition = StructureDefinition.<GT_MetaTileEntity_LargeChemicalReactor>builder()
                     .addShape(STRUCTURE_PIECE, transpose(new String[][]{

@@ -332,7 +332,7 @@ final class GT_CharcoalPitStructureChecks {
             assertTrue(structure.contains("height"));
             assertTrue(structure.contains("depth"));
             assertFalse(structure.contains("gt_hatch"));
-            assertTrue("Compact structure tooltip", f.machine.getCurrentDescription(true).length <= 13);
+            assertTrue("Compact structure tooltip", GT_StructureChannelChecks.materialLineCount(f.machine.getCurrentDescription(true)) <= 13);
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
             assertFalse(structure.contains("gt.tooltip."));
         }

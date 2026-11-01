@@ -396,7 +396,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
                         FusionHatch.OUTPUT.hintColor)
                 .addStructureInfo("Required hatches must be " + GT_Values.VN[tier()] + " or better.")
                 .addStructureInfo("Buses and special IMPACT hatches do not replace the required standard hatches; no maintenance is needed.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places reactor-tier energy injectors and fluid injectors/extractors at their dedicated ring positions.")
                 .toolTipFinisher();
     }
 

@@ -61,7 +61,7 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
                 .addRequirements(SHELL, "Any outer casing position", SHELL_HINT)
                 .addOtherStructurePart(Casings.MOTOR, "Center of the structure", 1)
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the centrifuge shell.")
                 .toolTipFinisher();
     }
 
@@ -126,6 +126,7 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
                     }))
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiblockCentrifuge.class)
+                            .autoPlace(HatchElement.InputBus, HatchElement.InputHatch, HatchElement.OutputBus, HatchElement.OutputHatch)
                             .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT))
                     .addElement('M', Casings.MOTOR.asElement())
                     .build();

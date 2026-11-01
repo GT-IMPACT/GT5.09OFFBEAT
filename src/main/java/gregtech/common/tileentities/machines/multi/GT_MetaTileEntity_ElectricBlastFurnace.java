@@ -97,7 +97,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 .addStructureInfo("Fill unused bottom and top positions with heat-proof casings.")
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
                 .addSubChannel(GTStructureChannels.COIL, "Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance, energy, inputs and outputs in the bottom layer, and the top muffler. Optional top gas outputs are installed manually.")
                 .toolTipFinisher();
     }
 

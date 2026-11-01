@@ -67,7 +67,7 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer
                 .addStructureInfo("At least one cupronickel coil must touch the pump; additional cupronickel coils at these five positions are allowed.")
                 .addStructureInfo("Construction keeps existing coils, or places one in a free position next to the pump.")
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the electrolyzer shell.")
                 .toolTipFinisher();
     }
 
@@ -127,6 +127,7 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer
         if (structureDefinition == null) {
             IStructureElement<GT_MetaTileEntity_MultiblockElectrolyzer> shell =
                     GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiblockElectrolyzer.class)
+                            .autoPlace(HatchElement.InputBus, HatchElement.InputHatch, HatchElement.OutputBus, HatchElement.OutputHatch)
                             .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT);
             structureDefinition = StructureDefinition.<GT_MetaTileEntity_MultiblockElectrolyzer>builder()
                     .addShape(STRUCTURE_PIECE, transpose(new String[][]{

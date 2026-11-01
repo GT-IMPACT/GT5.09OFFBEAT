@@ -82,7 +82,7 @@ public class GT_MetaTileEntity_MultiFurnace
                 .addStructureInfo("All eight heating coils must have the same tier.")
                 .addStructureInfo("Item input and output buses are required; IMPACT combined inputs and multi-amp energy hatches are accepted.")
                 .addSubChannel(GTStructureChannels.COIL, "Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance, energy and item buses in the bottom layer, and the muffler at the top-center position.")
                 .toolTipFinisher();
     }
 

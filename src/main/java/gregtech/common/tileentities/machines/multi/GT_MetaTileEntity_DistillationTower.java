@@ -106,7 +106,7 @@ public class GT_MetaTileEntity_DistillationTower
                 .addStructureInfo("Output buses are optional on any layer; bottom fluid outputs do not replace the required upper outlets.")
                 .addStructureInfo("Compatible IMPACT fluid and combined inputs and multi-amp energy hatches are accepted.")
                 .addSubChannel(GTStructureChannels.HEIGHT, "Total height = channel value + 2, from 3 to 12 blocks")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places the bottom fluid input, maintenance and energy hatches, and a separate fluid output for each distillation layer.")
                 .toolTipFinisher();
     }
 

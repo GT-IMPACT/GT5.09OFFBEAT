@@ -66,10 +66,70 @@ public enum HatchElement implements IHatchElement {
         public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
             return machine.addOutputToMachineList(tile, texture);
         }
+    },
+    InputHatch {
+        public boolean matches(IMetaTileEntity tile) {
+            return tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GTMTE_Multi_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
+        }
+
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            return machine.mInputHatches.size() + machine.mQuadrInputHatches.size() + machine.mInputBusHatches.size();
+        }
+
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            return machine.addInputToMachineList(tile, texture);
+        }
+    },
+    InputBus {
+        public boolean matches(IMetaTileEntity tile) {
+            return tile instanceof GT_MetaTileEntity_Hatch_InputBus || tile instanceof GTMTE_BusHatch_Input;
+        }
+
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            return machine.mInputBusses.size() + machine.mInputBusHatches.size();
+        }
+
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            return machine.addInputToMachineList(tile, texture);
+        }
+    },
+    OutputHatch {
+        public boolean matches(IMetaTileEntity tile) {
+            return tile instanceof GT_MetaTileEntity_Hatch_Output;
+        }
+
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            return machine.mOutputHatches.size();
+        }
+
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            return machine.addOutputToMachineList(tile, texture);
+        }
+    },
+    OutputBus {
+        public boolean matches(IMetaTileEntity tile) {
+            return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
+        }
+
+        public int count(GT_MetaTileEntity_MultiBlockBase machine) {
+            return machine.mOutputBusses.size();
+        }
+
+        public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
+            return machine.addOutputToMachineList(tile, texture);
+        }
     };
 
     @Override
     public String getDescription() {
-        return StatCollector.translateToLocal("gt.tooltip.hatch." + name().toLowerCase(Locale.ROOT));
+        String key;
+        switch (this) {
+            case InputHatch: key = "input_hatch"; break;
+            case InputBus: key = "input_bus"; break;
+            case OutputHatch: key = "output_hatch"; break;
+            case OutputBus: key = "output_bus"; break;
+            default: key = name().toLowerCase(Locale.ROOT);
+        }
+        return StatCollector.translateToLocal("gt.tooltip.hatch." + key);
     }
 }

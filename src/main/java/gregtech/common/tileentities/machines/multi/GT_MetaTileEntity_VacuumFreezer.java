@@ -60,7 +60,7 @@ public class GT_MetaTileEntity_VacuumFreezer
                 .addRequirements(SHELL, "Any casing position", SHELL_HINT)
                 .addAir("Center of the structure")
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the vacuum freezer shell.")
                 .toolTipFinisher();
     }
 
@@ -134,6 +134,7 @@ public class GT_MetaTileEntity_VacuumFreezer
                     }))
                     .addChannel(GTStructureUtility.HATCH_CHANNEL, 1, 1)
                     .addElement('C', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_VacuumFreezer.class)
+                            .autoPlace(HatchElement.InputBus, HatchElement.InputHatch, HatchElement.OutputBus, HatchElement.OutputHatch)
                             .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT))
                     .build();
         }

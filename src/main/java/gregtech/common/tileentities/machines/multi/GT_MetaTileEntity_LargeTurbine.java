@@ -88,7 +88,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
                 .addStructureInfo("The eight side positions accept hatches or casings; all remaining shell positions require casings.")
                 .addStructureInfo("Compatible IMPACT fluid inputs and multi-amp dynamo hatches are accepted.")
                 .addStructureInfo("Controllers of equally oriented large turbines cannot be two blocks apart horizontally.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory");
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places the rear Dynamo Hatch and required fluid, maintenance and exhaust hatches for this turbine in its shell.");
     }
 
     private StructureRequirements getShellRequirements() {

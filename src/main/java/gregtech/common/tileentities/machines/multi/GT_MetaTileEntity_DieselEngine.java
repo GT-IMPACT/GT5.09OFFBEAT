@@ -91,7 +91,7 @@ public class GT_MetaTileEntity_DieselEngine
                 .addStructureInfo("Two fluid-capable input hatches and one maintenance hatch are required; item-only buses do not replace fluid inputs.")
                 .addStructureInfo("Additional output hatches, buses and mufflers are accepted at the marked side positions.")
                 .addStructureInfo("Compatible IMPACT multi-fluid and combined inputs and multi-amp dynamo hatches are accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places two fluid inputs and maintenance in the engine shell, plus the dedicated muffler and rear dynamo.")
                 .toolTipFinisher();
     }
 

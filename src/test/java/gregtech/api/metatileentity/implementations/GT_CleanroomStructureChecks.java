@@ -364,7 +364,16 @@ final class GT_CleanroomStructureChecks {
             String marker = EnumChatFormatting.BLUE + "■" + EnumChatFormatting.RESET + " - ";
             assertTrue(structure.contains(marker));
             assertTrue(hints.contains(marker));
-            assertTrue("Keep the tooltip compact", f.machine.getCurrentDescription(true).length <= 18);
+            String[] rows = f.machine.getCurrentDescription(true);
+            int channelStart = -1;
+            for (int index = 0; index < rows.length; index++) {
+                if (EnumChatFormatting.getTextWithoutFormattingCodes(rows[index])
+                        .equals(net.minecraft.util.StatCollector.translateToLocal("gt.tooltip.channels"))) {
+                    channelStart = index;
+                }
+            }
+            assertTrue("Keep materials compact before the channel section", channelStart > 0 && channelStart <= 18);
+            assertEquals("Four named channels, each with its description", 9, rows.length - channelStart);
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
             assertFalse(structure.contains("gt.tooltip."));
         }

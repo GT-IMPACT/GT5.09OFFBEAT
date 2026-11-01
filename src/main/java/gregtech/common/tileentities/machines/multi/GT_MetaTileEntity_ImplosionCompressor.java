@@ -69,7 +69,7 @@ public class GT_MetaTileEntity_ImplosionCompressor
                 .addAir("Center of the structure")
                 .addStructureInfo("Item input and output buses are required; fluid-only hatches do not satisfy these requirements.")
                 .addStructureInfo("IMPACT combined item/fluid inputs and multi-amp energy hatches are accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance, energy, input/output buses and the muffler in the implosion compressor shell.")
                 .toolTipFinisher();
     }
 

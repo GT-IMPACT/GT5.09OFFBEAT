@@ -92,7 +92,7 @@ public class GT_MetaTileEntity_HeatExchanger
                 .addStructureInfo("The hot input and cold output are separate from the distilled-water and steam hatches.")
                 .addStructureInfo("The hot port accepts fluid input hatches, including IMPACT multi-fluid hatches; the cold port requires a fluid output hatch.")
                 .addStructureInfo("Compatible IMPACT fluid and combined input hatches can supply distilled water.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places the hot-fluid input and cooled-fluid output in their dedicated positions, plus water, steam and maintenance hatches in the shell.")
                 .toolTipFinisher();
     }
 

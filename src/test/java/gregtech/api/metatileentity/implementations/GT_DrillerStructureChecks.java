@@ -285,7 +285,7 @@ final class GT_DrillerStructureChecks {
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("ru_RU") ? "3 × 7 × 3" : "3 x 7 x 3"));
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(structure.contains("\u00a72\u25a0\u00a7r - "));
-            assertTrue("Compact structure tooltip", f.machine.getSecondaryDescription().length <= 15);
+            assertTrue("Compact structure tooltip", GT_StructureChannelChecks.materialLineCount(f.machine.getSecondaryDescription()) <= 15);
             assertTrue("Compact information tooltip including separator", f.machine.getPrimaryDescription().length <= 7);
             if (language.equals("en_US")) {
                 if (english == null) english = info; else assertEquals(english, info);

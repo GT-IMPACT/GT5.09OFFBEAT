@@ -95,7 +95,7 @@ public class GT_MetaTileEntity_Cleanroom
                 .addSubChannel(GTStructureChannels.WIDTH, "Width = 2 x value + 1")
                 .addSubChannel(GTStructureChannels.DEPTH, "Depth = 2 x value + 1")
                 .addSubChannel(GTStructureChannels.HEIGHT, "Height = value + 3")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Auto-place required hatches")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places the required Maintenance Hatch and Energy Hatch in the cleanroom walls. Doors and other wall devices are installed manually.")
                 .toolTipFinisher();
     }
 

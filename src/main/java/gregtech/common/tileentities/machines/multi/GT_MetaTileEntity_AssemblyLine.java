@@ -104,7 +104,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 .addStructureHint("Data Access Hatch (optional, next to controller)", DATA_HINT)
                 .addStructureInfo("Power: 1-8 basic OR 1 multi-amp; no mixing or lasers")
                 .addSubChannel(GTStructureChannels.LENGTH, "Length: channel + 4 (5-16)")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Auto-place required hatches")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places an input bus for every slice, top energy hatches, maintenance and the end output bus. Optional fluid inputs and data access are installed manually.")
                 .toolTipFinisher();
     }
 

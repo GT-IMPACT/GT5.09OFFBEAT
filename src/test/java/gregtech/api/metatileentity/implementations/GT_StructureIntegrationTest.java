@@ -232,6 +232,8 @@ public class GT_StructureIntegrationTest {
         GT_CharcoalPitStructureChecks.run(hintProxy);
         GT_DrillerStructureChecks.run(hatchItem, hintProxy);
         GT_PrimitiveBlastStructureChecks.run(hintProxy);
+        GT_StructureChannelChecks.checkEveryController();
+        GT_MixedPortStructureChecks.run();
     }
 
     private static void loadLanguage(String language) throws Exception {
@@ -392,7 +394,7 @@ public class GT_StructureIntegrationTest {
                         .addControlInfo("Biome coefficient:")
                         .addControlInfo("   Ocean, River - 1000 L/s");
                 String[] structureLines = aligned.getStructureInformation();
-                for (int i = 0; i < 12; i++) {
+                for (int i = 0; i < 10; i++) {
                     String plain = EnumChatFormatting.getTextWithoutFormattingCodes(structureLines[i]);
                     assertEquals("Uniform structure indentation in " + language, "   " + plain.trim(), plain);
                 }
@@ -400,7 +402,7 @@ public class GT_StructureIntegrationTest {
                         .getTextWithoutFormattingCodes(structureLines[1]));
                 assertEquals("   16 Pump Deck", EnumChatFormatting
                         .getTextWithoutFormattingCodes(structureLines[3]));
-                assertEquals("Footer", structureLines[12]);
+                assertEquals("Footer", structureLines[10]);
                 assertEquals("Biome coefficient:", aligned.getControlInfo()[0]);
                 assertEquals("   Ocean, River - 1000 L/s", EnumChatFormatting.getTextWithoutFormattingCodes(aligned.getControlInfo()[1]));
             }
@@ -549,6 +551,38 @@ public class GT_StructureIntegrationTest {
         assertTrue(casingsOnly.isSatisfied(independent.machine, 0));
         assertTrue(GTStructureUtility.buildHatchAdder(Freezer.class).buildAndChain(casingsOnly)
                 .check(f.machine, f.world, 11, 64, 0));
+        Source automaticItems = new Source(new ItemStack(hatchItem, 3, 32002), new ItemStack(Blocks.wool, 4, 1));
+        AutoPlaceEnvironment automaticEnvironment = AutoPlaceEnvironment.fromLegacy(automaticItems,
+                independent.player, independent.player::addChatMessage);
+        IStructureElement<Freezer> automatic = GTStructureUtility.buildHatchAdder(Freezer.class)
+                .autoPlace(2, addonInput).buildAndChain(casingsOnly);
+        assertTrue(casingsOnly.isSatisfied(independent.machine, 0));
+        assertEquals(IStructureElement.PlaceResult.ACCEPT,
+                automatic.survivalPlaceBlock(independent.machine, independent.world, 20, 64, 0,
+                        new ItemStack(Items.stick), automaticEnvironment));
+        assertEquals(3, automaticItems.stacks.get(0).stackSize);
+        for (int x = 21; x <= 22; x++) {
+            assertEquals(IStructureElement.PlaceResult.ACCEPT_STOP,
+                    automatic.survivalPlaceBlock(independent.machine, independent.world, x, 64, 0, trigger, automaticEnvironment));
+            assertTrue(automatic.check(independent.machine, independent.world, x, 64, 0));
+        }
+        assertEquals(2, addonInput.count(independent.machine));
+        assertEquals(IStructureElement.PlaceResult.ACCEPT,
+                automatic.survivalPlaceBlock(independent.machine, independent.world, 23, 64, 0, trigger, automaticEnvironment));
+        assertEquals(1, automaticItems.stacks.get(0).stackSize);
+        assertEquals(IStructureElement.PlaceResult.SKIP,
+                automatic.survivalPlaceBlock(independent.machine, independent.world, 21, 64, 0, trigger, automaticEnvironment));
+        IStructureElement<Freezer> filtered = GTStructureUtility.buildHatchAdder(Freezer.class)
+                .autoPlace(3, addonInput).onlyPlaceIf(hatch -> false).buildAndChain(casingsOnly);
+        assertEquals(IStructureElement.PlaceResult.ACCEPT,
+                filtered.survivalPlaceBlock(independent.machine, independent.world, 24, 64, 0, trigger, automaticEnvironment));
+        assertEquals(1, automaticItems.stacks.get(0).stackSize);
+        IStructureElement<Freezer> optional = GTStructureUtility.buildHatchAdder(Freezer.class)
+                .allow(addonInput).buildAndChain(casingsOnly);
+        assertEquals(IStructureElement.PlaceResult.ACCEPT,
+                optional.survivalPlaceBlock(independent.machine, independent.world, 25, 64, 0, trigger, automaticEnvironment));
+        assertEquals(1, automaticItems.stacks.get(0).stackSize);
+        assertThrows(IllegalArgumentException.class, () -> GTStructureUtility.buildHatchAdder(Freezer.class).autoPlace(0, addonInput));
     }
 
     private static void checkCasings() {
@@ -802,7 +836,7 @@ public class GT_StructureIntegrationTest {
         assertEquals(24, source.consumed);
         assertEquals(-1, f.build(trigger, 3, source));
         assertEquals(24, source.consumed);
-        for (HatchElement category : HatchElement.values())
+        for (HatchElement category : new HatchElement[] { HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output })
             assertEquals(1, category.count(f.machine));
         for (TestTile tile : f.world.tiles.values()) {
             if (tile.getMetaTileEntity() instanceof Freezer)

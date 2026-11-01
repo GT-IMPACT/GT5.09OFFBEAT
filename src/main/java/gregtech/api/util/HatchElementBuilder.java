@@ -34,9 +34,12 @@ import space.impact.structures.util.ItemStackPredicate;
 public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBase> {
     private final Map<IHatchElement, Integer> requirements = new LinkedHashMap<>();
     private final Set<IHatchElement> optional = new LinkedHashSet<>();
+    private final Map<IHatchElement, Integer> automatic = new LinkedHashMap<>();
     private int textureIndex = -1;
     private HintColor hintColor;
     private Predicate<IMetaTileEntity> placementPreference;
+    private Predicate<IMetaTileEntity> placementFilter = tile -> true;
+    private Predicate<IMetaTileEntity> acceptanceFilter = tile -> true;
     private BiFunction<T, IGregTechTileEntity, ForgeDirection> hatchFacing;
 
     public HatchElementBuilder<T> atLeast(IHatchElement... elements) {
@@ -60,6 +63,33 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         for (IHatchElement element : elements) {
             optional.add(Objects.requireNonNull(element));
         }
+        return this;
+    }
+
+    /** Requests available hatches during construction without making them formation requirements. */
+    public HatchElementBuilder<T> autoPlace(IHatchElement... elements) {
+        return autoPlace(1, elements);
+    }
+
+    public HatchElementBuilder<T> autoPlace(int count, IHatchElement... elements) {
+        if (count <= 0) throw new IllegalArgumentException("Automatic hatch count must be positive");
+        for (IHatchElement element : elements) {
+            optional.add(Objects.requireNonNull(element));
+            automatic.merge(element, count, Math::max);
+        }
+        return this;
+    }
+
+    /** Applies a hatch restriction to validation, error hints and automatic placement. */
+    public HatchElementBuilder<T> onlyAcceptIf(Predicate<IMetaTileEntity> filter) {
+        acceptanceFilter = Objects.requireNonNull(filter);
+        placementFilter = filter;
+        return this;
+    }
+
+    /** Limits automatic choices without rejecting existing manually selected hatches. */
+    public HatchElementBuilder<T> onlyPlaceIf(Predicate<IMetaTileEntity> filter) {
+        placementFilter = Objects.requireNonNull(filter);
         return this;
     }
 
@@ -201,12 +231,18 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         HintColor color = hintColor;
         Set<IHatchElement> accepted = new LinkedHashSet<>(required.keySet());
         Predicate<IMetaTileEntity> preference = placementPreference;
+        Predicate<IMetaTileEntity> filter = placementFilter;
+        Predicate<IMetaTileEntity> acceptance = acceptanceFilter;
         BiFunction<T, IGregTechTileEntity, ForgeDirection> facing = hatchFacing;
         accepted.addAll(optional);
+        Map<IHatchElement, Integer> placement = new LinkedHashMap<>(required);
+        automatic.forEach((element, count) -> placement.merge(element, count, Math::max));
         return new IStructureElement<T>() {
             private IHatchElement matching(World world, int x, int y, int z) {
                 TileEntity tile = world.getTileEntity(x, y, z);
                 if (!(tile instanceof IGregTechTileEntity))
+                    return null;
+                if (!acceptance.test(((IGregTechTileEntity) tile).getMetaTileEntity()))
                     return null;
                 for (IHatchElement element : accepted) {
                     if (element.matches(((IGregTechTileEntity) tile).getMetaTileEntity()))
@@ -216,9 +252,15 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
             }
 
             private Predicate<ItemStack> missingHatches(T machine, IItemSource source) {
-                Predicate<ItemStack> missing = stack -> required.entrySet().stream()
+                Predicate<ItemStack> requiredMissing = stack -> required.entrySet().stream()
                         .anyMatch(entry -> (dedicated || entry.getKey().count(machine) < entry.getValue())
-                                && entry.getKey().matchesForPlacement(GTStructureUtility.getMetaTileEntity(stack)));
+                                && entry.getKey().matchesForPlacement(GTStructureUtility.getMetaTileEntity(stack))
+                                && filter.test(GTStructureUtility.getMetaTileEntity(stack)));
+                Predicate<ItemStack> missing = source.takeOne(requiredMissing, true) != null ? requiredMissing
+                        : stack -> placement.entrySet().stream()
+                        .anyMatch(entry -> (dedicated || entry.getKey().count(machine) < entry.getValue())
+                                && entry.getKey().matchesForPlacement(GTStructureUtility.getMetaTileEntity(stack))
+                                && filter.test(GTStructureUtility.getMetaTileEntity(stack)));
                 if (preference != null) {
                     Predicate<ItemStack> preferred = missing
                             .and(stack -> preference.test(GTStructureUtility.getMetaTileEntity(stack)));
@@ -230,7 +272,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
             }
 
             private boolean needsHatches(T machine) {
-                return dedicated || required.entrySet().stream()
+                return dedicated || placement.entrySet().stream()
                         .anyMatch(entry -> entry.getKey().count(machine) < entry.getValue());
             }
 

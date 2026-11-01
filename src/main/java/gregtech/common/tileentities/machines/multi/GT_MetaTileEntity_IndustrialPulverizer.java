@@ -70,7 +70,7 @@ public class GT_MetaTileEntity_IndustrialPulverizer
                 .addStructureInfo("At least one steel pipe casing must touch the gearbox; additional pipes at these five positions are allowed.")
                 .addStructureInfo("Construction keeps existing pipes, or places one in a free position next to the gearbox.")
                 .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places missing maintenance, energy, input and output hatches in the pulverizer shell; the central gearbox and pipe stay unchanged.")
                 .toolTipFinisher();
     }
 

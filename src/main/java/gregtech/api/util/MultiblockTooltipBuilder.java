@@ -32,7 +32,9 @@ public class MultiblockTooltipBuilder {
     private final Map<HintColor, LinkedHashSet<String>> coloredHints = new LinkedHashMap<>();
     private final String machineName;
     private final Map<String, Map<String, String>> translatedText = new LinkedHashMap<>();
-    private final LinkedHashSet<String> describedChannels = new LinkedHashSet<>();
+    private final Map<String, LinkedHashSet<String>> channelDescriptions = new LinkedHashMap<>();
+    private final Map<String, String> defaultChannelDescriptions = new LinkedHashMap<>();
+    private final LinkedHashSet<String> masterChannelDescriptions = new LinkedHashSet<>();
     private boolean finished;
 
     /**
@@ -99,8 +101,10 @@ public class MultiblockTooltipBuilder {
             return "Use the ImpactStructures hologram projector on the controller to show the structure; sneak-use to build.";
         case "pollution":
             return "Produces %s pollution per second";
-        case "channel":
-            return "Channel %s: %s";
+        case "channels":
+            return "Structure channels";
+        case "master_channel_label":
+            return "Projector stack size";
         case "master_channel":
             return "Projector stack size determines: %s";
         case "hatch.energy":
@@ -387,32 +391,49 @@ public class MultiblockTooltipBuilder {
         return line(structure, separator(EnumChatFormatting.GRAY, 30));
     }
 
+    /** Repeated calls for one channel add detail rows under the same label. */
     public MultiblockTooltipBuilder addSubChannel(String channel, String description) {
         checkOpen();
-        describedChannels.add(channel);
-        String text = tr("channel", channel, text("Channel", description));
-        line(hints, text);
-        return line(structure, "   " + text);
+        channelDescriptions.computeIfAbsent(Objects.requireNonNull(channel), key -> new LinkedHashSet<>())
+                .add(text("Channel", description));
+        return this;
     }
 
-    /** Adds registered descriptions and bounds for channels not already described by this tooltip. */
+    /** Explicit machine descriptions take precedence over shared channel descriptions. */
     public MultiblockTooltipBuilder addStructureChannels(IStructureDefinition<?> definition) {
         checkOpen();
         for (IChannelDefinition channel : definition.getChannelDefinitions()) {
-            if (describedChannels.contains(channel.getChannel())) continue;
             String range = channel.getMaximumValue() == Integer.MAX_VALUE
                     ? channel.getMinimumValue() + "+"
                     : channel.getMinimumValue() + "-" + channel.getMaximumValue();
-            addSubChannel(channel.getChannel(), GTStructureChannels.getDescription(channel.getChannel())
-                    + " (" + range + ")");
+            defaultChannelDescriptions.putIfAbsent(channel.getChannel(),
+                    GTStructureChannels.getDescription(channel.getChannel()) + " (" + range + ")");
         }
         return this;
     }
 
     public MultiblockTooltipBuilder addMasterChannel(String effect) {
-        String text = tr("master_channel", text("Channel", effect));
-        line(hints, text);
-        return line(structure, "   " + text);
+        checkOpen();
+        masterChannelDescriptions.add(text("Channel", effect));
+        return this;
+    }
+
+    private void appendChannelSection(List<String> destination) {
+        if (channelDescriptions.isEmpty() && masterChannelDescriptions.isEmpty()) return;
+        line(destination, separator(EnumChatFormatting.DARK_GRAY, 30));
+        line(destination, EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + tr("channels")
+                + EnumChatFormatting.RESET);
+        if (!masterChannelDescriptions.isEmpty()) {
+            line(destination, "   " + EnumChatFormatting.AQUA + tr("master_channel_label") + EnumChatFormatting.RESET);
+            for (String description : masterChannelDescriptions)
+                line(destination, "      " + EnumChatFormatting.GRAY + description);
+        }
+        for (Map.Entry<String, LinkedHashSet<String>> channel : channelDescriptions.entrySet()) {
+            line(destination, "   " + EnumChatFormatting.AQUA + GTStructureChannels.getLabel(channel.getKey())
+                    + EnumChatFormatting.DARK_GRAY + " (" + channel.getKey() + ")" + EnumChatFormatting.RESET);
+            for (String description : channel.getValue())
+                line(destination, "      " + EnumChatFormatting.GRAY + description);
+        }
     }
 
     /**
@@ -532,6 +553,12 @@ public class MultiblockTooltipBuilder {
             line(hints, legend);
             line(structure, legend);
         }
+        for (Map.Entry<String, String> channel : defaultChannelDescriptions.entrySet()) {
+            if (!channelDescriptions.containsKey(channel.getKey()))
+                addSubChannel(channel.getKey(), channel.getValue());
+        }
+        appendChannelSection(structure);
+        appendChannelSection(hints);
         highlightQuantities(information);
         highlightQuantities(structure);
         highlightQuantities(controls);

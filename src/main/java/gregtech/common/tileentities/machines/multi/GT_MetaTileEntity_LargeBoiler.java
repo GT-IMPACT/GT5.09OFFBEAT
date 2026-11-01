@@ -72,7 +72,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 .addStructureInfo("Two inputs are required: a water hatch and a fuel hatch or bus.")
                 .addStructureInfo("Compatible IMPACT fluid and combined input hatches are accepted.")
                 .addStructureInfo("The top center is a casing or output hatch, not a pipe or air.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places water/fuel inputs, maintenance and muffler hatches in the firebox, and steam outputs in the boiler casing.")
                 .toolTipFinisher();
     }
 

@@ -89,7 +89,7 @@ public class GT_MetaTileEntity_OilCracker extends
                 .addStructureInfo("Steam, hydrogen, radon, fluorine and zinc, nickel, niobium or silver plasma enter through the middle ring; other fluids enter through the hydrocarbon end.")
                 .addStructureInfo("Compatible IMPACT multi-fluid and combined inputs and multi-amp energy hatches are accepted.")
                 .addStructureInfo("Additional item buses are accepted in their respective input or output zones, but do not replace fluid hatches.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places feed input on the input side, hydrogen input in the center, product output on the output side, and maintenance/energy hatches in the shell.")
                 .toolTipFinisher();
     }
 

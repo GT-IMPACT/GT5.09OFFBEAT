@@ -3,6 +3,9 @@ package gregtech.api.util;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import net.minecraft.util.EnumChatFormatting;
+import space.impact.structures.ChannelDescription;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import space.impact.structures.ImpactStructures;
@@ -51,6 +54,31 @@ public final class GTStructureChannels {
         String key = translationKey(channel);
         return StatCollector.canTranslate(key) ? StatCollector.translateToLocal(key)
                 : DESCRIPTIONS.getOrDefault(channel, channel);
+    }
+
+    /** Uses the same description-key + ".label" convention as the ImpactStructures channel GUI. */
+    public static String getLabel(String channel) {
+        ChannelDescription registered = ChannelDescription.getAll().get(channel);
+        if (registered != null) {
+            for (String description : new TreeMap<>(registered.getDescriptions()).values()) {
+                String label = translatedLabel(description);
+                if (label != null) return label;
+            }
+        }
+        // Tooltips can be built before channel registration during startup or headless checks.
+        if (DESCRIPTIONS.containsKey(channel)) {
+            String label = translatedLabel(translationKey(channel));
+            if (label != null) return label;
+        }
+        String readable = channel.replaceAll("[_:./-]+", " ").trim().replaceAll("\\s+", " ");
+        return readable.isEmpty() ? channel : Character.toUpperCase(readable.charAt(0)) + readable.substring(1);
+    }
+
+    private static String translatedLabel(String description) {
+        String key = description + ".label";
+        if (!StatCollector.canTranslate(key)) return null;
+        String label = EnumChatFormatting.getTextWithoutFormattingCodes(StatCollector.translateToLocal(key)).trim();
+        return label.isEmpty() || label.equals(key) ? null : label;
     }
 
     /** Unset subchannels retain the tool's master value, including legacy stack-size selection. */

@@ -106,7 +106,7 @@ public class GT_MetaTileEntity_AirFilter
                 .addStructureInfo("Unused bottom hatch and middle muffler positions require Air Filter Turbine Casings.")
                 .addStructureInfo("Item input and output buses are required; fluid-only hatches do not satisfy these requirements.")
                 .addStructureInfo("IMPACT combined item/fluid inputs and multi-amp energy hatches are accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance, energy and filter input/output buses in the base, and the muffler at its dedicated position.")
                 .toolTipFinisher();
     }
 

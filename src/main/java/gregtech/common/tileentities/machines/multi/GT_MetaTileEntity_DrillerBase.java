@@ -359,7 +359,7 @@ public abstract class GT_MetaTileEntity_DrillerBase
                         "Beside the pillar and above it", 15)
                 .addRequirements(getBaseRequirements(), "Base only", BASE_HINT)
                 .addStructureHint("Input Bus / Data Access (optional, base)", BASE_HINT)
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Auto-place required hatches")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance and sufficiently tiered energy hatches in the drill base, plus the service hatches required by this drill variant.")
                 .toolTipFinisher();
     }
 
