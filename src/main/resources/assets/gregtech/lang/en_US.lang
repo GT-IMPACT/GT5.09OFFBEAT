@@ -1590,3 +1590,5 @@ gt.processing.maintenance.tool.soft_hammer=Soft Mallet
 gt.processing.maintenance.tool.hard_hammer=Hammer
 gt.processing.maintenance.tool.soldering_tool=Soldering Iron
 gt.processing.maintenance.tool.crowbar=Crowbar
+gt.processing.result.cleanroom_required=Cleanroom required
+gt.processing.result.low_gravity_required=Low gravity required

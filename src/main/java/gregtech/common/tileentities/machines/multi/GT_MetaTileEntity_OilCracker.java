@@ -2,7 +2,7 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -21,23 +21,24 @@ import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
 
+import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 import static space.impact.structures.structure.StructureUtility.transpose;
 
-public class GT_MetaTileEntity_OilCracker
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_OilCracker>
-        implements ISurvivalConstructable {
+public class GT_MetaTileEntity_OilCracker extends
+        GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_OilCracker> implements ISurvivalConstructable {
     private static final String INPUT_LEFT = "input_left";
     private static final String INPUT_RIGHT = "input_right";
     private static final HintColor INPUT_HINT = HintColor.BLUE;
@@ -93,46 +94,36 @@ public class GT_MetaTileEntity_OilCracker
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex,
+            boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
-            if (aActive) return new ITexture[]{Casings.CLEAN_STAINLESS_STEEL.getTexture(),
-                    TextureFactory.of(OVERLAY_FRONT_OIL_CRACKER_ACTIVE),
-                    TextureFactory.builder().addIcon(OVERLAY_FRONT_OIL_CRACKER_ACTIVE_GLOW).glow().build()};
-            return new ITexture[]{Casings.CLEAN_STAINLESS_STEEL.getTexture(),
+            if (aActive) {
+                return new ITexture[] { Casings.CLEAN_STAINLESS_STEEL.getTexture(),
+                        TextureFactory.of(OVERLAY_FRONT_OIL_CRACKER_ACTIVE),
+                        TextureFactory.builder().addIcon(OVERLAY_FRONT_OIL_CRACKER_ACTIVE_GLOW).glow().build() };
+            }
+            return new ITexture[] { Casings.CLEAN_STAINLESS_STEEL.getTexture(),
                     TextureFactory.of(OVERLAY_FRONT_OIL_CRACKER),
-                    TextureFactory.builder().addIcon(OVERLAY_FRONT_OIL_CRACKER_GLOW).glow().build()};
+                    TextureFactory.builder().addIcon(OVERLAY_FRONT_OIL_CRACKER_GLOW).glow().build() };
         }
-        return new ITexture[]{Casings.CLEAN_STAINLESS_STEEL.getTexture()};
+        return new ITexture[] { Casings.CLEAN_STAINLESS_STEEL.getTexture() };
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "OilCrackingUnit.png");
+        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
+                "OilCrackingUnit.png");
     }
 
     @Override
-    public boolean checkRecipe(ItemStack aStack) {
-        ArrayList<FluidStack> tInputList = getStoredFluids();
-        FluidStack[] tFluidInputs = tInputList.toArray(new FluidStack[0]);
-        long tVoltage = getMaxInputVoltage();
-        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
+    public List<GT_Recipe.GT_Recipe_Map> getRecipeMaps() {
+        return Collections.singletonList(GT_Recipe.GT_Recipe_Map.sCrakingRecipes);
+    }
 
-        GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sCrakingRecipes.findRecipe(
-                getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluidInputs , mInventory[1]);
-        if (tRecipe != null && isRecipeVoltageAllowed(tRecipe.mEUt) && tRecipe.isRecipeInputEqual(true, tFluidInputs, mInventory[1])) {
-            this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-            this.mEfficiencyIncrease = 10000;
-            calculateOverclockedNessMulti(tRecipe.mEUt, tRecipe.mDuration, 1, tVoltage);
-            //In case recipe is too OP for that machine
-            if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
-                return false;
-            if (this.mEUt > 0) {
-                this.mEUt = (-this.mEUt);
-            }
-            this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
-            this.mOutputFluids = new FluidStack[]{tRecipe.getFluidOutput(0)};
-            return true;
-        }
-        return false;
+    @Override
+    protected ProcessingLogic createProcessingLogic() {
+        return new ProcessingLogic()
+                .setRecipeMapSupplier(this::getRecipeMap)
+                .setOverclock(2, 4);
     }
 
     @Override
@@ -146,16 +137,19 @@ public class GT_MetaTileEntity_OilCracker
         return valid;
     }
 
-    /** Read the existing end hatches without registering them or changing counters during previews. */
+    /**
+     * Read the existing end hatches without registering them or changing counters
+     * during previews.
+     */
     private String selectedPiece() {
         IGregTechTileEntity base = getBaseMetaTileEntity();
         int inputSide = 0;
         int outputSide = 0;
         int[] offset = new int[3];
-        for (int side : new int[]{-2, 2}) {
+        for (int side : new int[] { -2, 2 }) {
             for (int y = -1; y <= 1; y++) {
                 for (int depth = 0; depth < 3; depth++) {
-                    getExtendedFacing().getWorldOffset(new int[]{side, y, depth}, offset);
+                    getExtendedFacing().getWorldOffset(new int[] { side, y, depth }, offset);
                     IGregTechTileEntity tile = base.getIGregTechTileEntityOffset(offset[0], offset[1], offset[2]);
                     if (tile == null) {
                         continue;
@@ -216,9 +210,7 @@ public class GT_MetaTileEntity_OilCracker
     }
 
     private enum CrackerHatch implements IHatchElement {
-        HYDROCARBON,
-        REAGENT,
-        PRODUCT;
+        HYDROCARBON, REAGENT, PRODUCT;
 
         @Override
         public boolean matches(IMetaTileEntity tile) {
@@ -258,14 +250,14 @@ public class GT_MetaTileEntity_OilCracker
         @Override
         public String getDescription() {
             switch (this) {
-                case HYDROCARBON:
-                    return StatCollector.translateToLocal("gt.tooltip.hatch.cracker_input");
-                case REAGENT:
-                    return StatCollector.translateToLocal("gt.tooltip.hatch.cracker_reagent");
-                case PRODUCT:
-                    return StatCollector.translateToLocal("gt.tooltip.hatch.cracker_output");
-                default:
-                    throw new AssertionError(this);
+            case HYDROCARBON:
+                return StatCollector.translateToLocal("gt.tooltip.hatch.cracker_input");
+            case REAGENT:
+                return StatCollector.translateToLocal("gt.tooltip.hatch.cracker_reagent");
+            case PRODUCT:
+                return StatCollector.translateToLocal("gt.tooltip.hatch.cracker_output");
+            default:
+                throw new AssertionError(this);
             }
         }
     }
@@ -311,9 +303,8 @@ public class GT_MetaTileEntity_OilCracker
                     if ((yPos == tY) && (xPos == tX || zPos == tZ)) {
                         continue;
                     }
-                    if (aBaseMetaTileEntity.getBlock(xPos, yPos, zPos) == GregTech_API.sBlockCasings1 &&
-                            aBaseMetaTileEntity.getMetaID(xPos, yPos, zPos) == 12)
-                    {
+                    if (aBaseMetaTileEntity.getBlock(xPos, yPos, zPos) == GregTech_API.sBlockCasings1
+                            && aBaseMetaTileEntity.getMetaID(xPos, yPos, zPos) == 12) {
                         aBaseMetaTileEntity.getWorld().setBlock(xPos, yPos, zPos, GregTech_API.sBlockCasings5, 0, 3);
                     }
                 }
@@ -328,25 +319,32 @@ public class GT_MetaTileEntity_OilCracker
         tHatches.addAll(mQuadrInputHatches);
         tHatches.addAll(mInputBusHatches);
         for (GT_MetaTileEntity_Hatch tHatch : tHatches) {
-            if (!isValidMetaTileEntity(tHatch)) continue;
+            if (!isValidMetaTileEntity(tHatch)) {
+                continue;
+            }
             FluidStack[] tFluids;
             if (tHatch instanceof GTMTE_BusHatch_Input) {
                 GTMTE_BusHatch_Input combined = (GTMTE_BusHatch_Input) tHatch;
                 combined.mRecipeMap = getRecipeMap();
-                tFluids = new FluidStack[]{combined.getFillableStack()};
+                tFluids = new FluidStack[] { combined.getFillableStack() };
             } else {
                 GT_MetaTileEntity_Hatch_Input input = (GT_MetaTileEntity_Hatch_Input) tHatch;
                 input.mRecipeMap = getRecipeMap();
-                tFluids = input instanceof GTMTE_Multi_Hatch_Input
-                        ? ((GTMTE_Multi_Hatch_Input) input).getStoredFluid()
-                        : new FluidStack[]{input.getFillableStack()};
+                tFluids = input instanceof GTMTE_Multi_Hatch_Input ? ((GTMTE_Multi_Hatch_Input) input).getStoredFluid()
+                        : new FluidStack[] { input.getFillableStack() };
             }
             for (FluidStack tStack : tFluids) {
-                if (tStack == null) continue;
-                if (tStack.isFluidEqual(GT_ModHandler.getSteam(1000)) || tStack.isFluidEqual(Materials.Hydrogen.getGas(1000))
-                        || tStack.isFluidEqual(Materials.Radon.getGas(1000)) || tStack.isFluidEqual(Materials.Fluorine.getGas(1000))
-                        || tStack.isFluidEqual(Materials.Zinc.getPlasma(1)) || tStack.isFluidEqual(Materials.Nickel.getPlasma(1))
-                        || tStack.isFluidEqual(Materials.Niobium.getPlasma(1)) || tStack.isFluidEqual(Materials.Silver.getPlasma(1))) {
+                if (tStack == null) {
+                    continue;
+                }
+                if (tStack.isFluidEqual(GT_ModHandler.getSteam(1000))
+                        || tStack.isFluidEqual(Materials.Hydrogen.getGas(1000))
+                        || tStack.isFluidEqual(Materials.Radon.getGas(1000))
+                        || tStack.isFluidEqual(Materials.Fluorine.getGas(1000))
+                        || tStack.isFluidEqual(Materials.Zinc.getPlasma(1))
+                        || tStack.isFluidEqual(Materials.Nickel.getPlasma(1))
+                        || tStack.isFluidEqual(Materials.Niobium.getPlasma(1))
+                        || tStack.isFluidEqual(Materials.Silver.getPlasma(1))) {
                     if (isHatchInMiddleRing(tHatch)) {
                         rList.add(tStack);
                     }

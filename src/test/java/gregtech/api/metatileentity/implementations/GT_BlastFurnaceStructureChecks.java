@@ -2,7 +2,6 @@ package gregtech.api.metatileentity.implementations;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
-import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.HeatingCoil;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GTStructureUtility;
@@ -24,7 +23,6 @@ import space.impact.structures.structure.ISurvivalBuildEnvironment;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +45,7 @@ final class GT_BlastFurnaceStructureChecks {
             checkConflictsAndLegacy(facing, hints);
         }
         checkHeatAndOutputs();
+        checkSummedVoltageHeat();
         checkTooltip();
     }
 
@@ -113,7 +112,7 @@ final class GT_BlastFurnaceStructureChecks {
         }
         f.putHatch(f.bottom.get(1), 6);
         assertTrue(f.recheck());
-        assertEquals("Multi-amp voltage affects heat as before", HEAT[tier], heat(f.machine));
+        assertEquals("Amperage does not increase the voltage heat bonus", HEAT[tier] - 100, heat(f.machine));
         f.requiredHatches();
         f.putHatch(f.top.get(2), 1);
         assertFalse("Top accepts outputs only", f.recheck());
@@ -191,7 +190,7 @@ final class GT_BlastFurnaceStructureChecks {
         assertEquals(1, f.machine.mInputBusHatches.size());
         assertEquals(1, f.machine.mEnergyHatchesMulti.size());
         assertEquals(1, f.machine.mMufflerHatches.size());
-        assertEquals(HEAT[tier], heat(f.machine));
+        assertEquals(HEAT[tier] - 100, heat(f.machine));
         assertEquals(-1, f.build(trigger, 10, source));
         assertEquals(32, source.consumed);
         for (boolean channel : new boolean[]{false, true}) {
@@ -253,6 +252,41 @@ final class GT_BlastFurnaceStructureChecks {
         }
     }
 
+    private static void checkSummedVoltageHeat() throws Exception {
+        int[] energyPositions = { 1, 4, 5, 6 };
+        for (int tier = 0; tier <= 15; tier++) {
+            for (int count : new int[] { 1, 4 }) {
+                for (int amps : new int[] { 0, 1, 4, 64 }) {
+                    Furnace f = new Furnace(ForgeDirection.NORTH);
+                    f.machine.construct(new ItemStack(Items.stick), false);
+                    f.requiredHatches();
+                    for (int index = 0; index < count; index++) {
+                        int[] position = f.bottom.get(energyPositions[index]);
+                        MetaTileEntity hatch = amps == 0
+                                ? new GT_MetaTileEntity_Hatch_Energy("test", tier, "test", null)
+                                : new GT_MetaTileEntity_Hatch_EnergyMulti("test", tier, amps, "test", null);
+                        f.world.putTile(position[0], position[1], position[2],
+                                new TestTile(f.world, hatch, ForgeDirection.NORTH));
+                    }
+                    assertTrue(f.recheck());
+                    // Above UHV the fork's voltage table no longer increases by four each tier.
+                    int expectedTier = count == 1 ? tier : tier >= 13 ? 16 : tier + 1;
+                    assertEquals("tier=" + tier + ", count=" + count + ", amps=" + amps,
+                            1801 + 100 * (expectedTier - 2), heat(f.machine));
+                }
+            }
+        }
+
+        Furnace mixed = new Furnace(ForgeDirection.NORTH);
+        mixed.machine.construct(new ItemStack(Items.stick), false);
+        mixed.requiredHatches();
+        int[] position = mixed.bottom.get(4);
+        mixed.world.putTile(position[0], position[1], position[2], new TestTile(mixed.world,
+                new GT_MetaTileEntity_Hatch_EnergyMulti("test", 3, 64, "test", null), ForgeDirection.NORTH));
+        assertTrue(mixed.recheck());
+        assertEquals("LV + HV uses the tier of 32 + 512 V, regardless of amperage", 2001, heat(mixed.machine));
+    }
+
     private static void checkHeatAndOutputs() throws Exception {
         assertSame(HeatingCoil.CUPRONICKEL, HeatingCoil.fromTier(Integer.MIN_VALUE));
         assertSame(HeatingCoil.EXTRATERRESTRIAL, HeatingCoil.fromTier(Integer.MAX_VALUE));
@@ -266,12 +300,13 @@ final class GT_BlastFurnaceStructureChecks {
             assertTrue(f.recheck());
             assertEquals(1801 + 100 * (tier - 2), heat(f.machine));
         }
-        Method overclock = GT_MetaTileEntity_ElectricBlastFurnace.class.getDeclaredMethod(
-                "calculateOverclockednessEBF", int.class, int.class, long.class);
-        overclock.setAccessible(true);
-        assertEquals((byte) 1, overclock.invoke(f.machine, 120, 200, GT_Values.V[3]));
-        assertEquals(480, f.machine.mEUt);
-        assertEquals(100, f.machine.mMaxProgresstime);
+        for (int amps : new int[] { 1, 4, 16, 64 }) {
+            int[] p = f.bottom.get(1);
+            f.world.putTile(p[0], p[1], p[2], new TestTile(f.world,
+                    new GT_MetaTileEntity_Hatch_EnergyMulti("test", 3, amps, "test", null), ForgeDirection.NORTH));
+            assertTrue(f.recheck());
+            assertEquals("Amperage must not increase the voltage heat bonus", 1901, heat(f.machine));
+        }
 
         Fluid[] gases = {new Fluid("ebf_test_co2"), new Fluid("ebf_test_co"), new Fluid("ebf_test_so2")};
         for (Fluid gas : gases) {

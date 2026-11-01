@@ -1289,3 +1289,5 @@ gt.processing.maintenance.tool.soft_hammer=Киянка
 gt.processing.maintenance.tool.hard_hammer=Молоток
 gt.processing.maintenance.tool.soldering_tool=Паяльник
 gt.processing.maintenance.tool.crowbar=Лом
+gt.processing.result.cleanroom_required=Требуется чистая комната
+gt.processing.result.low_gravity_required=Требуется низкая гравитация

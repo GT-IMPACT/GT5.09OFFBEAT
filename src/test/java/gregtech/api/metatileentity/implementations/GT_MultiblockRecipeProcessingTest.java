@@ -360,7 +360,7 @@ public class GT_MultiblockRecipeProcessingTest {
                 fixture.items(iron, stick);
             } else if (model.equals("OilCracker")) {
                 stick = new ItemStack(Items.stick);
-                machine.mInventory[1] = stick;
+                fixture.items(stick);
             }
             if (!implosion()) {
                 water = new FluidStack(fluid("processing_water"), 300);
@@ -392,16 +392,12 @@ public class GT_MultiblockRecipeProcessingTest {
         }
 
         void assertOutputs() {
-            if (model.equals("OilCracker")) assertNull(machine.mOutputItems);
-            else {
-                assertEquals(model.equals("DistillationTower") ? 1 : 2,
-                        machine.mOutputItems.length);
+            {
+                assertEquals(2, machine.mOutputItems.length);
                 assertTrue(machine.mOutputItems[0].isItemEqual(new ItemStack(Items.gold_ingot)));
                 assertEquals(3, machine.mOutputItems[0].stackSize);
                 if (machine.mOutputItems.length == 2) {
-                    if (model.equals("ElectricBlastFurnace") || model.equals("LargeChemicalReactor"))
-                        assertEquals("These machines ignore output chances", 2, machine.mOutputItems[1].stackSize);
-                    else assertNull("Seeded rare output must miss", machine.mOutputItems[1]);
+                    assertNull("Seeded rare output must miss", machine.mOutputItems[1]);
                 }
             }
             if (!implosion()) {

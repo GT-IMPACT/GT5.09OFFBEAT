@@ -26,7 +26,7 @@ public class GT_MultiblockProcessingEdgesTest {
     @Test public void splitFluidStacksPreservePerMachineRules() throws Throwable { run("splitFluids"); }
     @Test public void controllerSlotIsOnlyUsedBySupportingMachines() throws Throwable { run("controller"); }
     @Test public void blastFurnaceHeatThresholdAndDiscounts() throws Throwable { run("heat"); }
-    @Test public void chemicalCleanroomCheckCurrentlyHappensAfterConsumption() throws Throwable { run("cleanroom"); }
+    @Test public void chemicalCleanroomRejectionDoesNotConsumeInputs() throws Throwable { run("cleanroom"); }
     @Test public void overflowFailureCurrentlyConsumesInputs() throws Throwable { run("overflow"); }
     @Test public void fullOutputDoesNotPreventLegacyRecipeStart() throws Throwable { run("fullOutput"); }
     @Test public void ordinaryAndMultiAmpEnergyDrainBoundaries() throws Throwable { run("energyDrain"); }
@@ -118,15 +118,15 @@ public class GT_MultiblockProcessingEdgesTest {
             f.register(24, 80); f.fill();
             f.machine.mInputBusses.get(0).mInventory[1] = null;
             f.machine.mInventory[1] = f.stick;
-            boolean supported = model.equals("LargeChemicalReactor");
+            boolean supported = false;
             assertEquals(model, supported, f.machine.checkRecipe(null));
             assertEquals(model, supported ? 2 : 3, f.stick.stackSize);
         });
     }
 
     private static void heat() throws Exception {
-        int[][] rows = {{1799, 0, 0}, {1800, -384, 20}, {2699, -384, 20}, {2700, -364, 20},
-                {3599, -364, 20}, {3600, -346, 10}, {5400, -312, 5}};
+        int[][] rows = {{1799, 0, 0}, {1800, -384, 20}, {2699, -384, 20}, {2700, -365, 20},
+                {3599, -365, 20}, {3600, -347, 10}, {5400, -313, 5}};
         for (int[] row : rows) recipe("ElectricBlastFurnace", 3, f -> {
             f.register(24, 80); f.fill();
             setField(f.machine, "mHeatingCapacity", row[0]);
@@ -147,8 +147,8 @@ public class GT_MultiblockProcessingEdgesTest {
                 setField(f.machine, "mCleanroom", room);
             }
             assertEquals(cleanliness > 0, f.machine.checkRecipe(null));
-            // Characterization, not desired behavior: rejection also consumes one batch.
-            f.assertConsumed();
+            if (cleanliness > 0) f.assertConsumed();
+            else f.assertUnconsumed();
             assertEquals(cleanliness > 0 ? 80 : 0, f.machine.mMaxProgresstime);
         });
     }
@@ -205,7 +205,7 @@ public class GT_MultiblockProcessingEdgesTest {
     }
 
     private static void splitEnergy() {
-        Fixture f = new Fixture(new GT_MetaTileEntity_LargeChemicalReactor("test"), 1);
+        Fixture f = new Fixture(new GT_MetaTileEntity_MultiFurnace("test"), 1);
         GT_MetaTileEntity_Hatch_Energy ordinary = f.machine.mEnergyHatches.get(0);
         GT_MetaTileEntity_Hatch_EnergyMulti multi = new GT_MetaTileEntity_Hatch_EnergyMulti("test", 1, 4, "test", null);
         f.attach(multi); f.machine.mEnergyHatchesMulti.add(multi);

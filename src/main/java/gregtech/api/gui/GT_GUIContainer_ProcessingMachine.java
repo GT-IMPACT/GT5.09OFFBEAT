@@ -200,6 +200,8 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         case INPUT_CHANGED:
         case MACHINE_CONDITION:
         case INSUFFICIENT_HEAT:
+        case CLEANROOM_REQUIRED:
+        case LOW_GRAVITY_REQUIRED:
         case WAITING_FOR_OUTPUT:
             return EnumChatFormatting.YELLOW;
         default:
