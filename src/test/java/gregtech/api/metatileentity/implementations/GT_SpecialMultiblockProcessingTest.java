@@ -137,34 +137,36 @@ public class GT_SpecialMultiblockProcessingTest {
             int optimum = gas ? 16 : plasma ? 641 : 1600;
             int[] amounts = {0, optimum / 2, optimum, optimum * 5 / 4, optimum * 2};
             int[] expectedPower = gas ? new int[]{0, 400, 1600, 1500, 1500}
-                    : plasma ? new int[]{1, 15975, 64100, 64100, 64100}
+                    : plasma ? new int[]{0, 15975, 64100, 64100, 64100}
                     : steam ? new int[]{0, 200, 800, 800, 800} : new int[]{0, 400, 1600, 1600, 1600};
             for (int i = 0; i < amounts.length; i++) {
                 GT_MetaTileEntity_LargeTurbine machine = (GT_MetaTileEntity_LargeTurbine)
                         GT_MultiblockRecipeProcessingTest.machine("LargeTurbine_" + model);
                 Fixture f = new Fixture(machine, 1);
-                if (steam || model.equals("HPSteam")) setField(machine, "achievement", true);
+                setField(machine, "fuelAchievement", true);
                 machine.optFlow = 1600; machine.baseEff = 10000;
                 GT_MetaTileEntity_Hatch_Input input = f.liquid(new FluidStack(fuel, amounts[i]));
                 GT_MetaTileEntity_Hatch_Output output = output(f);
-                Method power = machine.getClass().getDeclaredMethod("fluidIntoPower", java.util.ArrayList.class, int.class, int.class);
-                power.setAccessible(true);
-                int actual = (int) power.invoke(machine, machine.getStoredFluids(), 1600, 10000);
-                assertEquals(model + " input=" + amounts[i], expectedPower[i], actual);
+                setField(machine, "rotorPower", (long) expectedPower[i]);
+                assertEquals(model + " input=" + amounts[i], amounts[i] > 0, machine.checkRecipe(null));
+                assertEquals(expectedPower[i], machine.getRunningEUt());
                 int consumed = Math.min(amounts[i], optimum * 5 / 4);
                 assertEquals(amounts[i] - consumed, input.getFluidAmount());
+                assertEquals("Outputs stay with the active cycle", 0, output.getFluidAmount());
                 if (consumed > 0 && !gas) {
-                    assertEquals(steam ? consumed / 160 : consumed, output.getFluidAmount());
-                    assertSame(fluid(steam ? "ic2distilledwater" : plasma ? "test_coolant" : "steam"), output.mFluid.getFluid());
+                    assertEquals(steam ? consumed / 160 : consumed, machine.mOutputFluids[0].amount);
+                    assertSame(fluid(steam ? "ic2distilledwater" : plasma ? "test_coolant" : "steam"),
+                            machine.mOutputFluids[0].getFluid());
                 }
+                machine.stopMachine();
                 input.mFluid = new FluidStack(fuel, optimum);
-                machine.mEUt = 0;
                 assertTrue(machine.checkRecipe(null));
-                assertEquals("Startup ramp", Math.max(10, expectedPower[2] / 100), machine.mEUt);
+                assertEquals("Startup ramp", Math.max(10, expectedPower[2] / 100), machine.getRunningEUt());
                 assertEquals(1, machine.mMaxProgresstime);
                 assertEquals(10, machine.mEfficiencyIncrease);
+                machine.stopMachine();
                 input.mFluid = null;
-                machine.mEUt = 9;
+                setField(machine, "rotorPower", 9L);
                 assertFalse(machine.checkRecipe(null));
                 assertEquals(0, machine.mEUt);
                 assertEquals(0, machine.mEfficiency);
