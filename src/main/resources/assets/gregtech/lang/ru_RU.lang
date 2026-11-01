@@ -1293,3 +1293,4 @@ gt.processing.result.cleanroom_required=Требуется чистая комн
 gt.processing.result.low_gravity_required=Требуется низкая гравитация
 
 gt.processing.generation=Мощность до учёта КПД: %s EU/t
+gt.processing.nei=Открыть рецепты в NEI

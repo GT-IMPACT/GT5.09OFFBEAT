@@ -32,13 +32,14 @@ import static gregtech.api.logic.ProcessingLogic.SEPARATE_INPUTS;
  * Processing controls use holographic slots and server-side slotClick handling.
  */
 public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
-    public static final int CONTROL_COUNT = 5;
+    public static final int CONTROL_COUNT = 6;
     public static final int VOIDING_SLOT = 0;
     public static final int SEPARATION_SLOT = 1;
     public static final int BATCH_SLOT = 2;
     public static final int LOCK_SLOT = 3;
     public static final int POWER_SLOT = 4;
-    public static final int RECIPE_MAP_SLOT = 5;
+    public static final int NEI_SLOT = 5;
+    public static final int RECIPE_MAP_SLOT = 6;
     // The black interior is 256 x 144 (16:9), with a two-pixel frame.
     public static final int SCREEN_WIDTH = 260;
     public static final int SCREEN_HEIGHT = 148;
@@ -101,10 +102,21 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
             return (supported & BATCH) != 0;
         case LOCK_SLOT:
             return (supported & LOCK_RECIPE) != 0;
+        case NEI_SLOT:
+            return getNEIRecipeMap() != null;
         case RECIPE_MAP_SLOT:
             return hasRecipeMapSelector();
         default:
             return slot == POWER_SLOT;
+        }
+    }
+
+    public void updateControlSlotPositions() {
+        int controlCount = CONTROL_COUNT + (hasRecipeMapSelector() ? 1 : 0);
+        for (int index = 0; index < controlCount; index++) {
+            Slot slot = getSlot(index);
+            slot.xDisplayPosition = isControlVisible(index) ? controlX(index) : -10000;
+            slot.yDisplayPosition = controlY(index);
         }
     }
 
@@ -115,17 +127,20 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
         case SEPARATION_SLOT:
             return RIGHT_CONTROL_X;
         case BATCH_SLOT:
-        case RECIPE_MAP_SLOT:
+        case NEI_SLOT:
             return LEFT_CONTROL_X + 18;
         case POWER_SLOT:
-            return LEFT_CONTROL_X + (isControlVisible(BATCH_SLOT) ? 0 : 9);
+            return LEFT_CONTROL_X + (isControlVisible(NEI_SLOT) || hasRecipeMapSelector() ? 0 : 9);
         default:
             return LEFT_CONTROL_X;
         }
     }
 
     private static int controlY(int slot) {
-        return PLAYER_INVENTORY_Y + (slot == LOCK_SLOT || slot == RECIPE_MAP_SLOT ? 18 : 0);
+        if (slot == RECIPE_MAP_SLOT) {
+            return PLAYER_INVENTORY_Y + 36;
+        }
+        return PLAYER_INVENTORY_Y + (slot == LOCK_SLOT || slot == BATCH_SLOT ? 18 : 0);
     }
 
     @Override
@@ -216,6 +231,16 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
         return (GT_MetaTileEntity_ProcessingMultiBlockBase<?>) mTileEntity.getMetaTileEntity();
     }
 
+    public GT_Recipe_Map getNEIRecipeMap() {
+        GT_Recipe_Map map = machine().getRecipeMap();
+        return map != null && map.mNEIAllowed ? map : null;
+    }
+
+    public String getNEIRecipeMapName() {
+        GT_Recipe_Map map = getNEIRecipeMap();
+        return map == null ? "" : StatCollector.translateToLocal(map.mUnlocalizedName);
+    }
+
     public boolean hasRecipeMapSelector() {
         return machine().getRecipeMaps().size() > 1;
     }
@@ -265,8 +290,11 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        if (mTileEntity.isClientSide()
-                || !(mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_ProcessingMultiBlockBase)) {
+        if (!(mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_ProcessingMultiBlockBase)) {
+            return;
+        }
+        updateControlSlotPositions();
+        if (mTileEntity.isClientSide()) {
             return;
         }
         int[] values = state();
@@ -334,6 +362,7 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
         if (hasRecipeMapSelector()) {
             machine().syncActiveRecipeMap(activeRecipeMapIndex);
         }
+        updateControlSlotPositions();
         receivedState = true;
     }
 }

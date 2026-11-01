@@ -216,18 +216,28 @@ public class GT_TurbineProcessingTest {
                         }
                     };
                     player.openContainer = gui;
-                    assertEquals(42, gui.inventorySlots.size());
+                    assertEquals(43, gui.inventorySlots.size());
                     assertEquals(1, gui.getSlotCount());
                     assertTrue(gui.isControlVisible(GT_Container_ProcessingMachine.POWER_SLOT));
                     assertTrue(gui.isControlVisible(GT_Container_ProcessingMachine.VOIDING_SLOT));
-                    for (int slot : new int[] { 1, 2, 3 }) {
+                    for (int slot : new int[] { 1, 2, 3, GT_Container_ProcessingMachine.NEI_SLOT }) {
                         assertFalse(gui.isControlVisible(slot));
+                        assertTrue("Hidden controls must not leave an interactive slot inside the GUI",
+                                gui.getSlot(slot).xDisplayPosition < 0);
                         gui.slotClick(slot, 0, 0, player);
                         assertEquals(modes & ProcessingLogic.PROTECT_FLUIDS, restored.getProcessingModes());
                     }
                     gui.slotClick(GT_Container_ProcessingMachine.VOIDING_SLOT, 0, 0, player);
                     assertEquals((modes ^ ProcessingLogic.PROTECT_FLUIDS) & ProcessingLogic.PROTECT_FLUIDS,
                             restored.getProcessingModes());
+                    assertEquals(20, gui.getSlot(GT_Container_ProcessingMachine.POWER_SLOT).xDisplayPosition);
+                    int visibleControls = 0;
+                    for (int slot = 0; slot < GT_Container_ProcessingMachine.CONTROL_COUNT; slot++) {
+                        if (gui.getSlot(slot).xDisplayPosition >= 0) {
+                            visibleControls++;
+                        }
+                    }
+                    assertEquals("Only power and fluid protection have active slots", 2, visibleControls);
                 }
             }
         } finally {

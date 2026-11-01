@@ -657,7 +657,7 @@ public class GT_SharedProcessingTest {
                 }
             };
             player.openContainer = container;
-            assertEquals(41, container.inventorySlots.size());
+            assertEquals(42, container.inventorySlots.size());
             assertEquals(0, container.getSlotCount());
             assertEquals(0, container.getShiftClickSlotCount());
             ItemStack controller = new ItemStack(Items.stick);
@@ -673,11 +673,11 @@ public class GT_SharedProcessingTest {
                 container.slotClick(slotIndex, 0, 0, player);
                 assertEquals(expectedModes[slotIndex], scenario.machine.getProcessingModes());
                 assertEquals(new int[] { 223, 241, 29, 11 }[slotIndex], slot.xDisplayPosition);
-                assertEquals(slotIndex == 3 ? 174 : 156, slot.yDisplayPosition);
+                assertEquals(slotIndex == 2 || slotIndex == 3 ? 174 : 156, slot.yDisplayPosition);
             }
-            assertEquals(54, container.getSlot(5).xDisplayPosition);
-            assertEquals(156, container.getSlot(5).yDisplayPosition);
-            assertEquals(214, container.getSlot(32).yDisplayPosition);
+            assertEquals(54, container.getSlot(6).xDisplayPosition);
+            assertEquals(156, container.getSlot(6).yDisplayPosition);
+            assertEquals(214, container.getSlot(33).yDisplayPosition);
             assertEquals(11, container.getSlot(4).xDisplayPosition);
             assertEquals(156, container.getSlot(4).yDisplayPosition);
             assertTrue(container.getSlot(4) instanceof GT_Slot_Holo);
@@ -768,7 +768,8 @@ public class GT_SharedProcessingTest {
                     chunk.isModified = false;
                     assertFalse(chunk.needsSaving(false));
                     container.slotClick(slot, 0, 0, player);
-                    assertTrue("Control " + slot + " must mark the chunk for saving", chunk.needsSaving(false));
+                    assertEquals("Only settings controls must mark the chunk for saving",
+                            slot != GT_Container_ProcessingMachine.NEI_SLOT, chunk.needsSaving(false));
                 }
             }
         }
@@ -972,7 +973,7 @@ public class GT_SharedProcessingTest {
                         scenario.fixture.world);
                 GT_Container_ProcessingMachine container = new GT_Container_ProcessingMachine(player.inventory,
                         scenario.fixture.tile);
-                int controllerIndex = multipleMaps ? 6 : 5;
+                int controllerIndex = multipleMaps ? 7 : 6;
                 assertEquals(controllerIndex + 37, container.inventorySlots.size());
                 assertEquals(1, container.getSlotCount());
                 assertEquals(1, container.getShiftClickSlotCount());
@@ -1286,10 +1287,14 @@ public class GT_SharedProcessingTest {
         }
     }
 
-    private static void mapControlSlot() {
+    private static void mapControlSlot() throws Exception {
         try (Scenario scenario = new Scenario(1)) {
             GT_Recipe_Map other = GT_Recipe_Map.sCompressorRecipes;
             scenario.useMaps(scenario.map, other);
+            String translations = scenario.map.mUnlocalizedName + "=Localized first recipe map\n"
+                    + other.mUnlocalizedName + "=Localized second recipe map\n";
+            net.minecraft.util.StringTranslate.inject(new java.io.ByteArrayInputStream(
+                    translations.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
             GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(
                     scenario.fixture.world);
             GT_Container_ProcessingMachine server = new GT_Container_ProcessingMachine(player.inventory,
@@ -1300,22 +1305,29 @@ public class GT_SharedProcessingTest {
                 }
             };
             player.openContainer = server;
-            assertEquals(42, server.inventorySlots.size());
-            assertTrue(server.getSlot(5) instanceof GT_Slot_Holo);
-            assertEquals(29, server.getSlot(5).xDisplayPosition);
-            assertEquals(174, server.getSlot(5).yDisplayPosition);
-            server.slotClick(5, 0, 0, player);
+            assertEquals(43, server.inventorySlots.size());
+            assertTrue(server.isControlVisible(GT_Container_ProcessingMachine.NEI_SLOT));
+            assertSame(scenario.map, server.getNEIRecipeMap());
+            assertEquals("Localized first recipe map", server.getNEIRecipeMapName());
+            assertEquals(29, server.getSlot(GT_Container_ProcessingMachine.NEI_SLOT).xDisplayPosition);
+            assertEquals(156, server.getSlot(GT_Container_ProcessingMachine.NEI_SLOT).yDisplayPosition);
+            assertTrue(server.getSlot(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT) instanceof GT_Slot_Holo);
+            assertEquals(11, server.getSlot(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT).xDisplayPosition);
+            assertEquals(192, server.getSlot(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT).yDisplayPosition);
+            server.slotClick(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT, 0, 0, player);
             assertSame(other, scenario.machine.getRecipeMap());
-            server.slotClick(5, 1, 0, player);
+            assertSame(other, server.getNEIRecipeMap());
+            assertEquals("Localized second recipe map", server.getNEIRecipeMapName());
+            server.slotClick(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT, 1, 0, player);
             assertSame(scenario.map, scenario.machine.getRecipeMap());
-            server.slotClick(5, 1, 1, player);
+            server.slotClick(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT, 1, 1, player);
             assertSame(other, scenario.machine.getRecipeMap());
             assertEquals(0, scenario.machine.getProcessingModes());
-            server.slotClick(5, 0, 5, player);
-            server.slotClick(5, 2, 0, player);
+            server.slotClick(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT, 0, 5, player);
+            server.slotClick(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT, 2, 0, player);
             assertSame(other, scenario.machine.getRecipeMap());
             player.openContainer = player.inventoryContainer;
-            server.slotClick(5, 0, 0, player);
+            server.slotClick(GT_Container_ProcessingMachine.RECIPE_MAP_SLOT, 0, 0, player);
             assertSame(other, scenario.machine.getRecipeMap());
             scenario.machine.syncActiveRecipeMap(0);
             assertSame(other, scenario.machine.getRecipeMap());
@@ -1339,6 +1351,8 @@ public class GT_SharedProcessingTest {
             server.addCraftingToCrafters(listener);
             assertEquals(1, client.activeRecipeMapIndex);
             assertSame(other, clientMachine.getRecipeMap());
+            assertSame(other, client.getNEIRecipeMap());
+            assertEquals("Localized second recipe map", client.getNEIRecipeMapName());
             assertFalse(clientMachine.setActiveRecipeMap(scenario.map));
             assertSame(other, clientMachine.getRecipeMap());
             clientPlayer.openContainer = client;
@@ -1351,6 +1365,8 @@ public class GT_SharedProcessingTest {
             server.detectAndSendChanges();
             assertEquals(0, client.activeRecipeMapIndex);
             assertSame(scenario.map, clientMachine.getRecipeMap());
+            assertSame(scenario.map, client.getNEIRecipeMap());
+            assertEquals("Localized first recipe map", client.getNEIRecipeMapName());
         }
     }
 

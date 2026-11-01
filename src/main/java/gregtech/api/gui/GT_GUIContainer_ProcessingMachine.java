@@ -1,5 +1,6 @@
 package gregtech.api.gui;
 
+import codechicken.nei.recipe.GuiCraftingRecipe;
 import com.gtnewhorizons.modularui.api.drawable.AdaptableUITexture;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
 import gregtech.api.GregTech_API;
@@ -8,6 +9,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,7 @@ import java.util.Locale;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.CONTROL_COUNT;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.CONTROLLER_FRAME_SIZE;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.POWER_SLOT;
+import static gregtech.api.gui.GT_Container_ProcessingMachine.NEI_SLOT;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.RECIPE_MAP_SLOT;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.GUI_WIDTH;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.GUI_HEIGHT;
@@ -51,6 +54,7 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
     private static final UITexture[] BATCH = { overlay("batch_mode_off"), overlay("batch_mode_on") };
     private static final UITexture[] LOCK = { overlay("recipe_unlocked"), overlay("recipe_locked") };
     private static final UITexture RECIPE_MAP = overlay("machine_mode_default");
+    private static final UITexture NEI = overlay("nei");
     private static final UITexture[] POWER = { overlay("power_switch_off"), overlay("power_switch_on") };
     private static final String[] VOIDING_NAMES = { "none", "items", "fluids", "all" };
     private static final String[] MODE_NAMES = { "separate", "batch", "lock" };
@@ -87,6 +91,25 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
     }
 
     @Override
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
+        GT_Container_ProcessingMachine container = processingContainer();
+        container.updateControlSlotPositions();
+        Slot slot = container.getSlot(NEI_SLOT);
+        int x = mouseX - guiLeft;
+        int y = mouseY - guiTop;
+        if (container.isControlVisible(NEI_SLOT)
+                && x >= slot.xDisplayPosition - 1 && x < slot.xDisplayPosition + 17
+                && y >= slot.yDisplayPosition - 1 && y < slot.yDisplayPosition + 17) {
+            GT_Recipe_Map map = container.getNEIRecipeMap();
+            if (button == 0 && container.isDisplayReady() && map != null) {
+                GuiCraftingRecipe.openRecipeGui(map.mNEIName);
+            }
+            return;
+        }
+        super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         int x = mouseX - guiLeft;
@@ -114,11 +137,14 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
                     tooltip.add(text("mode." + MODE_NAMES[index - 1] + ".description"));
                 } else if (index == POWER_SLOT) {
                     tooltip.add(text("power") + ": " + text(container.allowedToWork ? "on" : "off"));
+                } else if (index == NEI_SLOT) {
+                    tooltip.add(text("nei"));
+                    tooltip.add(container.getNEIRecipeMapName());
                 } else if (index == RECIPE_MAP_SLOT) {
                     tooltip.add(text("recipe_map") + ": " + container.getActiveRecipeMapName());
                     tooltip.add(text("recipe_map_switch"));
                 }
-                if (index != POWER_SLOT) {
+                if (index != POWER_SLOT && index != NEI_SLOT) {
                     tooltip.add(text("next_cycle"));
                 }
             }
@@ -269,6 +295,7 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         SCREEN.draw(guiLeft + SCREEN_LEFT, guiTop + SCREEN_TOP, SCREEN_WIDTH, SCREEN_HEIGHT);
         GT_Container_ProcessingMachine container = processingContainer();
         int controls = CONTROL_COUNT + (container.hasRecipeMapSelector() ? 1 : 0);
+        container.updateControlSlotPositions();
         for (int index = 0; index < container.inventorySlots.size(); index++) {
             if (index >= controls) {
                 Slot slot = container.getSlot(index);
@@ -305,6 +332,9 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
             } else if (index == POWER_SLOT) {
                 pressed = container.allowedToWork;
                 icon = POWER[pressed ? 1 : 0];
+            } else if (index == NEI_SLOT) {
+                pressed = false;
+                icon = NEI;
             } else {
                 pressed = false;
                 icon = RECIPE_MAP;

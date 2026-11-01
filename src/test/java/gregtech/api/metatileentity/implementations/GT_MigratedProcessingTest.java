@@ -275,7 +275,7 @@ public class GT_MigratedProcessingTest {
                         assertTrue(container.getSlot(index) instanceof GT_Slot_Holo);
                     }
                     assertFalse(restored.hasControllerSlotInGui());
-                    assertEquals(41, container.inventorySlots.size());
+                    assertEquals(42, container.inventorySlots.size());
                     assertEquals(0, container.getSlotCount());
                     assertEquals(0, container.getShiftClickSlotCount());
                 }
