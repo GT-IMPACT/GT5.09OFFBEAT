@@ -132,6 +132,9 @@ public abstract class GT_MetaTileEntity_FusionComputer
             super.completeRecipe();
         } finally {
             continuingReaction = false;
+            if (mMaxProgresstime == 0 && !isWaitingForOutput()) {
+                mLastRecipe = null;
+            }
             turnCasingActive(mMaxProgresstime > 0 && !isWaitingForOutput());
         }
     }

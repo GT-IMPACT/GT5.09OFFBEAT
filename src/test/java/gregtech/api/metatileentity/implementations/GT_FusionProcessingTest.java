@@ -124,6 +124,11 @@ public class GT_FusionProcessingTest {
         run("gui");
     }
 
+    @Test
+    public void exhaustedInputsClearLastRecipeAndGuiOutputs() throws Throwable {
+        run("idleDisplay");
+    }
+
     public static void runScenario(String scenario, String model) throws Throwable {
         try {
             GT_FusionProcessingTest.class.getDeclaredMethod(scenario, int.class).invoke(null, Integer.parseInt(model));
@@ -410,6 +415,32 @@ public class GT_FusionProcessingTest {
         assertEquals(1234567, tag.getLong("storedEnergy"));
         assertEquals(scenario.machine.maxEUStore(), tag.getLong("energyCapacity"));
         assertEquals(0, scenario.machine.getProcessingModes());
+    }
+
+    private static void idleDisplay(int model) throws Exception {
+        Scenario scenario = new Scenario(model, 16);
+        scenario.recipe(128, 128, 1000000);
+        scenario.machine.setEUVar(1000000);
+        scenario.firstInput.amount = 10;
+        scenario.secondInput.amount = 10;
+        scenario.fixture.tile.enableWorking();
+        assertTrue(scenario.machine.checkRecipe(null));
+        assertNotNull(scenario.machine.mLastRecipe);
+        GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(
+                scenario.fixture.world);
+        GT_Container_ProcessingMachine gui = new GT_Container_ProcessingMachine(player.inventory,
+                scenario.fixture.tile);
+        Method snapshot = GT_Container_ProcessingMachine.class.getDeclaredMethod("outputSnapshot");
+        snapshot.setAccessible(true);
+        NBTTagCompound running = (NBTTagCompound) snapshot.invoke(gui);
+        assertEquals(1, running.getInteger("fluidsSize"));
+        scenario.finish();
+        assertEquals(CheckRecipeResult.NO_RECIPE, scenario.machine.getProcessingResult());
+        assertEquals(0, scenario.machine.mMaxProgresstime);
+        assertNull(scenario.machine.mLastRecipe);
+        NBTTagCompound idle = (NBTTagCompound) snapshot.invoke(gui);
+        assertEquals(0, idle.getInteger("fluidsSize"));
+        assertEquals(0, idle.getInteger("itemsSize"));
     }
 
     private static int multiplier(int model) {

@@ -207,17 +207,20 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
             lines.add(new ScreenLine(EnumChatFormatting.GREEN
                     + StatCollector.translateToLocalFormatted("gt.processing.generation", container.eut)));
         }
-        List<ItemStack> items = new ArrayList<>(Arrays.asList(container.outputItems));
-        items.removeIf(item -> item == null || item.stackSize <= 0);
-        items.sort(Comparator.comparingInt((ItemStack item) -> item.stackSize).reversed());
-        for (ItemStack item : items) {
-            lines.add(outputLine(item.getDisplayName(), item.stackSize, false));
-        }
-        List<FluidStack> fluids = new ArrayList<>(Arrays.asList(container.outputFluids));
-        fluids.removeIf(fluid -> fluid == null || fluid.amount <= 0);
-        fluids.sort(Comparator.comparingInt((FluidStack fluid) -> fluid.amount).reversed());
-        for (FluidStack fluid : fluids) {
-            lines.add(outputLine(fluid.getLocalizedName(), fluid.amount, true));
+        // Progress and outputs arrive separately; an old output snapshot must not be shown while idle.
+        if (container.mMaxProgressTime > 0) {
+            List<ItemStack> items = new ArrayList<>(Arrays.asList(container.outputItems));
+            items.removeIf(item -> item == null || item.stackSize <= 0);
+            items.sort(Comparator.comparingInt((ItemStack item) -> item.stackSize).reversed());
+            for (ItemStack item : items) {
+                lines.add(outputLine(item.getDisplayName(), item.stackSize, false));
+            }
+            List<FluidStack> fluids = new ArrayList<>(Arrays.asList(container.outputFluids));
+            fluids.removeIf(fluid -> fluid == null || fluid.amount <= 0);
+            fluids.sort(Comparator.comparingInt((FluidStack fluid) -> fluid.amount).reversed());
+            for (FluidStack fluid : fluids) {
+                lines.add(outputLine(fluid.getLocalizedName(), fluid.amount, true));
+            }
         }
         List<ScreenLine> wrapped = new ArrayList<>();
         for (ScreenLine line : lines) {
