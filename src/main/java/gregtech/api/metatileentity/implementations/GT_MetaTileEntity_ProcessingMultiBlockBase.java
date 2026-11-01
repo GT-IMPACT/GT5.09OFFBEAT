@@ -48,6 +48,14 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
 
     /** Opt in only when the machine uses its controller inventory slot. */
     public boolean hasControllerSlotInGui() {
+        return usesControllerSlotAsRecipeInput();
+    }
+
+    /**
+     * Controller ingredients are shared by all input groups, including separated
+     * buses.
+     */
+    protected boolean usesControllerSlotAsRecipeInput() {
         return false;
     }
 
@@ -258,15 +266,20 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     protected List<ProcessingInputs> collectProcessingInputs() {
         List<ItemStack> allItems = getStoredInputs();
         List<FluidStack> fluids = getStoredFluids();
+        boolean useController = usesControllerSlotAsRecipeInput();
+        ItemStack controller = useController ? mInventory[1] : null;
         BooleanSupplier sourceUnchanged = () -> sameReferences(allItems, getStoredInputs())
-                && sameReferences(fluids, getStoredFluids());
+                && sameReferences(fluids, getStoredFluids()) && (!useController || mInventory[1] == controller);
         if ((processingModes & ProcessingLogic.SEPARATE_INPUTS) == 0) {
-            return Collections.singletonList(new ProcessingInputs(allItems, fluids, sourceUnchanged));
+            return Collections.singletonList(
+                    new ProcessingInputs(withControllerInput(allItems, controller), fluids, sourceUnchanged));
         }
         List<ProcessingInputs> groups = new ArrayList<>();
         for (GTMTE_BusHatch_Input bus : mInputBusHatches) {
             if (isValidMetaTileEntity(bus)) {
-                groups.add(new ProcessingInputs(GTMTE_BusHatch_Input.getStoredInputs(bus), fluids, sourceUnchanged));
+                groups.add(
+                        new ProcessingInputs(withControllerInput(GTMTE_BusHatch_Input.getStoredInputs(bus), controller),
+                                fluids, sourceUnchanged));
             }
         }
         for (GT_MetaTileEntity_Hatch_InputBus bus : mInputBusses) {
@@ -277,13 +290,23 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
                         items.add(bus.mInventory[i]);
                     }
                 }
-                groups.add(new ProcessingInputs(items, fluids, sourceUnchanged));
+                groups.add(new ProcessingInputs(withControllerInput(items, controller), fluids, sourceUnchanged));
             }
         }
         if (groups.isEmpty()) {
-            groups.add(new ProcessingInputs(Collections.emptyList(), fluids, sourceUnchanged));
+            groups.add(new ProcessingInputs(withControllerInput(Collections.emptyList(), controller), fluids,
+                    sourceUnchanged));
         }
         return groups;
+    }
+
+    private static List<ItemStack> withControllerInput(List<ItemStack> inputs, ItemStack controller) {
+        if (controller == null) {
+            return inputs;
+        }
+        List<ItemStack> combined = new ArrayList<>(inputs);
+        combined.add(controller);
+        return combined;
     }
 
     private static <E> boolean sameReferences(List<E> expected, List<E> current) {
