@@ -1291,3 +1291,5 @@ gt.processing.maintenance.tool.soldering_tool=Паяльник
 gt.processing.maintenance.tool.crowbar=Лом
 gt.processing.result.cleanroom_required=Требуется чистая комната
 gt.processing.result.low_gravity_required=Требуется низкая гравитация
+
+gt.processing.generation=Мощность до учёта КПД: %s EU/t

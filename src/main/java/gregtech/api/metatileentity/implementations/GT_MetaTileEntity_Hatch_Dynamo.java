@@ -129,7 +129,8 @@ public class GT_MetaTileEntity_Hatch_Dynamo extends GT_MetaTileEntity_Hatch {
 
     @Override
     public long maxEUStore() {
-        return mCapacity == 0 ? 512L + V[mTier + 1] * 2L * mAmpers : mCapacity;
+        long nextVoltage = mTier + 1 < V.length ? V[mTier + 1] : V[mTier] * 4L;
+        return mCapacity == 0 ? 512L + nextVoltage * 2L * mAmpers : mCapacity;
     }
 
     @Override

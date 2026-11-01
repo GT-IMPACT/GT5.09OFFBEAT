@@ -95,6 +95,9 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         List<String> tooltip = new ArrayList<>();
         int controls = CONTROL_COUNT + (container.hasRecipeMapSelector() ? 1 : 0);
         for (int index = 0; index < controls; index++) {
+            if (!container.isControlVisible(index)) {
+                continue;
+            }
             Slot slot = container.getSlot(index);
             if (x >= slot.xDisplayPosition && x < slot.xDisplayPosition + 16 && y >= slot.yDisplayPosition
                     && y < slot.yDisplayPosition + 16) {
@@ -164,6 +167,10 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
         }
         if (container.mMaxProgressTime > 0) {
             lines.add(new ScreenLine(currentProgress(container)));
+        }
+        if (container.eut > 0) {
+            lines.add(new ScreenLine(EnumChatFormatting.GREEN
+                    + StatCollector.translateToLocalFormatted("gt.processing.generation", container.eut)));
         }
         List<ItemStack> items = new ArrayList<>(Arrays.asList(container.outputItems));
         items.removeIf(item -> item == null || item.stackSize <= 0);
@@ -266,6 +273,9 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
             }
         }
         for (int index = 0; index < controls; index++) {
+            if (!container.isControlVisible(index)) {
+                continue;
+            }
             Slot slot = container.getSlot(index);
             int x = guiLeft + slot.xDisplayPosition;
             int y = guiTop + slot.yDisplayPosition;

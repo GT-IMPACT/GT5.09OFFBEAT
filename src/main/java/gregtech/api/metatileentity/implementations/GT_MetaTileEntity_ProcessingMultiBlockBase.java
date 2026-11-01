@@ -187,6 +187,10 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return processingModes;
     }
 
+    public int getSupportedProcessingModes() {
+        return ProcessingLogic.ALL_MODES;
+    }
+
     public int getAvailableParallel() {
         return getProcessingLogic().getAvailableParallel();
     }
@@ -204,7 +208,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     }
 
     public void setProcessingModes(int modes) {
-        processingModes = modes & ProcessingLogic.ALL_MODES;
+        processingModes = modes & getSupportedProcessingModes();
         if ((processingModes & ProcessingLogic.LOCK_RECIPE) == 0) {
             getProcessingLogic().clearRecipeLock();
         }
@@ -224,7 +228,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         if (mMaxProgresstime > 0 || waitingForOutput) {
             return false;
         }
-        if (getRecipeMap() == null) {
+        if (getProcessingLogic().requiresRecipeMap() && getRecipeMap() == null) {
             processingResult = CheckRecipeResult.RECIPE_MAP_UNAVAILABLE;
             return false;
         }
@@ -251,10 +255,10 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return true;
     }
 
-    private void startCycle(ProcessingLogic.Result result, int efficiency) {
+    protected void startCycle(ProcessingLogic.Result result, int efficiency) {
         legacyOutputs = false;
         lEUt = -result.eut;
-        mEUt = (int) Math.max(Integer.MIN_VALUE + 1L, lEUt);
+        mEUt = (int) Math.max(Integer.MIN_VALUE + 1L, Math.min(Integer.MAX_VALUE, lEUt));
         mMaxProgresstime = result.duration;
         mProgresstime = 0;
         mOutputItems = result.items;
@@ -403,6 +407,12 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
             return true;
         }
         try {
+            if (lEUt > 0) {
+                long generated = Math.addExact(Math.multiplyExact(lEUt / 10000, mEfficiency),
+                        lEUt % 10000 * mEfficiency / 10000);
+                addEnergyOutput(generated);
+                return true;
+            }
             long cost = ProcessingLogic.efficiencyAdjustedEUt(-lEUt, mEfficiency);
             if (drainEnergyInput(cost)) {
                 return true;
@@ -412,6 +422,50 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         stopMachine();
         processingResult = CheckRecipeResult.INSUFFICIENT_POWER;
         return false;
+    }
+
+    @Override
+    public boolean addEnergyOutputMultipleDynamos(long energy, boolean allowMixedVoltage) {
+        if (energy <= 0) {
+            return true;
+        }
+        List<GT_MetaTileEntity_Hatch> dynamos = new ArrayList<>();
+        dynamos.addAll(mDynamoHatches);
+        dynamos.addAll(mDynamoHatchesMulti);
+        long capacity = 0;
+        long firstVoltage = -1;
+        for (GT_MetaTileEntity_Hatch hatch : dynamos) {
+            if (!isValidMetaTileEntity(hatch)) {
+                continue;
+            }
+            long voltage = hatch.maxEUOutput();
+            if (firstVoltage >= 0 && firstVoltage != voltage && !allowMixedVoltage) {
+                explodeMultiblock();
+                return false;
+            }
+            firstVoltage = voltage;
+            long throughput = Math.multiplyExact(voltage, hatch.maxAmperesOut());
+            capacity += Math.min(energy - capacity, throughput);
+        }
+        if (capacity < energy) {
+            explodeMultiblock();
+            return false;
+        }
+        long remaining = energy;
+        for (GT_MetaTileEntity_Hatch hatch : dynamos) {
+            if (remaining == 0) {
+                break;
+            }
+            if (isValidMetaTileEntity(hatch)) {
+                long throughput = Math.multiplyExact(hatch.maxEUOutput(), hatch.maxAmperesOut());
+                long offered = Math.min(remaining, throughput);
+                IGregTechTileEntity tile = hatch.getBaseMetaTileEntity();
+                long accepted = Math.min(offered, Math.max(0, tile.getEUCapacity() - tile.getStoredEU()));
+                tile.increaseStoredEnergyUnits(accepted, false);
+                remaining -= offered;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -536,7 +590,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
             processingResult = mMaxProgresstime > 0 ? CheckRecipeResult.SUCCESS : CheckRecipeResult.NONE;
             return;
         }
-        processingModes = processing.getInteger("modes") & ProcessingLogic.ALL_MODES;
+        processingModes = processing.getInteger("modes") & getSupportedProcessingModes();
         cycleModes = processing.getInteger("cycleModes") & ProcessingLogic.ALL_MODES;
         waitingForOutput = processing.getBoolean("waiting");
         currentParallel = processing.getInteger("parallel");

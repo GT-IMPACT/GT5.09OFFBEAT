@@ -217,7 +217,7 @@ public class GT_MultiblockProcessingEdgesTest {
         assertEquals(12, ordinary.getEUVar()); assertEquals(0, multi.getEUVar());
     }
 
-    public static final class ExplosionRecorder extends GT_MetaTileEntity_VacuumFreezer {
+    public static final class ExplosionRecorder extends GT_MetaTileEntity_MultiFurnace {
         int explosions;
         public ExplosionRecorder() { super("test"); }
         @Override public void explodeMultiblock() { explosions++; }

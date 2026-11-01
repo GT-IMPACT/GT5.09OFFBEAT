@@ -80,22 +80,43 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
         int controlCount = CONTROL_COUNT + (hasRecipeMapSelector() ? 1 : 0);
         IInventory controls = new InventoryBasic("Processing controls", false, controlCount);
         for (int index = 0; index < controlCount; index++) {
-            addSlotToContainer(new GT_Slot_Holo(controls, index, controlX(index), controlY(index), false, false, 1));
+            int x = isControlVisible(index) ? controlX(index) : -10000;
+            addSlotToContainer(new GT_Slot_Holo(controls, index, x, controlY(index), false, false, 1));
         }
         if (machine().hasControllerSlotInGui()) {
             addSlotToContainer(new Slot(mTileEntity, 1, CONTROLLER_X, CONTROLLER_Y));
         }
     }
 
-    private static int controlX(int slot) {
+    public boolean isControlVisible(int slot) {
+        int supported = machine().getSupportedProcessingModes();
         switch (slot) {
         case VOIDING_SLOT:
-            return CONTROLLER_X - 18;
+            return (supported & (PROTECT_ITEMS | PROTECT_FLUIDS)) != 0;
+        case SEPARATION_SLOT:
+            return (supported & SEPARATE_INPUTS) != 0;
+        case BATCH_SLOT:
+            return (supported & BATCH) != 0;
+        case LOCK_SLOT:
+            return (supported & LOCK_RECIPE) != 0;
+        case RECIPE_MAP_SLOT:
+            return hasRecipeMapSelector();
+        default:
+            return slot == POWER_SLOT;
+        }
+    }
+
+    private int controlX(int slot) {
+        switch (slot) {
+        case VOIDING_SLOT:
+            return CONTROLLER_X - (isControlVisible(SEPARATION_SLOT) ? 18 : 9);
         case SEPARATION_SLOT:
             return CONTROLLER_X;
         case BATCH_SLOT:
         case RECIPE_MAP_SLOT:
             return LEFT_CONTROL_X + 18;
+        case POWER_SLOT:
+            return LEFT_CONTROL_X + (isControlVisible(BATCH_SLOT) ? 0 : 9);
         default:
             return LEFT_CONTROL_X;
         }
@@ -135,10 +156,17 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
                 || (mouseButton != 0 && mouseButton != 1) || (clickMode != 0 && clickMode != 1)) {
             return null;
         }
+        if (!isControlVisible(slot)) {
+            return null;
+        }
         GT_MetaTileEntity_ProcessingMultiBlockBase<?> machine = machine();
         int modes = machine.getProcessingModes();
         switch (slot) {
         case VOIDING_SLOT:
+            if ((machine.getSupportedProcessingModes() & (PROTECT_ITEMS | PROTECT_FLUIDS)) == PROTECT_FLUIDS) {
+                machine.setProcessingModes(modes ^ PROTECT_FLUIDS);
+                break;
+            }
             int index = voidingIndex(modes);
             int next = Math.floorMod(index + (mouseButton == 1 ? -1 : 1), VOIDING_PROTECTION.length);
             machine.setProcessingModes((modes & ~(PROTECT_ITEMS | PROTECT_FLUIDS)) | VOIDING_PROTECTION[next]);

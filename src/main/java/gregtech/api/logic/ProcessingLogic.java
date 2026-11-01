@@ -90,6 +90,10 @@ public class ProcessingLogic {
         return availableParallel;
     }
 
+    public boolean requiresRecipeMap() {
+        return true;
+    }
+
     public void clearRecipeLock() {
         lockedRecipe = null;
     }
@@ -385,6 +389,15 @@ public class ProcessingLogic {
 
         public static Result failure(CheckRecipeResult status) {
             return new Result(status, null, null, 0, 0, 0, 0, null, null);
+        }
+
+        /** Fuel has already been committed; negative EU/t denotes generation. */
+        public static Result generation(ProcessingInputs consumed, long eut, FluidStack[] fluids) {
+            if (eut <= 0) {
+                throw new IllegalArgumentException("Generation must be positive");
+            }
+            return new Result(CheckRecipeResult.SUCCESS, consumed, null, -eut, 1, 1, 1,
+                    new ItemStack[0], fluids);
         }
     }
 }
