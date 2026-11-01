@@ -135,6 +135,31 @@ public final class ProcessingInputs {
         return true;
     }
 
+    /** Consumes one fluid across tanks. An insufficient supply leaves this snapshot unchanged. */
+    public boolean consumeFluid(FluidStack required) {
+        if (required == null || required.amount <= 0) {
+            return false;
+        }
+        long available = 0;
+        for (FluidStack fluid : fluids) {
+            if (fluid != null && fluid.isFluidEqual(required)) {
+                available += Math.max(0, fluid.amount);
+            }
+        }
+        if (available < required.amount) {
+            return false;
+        }
+        int remaining = required.amount;
+        for (FluidStack fluid : fluids) {
+            if (fluid != null && fluid.isFluidEqual(required)) {
+                int taken = Math.min(remaining, Math.max(0, fluid.amount));
+                fluid.amount -= taken;
+                remaining -= taken;
+            }
+        }
+        return true;
+    }
+
     public boolean commit() {
         if (!sourceUnchanged.getAsBoolean()) {
             return false;

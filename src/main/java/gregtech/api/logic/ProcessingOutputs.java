@@ -81,6 +81,18 @@ public final class ProcessingOutputs {
         return CheckRecipeResult.SUCCESS;
     }
 
+    /** Local output tanks must be drained before starting another continuous production cycle. */
+    public boolean areFluidOutputsEmpty() {
+        for (GT_MetaTileEntity_Hatch_Output hatch : machine.mOutputHatches) {
+            if (isValidMetaTileEntity(hatch) && !(hatch instanceof GT_MetaTileEntity_Hatch_Output_ME)
+                    && hatch.getFluidAmount() > 0) {
+                return false;
+            }
+        }
+        // ME has no local tank to empty; canFit checks the network's available capacity.
+        return true;
+    }
+
     public boolean deliver(ItemStack[] items, FluidStack[] fluids, boolean protectItems, boolean protectFluids) {
         boolean complete = true;
         if (items != null) {

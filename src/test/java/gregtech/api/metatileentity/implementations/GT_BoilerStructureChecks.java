@@ -253,9 +253,9 @@ final class GT_BoilerStructureChecks {
         GT_MetaTileEntity_LargeBoiler machine = machine(model);
         assertEquals(new int[]{400, 600, 800, 1000}[model], machine.getEUt());
         assertEquals(new int[]{16, 12, 8, 4}[model], machine.getEfficiencyIncrease());
-        Method boost = machine.getClass().getDeclaredMethod("runtimeBoost", int.class);
+        Method boost = machine.getClass().getDeclaredMethod("runtimeBoost", long.class);
         boost.setAccessible(true);
-        assertEquals(new int[]{40, 30, 26, 24}[model], boost.invoke(machine, 20));
+        assertEquals((long) new int[]{40, 30, 26, 24}[model], boost.invoke(machine, 20L));
         assertEquals(12, machine.getPollutionPerTick(null));
         for (String language : new String[]{"en_US", "ru_RU"}) {
             try (InputStream stream = GT_BoilerStructureChecks.class.getResourceAsStream(

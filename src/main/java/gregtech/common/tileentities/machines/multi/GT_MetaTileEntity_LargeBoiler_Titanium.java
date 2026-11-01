@@ -46,7 +46,7 @@ public class GT_MetaTileEntity_LargeBoiler_Titanium
     }
 
     @Override
-    int runtimeBoost(int mTime) {
-        return mTime * 130 / 100;
+    long runtimeBoost(long time) {
+        return Math.multiplyExact(time, 130) / 100;
     }
 }

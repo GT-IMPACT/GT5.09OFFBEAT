@@ -391,6 +391,15 @@ public class ProcessingLogic {
             return new Result(status, null, null, 0, 0, 0, 0, null, null);
         }
 
+        /** A committed fuel burn; the machine handles its thermal output each tick. */
+        public static Result fuelBurn(ProcessingInputs consumed, int duration, ItemStack[] containers) {
+            if (duration <= 0) {
+                throw new IllegalArgumentException("Burn duration must be positive");
+            }
+            return new Result(CheckRecipeResult.SUCCESS, consumed, null, 0, duration, 1, 1,
+                    containers, new FluidStack[0]);
+        }
+
         /** Fuel has already been committed; negative EU/t denotes generation. */
         public static Result generation(ProcessingInputs consumed, long eut, FluidStack[] fluids) {
             if (eut <= 0) {

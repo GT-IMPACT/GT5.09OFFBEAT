@@ -46,8 +46,8 @@ public class GT_MetaTileEntity_LargeBoiler_TungstenSteel
     }
 
     @Override
-    int runtimeBoost(int mTime) {
-        return mTime * 120 / 100;
+    long runtimeBoost(long time) {
+        return Math.multiplyExact(time, 120) / 100;
     }
 
 }

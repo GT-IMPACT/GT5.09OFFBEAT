@@ -46,7 +46,7 @@ public class GT_MetaTileEntity_LargeBoiler_Bronze
     }
 
     @Override
-    int runtimeBoost(int mTime) {
-        return mTime * 2;
+    long runtimeBoost(long time) {
+        return Math.multiplyExact(time, 2);
     }
 }

@@ -191,6 +191,11 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return ProcessingLogic.ALL_MODES;
     }
 
+    /** Fuel machines may expose a display-only map without filtering their input hatches. */
+    public GT_Recipe_Map getRecipeMapForNEI() {
+        return getRecipeMap();
+    }
+
     public int getAvailableParallel() {
         return getProcessingLogic().getAvailableParallel();
     }

@@ -2,9 +2,10 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.GT_Mod;
 import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.HatchElement;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
+import gregtech.api.logic.BoilerProcessingLogic;
+import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.IHatchElement;
@@ -16,22 +17,21 @@ import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
 import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
-import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 import static space.impact.structures.structure.StructureUtility.transpose;
 
 public abstract class GT_MetaTileEntity_LargeBoiler
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_LargeBoiler>
+        extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_LargeBoiler>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
     private static final HintColor FIREBOX_HINT = HintColor.BLUE;
@@ -194,98 +194,118 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeBoiler.png");
+        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
+                "LargeBoiler.png");
     }
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
     }
 
-    public boolean checkRecipe(ItemStack aStack) {
-        //Do we have an integrated circuit with a valid configuration?
-        if (mInventory[1] != null && mInventory[1].getUnlocalizedName().startsWith("gt.integrated_circuit")) {
-            int circuit_config = mInventory[1].getItemDamage();
-            if (circuit_config >= 1 && circuit_config <= 25) {
-                // If so, overwrite the current config
-                this.integratedCircuitConfig = circuit_config;
-            }
-        } else {
-            //If not, set the config to zero
-            this.integratedCircuitConfig = 0;
-        }
-
-        this.mSuperEfficencyIncrease = 0;
-        for (GT_Recipe tRecipe : GT_Recipe.GT_Recipe_Map.sDieselFuels.mRecipeList) {
-            FluidStack tFluid = GT_Utility.getFluidForFilledItem(tRecipe.getRepresentativeInput(0), true);
-            if (tFluid != null && tRecipe.mSpecialValue > 1) {
-                tFluid.amount = 1000;
-                if (depleteInput(tFluid)) {
-                    this.mMaxProgresstime = adjustBurnTimeForConfig(runtimeBoost(tRecipe.mSpecialValue / 2));
-                    this.mEUt = adjustEUtForConfig(getEUt());
-                    this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease() * 4;
-                    return true;
-                }
-            }
-        }
-        for (GT_Recipe tRecipe : GT_Recipe.GT_Recipe_Map.sDenseLiquidFuels.mRecipeList) {
-            FluidStack tFluid = GT_Utility.getFluidForFilledItem(tRecipe.getRepresentativeInput(0), true);
-            if (tFluid != null) {
-                tFluid.amount = 1000;
-                if (depleteInput(tFluid)) {
-                    this.mMaxProgresstime = adjustBurnTimeForConfig(Math.max(1, runtimeBoost(tRecipe.mSpecialValue * 2)));
-                    this.mEUt = adjustEUtForConfig(getEUt());
-                    this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease();
-                    return true;
-                }
-            }
-        }
-        ArrayList<ItemStack> tInputList = getStoredInputs();
-        if (!tInputList.isEmpty()) {
-            for (ItemStack tInput : tInputList) {
-                if (tInput != GT_OreDictUnificator.get(OrePrefixes.bucket, Materials.Lava, 1)){
-                    if (GT_Utility.getFluidForFilledItem(tInput, true) == null && (this.mMaxProgresstime = GT_ModHandler.getFuelValue(tInput) / 80) > 0) {
-                        this.excessFuel += GT_ModHandler.getFuelValue(tInput) % 80;
-                        this.mMaxProgresstime += this.excessFuel / 80;
-                        this.excessFuel %= 80;
-                        this.mMaxProgresstime = adjustBurnTimeForConfig(runtimeBoost(this.mMaxProgresstime));
-                        this.mEUt = adjustEUtForConfig(getEUt());
-                        this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease();
-                        this.mOutputItems = new ItemStack[]{GT_Utility.getContainerItem(tInput, true)};
-                        tInput.stackSize -= 1;
-                        updateSlots();
-                        if (this.mEfficiencyIncrease > 5000) {
-                            this.mEfficiencyIncrease = 0;
-                            this.mSuperEfficencyIncrease = 20;
-                        }
-                        return true;
-                    }
-                }
-            }
-        }
-        this.mMaxProgresstime = 0;
-        this.mEUt = 0;
-        return false;
+    @Override
+    protected ProcessingLogic createProcessingLogic() {
+        return new BoilerProcessingLogic(() -> new BoilerProcessingLogic.State(getEUt(), getEfficiencyIncrease(),
+                mEfficiency, maximumEfficiency(), circuitConfiguration(), excessFuel, excessProjectedEU),
+                this::runtimeBoost);
     }
 
-    abstract int runtimeBoost(int mTime);
+    @Override
+    public int getSupportedProcessingModes() {
+        return ProcessingLogic.PROTECT_ITEMS | ProcessingLogic.PROTECT_FLUIDS;
+    }
 
-    public boolean onRunningTick(ItemStack aStack) {
-        if (this.mEUt > 0) {
-            if (this.mSuperEfficencyIncrease > 0)
-                mEfficiency = Math.max(0, Math.min(mEfficiency + mSuperEfficencyIncrease, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
-            int tGeneratedEU = (int) (this.mEUt * 2L * this.mEfficiency / 10000L);
-            if (tGeneratedEU > 0) {
-                long amount = (tGeneratedEU + 160) / 160;
-                if (depleteInput(Materials.Water.getFluid(amount)) || depleteInput(GT_ModHandler.getDistilledWater(amount))) {
-                    addOutput(GT_ModHandler.getSteam(tGeneratedEU));
-                } else {
-                    GT_Log.exp.println("Boiler "+this.mName+" had no Water!");
-                    explodeMultiblock();
-                }
-            }
+    @Override
+    public GT_Recipe.GT_Recipe_Map getRecipeMapForNEI() {
+        return GT_Recipe.GT_Recipe_Map.sLargeBoilerFakeFuels;
+    }
+
+    @Override
+    public boolean hasControllerSlotInGui() {
+        return true;
+    }
+
+    private int maximumEfficiency() {
+        return getMaxEfficiency(mInventory[1]) - (getIdealStatus() - getRepairStatus()) * 1000;
+    }
+
+    private int circuitConfiguration() {
+        ItemStack circuit = mInventory[1];
+        if (circuit == null || !circuit.getUnlocalizedName().startsWith("gt.integrated_circuit")) {
+            return 0;
+        }
+        int configuration = circuit.getItemDamage();
+        return configuration >= 1 && configuration <= 25 ? configuration : 0;
+    }
+
+    @Override
+    protected void startCycle(ProcessingLogic.Result result, int efficiency) {
+        int previousEfficiency = mEfficiency;
+        super.startCycle(result, efficiency);
+        BoilerProcessingLogic.Burn burn = ((BoilerProcessingLogic) getProcessingLogic()).getBurn();
+        // mEUt is the legacy thermal rate; lEUt stays zero because boilers produce no electricity.
+        mEUt = burn.heat;
+        mEfficiency = previousEfficiency;
+        mEfficiencyIncrease = burn.efficiencyIncrease;
+        mSuperEfficencyIncrease = burn.tickEfficiencyIncrease;
+        integratedCircuitConfig = burn.circuit;
+        excessFuel = burn.fuelRemainder;
+        excessProjectedEU = burn.heatRemainder;
+        markDirty();
+    }
+
+    abstract long runtimeBoost(long time);
+
+    @Override
+    public boolean onRunningTick(ItemStack stack) {
+        if (mEUt <= 0) {
             return true;
         }
+        if (mSuperEfficencyIncrease > 0) {
+            mEfficiency = Math.max(0, Math.min(mEfficiency + mSuperEfficencyIncrease, maximumEfficiency()));
+        }
+        int steam = Math.toIntExact(mEUt * 2L * mEfficiency / 10000);
+        if (steam > 0) {
+            // Preserve the existing water rounding. A full output never pauses combustion.
+            long water = (steam + 160L) / 160;
+            if (depleteInput(Materials.Water.getFluid(water))
+                    || depleteInput(GT_ModHandler.getDistilledWater(water))) {
+                addOutput(GT_ModHandler.getSteam(steam));
+            } else {
+                GT_Log.exp.println("Boiler " + mName + " had no Water!");
+                explodeMultiblock();
+            }
+        }
         return true;
+    }
+
+    @Override
+    public void saveNBTData(NBTTagCompound tag) {
+        super.saveNBTData(tag);
+        tag.setLong("mEUt", mEUt);
+        NBTTagCompound boiler = new NBTTagCompound();
+        boiler.setInteger("tickWarmup", mSuperEfficencyIncrease);
+        boiler.setInteger("circuit", integratedCircuitConfig);
+        boiler.setInteger("fuelRemainder", excessFuel);
+        boiler.setInteger("heatRemainder", excessProjectedEU);
+        boiler.setBoolean("firstRun", firstRun);
+        tag.setTag("boiler", boiler);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound tag) {
+        super.loadNBTData(tag);
+        lEUt = 0;
+        NBTTagCompound boiler = tag.getCompoundTag("boiler");
+        mSuperEfficencyIncrease = boiler.getInteger("tickWarmup");
+        integratedCircuitConfig = boiler.getInteger("circuit");
+        excessFuel = boiler.getInteger("fuelRemainder");
+        excessProjectedEU = boiler.getInteger("heatRemainder");
+        firstRun = !tag.hasKey("boiler") || boiler.getBoolean("firstRun");
+        if (!tag.hasKey("boiler") && mMaxProgresstime > 0) {
+            // Old saves contain the thermal rate and duration, but no boiler-specific state.
+            integratedCircuitConfig = Math.max(0, Math.min(25, (getEUt() - mEUt) / 25));
+            mSuperEfficencyIncrease = mEfficiencyIncrease == 0 ? 20 : 0;
+        }
     }
 
     @Override
@@ -357,20 +377,4 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         return false;
     }
 
-    private int adjustEUtForConfig(int rawEUt) {
-        int adjustedSteamOutput = rawEUt - 25 * integratedCircuitConfig;
-        return Math.max(adjustedSteamOutput, 25);
-    }
-
-    private int adjustBurnTimeForConfig(int rawBurnTime) {
-        if (mEfficiency < getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)) {
-            return rawBurnTime;
-        }
-        int adjustedEUt = Math.max(25, getEUt() - 25 * integratedCircuitConfig);
-        int adjustedBurnTime = rawBurnTime * getEUt() / adjustedEUt;
-        this.excessProjectedEU += getEUt() * rawBurnTime - adjustedEUt * adjustedBurnTime;
-        adjustedBurnTime += this.excessProjectedEU / adjustedEUt;
-        this.excessProjectedEU %= adjustedEUt;
-        return adjustedBurnTime;
-    }
 }

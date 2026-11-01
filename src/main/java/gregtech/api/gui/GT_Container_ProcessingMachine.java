@@ -232,7 +232,7 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
     }
 
     public GT_Recipe_Map getNEIRecipeMap() {
-        GT_Recipe_Map map = machine().getRecipeMap();
+        GT_Recipe_Map map = machine().getRecipeMapForNEI();
         return map != null && map.mNEIAllowed ? map : null;
     }
 
