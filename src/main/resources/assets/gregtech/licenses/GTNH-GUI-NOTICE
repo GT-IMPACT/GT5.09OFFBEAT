@@ -1,0 +1,14 @@
+Processing GUI assets are copied, without modification, from GTNewHorizons/GT5-Unofficial:
+https://github.com/GTNewHorizons/GT5-Unofficial/tree/master/src/main/resources/assets/gregtech/textures/gui
+
+Source namespace: gregtech (not tectech).
+Files: background/singleblock_default.png, picture/screen_black.png, slot/item_standard.png,
+button/standard.png, button/standard_pressed.png,
+overlay_button/{void_excess_none,void_excess_item,void_excess_fluid,void_excess_all,
+input_separation_on,input_separation_off,batch_mode_on,batch_mode_off,
+recipe_locked,recipe_unlocked,machine_mode_default,power_switch_on,power_switch_off}.png.
+
+Upstream license: GNU LGPL v3; see GTNH-LGPL-3.0.
+Upstream credits include Jimbno / UU-Tex and GTNH texture contributors.
+The control order, overlays, and voiding-mode cycle follow GregTech's
+MTEMultiBlockBase and IControllerWithOptionalFeatures.

@@ -5,27 +5,30 @@ import static space.impact.structures.structure.StructureUtility.transpose;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import gregtech.api.enums.Casings;
-import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.HatchElement;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingMultiBlockBase;
 import gregtech.api.render.TextureFactory;
-import gregtech.api.util.*;
+import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.api.util.StructureRequirements;
 import space.impact.structures.alignment.constructable.ISurvivalConstructable;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
 
 public class GT_MetaTileEntity_VacuumFreezer
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_VacuumFreezer>
+        extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_VacuumFreezer>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.FROST_PROOF, 16)
@@ -81,11 +84,12 @@ public class GT_MetaTileEntity_VacuumFreezer
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "VacuumFreezer.png");
+        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "VacuumFreezer.png");
     }
 
-    public GT_Recipe.GT_Recipe_Map getRecipeMap() {
-        return GT_Recipe.GT_Recipe_Map.sVacuumRecipes;
+    @Override
+    public List<GT_Recipe.GT_Recipe_Map> getRecipeMaps() {
+        return Collections.singletonList(GT_Recipe.GT_Recipe_Map.sVacuumRecipes);
     }
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
@@ -93,37 +97,11 @@ public class GT_MetaTileEntity_VacuumFreezer
     }
 
 
-    public boolean checkRecipe(ItemStack aStack) {
-        ArrayList<ItemStack> tInputList = getStoredInputs();
-        ArrayList<FluidStack> tFluidList = getStoredFluids();
-        FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
-        ItemStack[] tInput = tInputList.toArray(new ItemStack[tInputList.size()]);
-        if (tInputList.size() > 0 || tFluids.length > 0) {
-            long tVoltage = getMaxInputVoltage();
-            byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-            GT_Recipe tRecipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), cashedRecipe,
-                    false, false, GT_Values.V[tTier], tFluids, tInput);
-            if (tRecipe != null && isRecipeVoltageAllowed(tRecipe.mEUt)) {
-                if (tRecipe.isRecipeInputEqual(true, tFluids, tInput)) {
-                    cashedRecipe = tRecipe;
-                    this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-                    this.mEfficiencyIncrease = 10000;
-                    calculateOverclockedNessMulti(tRecipe.mEUt, tRecipe.mDuration, 1, tVoltage);
-                    //In case recipe is too OP for that machine
-                    if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
-                        return false;
-                    if (this.mEUt > 0) {
-                        this.mEUt = (-this.mEUt);
-                    }
-                    this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
-                    this.mOutputItems = new ItemStack[]{tRecipe.getOutput(0)};
-                    this.mOutputFluids = tRecipe.mFluidOutputs;
-                    updateSlots();
-                    return true;
-                }
-            }
-        }
-        return false;
+    @Override
+    protected ProcessingLogic createProcessingLogic() {
+        return new ProcessingLogic()
+                .setRecipeMapSupplier(this::getRecipeMap)
+                .setOverclock(2, 4);
     }
 
 

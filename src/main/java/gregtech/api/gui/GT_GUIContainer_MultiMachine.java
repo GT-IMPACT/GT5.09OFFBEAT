@@ -27,7 +27,11 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
     String mName = "";
 
     public GT_GUIContainer_MultiMachine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, String aTextureFile) {
-        super(new GT_Container_MultiMachine(aInventoryPlayer, aTileEntity), RES_PATH_GUI + "multimachines/" + (aTextureFile == null ? "MultiblockDisplay" : aTextureFile));
+        this(new GT_Container_MultiMachine(aInventoryPlayer, aTileEntity), aName, aTextureFile);
+    }
+
+    protected GT_GUIContainer_MultiMachine(GT_Container_MultiMachine container, String aName, String aTextureFile) {
+        super(container, RES_PATH_GUI + "multimachines/" + (aTextureFile == null ? "MultiblockDisplay" : aTextureFile));
         mName = aName;
     }
 

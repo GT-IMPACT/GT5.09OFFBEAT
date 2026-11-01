@@ -319,31 +319,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                                 }
                                 
                                 if (mMaxProgresstime > 0 && ++mProgresstime >= mMaxProgresstime) {
-                                    if (mOutputItems != null) for (ItemStack tStack : mOutputItems)
-                                        if (tStack != null) {
-                                            try {
-                                                GT_Mod.achievements.issueAchivementHatch(aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), tStack);
-                                            } catch (Exception ignored) {
-                                            }
-                                            addOutput(tStack);
-                                        }
-                                    if (mOutputFluids != null) {
-                                        addFluidOutputs(mOutputFluids);
-                                    }
-                                    mEfficiency = Math.max(0, Math.min(mEfficiency + mEfficiencyIncrease, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
-                                    mOutputItems = null;
-                                    mProgresstime = 0;
-                                    mMaxProgresstime = 0;
-                                    mEfficiencyIncrease = 0;
-                                    if (aBaseMetaTileEntity.isAllowedToWork()) checkRecipe(mInventory[1]);
-                                    if (mOutputFluids != null && mOutputFluids.length > 0) {
-                                        if (mOutputFluids.length > 1) {
-                                            try {
-                                                GT_Mod.achievements.issueAchievement(aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), "oilplant");
-                                            } catch (Exception ignored) {
-                                            }
-                                        }
-                                    }
+                                    completeRecipe();
                                 }
                             }
                         } else {
@@ -367,6 +343,46 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             boolean active = aBaseMetaTileEntity.isActive() && mPollution > 0;
             for (GT_MetaTileEntity_Hatch_Muffler aMuffler : mMufflerHatches)
                 aMuffler.getBaseMetaTileEntity().setActive(active);
+        }
+    }
+
+    /** Completion hook; legacy machines retain their original delivery and restart behavior. */
+    protected void completeRecipe() {
+        IGregTechTileEntity aBaseMetaTileEntity = getBaseMetaTileEntity();
+        if (mOutputItems != null) {
+            for (ItemStack tStack : mOutputItems) {
+                if (tStack != null) {
+                    try {
+                        GT_Mod.achievements.issueAchivementHatch(
+                                aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()),
+                                tStack);
+                    } catch (Exception ignored) {
+                    }
+                    addOutput(tStack);
+                }
+            }
+        }
+        if (mOutputFluids != null) {
+            addFluidOutputs(mOutputFluids);
+        }
+        mEfficiency = Math.max(0, Math.min(mEfficiency + mEfficiencyIncrease,
+                getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
+        mOutputItems = null;
+        mProgresstime = 0;
+        mMaxProgresstime = 0;
+        mEfficiencyIncrease = 0;
+        if (aBaseMetaTileEntity.isAllowedToWork()) {
+            checkRecipe(mInventory[1]);
+        }
+        if (mOutputFluids != null && mOutputFluids.length > 0) {
+            if (mOutputFluids.length > 1) {
+                try {
+                    GT_Mod.achievements.issueAchievement(
+                            aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()),
+                            "oilplant");
+                } catch (Exception ignored) {
+                }
+            }
         }
     }
     
@@ -1196,6 +1212,10 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         return false;
     }
     
+    public long getRunningEUt() {
+        return mEUt;
+    }
+
     @Override
     public String[] getInfoData() {
         final ArrayList<String> ll = new ArrayList<>();
@@ -1244,7 +1264,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 Long.toString(maxEnergy) + EnumChatFormatting.RESET + " EU");
         
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.usage") + ": " + EnumChatFormatting.RED +
-                Integer.toString(-mEUt) + EnumChatFormatting.RESET + " EU/t");
+                Long.toString(-getRunningEUt()) + EnumChatFormatting.RESET + " EU/t");
         
         ll.add(StatCollector.translateToLocal("GT5U.multiblock.mei") + ": " + EnumChatFormatting.YELLOW +
                 Long.toString(baseInput) + EnumChatFormatting.RESET + " EU/t(*" + EnumChatFormatting.YELLOW + ampers + "A"

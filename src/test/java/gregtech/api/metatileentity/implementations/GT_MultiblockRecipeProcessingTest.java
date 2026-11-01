@@ -197,13 +197,14 @@ public class GT_MultiblockRecipeProcessingTest {
             try {
                 f.register(eut, 1); f.fill();
                 boolean accepted = model.equals("ImplosionCompressor")
-                        || (tier == 0 && !model.equals("DistillationTower")) || delta <= 0;
+                        || (tier == 0 && !model.equals("DistillationTower") && !model.equals("VacuumFreezer")) || delta <= 0;
                 String context = model + " tier=" + tier + " recipeEUt=" + eut;
                 assertEquals(context, accepted, f.machine.checkRecipe(null));
                 if (!accepted) { f.assertUnconsumed(); continue; }
-                int expected = model.equals("IndustrialPulverizer") ? eut / 2 : tier == 0 ? eut / 4 : eut;
+                int expected = model.equals("VacuumFreezer") ? eut
+                        : model.equals("IndustrialPulverizer") ? eut / 2 : tier == 0 ? eut / 4 : eut;
                 assertEquals(context, -expected, f.machine.mEUt);
-                assertEquals(context, model.equals("IndustrialPulverizer") || tier == 0 ? 2 : 1, f.machine.mMaxProgresstime);
+                assertEquals(context, (model.equals("IndustrialPulverizer") || tier == 0) && !model.equals("VacuumFreezer") ? 2 : 1, f.machine.mMaxProgresstime);
                 f.assertConsumed();
             } finally { f.map.clear(); GregTech_API.sPostloadFinished = f.previousPostload; }
         }
@@ -254,6 +255,14 @@ public class GT_MultiblockRecipeProcessingTest {
                         assertEquals(context, voltage, f.machine.getMaxInputVoltage());
                         f.register(24, duration);
                         f.fill();
+                        if (model.equals("VacuumFreezer")) {
+                            long power = scenario.equals("amps")
+                                    ? (mixed == 1 ? (GT_Values.V[tier] + 32) / 2 * (variant + 2L)
+                                            : GT_Values.V[tier] * variant)
+                                    : voltage;
+                            assertFreezerPower(f, power, duration, context);
+                            continue;
+                        }
                         if (model.equals("DistillationTower") && effectiveTier == 0) {
                             assertFalse(context, f.machine.checkRecipe(null));
                             f.assertUnconsumed();
@@ -284,6 +293,29 @@ public class GT_MultiblockRecipeProcessingTest {
         return (GT_MetaTileEntity_MultiBlockBase) Class.forName(
                 "gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_" + name)
                 .getConstructor(String.class).newInstance("processing-test");
+    }
+
+    // GTNH-style power thresholds; unlike the legacy table, sub-tick power does not fall.
+    private static final long[] FREEZER_POWER_THRESHOLDS = {32, 128, 512, 2048, 8192, 32768,
+            131072, 524288, 2097152, 8388608, 33554432, 134217728, 536870912, 2147483648L};
+    private static final long[] FREEZER_ENERGY = {24, 96, 384, 1536, 6144, 24576,
+            98304, 393216, 1572864, 6291456, 25165824, 100663296, 402653184, 1610612736};
+    private static final int[] FREEZER_DURATION = {80, 40, 20, 10, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1};
+
+    private static void assertFreezerPower(RecipeFixture f, long power, int duration, String context) {
+        if (power < 24) {
+            assertFalse(context, f.machine.checkRecipe(null));
+            f.assertUnconsumed();
+            return;
+        }
+        int index = 0;
+        while (index + 1 < FREEZER_POWER_THRESHOLDS.length && power >= FREEZER_POWER_THRESHOLDS[index + 1]) {
+            index++;
+        }
+        assertTrue(context, f.machine.checkRecipe(null));
+        assertEquals(context, -FREEZER_ENERGY[index], ((GT_MetaTileEntity_VacuumFreezer) f.machine).lEUt);
+        assertEquals(context, duration == 1 ? 1 : FREEZER_DURATION[index], f.machine.mMaxProgresstime);
+        f.assertConsumed();
     }
 
     static final class RecipeFixture {
@@ -367,7 +399,7 @@ public class GT_MultiblockRecipeProcessingTest {
         void assertOutputs() {
             if (model.equals("OilCracker")) assertNull(machine.mOutputItems);
             else {
-                assertEquals(model.equals("VacuumFreezer") || model.equals("DistillationTower") ? 1 : 2,
+                assertEquals(model.equals("DistillationTower") ? 1 : 2,
                         machine.mOutputItems.length);
                 assertTrue(machine.mOutputItems[0].isItemEqual(new ItemStack(Items.gold_ingot)));
                 assertEquals(3, machine.mOutputItems[0].stackSize);

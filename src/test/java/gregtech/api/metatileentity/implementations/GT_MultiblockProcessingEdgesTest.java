@@ -159,6 +159,13 @@ public class GT_MultiblockProcessingEdgesTest {
                 "LargeChemicalReactor", "ImplosionCompressor", "ElectricBlastFurnace", "DistillationTower", "OilCracker"}) {
             recipe(model, 15, f -> {
                 f.register(1073741824, 80); f.fill();
+                if (model.equals("VacuumFreezer")) {
+                    assertTrue(f.machine.checkRecipe(null));
+                    assertEquals(-1073741824L, ((GT_MetaTileEntity_VacuumFreezer) f.machine).lEUt);
+                    assertEquals(80, f.machine.mMaxProgresstime);
+                    f.assertConsumed();
+                    return;
+                }
                 assertFalse(model, f.machine.checkRecipe(null));
                 assertEquals(Integer.MAX_VALUE - 1, f.machine.mEUt);
                 assertEquals(Integer.MAX_VALUE - 1, f.machine.mMaxProgresstime);
@@ -190,6 +197,7 @@ public class GT_MultiblockProcessingEdgesTest {
                 f.attach(energy); f.machine.mEnergyHatchesMulti.add(energy); hatch = energy;
             } else hatch = f.machine.mEnergyHatches.get(0);
             hatch.setEUVar(stored);
+            ((GT_MetaTileEntity_VacuumFreezer) f.machine).lEUt = -24;
             f.machine.mEUt = -24; f.machine.mEfficiency = 10000; f.machine.mMaxProgresstime = 80;
             assertEquals(stored >= 24, f.machine.onRunningTick(null));
             assertEquals(stored >= 24 ? stored - 24 : stored, hatch.getEUVar());
@@ -198,7 +206,7 @@ public class GT_MultiblockProcessingEdgesTest {
     }
 
     private static void splitEnergy() {
-        Fixture f = new Fixture(new GT_MetaTileEntity_VacuumFreezer("test"), 1);
+        Fixture f = new Fixture(new GT_MetaTileEntity_MultiblockCentrifuge("test"), 1);
         GT_MetaTileEntity_Hatch_Energy ordinary = f.machine.mEnergyHatches.get(0);
         GT_MetaTileEntity_Hatch_EnergyMulti multi = new GT_MetaTileEntity_Hatch_EnergyMulti("test", 1, 4, "test", null);
         f.attach(multi); f.machine.mEnergyHatchesMulti.add(multi);
@@ -287,7 +295,8 @@ public class GT_MultiblockProcessingEdgesTest {
             recipe(model, 2, f -> {
                 f.register(24, row[0]); f.fill();
                 assertTrue(model + " duration=" + row[0], f.machine.checkRecipe(null));
-                assertEquals(-row[1], f.machine.mEUt); assertEquals(row[2], f.machine.mMaxProgresstime);
+                assertEquals(model.equals("VacuumFreezer") ? -96 : -row[1], f.machine.mEUt);
+                assertEquals(row[2], f.machine.mMaxProgresstime);
             });
         }
     }
@@ -367,6 +376,13 @@ public class GT_MultiblockProcessingEdgesTest {
         for (String model : new String[]{"VacuumFreezer", "ElectricBlastFurnace"})
             for (int duration : new int[]{1073741823, 1073741824, Integer.MAX_VALUE}) recipe(model, 0, f -> {
                 f.register(4, duration); f.fill();
+                if (model.equals("VacuumFreezer")) {
+                    assertTrue(f.machine.checkRecipe(null));
+                    assertEquals(-4, f.machine.mEUt);
+                    assertEquals(duration, f.machine.mMaxProgresstime);
+                    f.assertConsumed();
+                    return;
+                }
                 boolean success = duration == 1073741823;
                 assertEquals(success, f.machine.checkRecipe(null));
                 assertEquals(success ? -1 : Integer.MAX_VALUE - 1, f.machine.mEUt);
