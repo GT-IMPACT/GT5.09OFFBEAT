@@ -391,6 +391,16 @@ public class ProcessingLogic {
             return new Result(status, null, null, 0, 0, 0, 0, null, null);
         }
 
+        /** A prepared custom cycle. Input commit remains the caller's responsibility. */
+        public static Result cycle(ProcessingInputs consumed, long eut, int duration, int parallel, int operations,
+                ItemStack[] items, FluidStack[] fluids) {
+            if (duration <= 0 || parallel <= 0 || operations < parallel) {
+                throw new IllegalArgumentException("Invalid cycle size");
+            }
+            return new Result(CheckRecipeResult.SUCCESS, consumed, null, eut, duration, parallel, operations,
+                    items, fluids);
+        }
+
         /** A committed fuel burn; the machine handles its thermal output each tick. */
         public static Result fuelBurn(ProcessingInputs consumed, int duration, ItemStack[] containers) {
             if (duration <= 0) {

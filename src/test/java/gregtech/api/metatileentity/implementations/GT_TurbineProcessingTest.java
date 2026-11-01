@@ -13,7 +13,6 @@ import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine;
-import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiFurnace;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -304,7 +303,7 @@ public class GT_TurbineProcessingTest {
             assertEquals(7010, restored.mEfficiency);
             assertEquals(0, s.input.getFluidAmount());
 
-            GT_MetaTileEntity_MultiFurnace legacy = new GT_MetaTileEntity_MultiFurnace("legacy");
+            GT_LegacyProcessingTestMachine legacy = new GT_LegacyProcessingTestMachine("legacy");
             new Fixture(legacy, 1);
             legacy.mEUt = 800;
             legacy.mMaxProgresstime = 1;

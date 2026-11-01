@@ -6,7 +6,6 @@ import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Cleanroom;
-import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiFurnace;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -400,7 +399,7 @@ public class GT_AdvancedProcessingTest {
             assertEquals(CheckRecipeResult.OUTPUT_OVERFLOW, scenario.machine.getProcessingResult());
             f.assertUnconsumed();
 
-            GT_MetaTileEntity_MultiBlockBase legacy = new GT_MetaTileEntity_MultiFurnace("legacy");
+            GT_MetaTileEntity_MultiBlockBase legacy = new GT_LegacyProcessingTestMachine("legacy");
             new Fixture(legacy, 1);
             legacy.mEUt = -24;
             legacy.mMaxProgresstime = 4;
@@ -424,7 +423,7 @@ public class GT_AdvancedProcessingTest {
 
     private static void legacyBlastOutputs() throws Exception {
         try (Scenario scenario = new Scenario("ElectricBlastFurnace", 1)) {
-            GT_MetaTileEntity_MultiBlockBase legacy = new GT_MetaTileEntity_MultiFurnace("legacy");
+            GT_MetaTileEntity_MultiBlockBase legacy = new GT_LegacyProcessingTestMachine("legacy");
             new Fixture(legacy, 1);
             legacy.mEUt = -24;
             legacy.mMaxProgresstime = 80;

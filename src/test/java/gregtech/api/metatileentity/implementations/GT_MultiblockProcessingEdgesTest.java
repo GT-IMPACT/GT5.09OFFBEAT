@@ -205,7 +205,7 @@ public class GT_MultiblockProcessingEdgesTest {
     }
 
     private static void splitEnergy() {
-        Fixture f = new Fixture(new GT_MetaTileEntity_MultiFurnace("test"), 1);
+        Fixture f = new Fixture(new GT_LegacyProcessingTestMachine("test"), 1);
         GT_MetaTileEntity_Hatch_Energy ordinary = f.machine.mEnergyHatches.get(0);
         GT_MetaTileEntity_Hatch_EnergyMulti multi = new GT_MetaTileEntity_Hatch_EnergyMulti("test", 1, 4, "test", null);
         f.attach(multi); f.machine.mEnergyHatchesMulti.add(multi);
@@ -217,7 +217,7 @@ public class GT_MultiblockProcessingEdgesTest {
         assertEquals(12, ordinary.getEUVar()); assertEquals(0, multi.getEUVar());
     }
 
-    public static final class ExplosionRecorder extends GT_MetaTileEntity_MultiFurnace {
+    public static final class ExplosionRecorder extends GT_LegacyProcessingTestMachine {
         int explosions;
         public ExplosionRecorder() { super("test"); }
         @Override public void explodeMultiblock() { explosions++; }
@@ -259,6 +259,11 @@ public class GT_MultiblockProcessingEdgesTest {
             setField(machine, "mLevel", level); setField(machine, "mCostDiscount", discount);
             ItemStack ore = new ItemStack(net.minecraft.init.Blocks.iron_ore, 256);
             f.items(ore);
+            if (4 * level / discount > 32) {
+                assertFalse("One LV hatch cannot power this coil load", machine.checkRecipe(null));
+                assertEquals(256, ore.stackSize);
+                continue;
+            }
             assertTrue(machine.checkRecipe(null));
             assertEquals(256 - 8 * level, ore.stackSize);
             assertEquals(8 * level, machine.mOutputItems.length);
@@ -272,7 +277,7 @@ public class GT_MultiblockProcessingEdgesTest {
         Fixture f = new Fixture(machine, 1);
         setField(machine, "mLevel", 1);
         f.items(new ItemStack(Items.stick));
-        assertTrue("Legacy quirk: non-smeltable input still returns true", machine.checkRecipe(null));
+        assertFalse("Non-smeltable inputs must not start a cycle", machine.checkRecipe(null));
         assertEquals(0, machine.mMaxProgresstime);
     }
 

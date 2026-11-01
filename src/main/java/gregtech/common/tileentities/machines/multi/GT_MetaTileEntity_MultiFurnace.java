@@ -8,16 +8,16 @@ import gregtech.api.enums.Casings;
 import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.HeatingCoil;
 import gregtech.api.interfaces.IHatchElement;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.logic.SmeltingProcessingLogic;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 
 import gregtech.api.render.TextureFactory;
-import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
 import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
@@ -36,7 +36,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class GT_MetaTileEntity_MultiFurnace
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_MultiFurnace>
+        extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_MultiFurnace>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
     private static final HintColor BOTTOM_HINT = HintColor.BLUE;
@@ -98,7 +98,7 @@ public class GT_MetaTileEntity_MultiFurnace
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "MultiFurnace.png");
+        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "MultiFurnace.png");
     }
 
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {
@@ -109,37 +109,14 @@ public class GT_MetaTileEntity_MultiFurnace
         return true;
     }
 
-    public boolean checkRecipe(ItemStack aStack) {
-        ArrayList<ItemStack> tInputList = getStoredInputs();
-        if (!tInputList.isEmpty()) {
-            int mVolatage=GT_Utility.safeInt(getMaxInputVoltage());
+    @Override
+    protected ProcessingLogic createProcessingLogic() {
+        return new SmeltingProcessingLogic(() -> mLevel, () -> mCostDiscount);
+    }
 
-            int j = 0;
-            this.mOutputItems = new ItemStack[8 * this.mLevel];
-            for (int i = 0; (i < 256) && (j < this.mOutputItems.length); i++) {
-                if (null != (this.mOutputItems[j] = GT_ModHandler.getSmeltingOutput((ItemStack) tInputList.get(i % tInputList.size()), true, null))) {
-                    j++;
-                }
-            }
-            if (j > 0) {
-                this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-                this.mEfficiencyIncrease = 10000;
-                calculateOverclockedNessMulti(4, 512, 1, mVolatage);
-                //In case recipe is too OP for that machine
-                if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
-                    return false;
-
-                this.mEUt = GT_Utility.safeInt(((long)mEUt) * this.mLevel / (long)this.mCostDiscount,1);
-                if (mEUt == Integer.MAX_VALUE - 1)
-                    return false;
-                if (this.mEUt > 0) {
-                    this.mEUt = (-this.mEUt);
-                }
-            }
-            updateSlots();
-            return true;
-        }
-        return false;
+    @Override
+    public int getSupportedProcessingModes() {
+        return ProcessingLogic.BATCH | ProcessingLogic.PROTECT_ITEMS | ProcessingLogic.SEPARATE_INPUTS;
     }
 
     @Override

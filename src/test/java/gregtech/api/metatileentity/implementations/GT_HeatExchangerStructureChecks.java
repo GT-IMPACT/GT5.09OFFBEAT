@@ -287,9 +287,10 @@ final class GT_HeatExchangerStructureChecks {
         assertTrue(circuit.machine.checkRecipe(null));
         assertEquals(100, field(circuit.machine, "superheated_threshold"));
         assertEquals(256, circuit.machine.mEUt);
+        circuit.machine.mMaxProgresstime = 0;
         hot.mFluid = FluidRegistry.getFluidStack("water", 100);
         assertFalse("Unrelated fluid is not a heat source", circuit.machine.checkRecipe(null));
-        assertEquals(0, field(circuit.machine, "superheated_threshold"));
+        assertEquals("Rejected input must not mutate the previous cycle", 100, field(circuit.machine, "superheated_threshold"));
     }
 
     private static void checkTooltip() throws Exception {
@@ -342,7 +343,7 @@ final class GT_HeatExchangerStructureChecks {
     }
 
     private static final class Exchanger {
-        final TestWorld world = new TestWorld();
+        final TestWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
         final TestPlayer player = new TestPlayer(world);
         final TestExchanger machine = new TestExchanger();
         final List<int[]> shell = new ArrayList<>();

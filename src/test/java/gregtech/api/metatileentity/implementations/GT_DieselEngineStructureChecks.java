@@ -291,7 +291,7 @@ final class GT_DieselEngineStructureChecks {
                 fuelHatch.mFluid = new FluidStack(fuel, 10000);
                 lubricant.mFluid = Materials.Lubricant.getFluid(100);
                 oxygen.mFluid = boost ? Materials.Oxygen.getGas(100) : null;
-                Field boosted = f.machine.getClass().getDeclaredField("boostEu");
+                Field boosted = GT_MetaTileEntity_DieselEngine.class.getDeclaredField("boostEu");
                 boosted.setAccessible(true);
                 boosted.setBoolean(f.machine, boost);
                 f.machine.mEfficiency = boost ? 30000 : 10000;
@@ -307,11 +307,13 @@ final class GT_DieselEngineStructureChecks {
                 assertEquals(boost ? 30000 : 10000, f.machine.getMaxEfficiency(null));
                 assertEquals(model == 0 ? 15 : 40, f.machine.mEfficiencyIncrease);
                 int remainingLubricant = lubricant.mFluid.amount;
+                f.machine.mMaxProgresstime = 0;
                 f.machine.mRuntime = 1;
                 f.machine.mEfficiency = 1000;
                 assertTrue(f.machine.checkRecipe(null));
                 assertEquals("Startup below 20% produces no energy", 0, f.machine.mEUt);
                 assertEquals("Lubricant is not consumed on every tick", remainingLubricant, lubricant.mFluid.amount);
+                f.machine.mMaxProgresstime = 0;
                 lubricant.mFluid = null;
                 assertFalse("Lubricant is required", f.machine.checkRecipe(null));
             }
@@ -369,7 +371,7 @@ final class GT_DieselEngineStructureChecks {
     }
 
     private static final class Engine {
-        final TestWorld world = new TestWorld();
+        final TestWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
         final TestPlayer player = new TestPlayer(world);
         final GT_MetaTileEntity_DieselEngine machine;
         final List<int[]> sides = new ArrayList<>();

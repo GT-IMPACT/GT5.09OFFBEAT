@@ -1,7 +1,10 @@
 package gregtech.common.tileentities.machines.multi;
 
 import net.minecraft.block.Block;
-import gregtech.api.enums.Materials;
+import gregtech.api.logic.CombustionProcessingLogic;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import net.minecraft.nbt.NBTTagCompound;
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.HatchElement;
 import gregtech.api.interfaces.ICasing;
@@ -15,7 +18,7 @@ import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
 import net.minecraftforge.common.util.ForgeDirection;
-import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -23,22 +26,18 @@ import gregtech.api.metatileentity.implementations.*;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 import static space.impact.structures.structure.StructureUtility.onElementPass;
 import static space.impact.structures.structure.StructureUtility.transpose;
 
 public class GT_MetaTileEntity_DieselEngine
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_DieselEngine>
+        extends GT_MetaTileEntity_ProcessingMultiBlockBase<GT_MetaTileEntity_DieselEngine>
         implements ISurvivalConstructable {
     private static final String STRUCTURE_PIECE = "main";
     private static final HintColor SIDE_HINT = HintColor.BLUE;
@@ -196,61 +195,75 @@ public class GT_MetaTileEntity_DieselEngine
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeDieselEngine.png");
+        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeDieselEngine.png");
+    }
+
+    protected CombustionProcessingLogic.Settings engineSettings() {
+        return new CombustionProcessingLogic.Settings(2048, 4096, 2, 1, 72, 15);
     }
 
     @Override
-    public boolean checkRecipe(ItemStack aStack) {
-        ArrayList<FluidStack> tFluids = getStoredFluids();
-        Collection<GT_Recipe> tRecipeList = GT_Recipe.GT_Recipe_Map.sDieselFuels.mRecipeList;
+    protected ProcessingLogic createProcessingLogic() {
+        return new CombustionProcessingLogic(engineSettings(),
+                () -> new CombustionProcessingLogic.State(mRuntime, mEfficiency, boostEu));
+    }
 
-        if (tFluids.size() > 0 && tRecipeList != null) { //Does input hatch have a diesel fuel?
-            for (FluidStack hatchFluid1 : tFluids) { //Loops through hatches
-                for (GT_Recipe aFuel : tRecipeList) { //Loops through diesel fuel recipes
-                    FluidStack tLiquid;
-                    if ((tLiquid = GT_Utility.getFluidForFilledItem(aFuel.getRepresentativeInput(0), true)) != null) { //Create fluidstack from current recipe
-                        if (hatchFluid1.isFluidEqual(tLiquid)) { //Has a diesel fluid
-                            fuelConsumption = tLiquid.amount = boostEu ? (4096 / aFuel.mSpecialValue) : (2048 / aFuel.mSpecialValue); //Calc fuel consumption
-                            fuelConsumption = tLiquid.amount = Math.max(tLiquid.amount, 1);
-                            if (depleteInput(tLiquid)) { //Deplete that amount
-                                boostEu = depleteInput(Materials.Oxygen.getGas(2L));
+    @Override
+    public int getSupportedProcessingModes() {
+        return 0;
+    }
 
-                                if (tFluids.contains(Materials.Lubricant.getFluid(1L))) { //Has lubricant?
-                                    //Deplete Lubricant. 1000L should = 1 hour of runtime (if baseEU = 2048)
-                                    if (mRuntime % 72 == 0 || mRuntime == 0)
-                                        depleteInput(Materials.Lubricant.getFluid(boostEu ? 2 : 1));
-                                } else return false;
+    @Override
+    public GT_Recipe.GT_Recipe_Map getRecipeMapForNEI() {
+        return GT_Recipe.GT_Recipe_Map.sDieselFuels;
+    }
 
-                                fuelValue = aFuel.mSpecialValue;
-                                fuelRemaining = hatchFluid1.amount; //Record available fuel
-                                this.mEUt = mEfficiency < 2000 ? 0 : 2048; //Output 0 if startup is less than 20%
-                                this.mProgresstime = 1;
-                                this.mMaxProgresstime = 1;
-                                this.mEfficiencyIncrease = 15;
-                                if (this.mDynamoHatches.size() > 0) {
-                                    for (GT_MetaTileEntity_Hatch_Dynamo hatch : mDynamoHatches) {
-                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.mAmpers) < ((long) mEUt * mEfficiency / 10000L)) {
-                                            explodeMultiblock();
-                                        }
-                                    }
-                                }
-                                if (this.mDynamoHatchesMulti.size() > 0) {
-                                    for (GT_MetaTileEntity_Hatch_DynamoMulti hatch : mDynamoHatchesMulti) {
-                                        if ((hatch.getBaseMetaTileEntity().getOutputVoltage() * hatch.Amp) < ((long) mEUt * mEfficiency / 10000L)) {
-                                            explodeMultiblock();
-                                        }
-                                    }
-                                }
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
+    @Override
+    public boolean checkRecipe(ItemStack stack) {
+        boolean started = super.checkRecipe(stack);
+        if (!started && mMaxProgresstime == 0
+                && getProcessingResult() == CheckRecipeResult.NO_RECIPE) {
+            // Running out of fuel resets the engine's warmup, as in the original implementation.
+            mEfficiency = 0;
+            mEUt = 0;
+            lEUt = 0;
+            markDirty();
         }
-        this.mEUt = 0;
-        this.mEfficiency = 0;
-        return false;
+        return started;
+    }
+
+    @Override
+    protected void startCycle(ProcessingLogic.Result result, int efficiency) {
+        int previousEfficiency = mEfficiency;
+        super.startCycle(result, efficiency);
+        CombustionProcessingLogic logic = (CombustionProcessingLogic) getProcessingLogic();
+        mEfficiency = previousEfficiency;
+        mEfficiencyIncrease = logic.getWarmup();
+        boostEu = logic.isBoosted();
+        fuelConsumption = logic.getConsumption();
+        fuelValue = logic.getFuelValue();
+        fuelRemaining = logic.getRemaining();
+        markDirty();
+    }
+
+    @Override
+    public void saveNBTData(NBTTagCompound tag) {
+        super.saveNBTData(tag);
+        tag.setBoolean("engineBoost", boostEu);
+        tag.setInteger("engineFuelConsumption", fuelConsumption);
+        tag.setInteger("engineFuelValue", fuelValue);
+        tag.setInteger("engineFuelRemaining", fuelRemaining);
+        tag.setInteger("engineRuntime", mRuntime);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound tag) {
+        super.loadNBTData(tag);
+        boostEu = tag.hasKey("engineBoost") ? tag.getBoolean("engineBoost") : mEfficiency > 10000;
+        fuelConsumption = tag.getInteger("engineFuelConsumption");
+        fuelValue = tag.getInteger("engineFuelValue");
+        fuelRemaining = tag.getInteger("engineFuelRemaining");
+        mRuntime = tag.getInteger("engineRuntime");
     }
 
     @Override

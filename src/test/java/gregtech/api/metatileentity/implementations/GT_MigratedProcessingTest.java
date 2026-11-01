@@ -7,7 +7,6 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.recipe.check.CheckRecipeResult;
-import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiFurnace;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -287,7 +286,7 @@ public class GT_MigratedProcessingTest {
 
     private static void legacyCycle(String model) throws Exception {
         try (Scenario scenario = new Scenario(model, 1)) {
-            GT_MetaTileEntity_MultiBlockBase legacy = new GT_MetaTileEntity_MultiFurnace("legacy");
+            GT_MetaTileEntity_MultiBlockBase legacy = new GT_LegacyProcessingTestMachine("legacy");
             new Fixture(legacy, 1);
             legacy.mEUt = -96;
             legacy.mEfficiency = 10000;

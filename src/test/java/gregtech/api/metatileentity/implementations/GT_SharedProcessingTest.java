@@ -613,7 +613,7 @@ public class GT_SharedProcessingTest {
 
     private static void legacySave() {
         try (Scenario scenario = new Scenario(1)) {
-            GT_MetaTileEntity_MultiBlockBase legacyMachine = new gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiFurnace(
+            GT_MetaTileEntity_MultiBlockBase legacyMachine = new GT_LegacyProcessingTestMachine(
                     "legacy");
             new Fixture(legacyMachine, 1);
             legacyMachine.mEUt = -24;

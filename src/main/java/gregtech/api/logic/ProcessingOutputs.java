@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.function.UnaryOperator;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity;
 
@@ -26,6 +27,7 @@ public final class ProcessingOutputs {
     }
 
     private final GT_MetaTileEntity_MultiBlockBase machine;
+    private List<GT_MetaTileEntity_Hatch_Output> fluidHatches;
     private FluidOutputFilter fluidFilter = (hatch, fluid, index) -> true;
     private UnaryOperator<FluidStack[]> fluidTransform = fluids -> fluids;
     private final Map<GT_MetaTileEntity_Hatch, ItemStack[]> slots = new IdentityHashMap<>();
@@ -34,6 +36,12 @@ public final class ProcessingOutputs {
 
     public ProcessingOutputs(GT_MetaTileEntity_MultiBlockBase machine) {
         this.machine = machine;
+        fluidHatches = machine.mOutputHatches;
+    }
+
+    public ProcessingOutputs setFluidOutputHatches(List<GT_MetaTileEntity_Hatch_Output> hatches) {
+        fluidHatches = hatches;
+        return this;
     }
 
     public ProcessingOutputs setFluidOutputFilter(FluidOutputFilter filter) {
@@ -83,7 +91,7 @@ public final class ProcessingOutputs {
 
     /** Local output tanks must be drained before starting another continuous production cycle. */
     public boolean areFluidOutputsEmpty() {
-        for (GT_MetaTileEntity_Hatch_Output hatch : machine.mOutputHatches) {
+        for (GT_MetaTileEntity_Hatch_Output hatch : fluidHatches) {
             if (isValidMetaTileEntity(hatch) && !(hatch instanceof GT_MetaTileEntity_Hatch_Output_ME)
                     && hatch.getFluidAmount() > 0) {
                 return false;
@@ -186,7 +194,7 @@ public final class ProcessingOutputs {
     private void insertFluid(FluidStack stack, int outputIndex, boolean simulate) {
         // Restricted hatches retain their existing priority.
         for (boolean restricted : new boolean[] { true, false }) {
-            for (GT_MetaTileEntity_Hatch_Output hatch : machine.mOutputHatches) {
+            for (GT_MetaTileEntity_Hatch_Output hatch : fluidHatches) {
                 if (stack.amount <= 0) {
                     return;
                 }

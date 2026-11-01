@@ -7,6 +7,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingM
 import gregtech.api.net.GT_Packet_ProcessingOutputs;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
+import gregtech.api.util.GT_Recipe.GT_Recipe_Map_NonGTRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -233,7 +234,9 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
 
     public GT_Recipe_Map getNEIRecipeMap() {
         GT_Recipe_Map map = machine().getRecipeMapForNEI();
-        return map != null && map.mNEIAllowed ? map : null;
+        // Non-GT maps use an existing NEI handler (e.g. vanilla smelting), not GT recipe registration.
+        return map != null && (map.mNEIAllowed || map instanceof GT_Recipe_Map_NonGTRecipes)
+                ? map : null;
     }
 
     public String getNEIRecipeMapName() {
