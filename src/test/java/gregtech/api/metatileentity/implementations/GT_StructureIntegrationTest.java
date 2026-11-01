@@ -268,7 +268,7 @@ public class GT_StructureIntegrationTest {
             assertTrue(secondary.contains("gt_hatch"));
             assertFalse(secondary.contains("gt.tooltip."));
             assertFalse(secondary.contains("Format error"));
-            assertTrue(String.join("\n", f.machine.getStructureDescription(null)).contains("At least 16"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(String.join("\n", f.machine.getStructureDescription(null))).contains("At least 16"));
             assertFalse(String.join("\n", f.machine.getStructureDescription(null)).contains("Hold Shift"));
             String[] copy = f.machine.getPrimaryDescription();
             copy[0] = "mutated";
@@ -345,7 +345,7 @@ public class GT_StructureIntegrationTest {
                     .addInfo("100% original information").addStructureInfo("Original structure information");
             String informationKey = "TileEntity_DESCRIPTION_test.automatic_Information_Index_0";
             String structureKey = "TileEntity_DESCRIPTION_test.automatic_Structure_Index_0";
-            assertEquals("100% original information", automatic.getInformation()[0]);
+            assertEquals("100% original information", EnumChatFormatting.getTextWithoutFormattingCodes(automatic.getInformation()[0]));
             assertEquals("100% original information", GT_LanguageManager.LANGMAP.get(informationKey));
             assertEquals("Original structure information", GT_LanguageManager.LANGMAP.get(structureKey));
             GT_LanguageManager.LANGMAP.put(informationKey, "Configured information");
@@ -355,7 +355,7 @@ public class GT_StructureIntegrationTest {
             MultiblockTooltipBuilder configured = new MultiblockTooltipBuilder("test.automatic")
                     .addInfo("100% original information").addStructureInfo("Original structure information");
             assertEquals("Configured information", configured.getInformation()[0]);
-            assertEquals("   Configured structure", configured.getStructureInformation()[0]);
+            assertEquals("   Configured structure", EnumChatFormatting.getTextWithoutFormattingCodes(configured.getStructureInformation()[0]));
 
             GT_LanguageManager.sUseEnglishFile = false;
             loadLanguage("ru_RU");
@@ -401,8 +401,23 @@ public class GT_StructureIntegrationTest {
                         .getTextWithoutFormattingCodes(structureLines[3]));
                 assertEquals("Footer", structureLines[12]);
                 assertEquals("Biome coefficient:", aligned.getControlInfo()[0]);
-                assertEquals("   Ocean, River - 1000 L/s", aligned.getControlInfo()[1]);
+                assertEquals("   Ocean, River - 1000 L/s", EnumChatFormatting.getTextWithoutFormattingCodes(aligned.getControlInfo()[1]));
             }
+
+            MultiblockTooltipBuilder formatted = new MultiblockTooltipBuilder()
+                    .addInfo("AE2: 2048 EU/t, IC2: 400 L/s")
+                    .addSeparator().addSeparator()
+                    .beginStructureBlock(5, 9, 5, false)
+                    .addOtherStructurePart("Outer 5x7x5 shell", "Glass: 28 blocks")
+                    .addControlInfo(EnumChatFormatting.RED + "Limit 16; keep red");
+            String[] formattedInfo = formatted.getInformation();
+            assertEquals(4, formattedInfo.length); // information, separator, Shift, Ctrl
+            assertTrue(formattedInfo[0].contains("AE2: " + EnumChatFormatting.GOLD + "2048"));
+            assertTrue(formattedInfo[0].contains("IC2: " + EnumChatFormatting.GOLD + "400"));
+            assertTrue(formatted.getStructureInformation()[0].contains(EnumChatFormatting.GOLD + "9"));
+            assertTrue(formatted.getStructureInformation()[2].contains(EnumChatFormatting.GOLD + "5x7x5"));
+            assertTrue(formatted.getControlInfo()[0].contains(EnumChatFormatting.GOLD + "16" + EnumChatFormatting.RED));
+            org.junit.Assert.assertArrayEquals(formattedInfo, formatted.getInformation());
 
             MultiblockTooltipBuilder colors = new MultiblockTooltipBuilder()
                     .beginVariableStructureBlock(2, 4, 3, 3, 5, 6, false)

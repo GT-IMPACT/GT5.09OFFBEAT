@@ -341,7 +341,7 @@ public class MultiblockTooltipBuilder {
     }
 
     private MultiblockTooltipBuilder part(String name, String location, int... dots) {
-        line(structure, "   " + EnumChatFormatting.WHITE + name + ": " + EnumChatFormatting.GRAY + quantities(location, EnumChatFormatting.GRAY));
+        line(structure, "   " + EnumChatFormatting.WHITE + name + ": " + EnumChatFormatting.GRAY + location);
         return hintNames(name, dots);
     }
 
@@ -351,6 +351,10 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addOtherStructurePart(ICasing casing, String location, int count) {
         return part(quantity(Integer.toString(count)) + " " + casing.getDisplayName(), text("Location", location));
+    }
+
+    public MultiblockTooltipBuilder addOtherStructurePart(ICasing casing, String location) {
+        return part(casing.getDisplayName(), text("Location", location));
     }
 
     public MultiblockTooltipBuilder addOtherStructurePart(ItemStack stack, String location, int count) {
@@ -364,12 +368,12 @@ public class MultiblockTooltipBuilder {
     }
 
     public MultiblockTooltipBuilder addStructureInfo(String info) {
-        return line(structure, "   " + quantities(text("Structure", info), EnumChatFormatting.GRAY));
+        return line(structure, "   " + EnumChatFormatting.GRAY + text("Structure", info));
     }
 
     /** Format configuration values after translating the stable template. */
     public MultiblockTooltipBuilder addStructureInfo(String info, Object... arguments) {
-        return line(structure, "   " + quantities(String.format(Locale.ROOT, text("Structure", info), arguments), EnumChatFormatting.GRAY));
+        return line(structure, "   " + EnumChatFormatting.GRAY + String.format(Locale.ROOT, text("Structure", info), arguments));
     }
 
     public MultiblockTooltipBuilder addStructureFooter(String info) {
@@ -494,6 +498,9 @@ public class MultiblockTooltipBuilder {
     public MultiblockTooltipBuilder toolTipFinisher() {
         if (finished)
             return this;
+        normalizeSeparators(information);
+        if (!information.isEmpty() && !isSeparator(information.get(information.size() - 1)))
+            addSeparator();
         line(information, EnumChatFormatting.GRAY + tr("hold_shift"));
         if (!controls.isEmpty())
             line(information, EnumChatFormatting.GRAY + tr("hold_ctrl"));
@@ -506,8 +513,27 @@ public class MultiblockTooltipBuilder {
             line(hints, legend);
             line(structure, legend);
         }
+        highlightQuantities(information);
+        highlightQuantities(structure);
+        highlightQuantities(controls);
+        highlightQuantities(hints);
         finished = true;
         return this;
+    }
+
+    private static boolean isSeparator(String line) {
+        return EnumChatFormatting.getTextWithoutFormattingCodes(line).matches("-{3,}");
+    }
+
+    private static void normalizeSeparators(List<String> lines) {
+        for (int i = lines.size() - 1; i > 0; i--)
+            if (isSeparator(lines.get(i)) && isSeparator(lines.get(i - 1)))
+                lines.remove(i);
+    }
+
+    private static void highlightQuantities(List<String> lines) {
+        for (int i = 0; i < lines.size(); i++)
+            lines.set(i, quantities(lines.get(i), EnumChatFormatting.GRAY));
     }
 
     /**

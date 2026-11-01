@@ -244,7 +244,7 @@ final class GT_ImplosionStructureChecks {
             assertTrue(info.contains("10000"));
             assertFalse(info.contains("gt_hatch"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
-            assertTrue(structure.contains(language.equals("en_US") ? "warning signs" : "Знаки взрывоопасности"));
+            assertFalse(structure.contains(language.equals("en_US") ? "warning signs" : "Знаки взрывоопасности"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
             assertTrue(structure.contains("gt_hatch"));
             assertTrue(String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick))).contains("gt_hatch"));

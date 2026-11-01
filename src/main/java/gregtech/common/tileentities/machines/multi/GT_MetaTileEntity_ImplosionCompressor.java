@@ -65,7 +65,6 @@ public class GT_MetaTileEntity_ImplosionCompressor
                 .addController("Front center")
                 .addRequirements(SHELL, "Any casing position")
                 .addAir("Center of the structure")
-                .addStructureInfo("Explosion warning signs may replace solid steel casings and count toward the same minimum.")
                 .addStructureInfo("Item input and output buses are required; fluid-only hatches do not satisfy these requirements.")
                 .addStructureInfo("IMPACT combined item/fluid inputs and multi-amp energy hatches are accepted.")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Automatically place missing GregTech hatches from your inventory")
