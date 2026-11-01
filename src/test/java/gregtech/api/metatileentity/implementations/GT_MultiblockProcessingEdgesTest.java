@@ -114,14 +114,23 @@ public class GT_MultiblockProcessingEdgesTest {
     }
 
     private static void controller() throws Exception {
-        for (String model : ITEM_MACHINES) recipe(model, 1, f -> {
-            f.register(24, 80); f.fill();
-            f.machine.mInputBusses.get(0).mInventory[1] = null;
-            f.machine.mInventory[1] = f.stick;
-            boolean supported = false;
-            assertEquals(model, supported, f.machine.checkRecipe(null));
-            assertEquals(model, supported ? 2 : 3, f.stick.stackSize);
-        });
+        for (String model : ITEM_MACHINES) {
+            recipe(model, 1, f -> {
+                f.register(24, 80);
+                f.fill();
+                f.machine.mInputBusses.get(0).mInventory[1] = null;
+                f.machine.mInventory[1] = f.stick;
+
+                boolean supported = model.equals("LargeChemicalReactor");
+                assertEquals(model, supported, f.machine.checkRecipe(null));
+                assertEquals(model, supported ? 2 : 3, f.stick.stackSize);
+                if (supported) {
+                    f.assertConsumed();
+                } else {
+                    f.assertUnconsumed();
+                }
+            });
+        }
     }
 
     private static void heat() throws Exception {

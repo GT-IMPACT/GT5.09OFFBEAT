@@ -55,7 +55,7 @@ public class GT_AdvancedProcessingTest {
     }
 
     @Test
-    public void controlsAndPowerSurviveReloadWithoutControllerSlots() throws Throwable {
+    public void controlsAndPowerSurviveReloadWithMachineSpecificControllerSlots() throws Throwable {
         run("controls");
     }
 

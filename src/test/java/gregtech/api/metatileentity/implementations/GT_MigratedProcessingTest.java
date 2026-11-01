@@ -273,10 +273,19 @@ public class GT_MigratedProcessingTest {
                     for (int index = 0; index < GT_Container_ProcessingMachine.CONTROL_COUNT; index++) {
                         assertTrue(container.getSlot(index) instanceof GT_Slot_Holo);
                     }
-                    assertFalse(restored.hasControllerSlotInGui());
-                    assertEquals(42, container.inventorySlots.size());
-                    assertEquals(0, container.getSlotCount());
-                    assertEquals(0, container.getShiftClickSlotCount());
+                    boolean supportsController = model.equals("LargeChemicalReactor");
+                    int controllerSlots = supportsController ? 1 : 0;
+                    assertEquals(model, supportsController, restored.hasControllerSlotInGui());
+                    assertEquals(42 + controllerSlots, container.inventorySlots.size());
+                    assertEquals(controllerSlots, container.getSlotCount());
+                    assertEquals(controllerSlots, container.getShiftClickSlotCount());
+                    if (supportsController) {
+                        assertFalse(container.getSlot(container.getSlotStartIndex()) instanceof GT_Slot_Holo);
+                        assertSame(
+                                restored.mInventory[1],
+                                container.getSlot(container.getSlotStartIndex()).getStack()
+                        );
+                    }
                 }
             }
         } finally {
