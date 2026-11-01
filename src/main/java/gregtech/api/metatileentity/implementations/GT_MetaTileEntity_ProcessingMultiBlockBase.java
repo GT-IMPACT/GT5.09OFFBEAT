@@ -220,6 +220,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return currentOperations;
     }
 
+    @Override
     public boolean isWaitingForOutput() {
         return waitingForOutput;
     }
@@ -527,7 +528,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         currentParallel = 0;
         currentOperations = 0;
         processingResult = CheckRecipeResult.NONE;
-        if (getBaseMetaTileEntity().isAllowedToWork()) {
+        if (getBaseMetaTileEntity().isAllowedToWork() && getRepairStatus() > 0) {
             checkRecipe(mInventory[1]);
         }
     }
@@ -557,11 +558,20 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         // controller.
         if (waitingForOutput) {
             mEUt = 0;
+            if (getBaseMetaTileEntity().isAllowedToWork()) {
+                getBaseMetaTileEntity().disableWorking();
+                markDirty();
+            }
             return;
         }
         currentParallel = 0;
         currentOperations = 0;
+        mOutputFluids = null;
+        legacyOutputs = false;
+        cycleModes = 0;
+        processingResult = CheckRecipeResult.NONE;
         super.stopMachine();
+        markDirty();
     }
 
     protected void stopProcessing(CheckRecipeResult reason) {

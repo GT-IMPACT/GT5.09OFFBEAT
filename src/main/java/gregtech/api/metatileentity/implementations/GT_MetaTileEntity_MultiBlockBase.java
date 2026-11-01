@@ -278,7 +278,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 setupMachine(aBaseMetaTileEntity, mInventory[1]);
             }
             if (mStartUpCheck < 0) {
-                if (mMachine) {
+                if (mMachine && isWaitingForOutput()) {
+                    completeRecipe();
+                } else if (mMachine) {
                     for (GT_MetaTileEntity_Hatch_Maintenance tHatch : mMaintenanceHatches) {
                         if (isValidMetaTileEntity(tHatch)) {
                             if (disableMaintenance || !enabledMaintenance) {
@@ -339,11 +341,16 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 }
             }
             aBaseMetaTileEntity.setErrorDisplayID((aBaseMetaTileEntity.getErrorDisplayID() & ~127) | (mWrench ? 0 : 1) | (mScrewdriver ? 0 : 2) | (mSoftHammer ? 0 : 4) | (mHardHammer ? 0 : 8) | (mSolderingTool ? 0 : 16) | (mCrowbar ? 0 : 32) | (mMachine ? 0 : 64));
-            aBaseMetaTileEntity.setActive(mMaxProgresstime > 0);
+            aBaseMetaTileEntity.setActive(mMaxProgresstime > 0 && !isWaitingForOutput());
             boolean active = aBaseMetaTileEntity.isActive() && mPollution > 0;
             for (GT_MetaTileEntity_Hatch_Muffler aMuffler : mMufflerHatches)
                 aMuffler.getBaseMetaTileEntity().setActive(active);
         }
+    }
+
+    /** Completed processing cycles can retry delivery without running the machine again. */
+    public boolean isWaitingForOutput() {
+        return false;
     }
 
     /** Completion hook; legacy machines retain their original delivery and restart behavior. */
