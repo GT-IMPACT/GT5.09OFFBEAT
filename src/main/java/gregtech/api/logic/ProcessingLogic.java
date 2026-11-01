@@ -32,7 +32,7 @@ public class ProcessingLogic {
     private Supplier<GT_Recipe.GT_Recipe_Map> recipeMapSupplier;
     private Supplier<Integer> maxParallelSupplier = () -> 1;
     private Function<GT_Recipe, CheckRecipeResult> validator = recipe -> CheckRecipeResult.SUCCESS;
-    private Supplier<OverclockCalculator> calculatorSupplier = OverclockCalculator::new;
+    private Function<GT_Recipe, OverclockCalculator> calculatorFactory = recipe -> new OverclockCalculator();
     private double timeReduction = 2;
     private double powerIncrease = 4;
     private boolean subTickParallelBypassesLimit = false;
@@ -78,7 +78,11 @@ public class ProcessingLogic {
     }
 
     public ProcessingLogic setCalculatorSupplier(Supplier<OverclockCalculator> supplier) {
-        calculatorSupplier = supplier;
+        return setCalculatorFactory(recipe -> supplier.get());
+    }
+
+    public ProcessingLogic setCalculatorFactory(Function<GT_Recipe, OverclockCalculator> factory) {
+        calculatorFactory = factory;
         return this;
     }
 
@@ -215,7 +219,7 @@ public class ProcessingLogic {
     }
 
     private Result calculate(GT_Recipe recipe, ProcessingInputs inputs, Request request, long power) {
-        OverclockCalculator calculator = calculatorSupplier.get().setOverclock(timeReduction, powerIncrease);
+        OverclockCalculator calculator = calculatorFactory.apply(recipe).setOverclock(timeReduction, powerIncrease);
         if (!calculator.hasEnoughHeat()) {
             return Result.failure(CheckRecipeResult.INSUFFICIENT_HEAT);
         }
@@ -260,7 +264,7 @@ public class ProcessingLogic {
             return Result.failure(CheckRecipeResult.INPUT_CHANGED);
         }
         ItemStack[] itemOutputs = itemOutputs(recipe, count, request.random);
-        FluidStack[] fluidOutputs = fluidOutputs(recipe, count);
+        FluidStack[] fluidOutputs = request.outputs.prepareFluids(fluidOutputs(recipe, count));
         return new Result(CheckRecipeResult.SUCCESS, consumed, recipe, clock.eut, (int) duration, parallel, count,
                 itemOutputs, fluidOutputs);
     }
@@ -271,7 +275,7 @@ public class ProcessingLogic {
 
     private CheckRecipeResult outputStatus(GT_Recipe recipe, int count, Request request) {
         ItemStack[] items = itemOutputs(recipe, count, null);
-        FluidStack[] fluids = fluidOutputs(recipe, count);
+        FluidStack[] fluids = request.outputs.prepareFluids(fluidOutputs(recipe, count));
         return request.outputs.canFit(items, fluids, request.enabled(PROTECT_ITEMS), request.enabled(PROTECT_FLUIDS));
     }
 
@@ -322,7 +326,7 @@ public class ProcessingLogic {
         return Math.addExact(Math.multiplyExact(eut / divisor, 10000), eut % divisor * 10000 / divisor);
     }
 
-    private static final class OutputOverflowException extends ArithmeticException {
+    public static final class OutputOverflowException extends ArithmeticException {
     }
 
     public static final class Request {

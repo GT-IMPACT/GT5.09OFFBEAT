@@ -32,6 +32,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     private int currentParallel;
     private int currentOperations;
     private boolean waitingForOutput;
+    private boolean legacyOutputs;
     private String selectedRecipeMap;
     public long lEUt;
     private CheckRecipeResult processingResult = CheckRecipeResult.NONE;
@@ -45,6 +46,10 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     }
 
     protected abstract ProcessingLogic createProcessingLogic();
+
+    protected ProcessingOutputs createProcessingOutputs() {
+        return new ProcessingOutputs(this);
+    }
 
     /** Opt in only when the machine uses its controller inventory slot. */
     public boolean hasControllerSlotInGui() {
@@ -231,7 +236,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         final ProcessingLogic.Request request;
         try {
             request = new ProcessingLogic.Request(collectProcessingInputs(), getAverageInputVoltage(),
-                    getProcessingAmperage(), processingModes, new ProcessingOutputs(this),
+                    getProcessingAmperage(), processingModes, createProcessingOutputs(),
                     bound -> getBaseMetaTileEntity().getRandomNumber(bound), efficiency);
         } catch (ArithmeticException exception) {
             processingResult = CheckRecipeResult.POWER_OVERFLOW;
@@ -247,6 +252,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     }
 
     private void startCycle(ProcessingLogic.Result result, int efficiency) {
+        legacyOutputs = false;
         lEUt = -result.eut;
         mEUt = (int) Math.max(Integer.MIN_VALUE + 1L, lEUt);
         mMaxProgresstime = result.duration;
@@ -319,6 +325,22 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
             }
         }
         return true;
+    }
+
+    /** Sum of hatch voltages, as in GTNH; amperage does not raise the voltage tier. */
+    protected long getTotalInputVoltage() {
+        long voltage = 0;
+        for (GT_MetaTileEntity_Hatch_Energy hatch : mEnergyHatches) {
+            if (isValidMetaTileEntity(hatch)) {
+                voltage += hatch.getBaseMetaTileEntity().getInputVoltage();
+            }
+        }
+        for (GT_MetaTileEntity_Hatch_EnergyMulti hatch : mEnergyHatchesMulti) {
+            if (isValidMetaTileEntity(hatch)) {
+                voltage += hatch.getBaseMetaTileEntity().getInputVoltage();
+            }
+        }
+        return voltage;
     }
 
     protected long getProcessingAmperage() {
@@ -394,13 +416,28 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
 
     @Override
     protected void completeRecipe() {
+        ProcessingOutputs outputs = createProcessingOutputs();
+        if (legacyOutputs) {
+            try {
+                mOutputFluids = outputs.prepareFluids(mOutputFluids);
+            } catch (ProcessingLogic.OutputOverflowException exception) {
+                waitingForOutput = true;
+                lEUt = 0;
+                mEUt = 0;
+                mProgresstime = Math.max(0, mMaxProgresstime - 1);
+                processingResult = CheckRecipeResult.OUTPUT_OVERFLOW;
+                markDirty();
+                return;
+            }
+            legacyOutputs = false;
+        }
         if (!waitingForOutput) {
             awardOutputAchievements();
         }
         waitingForOutput = true;
         lEUt = 0;
         mEUt = 0;
-        boolean done = new ProcessingOutputs(this).deliver(mOutputItems, mOutputFluids,
+        boolean done = outputs.deliver(mOutputItems, mOutputFluids,
                 (cycleModes & ProcessingLogic.PROTECT_ITEMS) != 0, (cycleModes & ProcessingLogic.PROTECT_FLUIDS) != 0);
         markDirty();
         if (!done) {
@@ -465,6 +502,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         processing.setInteger("modes", processingModes);
         processing.setInteger("cycleModes", cycleModes);
         processing.setBoolean("waiting", waitingForOutput);
+        processing.setBoolean("legacyOutputs", legacyOutputs);
         processing.setInteger("parallel", currentParallel);
         processing.setInteger("operations", currentOperations);
         GT_Recipe_Map map = getRecipeMap();
@@ -481,6 +519,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     public void loadNBTData(NBTTagCompound tag) {
         super.loadNBTData(tag);
         NBTTagCompound processing = tag.getCompoundTag("processing");
+        legacyOutputs = !tag.hasKey("processing") || processing.getBoolean("legacyOutputs");
         selectedRecipeMap = processing.hasKey("recipeMap") ? processing.getString("recipeMap") : null;
         getProcessingLogic().clearRecipeCache();
         getProcessingLogic().clearRecipeLock();

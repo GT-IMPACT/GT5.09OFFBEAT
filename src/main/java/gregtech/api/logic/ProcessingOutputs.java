@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity;
 
 /**
@@ -19,13 +20,35 @@ import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Mult
  * destination accepted.
  */
 public final class ProcessingOutputs {
+    @FunctionalInterface
+    public interface FluidOutputFilter {
+        boolean accepts(GT_MetaTileEntity_Hatch_Output hatch, FluidStack fluid, int outputIndex);
+    }
+
     private final GT_MetaTileEntity_MultiBlockBase machine;
+    private FluidOutputFilter fluidFilter = (hatch, fluid, index) -> true;
+    private UnaryOperator<FluidStack[]> fluidTransform = fluids -> fluids;
     private final Map<GT_MetaTileEntity_Hatch, ItemStack[]> slots = new IdentityHashMap<>();
     private final Map<GT_MetaTileEntity_Hatch_Output, FluidStack> tanks = new IdentityHashMap<>();
     private final Map<GT_MetaTileEntity_Hatch, Long> meReserved = new IdentityHashMap<>();
 
     public ProcessingOutputs(GT_MetaTileEntity_MultiBlockBase machine) {
         this.machine = machine;
+    }
+
+    public ProcessingOutputs setFluidOutputFilter(FluidOutputFilter filter) {
+        fluidFilter = filter;
+        return this;
+    }
+
+    public ProcessingOutputs setFluidOutputTransform(UnaryOperator<FluidStack[]> transform) {
+        fluidTransform = transform;
+        return this;
+    }
+
+    /** Applied once to prepared results, never to partially delivered remainders. */
+    public FluidStack[] prepareFluids(FluidStack[] fluids) {
+        return fluids == null ? null : fluidTransform.apply(ProcessingInputs.copyFluids(fluids));
     }
 
     public CheckRecipeResult canFit(ItemStack[] items, FluidStack[] fluids, boolean protectItems,
@@ -44,9 +67,11 @@ public final class ProcessingOutputs {
             }
         }
         if (protectFluids) {
-            for (FluidStack stack : ProcessingInputs.copyFluids(fluids)) {
+            FluidStack[] copies = ProcessingInputs.copyFluids(fluids);
+            for (int index = 0; index < copies.length; index++) {
+                FluidStack stack = copies[index];
                 if (stack != null) {
-                    insertFluid(stack, true);
+                    insertFluid(stack, index, true);
                     if (stack.amount > 0) {
                         return CheckRecipeResult.FLUID_OUTPUT_FULL;
                     }
@@ -70,9 +95,10 @@ public final class ProcessingOutputs {
             }
         }
         if (fluids != null) {
-            for (FluidStack stack : fluids) {
+            for (int index = 0; index < fluids.length; index++) {
+                FluidStack stack = fluids[index];
                 if (stack != null && stack.amount > 0) {
-                    insertFluid(stack, false);
+                    insertFluid(stack, index, false);
                     if (!protectFluids) {
                         stack.amount = 0;
                     }
@@ -145,14 +171,15 @@ public final class ProcessingOutputs {
         }
     }
 
-    private void insertFluid(FluidStack stack, boolean simulate) {
+    private void insertFluid(FluidStack stack, int outputIndex, boolean simulate) {
         // Restricted hatches retain their existing priority.
         for (boolean restricted : new boolean[] { true, false }) {
             for (GT_MetaTileEntity_Hatch_Output hatch : machine.mOutputHatches) {
                 if (stack.amount <= 0) {
                     return;
                 }
-                if (!isValidMetaTileEntity(hatch) || (hatch.mMode != 0) != restricted) {
+                if (!isValidMetaTileEntity(hatch) || (hatch.mMode != 0) != restricted
+                        || !fluidFilter.accepts(hatch, stack, outputIndex)) {
                     continue;
                 }
                 if (GT_ModHandler.isSteam(stack) ? !hatch.outputsSteam() : !hatch.outputsLiquids()) {
