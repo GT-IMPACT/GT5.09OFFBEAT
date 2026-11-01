@@ -962,6 +962,46 @@ public class GT_SharedProcessingTest {
         run("optionalControllerSlot");
     }
 
+    @Test
+    public void chemicalReactorControllerSlotSuppliesNonConsumedRecipeSelector() throws Throwable {
+        run("chemicalReactorController");
+    }
+
+    private static void chemicalReactorController() throws Exception {
+        for (boolean separated : new boolean[] { false, true }) {
+            GT_MultiblockRecipeProcessingTest.RecipeFixture f =
+                    new GT_MultiblockRecipeProcessingTest.RecipeFixture("LargeChemicalReactor", 1);
+            try {
+                f.register(24, 80);
+                f.recipe.mInputs[1].stackSize = 0;
+                f.fill();
+                f.machine.mInputBusses.clear();
+                f.fixture.items(f.iron);
+                GT_MetaTileEntity_ProcessingMultiBlockBase<?> machine =
+                        (GT_MetaTileEntity_ProcessingMultiBlockBase<?>) f.machine;
+                machine.setProcessingModes(separated ? ProcessingLogic.SEPARATE_INPUTS : 0);
+                GT_StructureIntegrationTest.TestPlayer player =
+                        new GT_StructureIntegrationTest.TestPlayer(f.fixture.world);
+                GT_Container_ProcessingMachine container = (GT_Container_ProcessingMachine)
+                        machine.getServerGUI(0, player.inventory, f.fixture.tile);
+                assertEquals(1, container.getSlotCount());
+                Slot controller = container.getSlot(container.getSlotStartIndex());
+                assertFalse(controller instanceof GT_Slot_Holo);
+                assertFalse(machine.checkRecipe(null));
+                f.assertUnconsumed();
+                controller.putStack(f.stick);
+                assertSame(f.stick, machine.mInventory[1]);
+                assertTrue(machine.checkRecipe(null));
+                assertEquals(3, f.stick.stackSize);
+                assertEquals(4, f.iron.stackSize);
+                assertEquals(200, f.water.amount);
+            } finally {
+                f.map.clear();
+                GregTech_API.sPostloadFinished = f.previousPostload;
+            }
+        }
+    }
+
     private static void optionalControllerSlot() {
         for (boolean multipleMaps : new boolean[] { false, true }) {
             try (Scenario scenario = new Scenario(1)) {

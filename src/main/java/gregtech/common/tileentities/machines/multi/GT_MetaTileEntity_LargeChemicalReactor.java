@@ -103,6 +103,11 @@ public class GT_MetaTileEntity_LargeChemicalReactor
     }
 
     @Override
+    protected boolean usesControllerSlotAsRecipeInput() {
+        return true;
+    }
+
+    @Override
     public List<GT_Recipe.GT_Recipe_Map> getRecipeMaps() {
         return Collections.singletonList(GT_Recipe.GT_Recipe_Map.sMultiblockChemicalRecipes);
     }
