@@ -89,7 +89,7 @@ public class GT_MultiblockProcessingEdgesTest {
             ItemStack first = new ItemStack(Items.iron_ingot), second = first.copy();
             f.fixture.items(first, new ItemStack(Items.stick));
             f.fixture.items(second);
-            boolean combines = model.equals("VacuumFreezer");
+            boolean combines = f.usesSharedProcessing();
             assertEquals(model, combines, f.machine.checkRecipe(null));
             assertEquals(model, combines ? 0 : 1, first.stackSize);
             assertEquals(model, combines ? 0 : 1, second.stackSize);
@@ -104,7 +104,7 @@ public class GT_MultiblockProcessingEdgesTest {
                 f.water.amount = 50;
                 FluidStack second = f.water.copy();
                 f.fixture.liquid(second);
-                boolean combines = model.equals("VacuumFreezer") || model.equals("ElectricBlastFurnace")
+                boolean combines = f.usesSharedProcessing() || model.equals("ElectricBlastFurnace")
                         || model.equals("DistillationTower");
                 assertEquals(model, combines, f.machine.checkRecipe(null));
                 assertEquals(model, combines ? 0 : 50, f.water.amount);
@@ -118,8 +118,7 @@ public class GT_MultiblockProcessingEdgesTest {
             f.register(24, 80); f.fill();
             f.machine.mInputBusses.get(0).mInventory[1] = null;
             f.machine.mInventory[1] = f.stick;
-            boolean supported = model.equals("MultiblockCentrifuge") || model.equals("MultiblockElectrolyzer")
-                    || model.equals("LargeChemicalReactor") || model.equals("IndustrialPulverizer");
+            boolean supported = model.equals("LargeChemicalReactor");
             assertEquals(model, supported, f.machine.checkRecipe(null));
             assertEquals(model, supported ? 2 : 3, f.stick.stackSize);
         });
@@ -159,9 +158,9 @@ public class GT_MultiblockProcessingEdgesTest {
                 "LargeChemicalReactor", "ImplosionCompressor", "ElectricBlastFurnace", "DistillationTower", "OilCracker"}) {
             recipe(model, 15, f -> {
                 f.register(1073741824, 80); f.fill();
-                if (model.equals("VacuumFreezer")) {
+                if (f.usesSharedProcessing()) {
                     assertTrue(f.machine.checkRecipe(null));
-                    assertEquals(-1073741824L, ((GT_MetaTileEntity_VacuumFreezer) f.machine).lEUt);
+                    assertEquals(-1073741824L, ((GT_MetaTileEntity_ProcessingMultiBlockBase<?>) f.machine).lEUt);
                     assertEquals(80, f.machine.mMaxProgresstime);
                     f.assertConsumed();
                     return;
@@ -197,7 +196,7 @@ public class GT_MultiblockProcessingEdgesTest {
                 f.attach(energy); f.machine.mEnergyHatchesMulti.add(energy); hatch = energy;
             } else hatch = f.machine.mEnergyHatches.get(0);
             hatch.setEUVar(stored);
-            ((GT_MetaTileEntity_VacuumFreezer) f.machine).lEUt = -24;
+            ((GT_MetaTileEntity_ProcessingMultiBlockBase<?>) f.machine).lEUt = -24;
             f.machine.mEUt = -24; f.machine.mEfficiency = 10000; f.machine.mMaxProgresstime = 80;
             assertEquals(stored >= 24, f.machine.onRunningTick(null));
             assertEquals(stored >= 24 ? stored - 24 : stored, hatch.getEUVar());
@@ -206,7 +205,7 @@ public class GT_MultiblockProcessingEdgesTest {
     }
 
     private static void splitEnergy() {
-        Fixture f = new Fixture(new GT_MetaTileEntity_MultiblockCentrifuge("test"), 1);
+        Fixture f = new Fixture(new GT_MetaTileEntity_LargeChemicalReactor("test"), 1);
         GT_MetaTileEntity_Hatch_Energy ordinary = f.machine.mEnergyHatches.get(0);
         GT_MetaTileEntity_Hatch_EnergyMulti multi = new GT_MetaTileEntity_Hatch_EnergyMulti("test", 1, 4, "test", null);
         f.attach(multi); f.machine.mEnergyHatchesMulti.add(multi);
@@ -290,12 +289,12 @@ public class GT_MultiblockProcessingEdgesTest {
 
     private static void shortDurations() throws Exception {
         int[][] standard = {{1, 12, 1}, {2, 96, 1}, {3, 96, 1}, {79, 96, 39}, {80, 96, 40}, {81, 96, 40}};
-        int[][] pulverizer = {{1, 12, 2}, {2, 24, 2}, {3, 36, 2}, {79, 96, 19}, {80, 96, 20}, {81, 96, 20}};
+        int[][] pulverizer = {{1, 96, 1}, {2, 96, 1}, {3, 96, 1}, {79, 96, 19}, {80, 96, 20}, {81, 96, 20}};
         for (String model : ITEM_MACHINES) for (int[] row : model.equals("IndustrialPulverizer") ? pulverizer : standard) {
             recipe(model, 2, f -> {
                 f.register(24, row[0]); f.fill();
                 assertTrue(model + " duration=" + row[0], f.machine.checkRecipe(null));
-                assertEquals(model.equals("VacuumFreezer") ? -96 : -row[1], f.machine.mEUt);
+                assertEquals(f.usesSharedProcessing() ? -96 : -row[1], f.machine.mEUt);
                 assertEquals(row[2], f.machine.mMaxProgresstime);
             });
         }
@@ -376,7 +375,7 @@ public class GT_MultiblockProcessingEdgesTest {
         for (String model : new String[]{"VacuumFreezer", "ElectricBlastFurnace"})
             for (int duration : new int[]{1073741823, 1073741824, Integer.MAX_VALUE}) recipe(model, 0, f -> {
                 f.register(4, duration); f.fill();
-                if (model.equals("VacuumFreezer")) {
+                if (f.usesSharedProcessing()) {
                     assertTrue(f.machine.checkRecipe(null));
                     assertEquals(-4, f.machine.mEUt);
                     assertEquals(duration, f.machine.mMaxProgresstime);

@@ -100,11 +100,8 @@ public class GT_MultiblockRecipeProcessingTest {
                 case "voltage":
                     f.register(33, 80);
                     f.fill();
-                    boolean implosion = model.equals("ImplosionCompressor");
-                    assertEquals("Implosion searches without a voltage ceiling", implosion,
-                            f.machine.checkRecipe(null));
-                    if (!implosion) f.assertUnconsumed();
-                    else assertEquals(-33, f.machine.mEUt);
+                    assertFalse("A single LV hatch cannot supply 33 EU/t", f.machine.checkRecipe(null));
+                    f.assertUnconsumed();
                     return;
                 case "shortage":
                     f.register(24, 80);
@@ -196,15 +193,14 @@ public class GT_MultiblockRecipeProcessingTest {
             RecipeFixture f = new RecipeFixture(model, tier);
             try {
                 f.register(eut, 1); f.fill();
-                boolean accepted = model.equals("ImplosionCompressor")
-                        || (tier == 0 && !model.equals("DistillationTower") && !model.equals("VacuumFreezer")) || delta <= 0;
+                boolean accepted = (tier == 0 && !model.equals("DistillationTower") && !f.usesSharedProcessing())
+                        || delta <= 0;
                 String context = model + " tier=" + tier + " recipeEUt=" + eut;
                 assertEquals(context, accepted, f.machine.checkRecipe(null));
                 if (!accepted) { f.assertUnconsumed(); continue; }
-                int expected = model.equals("VacuumFreezer") ? eut
-                        : model.equals("IndustrialPulverizer") ? eut / 2 : tier == 0 ? eut / 4 : eut;
+                int expected = f.usesSharedProcessing() ? eut : tier == 0 ? eut / 4 : eut;
                 assertEquals(context, -expected, f.machine.mEUt);
-                assertEquals(context, (model.equals("IndustrialPulverizer") || tier == 0) && !model.equals("VacuumFreezer") ? 2 : 1, f.machine.mMaxProgresstime);
+                assertEquals(context, tier == 0 && !f.usesSharedProcessing() ? 2 : 1, f.machine.mMaxProgresstime);
                 f.assertConsumed();
             } finally { f.map.clear(); GregTech_API.sPostloadFinished = f.previousPostload; }
         }
@@ -255,12 +251,12 @@ public class GT_MultiblockRecipeProcessingTest {
                         assertEquals(context, voltage, f.machine.getMaxInputVoltage());
                         f.register(24, duration);
                         f.fill();
-                        if (model.equals("VacuumFreezer")) {
+                        if (f.usesSharedProcessing()) {
                             long power = scenario.equals("amps")
                                     ? (mixed == 1 ? (GT_Values.V[tier] + 32) / 2 * (variant + 2L)
                                             : GT_Values.V[tier] * variant)
                                     : voltage;
-                            assertFreezerPower(f, power, duration, context);
+                            assertSharedPower(f, power, duration, context);
                             continue;
                         }
                         if (model.equals("DistillationTower") && effectiveTier == 0) {
@@ -271,12 +267,6 @@ public class GT_MultiblockRecipeProcessingTest {
                         assertTrue(context, f.machine.checkRecipe(null));
                         int expectedEnergy = duration == 1 ? ONE_TICK_ENERGY[effectiveTier] : ENERGY[effectiveTier];
                         int expectedDuration = duration == 1 ? (effectiveTier == 0 ? 2 : 1) : DURATION[effectiveTier];
-                        if (model.equals("IndustrialPulverizer")) {
-                            expectedEnergy = duration == 1 ? 12 : effectiveTier <= 1 ? 24
-                                    : effectiveTier == 2 ? 96 : effectiveTier == 3 ? 384 : 960;
-                            expectedDuration = duration == 1 ? 2 : effectiveTier <= 1 ? 80
-                                    : effectiveTier == 2 ? 20 : effectiveTier == 3 ? 5 : 2;
-                        }
                         assertEquals(context + " EU/t", -expectedEnergy, f.machine.mEUt);
                         assertEquals(context + " ticks", expectedDuration, f.machine.mMaxProgresstime);
                         f.assertConsumed();
@@ -296,25 +286,28 @@ public class GT_MultiblockRecipeProcessingTest {
     }
 
     // GTNH-style power thresholds; unlike the legacy table, sub-tick power does not fall.
-    private static final long[] FREEZER_POWER_THRESHOLDS = {32, 128, 512, 2048, 8192, 32768,
+    private static final long[] SHARED_POWER_THRESHOLDS = {32, 128, 512, 2048, 8192, 32768,
             131072, 524288, 2097152, 8388608, 33554432, 134217728, 536870912, 2147483648L};
-    private static final long[] FREEZER_ENERGY = {24, 96, 384, 1536, 6144, 24576,
+    private static final long[] SHARED_ENERGY = {24, 96, 384, 1536, 6144, 24576,
             98304, 393216, 1572864, 6291456, 25165824, 100663296, 402653184, 1610612736};
-    private static final int[] FREEZER_DURATION = {80, 40, 20, 10, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1};
+    private static final int[] STANDARD_DURATION = {80, 40, 20, 10, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1};
 
-    private static void assertFreezerPower(RecipeFixture f, long power, int duration, String context) {
+    private static final int[] PERFECT_DURATION = {80, 20, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
+    private static void assertSharedPower(RecipeFixture f, long power, int duration, String context) {
         if (power < 24) {
             assertFalse(context, f.machine.checkRecipe(null));
             f.assertUnconsumed();
             return;
         }
         int index = 0;
-        while (index + 1 < FREEZER_POWER_THRESHOLDS.length && power >= FREEZER_POWER_THRESHOLDS[index + 1]) {
+        while (index + 1 < SHARED_POWER_THRESHOLDS.length && power >= SHARED_POWER_THRESHOLDS[index + 1]) {
             index++;
         }
         assertTrue(context, f.machine.checkRecipe(null));
-        assertEquals(context, -FREEZER_ENERGY[index], ((GT_MetaTileEntity_VacuumFreezer) f.machine).lEUt);
-        assertEquals(context, duration == 1 ? 1 : FREEZER_DURATION[index], f.machine.mMaxProgresstime);
+        assertEquals(context, -SHARED_ENERGY[index], ((GT_MetaTileEntity_ProcessingMultiBlockBase<?>) f.machine).lEUt);
+        int expectedDuration = f.model.equals("IndustrialPulverizer") ? PERFECT_DURATION[index] : STANDARD_DURATION[index];
+        assertEquals(context, duration == 1 ? 1 : expectedDuration, f.machine.mMaxProgresstime);
         f.assertConsumed();
     }
 
@@ -340,6 +333,8 @@ public class GT_MultiblockRecipeProcessingTest {
             GregTech_API.sPostloadFinished = true;
             if (model.equals("ElectricBlastFurnace")) setField(machine, "mHeatingCapacity", 1800);
         }
+
+        boolean usesSharedProcessing() { return machine instanceof GT_MetaTileEntity_ProcessingMultiBlockBase; }
 
         boolean fluidOnly() { return model.equals("OilCracker") || model.equals("DistillationTower"); }
         boolean implosion() { return model.equals("ImplosionCompressor"); }
