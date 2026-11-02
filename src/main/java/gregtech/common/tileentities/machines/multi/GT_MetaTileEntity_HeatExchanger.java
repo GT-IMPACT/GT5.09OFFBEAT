@@ -134,14 +134,14 @@ public class GT_MetaTileEntity_HeatExchanger
     @Override
     protected ProcessingLogic createProcessingLogic() {
         return new HeatExchangeProcessingLogic(() -> {
-            ItemStack circuit = mInventory[1];
+            ItemStack circuit = getConfigurationCircuit();
             return circuit != null && circuit.getUnlocalizedName().startsWith("gt.integrated_circuit")
                     ? circuit.getItemDamage() : 0;
         }, () -> penalty_per_config);
     }
 
     @Override
-    public boolean hasControllerSlotInGui() {
+    public boolean allowSelectCircuit() {
         return true;
     }
 

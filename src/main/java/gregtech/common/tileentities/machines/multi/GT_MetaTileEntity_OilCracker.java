@@ -261,7 +261,7 @@ public class GT_MetaTileEntity_OilCracker extends
     }
 
     @Override
-    protected boolean usesControllerSlotAsRecipeInput() {
+    public boolean allowSelectCircuit() {
         return true;
     }
 

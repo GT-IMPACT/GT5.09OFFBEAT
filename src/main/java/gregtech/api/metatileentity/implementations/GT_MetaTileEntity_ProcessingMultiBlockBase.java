@@ -1,7 +1,11 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.GT_Mod;
-import gregtech.common.gui.modularui.multiblock.MTEProcessingMultiBlockGui;
+import gregtech.api.interfaces.IConfigurationCircuitSupport;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
@@ -10,10 +14,9 @@ import gregtech.api.logic.ProcessingPersistence;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map_NonGTRecipes;
-import com.cleanroommc.modularui.factory.PosGuiData;
-import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
+import gregtech.common.gui.modularui.multiblock.MTEProcessingMultiBlockGui;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -29,7 +32,9 @@ import java.util.function.BooleanSupplier;
  * legacy lifecycle.
  */
 public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_MetaTileEntity_ProcessingMultiBlockBase<T>>
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<T> {
+        extends GT_MetaTileEntity_EnhancedMultiBlockBase<T> implements IConfigurationCircuitSupport {
+
+    private static final int CIRCUIT_SLOT = 2;
     private ProcessingLogic processingLogic;
     private int processingModes;
     private int cycleModes;
@@ -42,11 +47,11 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     private CheckRecipeResult processingResult = CheckRecipeResult.NONE;
 
     protected GT_MetaTileEntity_ProcessingMultiBlockBase(int id, String name, String regionalName) {
-        super(id, name, regionalName);
+        super(id, name, regionalName, CIRCUIT_SLOT + 1);
     }
 
     protected GT_MetaTileEntity_ProcessingMultiBlockBase(String name) {
-        super(name);
+        super(name, CIRCUIT_SLOT + 1);
     }
 
     protected abstract ProcessingLogic createProcessingLogic();
@@ -57,7 +62,55 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
 
     /** Opt in only when the machine uses its controller inventory slot. */
     public boolean hasControllerSlotInGui() {
-        return usesControllerSlotAsRecipeInput();
+        return !allowSelectCircuit() && usesControllerSlotAsRecipeInput();
+    }
+
+    @Override
+    public boolean allowSelectCircuit() {
+        return false;
+    }
+
+    @Override
+    public int getCircuitSlot() {
+        return CIRCUIT_SLOT;
+    }
+
+    @Override
+    public int getCircuitSlotX() {
+        return MTEProcessingMultiBlockGui.CIRCUIT_SLOT_X;
+    }
+
+    @Override
+    public int getCircuitSlotY() {
+        return MTEProcessingMultiBlockGui.CIRCUIT_SLOT_Y;
+    }
+
+    protected final ItemStack getConfigurationCircuit() {
+        return allowSelectCircuit() ? mInventory[getCircuitSlot()] : null;
+    }
+
+    @Override
+    public boolean isValidSlot(int index) {
+        return index != getCircuitSlot() && super.isValidSlot(index);
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        if (index == getCircuitSlot() && stack != null) {
+            if (!(stack.getItem() instanceof GT_IntegratedCircuit_Item)
+                || stack.getItemDamage() < 0 || stack.getItemDamage() > GhostCircuitItemStackHandler.MAX_CONFIG) {
+                stack = null;
+            } else {
+                stack = stack.copy();
+                stack.stackSize = 0;
+            }
+        }
+        super.setInventorySlotContents(index, stack);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int index, int amount) {
+        return index == getCircuitSlot() ? null : super.decrStackSize(index, amount);
     }
 
     /**
@@ -297,10 +350,11 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     protected List<ProcessingInputs> collectProcessingInputs() {
         List<ItemStack> allItems = getStoredInputs();
         List<FluidStack> fluids = getStoredFluids();
-        boolean useController = usesControllerSlotAsRecipeInput();
-        ItemStack controller = useController ? mInventory[1] : null;
+        int controllerSlot = allowSelectCircuit() ? getCircuitSlot() : usesControllerSlotAsRecipeInput() ? 1 : -1;
+        ItemStack controller = getStackInSlot(controllerSlot);
         BooleanSupplier sourceUnchanged = () -> sameReferences(allItems, getStoredInputs())
-                && sameReferences(fluids, getStoredFluids()) && (!useController || mInventory[1] == controller);
+                && sameReferences(fluids, getStoredFluids())
+                && (controllerSlot < 0 || getStackInSlot(controllerSlot) == controller);
         if ((processingModes & ProcessingLogic.SEPARATE_INPUTS) == 0) {
             return Collections.singletonList(
                     new ProcessingInputs(withControllerInput(allItems, controller), fluids, sourceUnchanged));
@@ -592,6 +646,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         processing.setInteger("cycleModes", cycleModes);
         processing.setBoolean("waiting", waitingForOutput);
         processing.setBoolean("legacyOutputs", legacyOutputs);
+        processing.setBoolean("ghostCircuit", allowSelectCircuit());
         processing.setInteger("parallel", currentParallel);
         processing.setInteger("operations", currentOperations);
         GT_Recipe_Map map = getRecipeMap();
@@ -608,6 +663,17 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     public void loadNBTData(NBTTagCompound tag) {
         super.loadNBTData(tag);
         NBTTagCompound processing = tag.getCompoundTag("processing");
+        if (allowSelectCircuit() && !processing.getBoolean("ghostCircuit")
+            && mInventory[getCircuitSlot()] == null) {
+            ItemStack legacyCircuit = mInventory[1];
+            if (legacyCircuit != null && legacyCircuit.getItem() instanceof GT_IntegratedCircuit_Item
+                && legacyCircuit.getItemDamage() >= 0
+                && legacyCircuit.getItemDamage() <= GhostCircuitItemStackHandler.MAX_CONFIG) {
+                // Keep the original item intact; only copy its configuration into the phantom slot.
+                setInventorySlotContents(getCircuitSlot(), legacyCircuit);
+            }
+        }
+        setInventorySlotContents(getCircuitSlot(), mInventory[getCircuitSlot()]);
         legacyOutputs = !tag.hasKey("processing") || processing.getBoolean("legacyOutputs");
         selectedRecipeMap = processing.hasKey("recipeMap") ? processing.getString("recipeMap") : null;
         getProcessingLogic().clearRecipeCache();

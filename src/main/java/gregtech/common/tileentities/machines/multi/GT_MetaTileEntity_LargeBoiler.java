@@ -213,7 +213,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
     @Override
-    public boolean hasControllerSlotInGui() {
+    public boolean allowSelectCircuit() {
         return true;
     }
 
@@ -222,7 +222,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
     private int circuitConfiguration() {
-        ItemStack circuit = mInventory[1];
+        ItemStack circuit = getConfigurationCircuit();
         if (circuit == null || !circuit.getUnlocalizedName().startsWith("gt.integrated_circuit")) {
             return 0;
         }

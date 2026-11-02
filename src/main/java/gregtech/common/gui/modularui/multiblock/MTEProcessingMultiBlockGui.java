@@ -16,6 +16,7 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingMultiBlockBase;
 import gregtech.api.modularui2.GTGuis;
+import gregtech.api.modularui2.common.CommonWidgets;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.common.gui.modularui.util.MachineModularSlot;
 import net.minecraft.client.gui.Gui;
@@ -34,6 +35,9 @@ import static gregtech.api.gui.GT_Container_ProcessingMachine.PLAYER_INVENTORY_Y
 
 /** GTNH MUI2 synchronization and slots with the existing processing window's fixed layout. */
 public final class MTEProcessingMultiBlockGui {
+
+    public static final int CIRCUIT_SLOT_X = (PLAYER_INVENTORY_X - 1 - 18) / 2 + 1;
+    public static final int CIRCUIT_SLOT_Y = PLAYER_INVENTORY_Y + 58;
 
     private final GT_MetaTileEntity_ProcessingMultiBlockBase<?> machine;
 
@@ -64,6 +68,11 @@ public final class MTEProcessingMultiBlockGui {
                     .slotGroup("controller"))
                 .invisible()
                 .pos(CONTROLLER_X - 1, CONTROLLER_Y - 1));
+        }
+        if (machine.allowSelectCircuit()) {
+            panel.child(CommonWidgets.createCircuitSlot(syncManager, machine)
+                .name("processing_circuit")
+                .pos(machine.getCircuitSlotX() - 1, machine.getCircuitSlotY() - 1));
         }
         panel.child(SlotGroupWidget.playerInventory((index, slot) -> slot.invisible())
             .pos(PLAYER_INVENTORY_X - 1, PLAYER_INVENTORY_Y - 1));
