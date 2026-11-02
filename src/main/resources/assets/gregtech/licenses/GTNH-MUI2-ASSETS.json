@@ -1,0 +1,2765 @@
+{
+  "repository": "GTNewHorizons/GT5-Unofficial",
+  "commit": "f0472cfbd44ab9c8d5a27df7e98c64a42eb1c03f",
+  "files": [
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/bronze.png",
+      "sha256": "fa8dc8c7d993af2874911aaa058590629c800da5403c630bfa819ca15c77d048",
+      "bytes": 147
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/chaos_locator.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/chaos_locator.png",
+      "sha256": "dd8a1cce47a936c819f149f3e1fef6b473f2b4761402462e4d7af88bc0360bc8",
+      "bytes": 428
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/coke_oven.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/coke_oven.png",
+      "sha256": "7373e7a1049c61f9089bf6ba20097460cc6d3fc93c8eed5362b2ae92ffc336a4",
+      "bytes": 1004
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/contributors_foundry.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/contributors_foundry.png",
+      "sha256": "448605520ab1a50d3988a1a6484c8fc299060c72df285073d4ba17b2c6f0064b",
+      "bytes": 122492
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/drone_camera.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/drone_camera.png",
+      "sha256": "1d423e5bb108bebe3b9723aa6f053673852e5ae88d83b1c634fbc68facff787c",
+      "bytes": 495
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/foundry_default.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/foundry_default.png",
+      "sha256": "837ff2790f2fce682769a00f1749f7f5ed590d677e0ddf252e08eb5d2aba7683",
+      "bytes": 32551
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/nanochip_default.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/nanochip_default.png",
+      "sha256": "a63b13d56f58ea84826cafd12a6081847eed76f8bf7dab6ef89ad9c5a1941f84",
+      "bytes": 4687
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/nanochip_default_large.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/nanochip_default_large.png",
+      "sha256": "b08d82d31f6829b84f805aae0a984d8f9913d07c2895d9bbd864a9d2734edf38",
+      "bytes": 4191
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/nanochip_nameplate.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/nanochip_nameplate.png",
+      "sha256": "f22abe04767be9472bace9ba34064ebb9bc695b0136b307aeebea55aca366a26",
+      "bytes": 173
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/nanochip_rule.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/nanochip_rule.png",
+      "sha256": "f0f6351665e65c0ed2fef9b3333c384f69386551459f87aaa45c9ffc78920e21",
+      "bytes": 260
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/popup.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/popup.png",
+      "sha256": "dccf7367266a4cfd4d9ee2adf4153afd855e39a60a1df6e732442321b48d421b",
+      "bytes": 240
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/popup_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/popup_bronze.png",
+      "sha256": "72f832c937113fbc2b7b8be6217853c78808e97019108e23ced8843bfdbe58d8",
+      "bytes": 210
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/popup_foundry.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/popup_foundry.png",
+      "sha256": "6491150ff6fa519d917debae1e444b34f69ea1879a96397ac45a580d078f87e4",
+      "bytes": 31704
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/popup_nanochip.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/popup_nanochip.png",
+      "sha256": "9937c860814d2577d840c32c8a310dcc8a5e0b25c6d072e358ceeda77ba25535",
+      "bytes": 4594
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/popup_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/popup_primitive.png",
+      "sha256": "08d9d6091da0f5c911ecd7ce69b9046aa9010555d426f49099b86c88a2ea91d3",
+      "bytes": 210
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/popup_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/popup_steel.png",
+      "sha256": "c9b1bc22ece5f3c59bc3dab076f4f704c782f5e07853554d8fccab6b923e479a",
+      "bytes": 210
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/primitive.png",
+      "sha256": "bdf98eee96b6f58b4494850738ec0e27c328a7e1353985062fcaa289c06b4e73",
+      "bytes": 147
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/redstone_sniffer.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/redstone_sniffer.png",
+      "sha256": "5ddad04b5a12ef1c7f2347fc82b7a5067d7c667581b470510679371916d42985",
+      "bytes": 704
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/singleblock_default.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/singleblock_default.png",
+      "sha256": "2a6c1dea2b37e2e1011ae9584959e590ca7386d582e5421490c01d8afc9a09ba",
+      "bytes": 147
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/steam_dial.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/steam_dial.png",
+      "sha256": "29ff2da21d7aa32caf33dd5893e8ce0125d2ff47de846b524cddb688e73b3f04",
+      "bytes": 459
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/steam_dial_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/steam_dial_steel.png",
+      "sha256": "8e8e14a90d5209b6213a8b1936497047b047581352ade342abe532e9911e3704",
+      "bytes": 440
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/steel.png",
+      "sha256": "aafbf39e310f944185881e184c0dfc9514a2d3407ebc77bd1885cf937355e495",
+      "bytes": 147
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/terminal.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/terminal.png",
+      "sha256": "b54bd0ddb74dd03af47d543c17d223753e20bb970e46a2ccc7502f572a4b86aa",
+      "bytes": 100
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/background/text_field.png",
+      "target": "assets/gregtech/textures/gui/mui2/background/text_field.png",
+      "sha256": "b54bd0ddb74dd03af47d543c17d223753e20bb970e46a2ccc7502f572a4b86aa",
+      "bytes": 100
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/bronze.png",
+      "sha256": "183e15ccff7481d6138d3246b24ab39e4ceca24909bf737eb528bdd87e31e0a3",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/bronze_pressed.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/bronze_pressed.png",
+      "sha256": "f5952b0d356b797694a464234e6c9ecb43033a24b6712d6e59a965c49599c33f",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/foundry.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/foundry.png",
+      "sha256": "a57c36685d8879e306c2c288c36d113f88ec69d93f892b3e86f2a4fb062ea75d",
+      "bytes": 370
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/foundry_pressed.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/foundry_pressed.png",
+      "sha256": "7eef0ce8b26d55a4f643248a2ee3d45bdc0d2f4bab83da0d111ae7bdbfe276ed",
+      "bytes": 373
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/nanochip.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/nanochip.png",
+      "sha256": "7656ae906193ac5ee8398f1317df03a26302b36189027b0f48eb2b747905e627",
+      "bytes": 1714
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/nanochip_pressed.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/nanochip_pressed.png",
+      "sha256": "9c20f85c8fa0d8306b486b0dc5ecb1bee6407badc75ecc557f9c6b191d20f344",
+      "bytes": 1721
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/primitive.png",
+      "sha256": "89107c5552024b8680f9f3fcf6d3ba3898171793bf497de5700d75451a2fe77e",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/primitive_pressed.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/primitive_pressed.png",
+      "sha256": "432c84b88c4fcc5bddc3bfa370eb8fc5391054fb233ba44a07d32918f9fe70ad",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/standard.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/standard.png",
+      "sha256": "f01e1117e5e9c32f540d0255d0e23a6395a03f8d581b54bfabccb7978d46cf20",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/standard_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/standard_disabled.png",
+      "sha256": "8c9301d07663606d55ebc3033621ebf9306272328193e3485ecfcceb9c6e744b",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/standard_pressed.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/standard_pressed.png",
+      "sha256": "2622a044ababdf79e0ff67c0e9571520c09838dd1dc63dc42451282ff2ba11df",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/standard_toggle_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/standard_toggle_disabled.png",
+      "sha256": "81debde3f25849d5e9f7fce56a712c0d7aa99c498a08c506996fdf236dbf0c74",
+      "bytes": 149
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/steel.png",
+      "sha256": "5a991fcf6d48ade6b31086a26576f598e258b1486c2bd728a7c4f2d317380c66",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/button/steel_pressed.png",
+      "target": "assets/gregtech/textures/gui/mui2/button/steel_pressed.png",
+      "sha256": "2ac50ac2accfc6a7fe6641a5322e61a3019559b34c8647b4b0ff8d3a3b28a5f5",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_battery.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_battery.png",
+      "sha256": "cb810c1fff9f24d83b2dfce0527c3299229b33707620d979ade55613350ad96a",
+      "bytes": 4467
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_crowbar.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_crowbar.png",
+      "sha256": "572dcb40d4880afd21666b80b213d62503a20532162082793aabb1cfeb0a39c3",
+      "bytes": 4452
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_hard_hammer.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_hard_hammer.png",
+      "sha256": "8037b452457b33072e59f9e56e55c1440f4c4b90587c2a2227b6e2b11ac5b892",
+      "bytes": 4461
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_screwdriver.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_screwdriver.png",
+      "sha256": "345a60f7f795a64171a1806fd3f6610aa0d9399ee132740fc1cd39b82445e5fb",
+      "bytes": 4467
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_soft_mallet.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_soft_mallet.png",
+      "sha256": "abbf52acf4b762e5213f3f9af4c5fedfa3dd4988e18a0838b5b5ac1fae3a199c",
+      "bytes": 9502
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_soldering_iron.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_soldering_iron.png",
+      "sha256": "585520a19e7a1b4e693252d1d0ab13804752f34b7bd97ad69024278a4e3145a1",
+      "bytes": 8527
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_wire_cutter.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_wire_cutter.png",
+      "sha256": "0aa63df4553ab80c7bccd594dce6b3b2a82fb2cd252532f93441d421f895f0da",
+      "bytes": 4470
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/items/toolbox/toolbox_slot_wrench.png",
+      "target": "assets/gregtech/textures/gui/mui2/external/items/toolbox/toolbox_slot_wrench.png",
+      "sha256": "7105d775fc2e78b639537514b98a738c5e77923190a738d52520b8c998e3ba30",
+      "bytes": 4460
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/maintenance_all.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/maintenance_all.png",
+      "sha256": "1d14369728c53d02d08ab0b3920f0dea299552a8d7fe20a9eb9169f66f168d1f",
+      "bytes": 1857
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/maintenance_none.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/maintenance_none.png",
+      "sha256": "4149f27770e77c338ab52d305b02e958518a346d67344b6aa4742bb220cbebc6",
+      "bytes": 1864
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/maintenance_some.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/maintenance_some.png",
+      "sha256": "8bc35fe14d02b8c5151a2766ad81a2639d175153a5c35cbaa2eb1f7ee9bbb846",
+      "bytes": 1856
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/manualShutdown.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/manualShutdown.png",
+      "sha256": "5b9a2f25c9102e0c492badcfd7e82081fd0b8c6d4886330dd94cf629025f23b8",
+      "bytes": 191
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/needsCrowbar.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/needsCrowbar.png",
+      "sha256": "0891c6ff109c5184923f467f0ae3296470fac5216434d185e7639e43ae51e768",
+      "bytes": 5249
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/needsHardhammer.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/needsHardhammer.png",
+      "sha256": "e46fd93dc04fe0aed57f8925b87f83de9562f803d8e2e8b09b4ae50c7b418173",
+      "bytes": 195
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/needsScrewdriver.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/needsScrewdriver.png",
+      "sha256": "9d93d7e9b749112a396133a054b9de2221d2506c81241fb45f23527775f2da60",
+      "bytes": 654
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/needsSofthammer.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/needsSofthammer.png",
+      "sha256": "a242846d821c494fa2a076d2e58debf33bb8511684493a953f140ae1b08631b5",
+      "bytes": 5306
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/needsSoldering.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/needsSoldering.png",
+      "sha256": "3a7428dc121bc849b2c12ec8446680a3b7ede78b40f07b070d55e29bb848b3ce",
+      "bytes": 5169
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/needsWrench.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/needsWrench.png",
+      "sha256": "57e048411a692f2ea88d041b01f554aeef46023b23e070b13ef4b5084107cfde",
+      "bytes": 5250
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/stalled_computation.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/stalled_computation.png",
+      "sha256": "13b03e678820759784bbe5e4e5d9289706d08130c1b3b3ec18ed32eab6e6f156",
+      "bytes": 142
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/structureIncomplete.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/structureIncomplete.png",
+      "sha256": "145dba6a7295bdd3c7f23858635a34c9b8d139e02b14af4e049505ce9923d3f8",
+      "bytes": 146
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/icons/unpowered.png",
+      "target": "assets/gregtech/textures/gui/mui2/icons/unpowered.png",
+      "sha256": "29c40100628300469d09afde2d9a9b0be8ee854035a5efc6ca9df3e31a34c0b3",
+      "bytes": 155
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/LiquidMode.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/LiquidMode.png",
+      "sha256": "a27e21a47f941c9dce2d55e193c0ca12ff55f922a1c889f7ad67a34423da1e23",
+      "bytes": 154
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/LiquidMode_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/LiquidMode_off.png",
+      "sha256": "875f6210edd19af3e752e51ebfe0d247141143d62fc7764a9d7f46eacc1673a8",
+      "bytes": 154
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/allow_input.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/allow_input.png",
+      "sha256": "8d1be1e12daef8b6d2d5fba7dcc3909338c19eead1f439e21b45ca413f59c59a",
+      "bytes": 193
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/allow_output.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/allow_output.png",
+      "sha256": "492db02b5fa5efa334ead4dac01a908bf55a45b58cf463fbb2f58bbf7a1160bd",
+      "bytes": 232
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/analog.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/analog.png",
+      "sha256": "4ec4f9a7f37db2adad745850f90c4e431435b14381cf716f29ef61195ef543e4",
+      "bytes": 164
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/auto_pull_me.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/auto_pull_me.png",
+      "sha256": "4c6b99a1b4929a865e47c1274124cffbf6c04b7dfcad7073ed90403c73bd0182",
+      "bytes": 188
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/auto_pull_me_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/auto_pull_me_disabled.png",
+      "sha256": "b50d4e820873f21a7331f2300472203d5b92dd63ded15b8f9525ad130f3c3191",
+      "bytes": 188
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/autooutput_fluid.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/autooutput_fluid.png",
+      "sha256": "1563940e63c4407c9fa29d0cc39c57942f9a971b2ab8785a603ec840709277c8",
+      "bytes": 137
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/autooutput_item.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/autooutput_item.png",
+      "sha256": "63b83edcb23c273a6c8e565a61812af117d60d51fd2a91e9edf0731f75c9912b",
+      "bytes": 130
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/batch_mode_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/batch_mode_off.png",
+      "sha256": "33efc97ef40677aea97247c3a4de61f61dc20fe878b0563e3ad236ae50e6e7c5",
+      "bytes": 161
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/batch_mode_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/batch_mode_on.png",
+      "sha256": "617ac263ad4a4eed49fa4325201f8cb9eda1c93802328292f6eaabbc697e690d",
+      "bytes": 183
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/blacklist.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/blacklist.png",
+      "sha256": "8cfba3bd143e1f31567d278bbdb8a9644c7dbe7e9f62162d61b590e1369fbd52",
+      "bytes": 167
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/block_input.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/block_input.png",
+      "sha256": "41e3009ef7ba9a396ac288567eff4ddc23393c352c4c5394fa7a947ca02358ae",
+      "bytes": 195
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/block_output.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/block_output.png",
+      "sha256": "e11e113181f6bca4d94ebcc880106d475ea54b5fcf7313e7663e3542a597ce69",
+      "bytes": 228
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/bounding_box.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/bounding_box.png",
+      "sha256": "3786003e01b039dc6c632a2c774eb80498bb4c468cd1f72bb1c50fa89afda137",
+      "bytes": 173
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/checkmark.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/checkmark.png",
+      "sha256": "aa30774c7987e32ef127a6fbcd5a4e104e55131db057c290a7b1cd311004a9b7",
+      "bytes": 248
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/chunkloading.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/chunkloading.png",
+      "sha256": "a6ce5ce7bcdb6f4d0e9a4973e4e208ee63d6050bf0d742fb6057acb268596b0a",
+      "bytes": 167
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/chunkloading_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/chunkloading_off.png",
+      "sha256": "bb467a600275e4458e2ac1b7d631250d6352d9d9542aba3648a53051985a680a",
+      "bytes": 167
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/copy_to_clipboard.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/copy_to_clipboard.png",
+      "sha256": "e8033902e2cf9c0b57fc777d13b7c17f811646bf46fb0324ee4072146af13ca7",
+      "bytes": 146
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/cross.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/cross.png",
+      "sha256": "416974b8f00856d9beec4f1d636f4f5a46db2bcd2a6d36de2f943df66ac5907c",
+      "bytes": 196
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/cyclic.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/cyclic.png",
+      "sha256": "99d1fa97973ef10bed83b5b3e7aa084296df4192934c6f0ddea961240c1bb945",
+      "bytes": 152
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/disable.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/disable.png",
+      "sha256": "b912e8fa09ac6710995946362d3b8c5b3b47b29be3b61459833ba1162f73464b",
+      "bytes": 166
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/emit_energy.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/emit_energy.png",
+      "sha256": "30823394d8218dc979a67ebfc70d35c29f836f193fc81cab204d097e0bce86ad",
+      "bytes": 149
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/emit_redstone.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/emit_redstone.png",
+      "sha256": "e23e70995e4cf2125af08370c4de1b944e9c62a29ed805427f56c008babb0108",
+      "bytes": 151
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/export.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/export.png",
+      "sha256": "2a1e294b94830907a3c9d9e1458dfcd5fd5b0ebc6dfe79aceee3d34ec9223cbd",
+      "bytes": 205
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/finite_mode_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/finite_mode_off.png",
+      "sha256": "4ad52f3cd15235b645bb0b582fa970d8df9740e35a078e73dc1fb99502a8e220",
+      "bytes": 217
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/finite_mode_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/finite_mode_on.png",
+      "sha256": "7f20077c5a964c1f18ad2d150dafa66eecbac5bc013062ad270f24342d2f2f58",
+      "bytes": 217
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/finite_mode_panel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/finite_mode_panel.png",
+      "sha256": "2fa7e2acd50173a3eece1010b38f21816d98f31c24b232c4380863daea39c5d0",
+      "bytes": 236
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/forbidden.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/forbidden.png",
+      "sha256": "904651eb7383f950969a6d5ec79950c44d998d956d3ff6d41a1252352cd0285b",
+      "bytes": 163
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/foundry_calculator.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/foundry_calculator.png",
+      "sha256": "820f31a042ff7c1c7cc5873beedbeb4c6fed6bae57f93659ee1c90a54dff3d7a",
+      "bytes": 1879
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/gate_and.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/gate_and.png",
+      "sha256": "0487914e32013cb001ebf9c4f3c2a75b8dbfe922ff48e04f770d9fc27db81070",
+      "bytes": 173
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/gate_nand.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/gate_nand.png",
+      "sha256": "3536f9f9411fa43ce2986068d06aae383ff5f1c3d97046989347c1f55b103170",
+      "bytes": 174
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/gate_nor.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/gate_nor.png",
+      "sha256": "f9efbfc761ccd38c121d0d6e7911af2535f25e058e2c52377811a17612913cc7",
+      "bytes": 206
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/gate_or.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/gate_or.png",
+      "sha256": "85c6f7f782401799a6dd7939083ee5914a389c1743429bd3e348316b31ea105b",
+      "bytes": 206
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/highlight_block.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/highlight_block.png",
+      "sha256": "341928570d467f20e246c31493177e54dc3521de5ffcf9b1ae8f0ed808473f3a",
+      "bytes": 131
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/hourglass.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/hourglass.png",
+      "sha256": "b67af0f885811940e2f182b383a3bc1d0da3032477ae1b06d331cd691e179b63",
+      "bytes": 254
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/import.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/import.png",
+      "sha256": "91610c1efc90e1bafca4e7d3c9f301cddbbca8d3f3a7041684cc4e468fd27ba9",
+      "bytes": 211
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/input_from_output_side.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/input_from_output_side.png",
+      "sha256": "9fd97df95869c8eb6d1cb2099f0e4f3053adf8721a45617bb9eddb881d9b279e",
+      "bytes": 232
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/input_separation_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/input_separation_off.png",
+      "sha256": "0d90807583fe9ee0074eeaa72da48c274b132e273d82efb6c79a856860da43aa",
+      "bytes": 162
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/input_separation_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/input_separation_on.png",
+      "sha256": "5c7bd555b8427cf5a2437a9c649738f1cf4f66fd61e66a4d50465f7cdc9e8c24",
+      "bytes": 177
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/invert_filter.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/invert_filter.png",
+      "sha256": "f65d7c5ffd373c7e55e15c1184b6ffe9864b456682d584c2de11569cc2f14703",
+      "bytes": 148
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/invert_redstone.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/invert_redstone.png",
+      "sha256": "183dc3246adfdfc29478e27ccdd6ef0002ef7d0be95fdfb9bcbe91f74c2bc2fc",
+      "bytes": 136
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/lma_animation_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/lma_animation_off.png",
+      "sha256": "99b6af97a6887e3124a513df480fef4f9dc40f09ca07fb2ee8b17906cf159031",
+      "bytes": 156
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/lma_animation_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/lma_animation_on.png",
+      "sha256": "395802a1d545084082c5263cb27a43c3ca34123db270082471ed63434dc94940",
+      "bytes": 183
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/lock.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/lock.png",
+      "sha256": "2321eae63d07e7c965e71d99e7ad9df5a41a43a043d6cc062feb1451022f4f8c",
+      "bytes": 156
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/lock_small.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/lock_small.png",
+      "sha256": "eb784c15f24891f770a79d37fb9e66748525137e3290ae08fc768923b48e2d77",
+      "bytes": 144
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_arc.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_arc.png",
+      "sha256": "b5ee818ac603dff5dbbe543dd90b8ddd24cda9985739d93995d7205a31abd4ab",
+      "bytes": 161
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_bending.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_bending.png",
+      "sha256": "6bab09ec44a02422bb696f711bdeb85123b3086cb2426fb2d75aa49bff1d0983",
+      "bytes": 184
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_chembath.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_chembath.png",
+      "sha256": "8fecb89de59bb6b242f556a3832d7b69782b8f174d6cc923b97d668ce6cce7fe",
+      "bytes": 161
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_compressing.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_compressing.png",
+      "sha256": "63c5b58ce0aedb67a25dd16fe1df1df5787dd73af2a1fe62aa67ece8e91eaed1",
+      "bytes": 184
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_default.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_default.png",
+      "sha256": "76a24f2bf21760f1a50bc9bec4cc703e01b79bdffb0cf8fa7f04dd4e5f8c459d",
+      "bytes": 171
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_dehp_steam.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_dehp_steam.png",
+      "sha256": "81de3a580615fa8ade0cd66cb813e7efb820541fe3aa83791bc168deab566333",
+      "bytes": 113
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_distilling.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_distilling.png",
+      "sha256": "7ea4e728d010ce492f22959ebfb4f3b84e552ad78b44eb8fafdfdd0024757cce",
+      "bytes": 181
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_forming.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_forming.png",
+      "sha256": "2b4c72c2811bd12e7e50cce440a0070da96309d82033b70dfcd58a9d42d07371",
+      "bytes": 187
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_iof_bath.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_iof_bath.png",
+      "sha256": "2aeb8a993979266638b6b78b8c4b130e864f56e7a9d26fa73ac757b548ec526e",
+      "bytes": 171
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_iof_centrifuge.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_iof_centrifuge.png",
+      "sha256": "a51259112c9df28fb3ebf6c61a4b994e5c01536f9442d0ba5fdb4048d7f0d524",
+      "bytes": 178
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_iof_forge.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_iof_forge.png",
+      "sha256": "ec13160cd7ade80ae3b2b7a900bd037c38afb9b6fdff8d494df1e6ffe47bb508",
+      "bytes": 143
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_iof_macerator.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_iof_macerator.png",
+      "sha256": "1422cf9d2db1f0ac5b5b50d9d99b7d44dc3150a4189f0f7ce2e0cb388ad9be6a",
+      "bytes": 169
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_iof_sifter.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_iof_sifter.png",
+      "sha256": "910806a2a523feac0b30b4161c8a5d21f23814acfb46a4bb380ade9de2d9f1be",
+      "bytes": 112
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_iof_thermal.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_iof_thermal.png",
+      "sha256": "4b98ffb31066231ef092eab9050584a8b9d708d7185223af7aa4343a35a578b5",
+      "bytes": 206
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_iof_washer.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_iof_washer.png",
+      "sha256": "abb15cd1565d61262f564c3f8fb921e9ccc21e952ff97b3bdbe4812ab47d4840",
+      "bytes": 171
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_lhc_accelerator.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_lhc_accelerator.png",
+      "sha256": "a6f268ce79fc78ec897133febf557b6759cc4253a8333519e0f76bf1bc4369f7",
+      "bytes": 2674
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_lhc_collider.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_lhc_collider.png",
+      "sha256": "7ca630e0cc7af4db8981ced73564edf219b0349e13f6d39d7afc0a913e345078",
+      "bytes": 3598
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_lpf_fluid.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_lpf_fluid.png",
+      "sha256": "db7a41bf86cc54626f338aac8b2579f95025762e28da907de48e9945343042b1",
+      "bytes": 176
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_lpf_metal.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_lpf_metal.png",
+      "sha256": "e1daa3b506d600a513f7b40f8f7fc2a81e429591bf0fb0ed822bc97aa84ca6fb",
+      "bytes": 176
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_mass_fabrication.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_mass_fabrication.png",
+      "sha256": "1cb545692c0ed9e56d91d748c2b6e2235a52ef9724f2c3012e0f84aebcb7760f",
+      "bytes": 179
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_packager.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_packager.png",
+      "sha256": "4c33e1b092275fe0e6ba4e27d0881513afb88fb58e989a4ccdf18f77742ef851",
+      "bytes": 183
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_plasma_arc.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_plasma_arc.png",
+      "sha256": "60909c75ab1c41cd4cf339294171816f1b74e70f014098c59ea379b18171c8f9",
+      "bytes": 177
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_polarizer.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_polarizer.png",
+      "sha256": "e375261b981e2acdd82185f1d3fbb3cbe9ddd12bbbd6ac2dbb87401f05f0cf92",
+      "bytes": 198
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_recycling.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_recycling.png",
+      "sha256": "0580f4d23cdeddd30839890c10eb6a69a54483968f2ac7d9689abae3569a489e",
+      "bytes": 178
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_research.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_research.png",
+      "sha256": "8d2075628b9a28fe03c2143458be26f64f551e0fae6a0566a4341c4b3c05ab39",
+      "bytes": 154
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_scanner.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_scanner.png",
+      "sha256": "ba3f1e4f8d4c2a22c3708d8779c0c86f62908b0b9c7b858157bf8e22a31335fb",
+      "bytes": 168
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_separator.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_separator.png",
+      "sha256": "7c29e0901754cc90e1ba46dcf8b307754e4648caa52c364168709a088a5b556f",
+      "bytes": 167
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_simplewasher.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_simplewasher.png",
+      "sha256": "5ff4bf1db122d8de4cede48909e1e797f7ae68dd99602789b9dd42772cf6e4ce",
+      "bytes": 166
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_singularity.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_singularity.png",
+      "sha256": "c02fc3cce6f094e42e8449f89530036b26971dd6b04de147ab0162b5806ecbe3",
+      "bytes": 190
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_tower.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_tower.png",
+      "sha256": "c8d3d791f0e5202d068d59e0f5ac6e5c727f7cdbf79ed11b01ddddf42a8f1027",
+      "bytes": 161
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_unpackager.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_unpackager.png",
+      "sha256": "dfd85e00cfc57fbf8f9efeb0aadc5382268e87ce2d360eea35f59e76e4366747",
+      "bytes": 184
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/machine_mode_washplant.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/machine_mode_washplant.png",
+      "sha256": "f95f0223aa24f3276e67133d90f5b2f3869f54e7ea2b2eecb507a8268838e19c",
+      "bytes": 185
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/mebf_pyro_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/mebf_pyro_off.png",
+      "sha256": "d7f990742b1b3e842f5e88d49c3e63077eae61d0895517923fea3e314da4423a",
+      "bytes": 2057
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/mebf_pyro_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/mebf_pyro_on.png",
+      "sha256": "aecc7a0c9faaaac7cdafc7398d9172a4ed270c59f12ddfcee58c8b8646e3852e",
+      "bytes": 2113
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/muffle_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/muffle_off.png",
+      "sha256": "f9283a4bec4fec6e0f015c05b441aab69b951428355c654a9320bdc024d5811a",
+      "bytes": 195
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/muffle_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/muffle_on.png",
+      "sha256": "31415187e7da56fbf4afe1c320caf54511bd1c3b9880573956cbfcdd14ba9873",
+      "bytes": 238
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/mvf_cryo_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/mvf_cryo_off.png",
+      "sha256": "d7f990742b1b3e842f5e88d49c3e63077eae61d0895517923fea3e314da4423a",
+      "bytes": 2057
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/mvf_cryo_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/mvf_cryo_on.png",
+      "sha256": "033bc92ea703094c06f8648417168d08d85a48a81e22625b560f84d4f5f8bcf0",
+      "bytes": 2540
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/nbt.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/nbt.png",
+      "sha256": "7245ae6eafb36911a36815037527d93c5bc07cb4f31c107e27a9cfacd58bae95",
+      "bytes": 136
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/one_stack_limit.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/one_stack_limit.png",
+      "sha256": "348f9a2aa32722aaa239a549840c810df190797d93597192e3815568e165b607",
+      "bytes": 190
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/pattern_optimize.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/pattern_optimize.png",
+      "sha256": "000add6b5f3abd4f14ef3d031dcd0d2d776b92f6bf97ae0d599dda0fcea62cd7",
+      "bytes": 177
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/plus_large.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/plus_large.png",
+      "sha256": "b164945d95c8357f560df7716b20d8f706af6b9614087caa8e52e62d6e83b27a",
+      "bytes": 139
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/plus_small.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/plus_small.png",
+      "sha256": "dfd24ce067dbb96c9cbe692477f10545339c27b7296583a16e2ad0259fc24eb1",
+      "bytes": 138
+    },
+    {
+      "source": "src/main/resources/assets/tectech/textures/gui/overlay_button/power_switch_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/power_switch_disabled.png",
+      "sha256": "659499365fb96336c072387a7e2dd25ee1eacc3b50c1a8878e73e94f69ad2abe",
+      "bytes": 159,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_button/power_switch_disabled.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/power_switch_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/power_switch_off.png",
+      "sha256": "047317ced93bc0a211e8cd19901e0c30ee348e18f4dba2718222cee225f44d51",
+      "bytes": 280
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/power_switch_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/power_switch_on.png",
+      "sha256": "f12d2af659bdcd4e3c015137718e4deac009043ab3cf0862200c5a8f20794497",
+      "bytes": 405
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/print.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/print.png",
+      "sha256": "86d1faa964fae193d17788f08701d827c0ead8d5f3e3486e08985adef826e56f",
+      "bytes": 162
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/progress.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/progress.png",
+      "sha256": "f20859086528f280fa5f027a3861d82960deda13af43608be8fc9d513d593966",
+      "bytes": 202
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/recipe_locked.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/recipe_locked.png",
+      "sha256": "f2e3ac27399ee05d8a142059866ece413dc2fd7cd52610c5a88a3ae119da0d01",
+      "bytes": 196
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/recipe_unlocked.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/recipe_unlocked.png",
+      "sha256": "bcee74da8835f649784bf416a20d2afeb3260ef337f9f2d2e5eb3d2b0bd2381c",
+      "bytes": 197
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/redstoneSnifferLocate.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/redstoneSnifferLocate.png",
+      "sha256": "6f89df17e9ebac8d1baf56d51c212a0bfc7bb49bb94f83232d1190f87f7f30d1",
+      "bytes": 204
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/redstone_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/redstone_off.png",
+      "sha256": "4c011b3962ed119d4fdae484de1d3d0366145181cefa5d2f549e3f5d523a0042",
+      "bytes": 202
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/redstone_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/redstone_on.png",
+      "sha256": "945cd3f31f4309c662e5b0ce19a06ce5a70d40b713b7c3f58ac332c93e8243dd",
+      "bytes": 489
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/replace_cobble_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/replace_cobble_off.png",
+      "sha256": "fa4bb075250b8103bec65c2d2e9a49bc0e05d68197d150c568de69d3fa9aff9b",
+      "bytes": 193
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/replace_cobble_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/replace_cobble_on.png",
+      "sha256": "da382fffd504d5c3d6f6ed84d4c3ef9c4e43d2b656c119e731280ef1def77c99",
+      "bytes": 210
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/resize_panel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/resize_panel.png",
+      "sha256": "60f058106900e98377b12dfd669ab082f8cc22d218a100e92ffc155dc9e1ecb0",
+      "bytes": 370
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/retract_pipes.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/retract_pipes.png",
+      "sha256": "5ab0557292da36b6b6eb571b87e7c02ea2612e90b191eba3195292bd35d85b93",
+      "bytes": 326
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/screwdriver.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/screwdriver.png",
+      "sha256": "7cb461b357f319cbcb5972c6776bbbc1ad7ac7f11956638d3454f821ea5bc3f1",
+      "bytes": 223
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/show_work_area.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/show_work_area.png",
+      "sha256": "442037745bfd180ad40060944fc2658883ab1761a7fe53525e13c4c03a9d6469",
+      "bytes": 1486
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/shuffle.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/shuffle.png",
+      "sha256": "3c9694e702180fde8384328595f9685a92e8e9aa35dfc3d29b64f3fc75981326",
+      "bytes": 217
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/side_selection_back.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/side_selection_back.png",
+      "sha256": "7ba2ec0d0e2cffecc2944a7b5c3f7ab7189975daced156b98aeea6ce009827fc",
+      "bytes": 147
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/side_selection_down.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/side_selection_down.png",
+      "sha256": "d4d10459e5fd731e572be0e659daa83842f84f84ff0469dfd04f7f47390193c2",
+      "bytes": 145
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/side_selection_left.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/side_selection_left.png",
+      "sha256": "d4130812a2975e9ef36a53b7ec845099c8d94ec28224a42d2255c6e0af8f1c9f",
+      "bytes": 142
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/side_selection_right.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/side_selection_right.png",
+      "sha256": "9112c458215af334f1950b584b0ae716bf94ecceaf117b6b95f885f315cac872",
+      "bytes": 143
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/side_selection_up.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/side_selection_up.png",
+      "sha256": "8a018baef1ae3ec8edc260b0e569df342fe0c4aba9aee9f90922a13e3c913c4a",
+      "bytes": 139
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/small_power_switch_off.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/small_power_switch_off.png",
+      "sha256": "c5eed4ff29599137b9aee04514e1f0e849502534c8183c61f985ac24dbb8afe7",
+      "bytes": 1939
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/small_power_switch_on.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/small_power_switch_on.png",
+      "sha256": "671daac216a566c973aa7591c49452e40694bdce721dfa34eeb84a62b4fef6b4",
+      "bytes": 1950
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/sorting_mode.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/sorting_mode.png",
+      "sha256": "a51e192af8d232558f02a122b734aa82ac96edd6573985b8c0408f41b97f2bf3",
+      "bytes": 187
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/stocking_mode.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/stocking_mode.png",
+      "sha256": "4b355c0e6628ac1309ade6d511d894bfff838394ae2231228f4c20797bb46cce",
+      "bytes": 159
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/structure_update.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/structure_update.png",
+      "sha256": "9d918cef2caeec4ccad1c506f02693ad920f6e2581467ac1dbd15ac3478ee004",
+      "bytes": 198
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/tank_void_all.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/tank_void_all.png",
+      "sha256": "a205bdff1cc93879ba6198499095da612e1eded0682f52cb681d1a33ad4a9d57",
+      "bytes": 171
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/tank_void_excess.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/tank_void_excess.png",
+      "sha256": "368cd8e40efec6ef095a30aa0935db393c230bc6f9eff1391d3f75bddf6f1d4e",
+      "bytes": 170
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/transpose.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/transpose.png",
+      "sha256": "72c3c7d086eaae1f9c2da22d7c45aaa9bdafd259a974adaf4be7973116bb4018",
+      "bytes": 151
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/use_inverted_processing_state.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/use_inverted_processing_state.png",
+      "sha256": "c7e05e5b90149e59f0e69623bee04ec63bba00cc57b007257ee2600000807468",
+      "bytes": 227
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/use_processing_state.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/use_processing_state.png",
+      "sha256": "4dc2a20906df74892492d8d1d1adff786e1a41eeb0f64006515113bff09e968e",
+      "bytes": 223
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/void_excess_all.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/void_excess_all.png",
+      "sha256": "2c2e1eff3e6d2872b30cdaf1bc568fb16b0d5966b5f875fe80350517bd3c2ee1",
+      "bytes": 248
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/void_excess_fluid.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/void_excess_fluid.png",
+      "sha256": "7faeed2616031ae7fd9b2d60214f5cdc6108777ea55d420de661349e496cd1ae",
+      "bytes": 238
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/void_excess_item.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/void_excess_item.png",
+      "sha256": "4b2292ecb2fd201c5e9b391b03d5feabfa99225af11114225cf102bb296bb8a8",
+      "bytes": 238
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/void_excess_none.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/void_excess_none.png",
+      "sha256": "1711bac4c11eca92f287e4f4a1b9dfdd4cc99df49d0750569bd377634a205bf3",
+      "bytes": 215
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/whitelist.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/whitelist.png",
+      "sha256": "e0901596087e102b36f7b5c669984056f3012a102807ec667c67b7490d30148a",
+      "bytes": 167
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/work_area.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/work_area.png",
+      "sha256": "b6550ca24867d5d95b69b20e5cadb16fb84dcea6112f8c49fb3107912e57a40e",
+      "bytes": 212
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_button/x2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_button/x2.png",
+      "sha256": "9567c892345c8ca817567e8075c3f1d378b5566fd1416c9443f6b3238f4c9d59",
+      "bytes": 159
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/armor.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/armor.png",
+      "sha256": "448c0a298d502da168d6dbe3f6b270aa1b8cf17d43823e32347dd9beb99e0369",
+      "bytes": 133
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/armor_core.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/armor_core.png",
+      "sha256": "e77379c220364aedace6ff6289494fd8626f9f43e34928619778c73ce39082b0",
+      "bytes": 140
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/armor_frame.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/armor_frame.png",
+      "sha256": "04df251d76108d250c825713934a8542dc643d4958ba1b7e7caeb995ce7f9220",
+      "bytes": 131
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/arrow_me.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/arrow_me.png",
+      "sha256": "09d0ed008aab3786d90704f25a92ff668a174f64cbca1bbdc2f694311e552ae5",
+      "bytes": 130
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/background_coke_oven_fluid_slot.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/background_coke_oven_fluid_slot.png",
+      "sha256": "0c32bff68ab6c52004336ec746ce39b45e725acde57303adf8d934353cb08166",
+      "bytes": 390
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/beaker_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/beaker_1.png",
+      "sha256": "af2bc68df8b33b2adbb4bcadaf89b2bf3324ede4c5ae6b5dc0e3fa4da93ce980",
+      "bytes": 172
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/beaker_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/beaker_2.png",
+      "sha256": "1759f245b0cd99a11aba5e59919b5259897955874757ee1115a561e5e04c2c81",
+      "bytes": 173
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/bee_drone.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/bee_drone.png",
+      "sha256": "901e10f196e572a546e7a80846729bc2b025529f8eea4df9b2f3f8b2aaf7738a",
+      "bytes": 225
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/bee_queen.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/bee_queen.png",
+      "sha256": "aeaa1ae0ec8061889635378252dac69f509b6e7af75f439c17cf62a105850f6c",
+      "bytes": 254
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/bender.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/bender.png",
+      "sha256": "f494c12c06f2559145e7f7b35965f1a7a8c141d069bb27603ed3ddb6973149a1",
+      "bytes": 115
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/block.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/block.png",
+      "sha256": "e1b87b480772d99c2bb39b90c42cbe3bc2edc64e393265c96b1de4f51d220c40",
+      "bytes": 346
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/block_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/block_bronze.png",
+      "sha256": "3b55e9ff7dd22202107a1bd3ad06989ecf3d4afbe9535f839096461316bd9154",
+      "bytes": 320
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/block_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/block_primitive.png",
+      "sha256": "da2226e1ab445f5ff8c254f012f1e5969914f1387184cdbca117739ff2ddb3ea",
+      "bytes": 343
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/block_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/block_steel.png",
+      "sha256": "3d3bea2c2e9dd1029d54d9cdfd3869102a6d2e72844325ace7763c8d5c6bcc01",
+      "bytes": 364
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/box.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/box.png",
+      "sha256": "498369c6f37d6348d658de81cdc9692164d8a88c6706dff0b761285d99bca128",
+      "bytes": 116
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/boxed.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/boxed.png",
+      "sha256": "0a75f14f7d189bc6e76089bdd94250b50501e4389ac367cefc5949b0db070cc2",
+      "bytes": 118
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/canister.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/canister.png",
+      "sha256": "607e265876a33c297f66f46640e324f5a7a41b3120f8e94066cc26f592cb652a",
+      "bytes": 139
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/canister_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/canister_bronze.png",
+      "sha256": "2695afacd9a3893f6df39a7c8cc3b6dbc02b1062e0424aa9b1668925f5788372",
+      "bytes": 137
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/canister_dark.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/canister_dark.png",
+      "sha256": "45df8e6817be8c146a9468d0bce5f3ceeae371c56070abf08fc59fbcbe3cf1c2",
+      "bytes": 149
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/canister_dark.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/canister_primitive.png",
+      "sha256": "45df8e6817be8c146a9468d0bce5f3ceeae371c56070abf08fc59fbcbe3cf1c2",
+      "bytes": 149,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/canister_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/canister_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/canister_steel.png",
+      "sha256": "b84330b60fab3405bf62145f2693580bed8cbb556f865d686421f72028033d30",
+      "bytes": 137
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/canner.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/canner.png",
+      "sha256": "65f247af926d32110ea745f40180bf41ae9dca5a8bfe33006a44a8160df92182",
+      "bytes": 128
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/cauldron.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/cauldron.png",
+      "sha256": "55c08ef04044df7908a96ce2d49c334e37ef4b84d8fdc1e266ddd2f898eb703b",
+      "bytes": 157
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/centrifuge.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/centrifuge.png",
+      "sha256": "8284a4eb7bcfc99685fe638f6441142c8228ec7185229c5d67516df626c90ed4",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/centrifuge_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/centrifuge_bronze.png",
+      "sha256": "193ab2ba6a244fc8f5935ba7f3986d3599c54d9177bfaf47ab1184a88750bc1f",
+      "bytes": 155
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/centrifuge_fluid.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/centrifuge_fluid.png",
+      "sha256": "f8ff937c2b8e66db48d886a5b740e1696ee9b5dd48cf50dcd47e340eda8ab1f6",
+      "bytes": 151
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/centrifuge.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/centrifuge_primitive.png",
+      "sha256": "8284a4eb7bcfc99685fe638f6441142c8228ec7185229c5d67516df626c90ed4",
+      "bytes": 132,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/centrifuge_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/centrifuge_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/centrifuge_steel.png",
+      "sha256": "4b99794489a2fc3d8dab7a9ff2a4207bb51566a4a53f23f97cf6ff60edb2cbb8",
+      "bytes": 156
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/charger.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/charger.png",
+      "sha256": "dea6616bbc1a4ba48ca8acc75e1f301e55ce97722d7605429b5a03668e579c8d",
+      "bytes": 113
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/charger_fluid.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/charger_fluid.png",
+      "sha256": "671811121d66ccfb610e43bf93b2cfae2ea8222f3bfae63df31f0035e3930dcf",
+      "bytes": 148
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/circuit.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/circuit.png",
+      "sha256": "a29b29c0e90eb568b633f1746110b555d6cc8f246b19bcca3f630c11eb443e5c",
+      "bytes": 120
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/coal.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/coal.png",
+      "sha256": "8cb5883973df7e110741c5991f2bddf08c432b08f7987a53b9daf596d4c32871",
+      "bytes": 131
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/coal_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/coal_bronze.png",
+      "sha256": "5cb150f0aad9aa7e94f066f667104451c052ccc409a52b0a438da1520a839a3c",
+      "bytes": 147
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/coal.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/coal_primitive.png",
+      "sha256": "8cb5883973df7e110741c5991f2bddf08c432b08f7987a53b9daf596d4c32871",
+      "bytes": 131,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/coal_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/coal_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/coal_steel.png",
+      "sha256": "6977d775d5992e64ae2b5644ff0b66794364c358b13baf0f944c47a908a51782",
+      "bytes": 147
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/coke_oven_coal.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/coke_oven_coal.png",
+      "sha256": "5b359107af34433e54bef201471eb5113a927f6ea7bd93d9cab61e06aec18e39",
+      "bytes": 614
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/compressor.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/compressor.png",
+      "sha256": "90dcc77da4d448bae082bfad4f14c6b40bb902e5b55d770ede2592be45662460",
+      "bytes": 111
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/compressor_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/compressor_bronze.png",
+      "sha256": "6bf3ed3fef549931c78f6bafb8c96e28b39b271a3cef9659efc5dbf07e182a29",
+      "bytes": 115
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/compressor.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/compressor_primitive.png",
+      "sha256": "90dcc77da4d448bae082bfad4f14c6b40bb902e5b55d770ede2592be45662460",
+      "bytes": 111,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/compressor_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/compressor_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/compressor_steel.png",
+      "sha256": "cf306219a69ee562edc0bb8b8dd6ac548c1d4a34299206050fcd6f5f826ad578",
+      "bytes": 116
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/crushed_ore.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/crushed_ore.png",
+      "sha256": "2f1625b3288ae2911f32b3637da1bf1ccbcdf9fc8032be761d091fdf4ffb3212",
+      "bytes": 170
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/crushed_ore_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/crushed_ore_bronze.png",
+      "sha256": "73d8da698dfa594992f143b504ffcddcda9098c77e108dff583dc0704f5702bf",
+      "bytes": 171
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/crushed_ore.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/crushed_ore_primitive.png",
+      "sha256": "2f1625b3288ae2911f32b3637da1bf1ccbcdf9fc8032be761d091fdf4ffb3212",
+      "bytes": 170,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/crushed_ore_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/crushed_ore_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/crushed_ore_steel.png",
+      "sha256": "78f12e0be2668fb60d4d83769e029fba088238862d33f88eacd3061357cbf05c",
+      "bytes": 172
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/cutter_sliced.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/cutter_sliced.png",
+      "sha256": "d30ec08c51227003adc31d7d2c17b43394f5687d5e762886b773d94c15e5aca4",
+      "bytes": 115
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/data_orb.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/data_orb.png",
+      "sha256": "8ad950a0861dcf2ab593c0a49cdc77bef2189bd8ebc635f0d4f4c48c74a5f29c",
+      "bytes": 143
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/data_stick.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/data_stick.png",
+      "sha256": "5f051dfeff6bf015d2247a714258408e5142c50653778284241be481f1c1945b",
+      "bytes": 117
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/drawer.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/drawer.png",
+      "sha256": "b97cc97a123ceda910f392665c0ff759a6f338c924cce08dd0f3b66a282bf8dc",
+      "bytes": 124
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/drawer_front.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/drawer_front.png",
+      "sha256": "ae9b53c28f18cc81c3f38bffa5861a8b7f4ce642e05de2de00f32b8ae535155e",
+      "bytes": 131
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/drawer_side.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/drawer_side.png",
+      "sha256": "1f110d642dc8a3a47ee462fb0dd4deed8c2c653ce8be623cc9ce48705d21211c",
+      "bytes": 135
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/drawer_trim.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/drawer_trim.png",
+      "sha256": "62d26a39270b697df75a7303de43b46556019dfa0d03b630acaec004555cdf18",
+      "bytes": 137
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/dust.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/dust.png",
+      "sha256": "011d792b5e7b7c133e1f03b2904b7a34d272946075b47c323ac18a30aace60dd",
+      "bytes": 137
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/dust_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/dust_bronze.png",
+      "sha256": "886da20adf96f9653b31ed8904d78a4711122ab17f867c819aebf3f8882a6325",
+      "bytes": 162
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/dust_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/dust_primitive.png",
+      "sha256": "1b801ed2fd259e80337d6fe6389b6a03852ed1a4bc879d1385b034dfffe4204b",
+      "bytes": 163
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/dust_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/dust_steel.png",
+      "sha256": "3dfa82e9eaaebacd956725c014bc230a15f152caa5ca95de56a57119da6c461d",
+      "bytes": 163
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/explosive.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/explosive.png",
+      "sha256": "8812d346b096f879bb3f1b9b61c5f916db4828ed9cd2b434c24a424cda631d6a",
+      "bytes": 163
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/extruder_shape.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/extruder_shape.png",
+      "sha256": "894a240fc0efe57d3a2c18bdb4dd7c9b9476cc410fc33accd2e19fabebe93a39",
+      "bytes": 226
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/filter.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/filter.png",
+      "sha256": "5eeeeea4287c81f38134a6bdddb463d63d4e9d0587468b55560d9184041e8ec8",
+      "bytes": 225
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/furnace.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/furnace.png",
+      "sha256": "a09f4129f7e3112cd95530555d0051683a7469d0c2fd044df32e612a59182ae3",
+      "bytes": 158
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/furnace_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/furnace_bronze.png",
+      "sha256": "00bf8c9820e0f532d5d9ea7939ea82f7918acbf67d771f24ba2830bcd793b3b8",
+      "bytes": 163
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/furnace_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/furnace_primitive.png",
+      "sha256": "f88d6f1fdb57e9bcb3b7d8f789394ed74d47c538fc52c568bcd5102b0738aa01",
+      "bytes": 172
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/furnace_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/furnace_steel.png",
+      "sha256": "e005d15d1acd9a44c2fd405626faf4ff5c04c19a891806900103fc398c1d691b",
+      "bytes": 172
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/gem.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/gem.png",
+      "sha256": "cbff3f50ab7358a57a6cbfb185ca3a0152706ca47536b7639a1236f6330e7e9d",
+      "bytes": 135
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/hammer.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/hammer.png",
+      "sha256": "bc87b9d370a591c1aefca97c2187a8d444757ad90d7665d23a5934be0e837259",
+      "bytes": 120
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/hammer_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/hammer_bronze.png",
+      "sha256": "32799711ba086592ff09edf71641f7f02af33a89ab7c6c5bb6f2a2a205e432e2",
+      "bytes": 159
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/hammer.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/hammer_primitive.png",
+      "sha256": "bc87b9d370a591c1aefca97c2187a8d444757ad90d7665d23a5934be0e837259",
+      "bytes": 120,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/hammer_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/hammer_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/hammer_steel.png",
+      "sha256": "7f426fc546364d7152149c44431d9fa47efa0b5e6c71fe65c462c5f69d18692c",
+      "bytes": 159
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/heater_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/heater_1.png",
+      "sha256": "38bd283e9b6e415232356b2a544f85e358c345f1fb5366232c1778ad2274075d",
+      "bytes": 175
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/heater_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/heater_2.png",
+      "sha256": "3d9d62f1d3831f7d6f255d99b6159700e4fb45048de5e651a27bde675c4d8881",
+      "bytes": 173
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/implosion.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/implosion.png",
+      "sha256": "06725ab1e4e38fd4e53398d287f6d927afeac7a481e6a1dc39c6eaeb8231d159",
+      "bytes": 155
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/in.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/in.png",
+      "sha256": "aa2d06ad4c09988d8e2e1574b635201c4a5a7e03c0d137d2e54729bffcf0454c",
+      "bytes": 122
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/in_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/in_bronze.png",
+      "sha256": "72b9cb69088409b922e8edd87c8b58a408044e54bc07263a797b246489140de3",
+      "bytes": 121
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/in.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/in_primitive.png",
+      "sha256": "aa2d06ad4c09988d8e2e1574b635201c4a5a7e03c0d137d2e54729bffcf0454c",
+      "bytes": 122,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/in_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/in_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/in_steel.png",
+      "sha256": "1e37b3e188ee0e6454ad574981a31011717e8e40d0629620eb8d7f57a56c0487",
+      "bytes": 121
+    },
+    {
+      "source": "src/main/resources/assets/miscutils/textures/gui/overlay_slot/ingot.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/ingot.png",
+      "sha256": "1875da2f5e1e8f27f5b502781ee03f6ad86aa4531263baf3e243f50e07baf798",
+      "bytes": 160,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/ingot.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/ingot_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/ingot_bronze.png",
+      "sha256": "03456effb8d673b5cb1ff32e6d1e69b0997552cce6e58773d19f3c42b0eea0e7",
+      "bytes": 181
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/ingot_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/ingot_primitive.png",
+      "sha256": "78a03a28041d6acfc763b59330158734a52dacbb00ea199cff0d0c32ab500a72",
+      "bytes": 182
+    },
+    {
+      "source": "src/main/resources/assets/miscutils/textures/gui/overlay_slot/ingot.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/ingot_steel.png",
+      "sha256": "1875da2f5e1e8f27f5b502781ee03f6ad86aa4531263baf3e243f50e07baf798",
+      "bytes": 160,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/ingot_steel.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/int_circuit.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/int_circuit.png",
+      "sha256": "3de4573cd520f7d4af8cb4c3ab8427b994f85d7a86bffa01e5d4e023245a96ae",
+      "bytes": 174
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/lens.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/lens.png",
+      "sha256": "c14478dfe6280b8f09ce9c930bbda0777181f42670f725f85929233eab126558",
+      "bytes": 355
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/microscope.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/microscope.png",
+      "sha256": "5e1bfd139ab91dd651f54a3e3b96b43625b5e7265bbcac9fecc60641b724869d",
+      "bytes": 149
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/mining_pipe.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/mining_pipe.png",
+      "sha256": "378d6965c2d093a970cfd78cce5bb28877a9cf4f65ebe905fe51bf3d998f1ff7",
+      "bytes": 148
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/mold.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/mold.png",
+      "sha256": "9ce21dd07af88e42f149135f77145a3858c1e82bceb1b4c64ec1e566eefc3d94",
+      "bytes": 356
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/molecular_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/molecular_1.png",
+      "sha256": "fc156e0c35271fd34fcc2cd3d0be15ae01e4637e3623fe58dc318524df504387",
+      "bytes": 167
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/molecular_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/molecular_2.png",
+      "sha256": "87f0d4c4e2789a31106343d5059a95fa82fac236442d4016c029574db9764874",
+      "bytes": 166
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/molecular_3.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/molecular_3.png",
+      "sha256": "03e7e0fd812031e8fbebc3a6c80e585ae7eed621deda7bfae01655acd02ff4a5",
+      "bytes": 165
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_0.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_0.png",
+      "sha256": "3511c9521f444dc55b54b5c7e8a0e8315fc28e7afcf99ffa3c08c5c718a67ece",
+      "bytes": 117
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_1.png",
+      "sha256": "8550858cd882671164136c4c99382dc984754bb1fef5f48a28a3e2c76d722fc4",
+      "bytes": 107
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_10.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_10.png",
+      "sha256": "6ab3a3a51659a69f62f974554d9319df405687276a4b7f0688eb360c5342b043",
+      "bytes": 130
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_11.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_11.png",
+      "sha256": "93e6d598701021d355e55fe33e96d9278d2577220bede5404a08a9cc71f5c8cb",
+      "bytes": 112
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_2.png",
+      "sha256": "800bfcd480eed392ea97d2b986411764136dbd13dd7ef470de57e1055a80ebf8",
+      "bytes": 111
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_3.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_3.png",
+      "sha256": "9ae96c075029fd993cdb6ed4745d3cbd9acc860365f407fb3a74d072efc4c26d",
+      "bytes": 111
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_4.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_4.png",
+      "sha256": "fde4a48561db0d6031fbd0f378e67f5f0c2c924e8810983b38328a8ad19d267f",
+      "bytes": 114
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_5.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_5.png",
+      "sha256": "0694b9e65612e5fe81524e852d2f9026a1a354c0dd6160393658b13349773c68",
+      "bytes": 111
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_6.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_6.png",
+      "sha256": "d8fd6b468de6640e15e1d9eb02b2d0a3be5164115582c5435c8b52580ea2d6c8",
+      "bytes": 115
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_7.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_7.png",
+      "sha256": "fe53161d3f603571464dc317533c2c624aed16e097aeb5b27031f4768099f3d1",
+      "bytes": 106
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_8.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_8.png",
+      "sha256": "4bd9094a3c5dd7cba9452f81c350749f6868429bd64a9518df27d460fca4000d",
+      "bytes": 103
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/number_9.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/number_9.png",
+      "sha256": "bb9d4c0c8c3d9c310c8f541b4bdf0aaf85050922a7d0e4f07bb6d7704a07c300",
+      "bytes": 113
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/out.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/out.png",
+      "sha256": "f3012d7901fffab5287660afc04dfb889fab1e39bdf88a1f24985ae5c8b5f77e",
+      "bytes": 124
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/out_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/out_bronze.png",
+      "sha256": "ca9bc1e9d1085557a248af8676f00a870b2bdaa947b5fd0d4c55696979d3d606",
+      "bytes": 123
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/out.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/out_primitive.png",
+      "sha256": "f3012d7901fffab5287660afc04dfb889fab1e39bdf88a1f24985ae5c8b5f77e",
+      "bytes": 124,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/out_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/out_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/out_steel.png",
+      "sha256": "0489c9af9458d8015b80c6b64d22aec8affd3c7b6f3dee2853fe1341ca9a4fee",
+      "bytes": 124
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/overlay_coke_oven_fluid_slot_gauge.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/overlay_coke_oven_fluid_slot_gauge.png",
+      "sha256": "d0d8ba32578202b1ea4cbf0285b4280aafc7017faa1c50926f9e62c3bd0fc43f",
+      "bytes": 100
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/page_blank.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/page_blank.png",
+      "sha256": "be2ef48b07dde225152b18fd274348063095dd65306bf118e32bb71cdba0234a",
+      "bytes": 100
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/page_printed.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/page_printed.png",
+      "sha256": "227c2a08276f7e1a877b5ddc7a0e69f30179d3ad80588d4a9eaf1b8a6109f80e",
+      "bytes": 127
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/pattern_me.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/pattern_me.png",
+      "sha256": "6bba9f8117742f0cf9ac9763d521565758742a779062a7ba23df8bc43d10ef34",
+      "bytes": 221
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/press_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/press_1.png",
+      "sha256": "cc40e18eef771326b12cbaf3152143d6929abbb773e679af06452d56e6fea9fe",
+      "bytes": 124
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/press_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/press_2.png",
+      "sha256": "8e076ebf66e68d654fa9fb37211a5c725934b4865eb37de308001dfb4746c5ed",
+      "bytes": 127
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/press_3.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/press_3.png",
+      "sha256": "aa2a555177a345e143ec15b15235200baea4a04954035e06358e056e81444a28",
+      "bytes": 130
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/recycle.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/recycle.png",
+      "sha256": "1b6b479a47453cc3ea361b6b67d73d240a1b40e0c611b5d4ce8ee1ab93c47c59",
+      "bytes": 156
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/rod_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/rod_1.png",
+      "sha256": "d8d156ef5bfcf3e3f04d3ff823ead4e62f5a0781868cd057720ecb7873beb23e",
+      "bytes": 124
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/rod_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/rod_2.png",
+      "sha256": "cc88b537527772869a27993f9deb7d24a6a9a830816db18a373df22552c6ddde",
+      "bytes": 126
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/slot_upgrade.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/slot_upgrade.png",
+      "sha256": "c9567b338f2c085601b2092336280ed5bde30fa1a1a67925e8a4a679bbae6cbf",
+      "bytes": 780
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/square.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/square.png",
+      "sha256": "64e3442811b2b4f147e280b0fb0bd2c92b50a5515c2c40770c585a540df9bf9c",
+      "bytes": 100
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/uua.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/uua.png",
+      "sha256": "0f9c962662b725bdf39d2d9f000fd3fcfd14b211e1f554941b76e14fcb663896",
+      "bytes": 110
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/uum.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/uum.png",
+      "sha256": "2135ad6668948ebcab6a13cdb4c7cba2ffb427f17235ae02ae4a0e55b81a80d7",
+      "bytes": 114
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/vial_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/vial_1.png",
+      "sha256": "4ace34468c0e2ad25ce9893b4dee98fe81237db0bca3cfc61e314773ab9231c4",
+      "bytes": 146
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/vial_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/vial_2.png",
+      "sha256": "08343b15dd4d4ea5d880995906e83c470c0bca395ced0a21e023f39eb96de084",
+      "bytes": 161
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/overlay_slot/wiremill.png",
+      "target": "assets/gregtech/textures/gui/mui2/overlay_slot/wiremill.png",
+      "sha256": "d06693e03789b7a952cbf50522fbfd19008631651fff1effae0ce508d5a367ee",
+      "bytes": 136
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_22_blue.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_22_blue.png",
+      "sha256": "d2a5c860815f2b32ee150210a4e561e495ca75e5df6a4c60eab701c0b31e7b87",
+      "bytes": 152
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_22_red.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_22_red.png",
+      "sha256": "187c0b078963dedea6c53ba2e99d0376930adf237effe046d831cef5c9b8aa61",
+      "bytes": 152
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_22_white.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_22_white.png",
+      "sha256": "e74a7899ac2bd7fae505fea296d909114382a2b725d082b448f5cfaf335b56b3",
+      "bytes": 152
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_24_blue.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_24_blue.png",
+      "sha256": "0a2eee55de0abf2d5e041128656d4f9276c79fd81e3e2e679362578200663748",
+      "bytes": 155
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_24_red.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_24_red.png",
+      "sha256": "b1ba48360c815e5223c89290f771cdb8b99beb94e9d420a159f17627b64c7af6",
+      "bytes": 184
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_24_white.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_24_white.png",
+      "sha256": "2511442c2b5b7f1e5a216e579395992fbd692c2801440e9d04ee5ab373645a09",
+      "bytes": 184
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_6_white_pre.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_6_white_pre.png",
+      "sha256": "177a7b8e2809a5a592bb1de355d3e6da86417afb90ba82df6aa62351ea5f118c",
+      "bytes": 355
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/arrow_double.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/arrow_double.png",
+      "sha256": "2982780afd6d02903a2a21e59e72bb4957e4997f6e4616505fb708b97bfc4c2d",
+      "bytes": 117
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_base.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_base.png",
+      "sha256": "18bd12cb15e28ffab221ff34baa0e0e564ca929a863d16e1382e3fde0cab29d0",
+      "bytes": 5200
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_ecb_slc_pair.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_ecb_slc_pair.png",
+      "sha256": "6efa7876c250f0dd18236d5f1dc2146d8b35deb773849b60a9fa63b57702a5c8",
+      "bytes": 2928
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_ecb_slc_pair_active.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_ecb_slc_pair_active.png",
+      "sha256": "421f09e15c300592e99265ee710f602ee85841936494f2bc3376b156bfdb1d70",
+      "bytes": 2562
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_efficient_oc.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_efficient_oc.png",
+      "sha256": "98f73089c252065a2738cf60f0573b8e9919023e01ed04e5d1d3845cec61afbe",
+      "bytes": 2922
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_extra_casting_basins.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_extra_casting_basins.png",
+      "sha256": "fb530ccfdbfcd81f5f3f351f922156a03f21671c0a9894c41ed7221b76a664cd",
+      "bytes": 4474
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_heliocast_reinforcement.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_heliocast_reinforcement.png",
+      "sha256": "b452a5b6dc8fc248470a7e8377af74e2057c4ff99ed1789eac50445090c96132",
+      "bytes": 2344
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_hr_self_pair.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_hr_self_pair.png",
+      "sha256": "1a9f16cb6fa4ac349f5b9885c72842405605db8621ddc34d8b14b797ea5ade05",
+      "bytes": 3585
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_hr_self_pair_active.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_hr_self_pair_active.png",
+      "sha256": "8b4644dfc1967b4e1cdb6fdccc9c7393e6b996ef5e49263cc7f7dc2d85e0944f",
+      "bytes": 3441
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_hypercooler.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_hypercooler.png",
+      "sha256": "8012b9826d2808e9748e871b9e3e5e72d5eaa218f9c96f03ab7959e1fcc811be",
+      "bytes": 3856
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_logo.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_logo.png",
+      "sha256": "3a890d84d7ea0b4eb8b549c753c7ee1543183a6f5b711648c1f9cc020f5b6d02",
+      "bytes": 2339
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_pes_eoc_pair.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_pes_eoc_pair.png",
+      "sha256": "2ddc2b7f15a01e19b33637f250e94b673f7b893068478cd60daa3219b0163b96",
+      "bytes": 3145
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_pes_eoc_pair_active.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_pes_eoc_pair_active.png",
+      "sha256": "08d2c9f5f350bbdfb14f79fde801ed1c142fb885d24a32d82e6e2a4db7ab76cf",
+      "bytes": 2941
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_power_efficient_subsystems.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_power_efficient_subsystems.png",
+      "sha256": "ef8a273d50ea2a413ddaae6b85d83fc782f26745bce151e43c8b378031f9a8cf",
+      "bytes": 3578
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_streamlined_casters.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_streamlined_casters.png",
+      "sha256": "f0d108538629dcad88198817ede06bb9bde92fcf23c2bf5d9e990ff33cb7db2e",
+      "bytes": 4004
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_tds.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_tds.png",
+      "sha256": "933138c10cbcc4b788080b7e3b4bae42d57fdb036489779269ae1fc05e11e5a2",
+      "bytes": 3217
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_uc_hc_pair.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_uc_hc_pair.png",
+      "sha256": "31d0d0caeb3e54d69fb017066c6ad72ca332de0fd8f510491047257ba72eafad",
+      "bytes": 3427
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_uc_hc_pair_active.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_uc_hc_pair_active.png",
+      "sha256": "5f7ed26bb919214d6fdabe2d634bd5c15646efc2aa877c1797cf2788b5b72f9e",
+      "bytes": 3314
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/exofoundry_unset.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/exofoundry_unset.png",
+      "sha256": "9c578ba28f321accf097d21199d02fdc0efa6f4cd9f33e5e9369adc64a922740",
+      "bytes": 187
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/gauge.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/gauge.png",
+      "sha256": "50754772942b291121581babf8f03ddd4da33649b6bb62a57c10461fafbdf5a0",
+      "bytes": 118
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/gray_rectangle.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/gray_rectangle.png",
+      "sha256": "faf165cb46533d46a173830ac7f3935d31f3b89a4539c84f2676e851c2974f23",
+      "bytes": 100
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/gt_logo_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/gt_logo_bronze.png",
+      "sha256": "3a3cb291cacd667a9d48f489d7869f3f05c92744cdf686fa38c8b6c91e2dfde0",
+      "bytes": 143
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/gt_logo_gray.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/gt_logo_gray.png",
+      "sha256": "ecf5f9f4c33a5a0849defaf74978c1adaec4641e0a9821f17fbdcf61629215fa",
+      "bytes": 139
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/gt_logo_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/gt_logo_primitive.png",
+      "sha256": "889b932e341c066848957a21156415989abc9fca1a41ce843818386e38f83ea0",
+      "bytes": 143
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/gt_logo_standard.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/gt_logo_standard.png",
+      "sha256": "f7a3155d0abc52313d37bbccfadfcc5db473d8b98168da7dd1b87bb297d67f5f",
+      "bytes": 172
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/gt_logo_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/gt_logo_steel.png",
+      "sha256": "00b6d8d9796395a062e7bb171ec3943905afc6a9c4cf06ac05719a82ce54f025",
+      "bytes": 143
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/information_bubble.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/information_bubble.png",
+      "sha256": "d734524070b5985661d89446a76d8de3b6a6b71cf327fd455e2d1e996a1834d1",
+      "bytes": 240
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/information_round.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/information_round.png",
+      "sha256": "d734524070b5985661d89446a76d8de3b6a6b71cf327fd455e2d1e996a1834d1",
+      "bytes": 240
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/information_symbol.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/information_symbol.png",
+      "sha256": "64cd79da8b8557cf450f1f4a12082301c1661d581958c0e1438c7ad70744029c",
+      "bytes": 96
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/nanochip_arrow.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/nanochip_arrow.png",
+      "sha256": "696221d2cfd6820dc9fde1913b2b7d3700fb277efa3aeeaa8728e216eb9d2abf",
+      "bytes": 445
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/nanochip_logo.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/nanochip_logo.png",
+      "sha256": "9805af10258354f148a77eb5eed38d2df8d4e9c0b3b0bff7ae07e10a100186b6",
+      "bytes": 2241
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/noRotor.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/noRotor.png",
+      "sha256": "e6a2c925d5f3d6b9904e2b768f084f6a5c94b57616488726e9a001c84c081c97",
+      "bytes": 254
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/plus_red.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/plus_red.png",
+      "sha256": "4d885ee45c8502131fbc44260adac33db79aee9732e074766a53014b0e6aa61d",
+      "bytes": 384
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/screen_black.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/screen_black.png",
+      "sha256": "530a079c55ea6d5d997a917ea6594a272427ca7a24181ebd26b3f37f15cbba6c",
+      "bytes": 123
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/slots_holo_3by3.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/slots_holo_3by3.png",
+      "sha256": "95736ca8a5948747c14b5c7103441fb4802a03108dddd027693950f52c5c9ec5",
+      "bytes": 122
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/stalled_electricity.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/stalled_electricity.png",
+      "sha256": "72dd5d9138a52c812cba8d30f153f6c3cf3d38e1b6aa216f310a8437e699ad82",
+      "bytes": 122
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/stalled_steam.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/stalled_steam.png",
+      "sha256": "fa0a0bed5cbb89caa24cb82d47ab629e947e5be1fc191cbe74df764e0bd0aea0",
+      "bytes": 172
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/super_buffer.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/super_buffer.png",
+      "sha256": "89e5ce08f8e775772881510bd41b026eef83dc6624e6a8958954ef15f1ec2d6f",
+      "bytes": 2183
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/transparent.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/transparent.png",
+      "sha256": "a0d6273d28ac9c385719f59a46992c131cc5d38ce48003fa8a1f840027355a28",
+      "bytes": 92
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/water_purification_idle.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/water_purification_idle.png",
+      "sha256": "02eebfc6876281f4f14943a5d6ebf075c678aef4035d10750052d595e6021b0f",
+      "bytes": 546
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/water_purification_offline.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/water_purification_offline.png",
+      "sha256": "cc2f7216efb8e8956ffaae52441947662aa1f951f64a240230925ca1944ae34d",
+      "bytes": 546
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/water_purification_online.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/water_purification_online.png",
+      "sha256": "f24df89921ae5e2df61d3a51b45b122555b5a5dd4f5448210164d011fc2a8663",
+      "bytes": 546
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/picture/wind.png",
+      "target": "assets/gregtech/textures/gui/mui2/picture/wind.png",
+      "sha256": "13a33c80bc684cc9bddef1736aae3de02548e92d0f9d2d5f7e4c4450ac70e1a4",
+      "bytes": 236
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/arrow.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/arrow.png",
+      "sha256": "7bdae3a2d282f406edfd534f4f490d5969bd4b7e84fb540bb6769b6016304d62",
+      "bytes": 220
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/arrow_bbf.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/arrow_bbf.png",
+      "sha256": "77a9337fed1abea57c1faacb61a4db6a6c083f9eebb1d941eb02a5ee12d5ce53",
+      "bytes": 180
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/arrow_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/arrow_bronze.png",
+      "sha256": "7ede5ee221a08d2ac1318376795a13641f83257b191d767d1adef58793f676d4",
+      "bytes": 219
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/arrow_multiple.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/arrow_multiple.png",
+      "sha256": "eb652daa3aa52e17721e0ceee507297183aac368903641d1f3a88822675eaf3d",
+      "bytes": 228
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/arrow.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/arrow_primitive.png",
+      "sha256": "7bdae3a2d282f406edfd534f4f490d5969bd4b7e84fb540bb6769b6016304d62",
+      "bytes": 220,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/progressbar/arrow_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/arrow_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/arrow_steel.png",
+      "sha256": "47612931c7bf0cd3e512828927b68ef7ac0e5da5107fe8ca23c76ae2b2af5d86",
+      "bytes": 206
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/assemble.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/assemble.png",
+      "sha256": "daf96f04cd24991bebd807b2a91fc7d5cf4f235e24b5b07b01674d7b44cec9c6",
+      "bytes": 172
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/assemblyline_1.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/assemblyline_1.png",
+      "sha256": "e641ea995acb1611c5dc38da1f551cf53f860051eabef5fd84198051f27c6686",
+      "bytes": 193
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/assemblyline_2.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/assemblyline_2.png",
+      "sha256": "8ab2e91718b8b0331c1e6a35a79f9e8af2aab2d9a35d2e91c676d782b51bc2c5",
+      "bytes": 213
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/assemblyline_3.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/assemblyline_3.png",
+      "sha256": "05ace525de5eb0d9b742bc08aff9ac4e818984e5a556fadc8536bcbfbbe1aeb0",
+      "bytes": 167
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/bath.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/bath.png",
+      "sha256": "d88d1bac7c7a013ca52aec2cbc50b583f9ca8ad67e5c60b09b92ef4a03389210",
+      "bytes": 271
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/bending.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/bending.png",
+      "sha256": "1ddcde4f4167ba1cf7a242761ec2d8963d3cc0624f0ca2e3b8e0550e7f9984fb",
+      "bytes": 195
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/boiler_heat.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/boiler_heat.png",
+      "sha256": "8d4d49eb59a8b6c01b2343e5cda58f7c02461ae41c6238e3158dd9df3b0feb12",
+      "bytes": 99
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/boiler_steam.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/boiler_steam.png",
+      "sha256": "581c76bbb1b1464772ec526cb376d86cf96b8b167daecca7b41a6004dc9c235e",
+      "bytes": 99
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/boiler_water.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/boiler_water.png",
+      "sha256": "f1bd69a346604cf8f21d1c84285a4821766a77979c79f44027fb17f5e3e4169b",
+      "bytes": 99
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/canner.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/canner.png",
+      "sha256": "6c666a97765823278e1d504209d0a0c50fa9de6f4deaec281b03e80a6469edda",
+      "bytes": 233
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/circuit_assembler.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/circuit_assembler.png",
+      "sha256": "26a0a89f7a8c1b2557a4e0f666afe316a6ebea819c7c8a64a627049dc960b07b",
+      "bytes": 266
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/clarifier.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/clarifier.png",
+      "sha256": "a1f5ad57e73a9a34ce843fab0041c895d4b38df888057f3e289be17b3cc3aa51",
+      "bytes": 825
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/compress.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/compress.png",
+      "sha256": "c5bdc7df1395bdc0955cb20a2d21c5cb47b09e1824ab03acd2092e8db6e44fdf",
+      "bytes": 208
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/compress_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/compress_bronze.png",
+      "sha256": "0b46921b24e8f63d6a7b6068936400844ca379a2309e12fbea83551fd856a308",
+      "bytes": 194
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/compress.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/compress_primitive.png",
+      "sha256": "c5bdc7df1395bdc0955cb20a2d21c5cb47b09e1824ab03acd2092e8db6e44fdf",
+      "bytes": 208,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/progressbar/compress_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/compress_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/compress_steel.png",
+      "sha256": "ca3817013a90e8bfd85169d23ab2628d60bf1a4f62d88344b98b69d941551715",
+      "bytes": 194
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/cut.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/cut.png",
+      "sha256": "d9f6f5ce67f340fc132c1b3515c45c2ab21febd065bc006a53585441a2349aa3",
+      "bytes": 153
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/extract.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/extract.png",
+      "sha256": "96c27686537939e0c770848226805d383876182568547b204b40fd274a62d8b0",
+      "bytes": 230
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/extract_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/extract_bronze.png",
+      "sha256": "5b925f2f7ff53df1869c25de1ef3e282c9dc4cced9163eb94d33c35580da9d0b",
+      "bytes": 211
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/extract.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/extract_primitive.png",
+      "sha256": "96c27686537939e0c770848226805d383876182568547b204b40fd274a62d8b0",
+      "bytes": 230,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/progressbar/extract_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/extract_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/extract_steel.png",
+      "sha256": "b8e001bc9e8a14f55f2f10bba33e0e9b0629726c3bd55e177032f5336e24867d",
+      "bytes": 211
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/extrude.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/extrude.png",
+      "sha256": "7cc6ff7a26146977b01fa1181b3411d10884b6da11cde1969025a5c69b64b7bc",
+      "bytes": 190
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/fishing.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/fishing.png",
+      "sha256": "a8c4a2530e140eb0ecd686bbc6e18f20fc283d15f019e3ab61f07d79725651b4",
+      "bytes": 240
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/flocculation.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/flocculation.png",
+      "sha256": "7970de5e81bf5c8065a364e1938484274607827cd5b3d9730922a7b990abffb8",
+      "bytes": 891
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/fuel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/fuel.png",
+      "sha256": "6fde1e00b220d57fde06bd6669d1879a027ee1b99d506c5fa95866087409bfee",
+      "bytes": 213
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/fuel_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/fuel_bronze.png",
+      "sha256": "8e7a799a59e77a9fc79955719b1a8b0bf62bb6dd4618c4b1ff4f60b291d6db36",
+      "bytes": 255
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/fuel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/fuel_primitive.png",
+      "sha256": "6fde1e00b220d57fde06bd6669d1879a027ee1b99d506c5fa95866087409bfee",
+      "bytes": 213,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/progressbar/fuel_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/fuel_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/fuel_steel.png",
+      "sha256": "2935277c603cfc971a73f1017ab09b92db2bffd5651b5b9554b8ac9c6551fb52",
+      "bytes": 249
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/hammer.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/hammer.png",
+      "sha256": "063c3dfb111f8aaf18d092a1f9254aa608b04f16bc8b53eebe3ed6c9ae93edd4",
+      "bytes": 137
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/hammer_base.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/hammer_base.png",
+      "sha256": "e34cc94da7915def5b47ec03b0143969c8a20d90369e94ba66153c8431895f66",
+      "bytes": 111
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/hammer_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/hammer_bronze.png",
+      "sha256": "c9f63844c6c63ddf379fe8f61c6ecabe2ef66c7320b7fd1cf9e0190a7aeba55d",
+      "bytes": 129
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/hammer.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/hammer_primitive.png",
+      "sha256": "063c3dfb111f8aaf18d092a1f9254aa608b04f16bc8b53eebe3ed6c9ae93edd4",
+      "bytes": 137,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/progressbar/hammer_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/hammer_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/hammer_steel.png",
+      "sha256": "9ad452043c673e7a1afdcddfb4f8887f135ea406009733a943678d245c6234b5",
+      "bytes": 129
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/lathe.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/lathe.png",
+      "sha256": "879ce774831f189be56b87d3688ca6c7cc4368da2eb2ca79a4113ed9260ceea4",
+      "bytes": 150
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/lathe_base.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/lathe_base.png",
+      "sha256": "301b80ee728b608638d6224c40b21f95d08b9d3dfe7d58516b76ec449a93a7cd",
+      "bytes": 90
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/macerate.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/macerate.png",
+      "sha256": "b730cfae60707b086b540f1c61b6b64464feff5db8f3bd47150a7daff8bc2242",
+      "bytes": 235
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/macerate_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/macerate_bronze.png",
+      "sha256": "85b9456273e1fffe8e625c9f566240f8b29b69196e05ac531bac136f8809659d",
+      "bytes": 217
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/macerate.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/macerate_primitive.png",
+      "sha256": "b730cfae60707b086b540f1c61b6b64464feff5db8f3bd47150a7daff8bc2242",
+      "bytes": 235,
+      "fallbackFor": "src/main/resources/assets/gregtech/textures/gui/progressbar/macerate_primitive.png"
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/macerate_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/macerate_steel.png",
+      "sha256": "360d6659c873733d030166544b5bec0d541bf0c2e87f4ad377ee83ca9be7dffa",
+      "bytes": 217
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/magnet.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/magnet.png",
+      "sha256": "fb07a320492bb1a01aec08fab0e8ff5a549c13d4f27933f67d09bf505424e450",
+      "bytes": 218
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/meter_mint.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/meter_mint.png",
+      "sha256": "18756b51f9904bb79b3b25d156e66223eff9cd427712ac024113e5a6ae90700a",
+      "bytes": 156
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/meter_orange.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/meter_orange.png",
+      "sha256": "3ce7eaf07b6e19f3459417d4e15cb92fb495c3cad85116329b24a62ac846a656",
+      "bytes": 154
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/meter_rose.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/meter_rose.png",
+      "sha256": "9bd41e05e6aa29fc7301a03213df05bf10a76d9c883cf439a97cb4b27013c7c6",
+      "bytes": 156
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/mixer.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/mixer.png",
+      "sha256": "33d2e072db7591df30b3492b00167f7d71b0eb135aa2c09890b0512ae1df4cbd",
+      "bytes": 301
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/name_remover.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/name_remover.png",
+      "sha256": "4a4b21c41932831bf69f1e319281ab6af97ec5de50896d746ec43e2303d606d9",
+      "bytes": 171
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/nanochip_calibration.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/nanochip_calibration.png",
+      "sha256": "346af4512bdeb1a2157299347e28daee74b63d0bf8522150c597ae85d86589a4",
+      "bytes": 320
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/ozonation.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/ozonation.png",
+      "sha256": "909bbe9c8db760a2678f3d8acfe7358757995d5e7f1a27492e0235f1baaa19f6",
+      "bytes": 1330
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/phneutralization.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/phneutralization.png",
+      "sha256": "25559e19f496cc83e43e618ff7ecf03a65efcd4aec82b7b33edebdb6381e6e1a",
+      "bytes": 719
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/recycle.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/recycle.png",
+      "sha256": "17fc40cac3895c1e807f0e512cf5056f5286e780405db06616a077ceaec87a27",
+      "bytes": 248
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/sift.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/sift.png",
+      "sha256": "f59172320d1f6d81db77bf1f84b321f4f4018caed90a46f216f15ce16b1091d0",
+      "bytes": 268
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/steam_fill.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/steam_fill.png",
+      "sha256": "7aa2a61e99b50df135588673dfe2ad9a16d17497e6825b3d937523239f003cb1",
+      "bytes": 148
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/steam_fill_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/steam_fill_steel.png",
+      "sha256": "5cd9b99ddd6bf130c45abe9cf3c38bb6d1a8e27fe9c2b9604e0672a6063394c5",
+      "bytes": 148
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/stored_eu.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/stored_eu.png",
+      "sha256": "d615e972ec84803b434694375eca9c2ba74f7aa34c4b2bed68d6926f0f83b2b0",
+      "bytes": 110
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/uvtreatment.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/uvtreatment.png",
+      "sha256": "99a5602800724bf1b2857d5df36d3748391051c59e67d6b10a93e2f2d1e7e936",
+      "bytes": 1564
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/water_plasma_heater.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/water_plasma_heater.png",
+      "sha256": "d7459d48e72ead49ebb2e0e4ff721c1057ec39f4e1b247cb159c4a9d101599e5",
+      "bytes": 1264
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/water_purification_unit.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/water_purification_unit.png",
+      "sha256": "572b0131b9a700c45893379f0290cefedcc666ccd73d451764e8187fec2022d5",
+      "bytes": 133
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/windmill_grindstone.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/windmill_grindstone.png",
+      "sha256": "3222bafa11f15209c35cfd32ee0195c35f19bfee0b101e2f45e2e8665df4d3d1",
+      "bytes": 864
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/progressbar/wiremill.png",
+      "target": "assets/gregtech/textures/gui/mui2/progressbar/wiremill.png",
+      "sha256": "4eb80b82d985194b92d134ba99ce65328627c44ab495c2832748f2064631817d",
+      "bytes": 210
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/dark_gray.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/dark_gray.png",
+      "sha256": "f3990aa87fa88f0878182c094365919a5de9e1c992e4ccaeace8cb65c57e2080",
+      "bytes": 95
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/fluid_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/fluid_bronze.png",
+      "sha256": "2cd81782ba52336a152dd8f5a02d210b328d118282907eeb8c02fd7833b141c3",
+      "bytes": 102
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/fluid_dark_gray.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/fluid_dark_gray.png",
+      "sha256": "a6dd61ec58f2bf5da47b15cf94570271c413e461947e24403eda09b42f84bab6",
+      "bytes": 388
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/fluid_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/fluid_primitive.png",
+      "sha256": "1ccaa45e14b050daed32286edc72e4ada769e942613cf4d031bea252b352f74d",
+      "bytes": 102
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/fluid_standard.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/fluid_standard.png",
+      "sha256": "4bc3f0b004e2945de12e4bb12a32a9ad7f405a9f14999cc6264570aa6d2656ba",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/fluid_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/fluid_steel.png",
+      "sha256": "3962f7ef5048c8e856af1aff4cdc3c95984927922e9f93b60c8ac213c7ef4649",
+      "bytes": 102
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/fluid_tank.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/fluid_tank.png",
+      "sha256": "ceeead779339e5a11e245e25f3d416606f3bc9f1229e781a682576a347717e66",
+      "bytes": 371
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_bronze.png",
+      "sha256": "7fb4a88a0e4f403366d1746602962582e916027c3f08c005eb41b1cb6cd18080",
+      "bytes": 112
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_foundry.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_foundry.png",
+      "sha256": "7eef0ce8b26d55a4f643248a2ee3d45bdc0d2f4bab83da0d111ae7bdbfe276ed",
+      "bytes": 373
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_gold.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_gold.png",
+      "sha256": "ed47e742cea76802e3b2595f69c1d87331f02954de1c25e8fb1699e145a8749a",
+      "bytes": 110
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_green.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_green.png",
+      "sha256": "42f7b1f9ff2348d75f8825a666a2862c68fb2f0c5e0e9be6162e2dd07c7a579d",
+      "bytes": 111
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_nanochip.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_nanochip.png",
+      "sha256": "aa9757b3cc24b7329279665571feb89d26ab531d38ed6b4b3104a9f53e6865c9",
+      "bytes": 1714
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_primitive.png",
+      "sha256": "7aeb566e35b6cb5b437ac31ea86d06355517c12f4ce6df6b631fbb6838676a97",
+      "bytes": 99
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_prismatic.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_prismatic.png",
+      "sha256": "575d99c9d97443dc01d2f40df2b287b343d859652c3795d95dced1e79ab5c493",
+      "bytes": 181
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_purple.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_purple.png",
+      "sha256": "dff602acc1f357aba412f3c7969b64d3b429886c701e6ce1b4ad79202ced1e49",
+      "bytes": 112
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_standard.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_standard.png",
+      "sha256": "2622a044ababdf79e0ff67c0e9571520c09838dd1dc63dc42451282ff2ba11df",
+      "bytes": 132
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_steel.png",
+      "sha256": "83dc3b9111ff603dc688eb1a1e46416b258e9f65037a4bfedaac1d91a324eaf6",
+      "bytes": 112
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/item_tank.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/item_tank.png",
+      "sha256": "8dc8648aecaad760328623cff740b7a7a186c62df43de4ffecb65ea82c65c1fe",
+      "bytes": 371
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/slot/maintenance.png",
+      "target": "assets/gregtech/textures/gui/mui2/slot/maintenance.png",
+      "sha256": "6c697e6014ea4d0cf3a4b079a7dcc3a491290ea45448e9496acbd05acf894225",
+      "bytes": 158
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_bronze_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_bronze_disabled.png",
+      "sha256": "9c61552041ba340869105138d62351832e973764a959b661208592ba28b13e1e",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_bronze_highlight.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_bronze_highlight.png",
+      "sha256": "71d5e061a70de336a6eb10d38553732012153bd92a42d3f048812ad720446e0e",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_bronze_normal.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_bronze_normal.png",
+      "sha256": "e0db3639888125ffbde8f9d9c9998a3547651292aa4b9efcd41cd6ce291e9874",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_disabled.png",
+      "sha256": "2d21c1e1b8a371cf058d333418a1e2ad2e2d724e682c3e73a52845dcd2ea1670",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_highlight.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_highlight.png",
+      "sha256": "cad9d025424b2b39173a8c96421ac4286496fedbee86513de5f61ee0f5c9bbf1",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_normal.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_normal.png",
+      "sha256": "530b1abb246f5a05054b84e4cf4262173228a392540be681a9a180744eedf8ba",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_primitive_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_primitive_disabled.png",
+      "sha256": "2173176c2bbe993752ce76ea79e09373418f023ddbe6eab8b5a726e7be0f70e3",
+      "bytes": 413
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_primitive_highlight.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_primitive_highlight.png",
+      "sha256": "fd72d014cc8e31e42f6d9d9aa269b339823d8f32bbf873f57099507a0bcde9e9",
+      "bytes": 413
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_primitive_normal.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_primitive_normal.png",
+      "sha256": "7127e4b98b69bfac9ff8e7905bc82aa1f020ce7a1deafa51527ad03ca4a49b4f",
+      "bytes": 413
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_steel_disabled.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_steel_disabled.png",
+      "sha256": "af77aeaf0a3ccd388e13c7cdfcfefd13997ef16209e255f1aced96b8f576925f",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_steel_highlight.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_steel_highlight.png",
+      "sha256": "83e6f177055e9ccecd1472373e8b5873904d9cef336b748cb1bd717223902fa8",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/cover_steel_normal.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/cover_steel_normal.png",
+      "sha256": "9bca1454707a0ad537129ae10bb7b0393be3fa1a00fea33629cf74c71b09f962",
+      "bytes": 411
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/title_dark.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/title_dark.png",
+      "sha256": "954f93f200811986f18ed8571651856a6c1eb8e5c9aa1427ac67d20e8e21b784",
+      "bytes": 127
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/title_dark_bronze.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/title_dark_bronze.png",
+      "sha256": "731111ecafcd24e866c67e8eed1a90efd2ef5fc89111dfee1b9c8a4e9c6d5f7c",
+      "bytes": 127
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/title_dark_primitive.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/title_dark_primitive.png",
+      "sha256": "188cbec83f265722baffa11d8e672d7ac0e83f7c26c365d22ed5901d3cb0760c",
+      "bytes": 127
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/title_dark_steel.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/title_dark_steel.png",
+      "sha256": "934f8430488f670afb8143579b2362be4d0055750553ed5ae0863f27df36e619",
+      "bytes": 127
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/title_foundry.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/title_foundry.png",
+      "sha256": "c018af0a1067829bb0f0b12cd579971eb446a6fa9cb4a2c4ec96d27d3220a615",
+      "bytes": 806
+    },
+    {
+      "source": "src/main/resources/assets/gregtech/textures/gui/tab/title_nanochip.png",
+      "target": "assets/gregtech/textures/gui/mui2/tab/title_nanochip.png",
+      "sha256": "daba4c216157f47f47625f5245c91f4139309830bd4cc06174d97b030d6a5a00",
+      "bytes": 1796
+    }
+  ]
+}
