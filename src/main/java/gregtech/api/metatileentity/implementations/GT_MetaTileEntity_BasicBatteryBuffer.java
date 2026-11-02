@@ -1,14 +1,26 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import cpw.mods.fml.common.Optional;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.*;
+import gregtech.api.gui.GT_Container_1by1;
+import gregtech.api.gui.GT_Container_2by2;
+import gregtech.api.gui.GT_Container_3by3;
+import gregtech.api.gui.GT_Container_4by4;
+import gregtech.api.gui.GT_GUIContainer_1by1;
+import gregtech.api.gui.GT_GUIContainer_2by2;
+import gregtech.api.gui.GT_GUIContainer_3by3;
+import gregtech.api.gui.GT_GUIContainer_4by4;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.gui.modularui.singleblock.MTEBasicBatteryBufferGui;
 import ic2.api.item.IElectricItem;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -33,6 +45,7 @@ import static gregtech.api.enums.GT_Values.V;
  * Extend this class to make a simple Machine
  */
 public class GT_MetaTileEntity_BasicBatteryBuffer extends GT_MetaTileEntity_TieredMachineBlock {
+
     public boolean mCharge = false, mDecharge = false;
     public int mBatteryCount = 0, mChargeableCount = 0;
     private long count = 0;
@@ -204,6 +217,16 @@ public class GT_MetaTileEntity_BasicBatteryBuffer extends GT_MetaTileEntity_Tier
         if (aBaseMetaTileEntity.isClientSide()) return true;
         aBaseMetaTileEntity.openGUI(aPlayer);
         return true;
+    }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings uiSettings) {
+        return new MTEBasicBatteryBufferGui(this).build(data, syncManager, uiSettings);
     }
 
     @Override

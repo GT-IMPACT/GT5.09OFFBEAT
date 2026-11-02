@@ -1,5 +1,9 @@
 package gregtech.common.tileentities.machines.basic;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
@@ -11,6 +15,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 
 import gregtech.api.render.TextureFactory;
+import gregtech.common.gui.modularui.singleblock.MTEBasicTankGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -30,6 +35,16 @@ public class GT_MetaTileEntity_WaterGenerator extends GT_MetaTileEntity_Hatch {
 
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_WaterGenerator(this.mName, this.mTier, this.mDescription, this.mTextures);
+    }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEBasicTankGui(this).build(data, syncManager, settings);
     }
 
     public ITexture[][][] getTextureSet(ITexture[] aTextures) {
