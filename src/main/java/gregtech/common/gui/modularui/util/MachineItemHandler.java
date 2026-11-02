@@ -26,7 +26,8 @@ public class MachineItemHandler extends ItemStackHandler {
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         validateSlotIndex(slot);
-        return stack == null || !isCircuitSlot(slot) && owner.isItemValidForSlot(slot, stack);
+        return stack == null || !isCircuitSlot(slot) && !owner.isInventorySlotLocked(slot)
+            && owner.isItemValidForSlot(slot, stack);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class MachineItemHandler extends ItemStackHandler {
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         validateSlotIndex(slot);
-        if (amount <= 0 || isCircuitSlot(slot)) {
+        if (amount <= 0 || isCircuitSlot(slot) || owner.isInventorySlotLocked(slot)) {
             return null;
         }
         ItemStack extracted = super.extractItem(slot, amount, simulate);
@@ -51,6 +52,17 @@ public class MachineItemHandler extends ItemStackHandler {
     private boolean isCircuitSlot(int slot) {
         return owner instanceof IConfigurationCircuitSupport
             && slot == ((IConfigurationCircuitSupport) owner).getCircuitSlot();
+    }
+
+    @Override
+    public void setStackInSlot(int slot, ItemStack stack) {
+        validateSlotIndex(slot);
+        IGregTechTileEntity base = owner.getBaseMetaTileEntity();
+        if (owner.isInventorySlotLocked(slot) && stack != getStackInSlot(slot)
+            && (base == null || !base.isClientSide())) {
+            return;
+        }
+        super.setStackInSlot(slot, stack);
     }
 
     @Override

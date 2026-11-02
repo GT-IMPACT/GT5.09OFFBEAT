@@ -71,7 +71,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
         return new MultiblockTooltipBuilder(mName)
                 .addMachineType(machineType)
                 .addInfo("Insert a turbine rotor into the controller GUI to store its characteristics.")
-                .addInfo("The rotor is consumed after its characteristics have been stored.")
+                .addInfo("The installed rotor remains in its slot and cannot be removed or replaced.")
                 .beginStructureBlock(3, 3, 4, true)
                 .addController("Front center")
                 .addRequirements(getShellRequirements(), "Shell; hatches only at the centers of the four sides in the two middle layers", SIDE_HINT)
@@ -239,6 +239,21 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
     public boolean checkguislot = true;
     public String mNameRotorMaterial = "";
 
+    public boolean isRotorLocked() {
+        ItemStack rotor = mInventory[1];
+        return rotor != null && rotor.getItem() instanceof GT_MetaGenerated_Tool;
+    }
+
+    @Override
+    public boolean isInventorySlotLocked(int slot) {
+        return slot == 1 && isRotorLocked();
+    }
+
+    @Override
+    public boolean isValidSlot(int index) {
+        return !isInventorySlotLocked(index) && super.isValidSlot(index);
+    }
+
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         aNBT.setLong("rotorPower", rotorPower);
@@ -276,7 +291,6 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
                 Materials tMaterial = GT_MetaGenerated_Tool.getPrimaryMaterial(aStack);
                 this.mNameRotorMaterial = GT_LanguageManager.getTranslation(aStack.getDisplayName())
                         + " | Material Rotor: " + tMaterial.mLocalizedName;
-                this.mInventory[1] = null;
                 this.checkguislot = false;
                 markDirty();
             }

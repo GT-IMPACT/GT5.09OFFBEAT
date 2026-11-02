@@ -44,7 +44,7 @@ import java.util.List;
  * Don't implement this yourself and expect it to work. Extend @MetaTileEntity itself.
  */
 public interface IMetaTileEntity extends IGregtechWailaProvider, ISidedInventory, IFluidTank, IFluidHandler,
-        IGearEnergyTileEntity, IMachineBlockUpdateable, IGuiHolder<PosGuiData> {
+        IGearEnergyTileEntity, IMachineBlockUpdateable, IGuiHolder<PosGuiData>, IInventorySlotLocking {
     /**
      * This determines the BaseMetaTileEntity belonging to this MetaTileEntity by using the Meta ID of the Block itself.
      * <p/>

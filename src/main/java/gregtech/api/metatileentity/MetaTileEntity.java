@@ -702,7 +702,15 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
 
     @Override
     public void setInventorySlotContents(int aIndex, ItemStack aStack) {
-        if (aIndex >= 0 && aIndex < mInventory.length) mInventory[aIndex] = aStack;
+        if (aIndex < 0 || aIndex >= mInventory.length) {
+            return;
+        }
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        if (isInventorySlotLocked(aIndex) && aStack != mInventory[aIndex]
+            && (base == null || !base.isClientSide())) {
+            return;
+        }
+        mInventory[aIndex] = aStack;
     }
 
     @Override
@@ -719,11 +727,14 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int aIndex, ItemStack aStack) {
-        return getBaseMetaTileEntity().isValidSlot(aIndex);
+        return !isInventorySlotLocked(aIndex) && getBaseMetaTileEntity().isValidSlot(aIndex);
     }
 
     @Override
     public ItemStack decrStackSize(int aIndex, int aAmount) {
+        if (isInventorySlotLocked(aIndex)) {
+            return null;
+        }
         ItemStack tStack = getStackInSlot(aIndex), rStack = GT_Utility.copy(tStack);
         if (tStack != null) {
             if (tStack.stackSize <= aAmount) {

@@ -2,6 +2,7 @@ package gregtech.common.gui.modularui.multiblock;
 
 import codechicken.nei.recipe.GuiCraftingRecipe;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
+import com.cleanroommc.modularui.drawable.DynamicDrawable;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -16,6 +17,7 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingMultiBlockBase;
 import gregtech.api.modularui2.GTGuis;
+import gregtech.api.modularui2.GTGuiTextures;
 import gregtech.api.modularui2.common.CommonWidgets;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.common.gui.modularui.util.MachineModularSlot;
@@ -67,6 +69,8 @@ public final class MTEProcessingMultiBlockGui {
                 .slot(new MachineModularSlot(machine.getInventoryHandler(), 1, machine.getBaseMetaTileEntity())
                     .slotGroup("controller"))
                 .invisible()
+                .overlay(new DynamicDrawable(() -> machine.isInventorySlotLocked(1)
+                    ? GTGuiTextures.OVERLAY_BUTTON_LOCKED.asIcon().size(16) : IDrawable.EMPTY))
                 .pos(CONTROLLER_X - 1, CONTROLLER_Y - 1));
         }
         if (machine.allowSelectCircuit()) {
