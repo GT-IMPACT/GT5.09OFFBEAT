@@ -68,32 +68,49 @@ public class GT_FluidDisplayStackRenderer implements IItemRenderer {
             return;
         }
 
-        // Render Fluid amount text
-        long fluidAmount = item.getTagCompound().getLong("mFluidDisplayAmount");
-        if (fluidAmount > 0L) {
-            String amountString;
+        drawFluidAmount(item.getTagCompound().getLong("mFluidDisplayAmount"), 0, 0, 16);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+    }
 
-            if (fluidAmount < 10000) {
-                amountString = "" + fluidAmount + "L";
-            } else {
-                int exp = (int) (Math.log(fluidAmount) / Math.log(1000));
-                double shortAmount = fluidAmount / Math.pow(1000, exp);
-                if ( shortAmount >= 100) {
-                    amountString = String.format("%.0f%cL", shortAmount, "kMGTPE".charAt(exp - 1)); //heard it here first, PetaLiters
-                } else if ( shortAmount >= 10) {
-                    amountString = String.format("%.1f%cL", shortAmount, "kMGTPE".charAt(exp - 1));
-                } else {
-                    amountString = String.format("%.2f%cL", shortAmount, "kMGTPE".charAt(exp - 1));
-                }
-            }
-
-            FontRenderer fontRender = Minecraft.getMinecraft().fontRenderer;
-            float smallTextScale = fontRender.getUnicodeFlag() ? 3F/4F : 1F/2F;
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glScalef(smallTextScale, smallTextScale, 1.0f);
-            fontRender.drawString( amountString, 0, (int) (16/smallTextScale) - fontRender.FONT_HEIGHT + 1, 0xFFFFFF, true);
-            GL11.glScalef(1f, 1f, 1f);
-            GL11.glDisable(GL11.GL_ALPHA_TEST);
+    /** Draw the original fluid-display label without allowing it to scale with the amount's width. */
+    public static void drawFluidAmount(long fluidAmount, int x, int y, int height) {
+        if (fluidAmount <= 0 || height <= 0) {
+            return;
         }
+        FontRenderer fontRender = Minecraft.getMinecraft().fontRenderer;
+        float smallTextScale = fontRender.getUnicodeFlag() ? 3F / 4F : 1F / 2F;
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
+        GL11.glPushMatrix();
+        try {
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glTranslatef(x, y, 0);
+            GL11.glScalef(smallTextScale, smallTextScale, 1.0F);
+            fontRender.drawString(
+                formatFluidAmount(fluidAmount),
+                0,
+                (int) (height / smallTextScale) - fontRender.FONT_HEIGHT + 1,
+                0xFFFFFF,
+                true
+            );
+        } finally {
+            GL11.glPopMatrix();
+            GL11.glPopAttrib();
+        }
+    }
+
+    static String formatFluidAmount(long fluidAmount) {
+        if (fluidAmount < 10000) {
+            return fluidAmount + "L";
+        }
+        int exp = (int) (Math.log(fluidAmount) / Math.log(1000));
+        double shortAmount = fluidAmount / Math.pow(1000, exp);
+        if (shortAmount >= 100) {
+            return String.format("%.0f%cL", shortAmount, "kMGTPE".charAt(exp - 1));
+        }
+        if (shortAmount >= 10) {
+            return String.format("%.1f%cL", shortAmount, "kMGTPE".charAt(exp - 1));
+        }
+        return String.format("%.2f%cL", shortAmount, "kMGTPE".charAt(exp - 1));
     }
 }
