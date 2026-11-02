@@ -1,5 +1,7 @@
 package gregtech.common.tileentities.machines.steam;
 
+import com.cleanroommc.modularui.drawable.UITexture;
+import gregtech.api.modularui2.GTGuiTextures;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
@@ -16,6 +18,22 @@ import net.minecraft.entity.player.InventoryPlayer;
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_ForgeHammer_Steel extends GT_MetaTileEntity_BasicMachine_Steel {
+
+    @Override
+    protected UITexture getGuiProgressTexture() {
+        return GTGuiTextures.PROGRESSBAR_HAMMER_STEAM.get(getSteamGuiVariant());
+    }
+
+    @Override
+    protected int getGuiProgressDirection() {
+        return 6;
+    }
+
+    @Override
+    protected int getGuiProgressSegments() {
+        return 3;
+    }
+
     public GT_MetaTileEntity_ForgeHammer_Steel(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, "Forge Hammer", 1, 1, false);
     }

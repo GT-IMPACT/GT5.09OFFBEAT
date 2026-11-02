@@ -1,5 +1,7 @@
 package gregtech.common.tileentities.machines.steam;
 
+import com.cleanroommc.modularui.drawable.UITexture;
+import gregtech.api.modularui2.GTGuiTextures;
 import gregtech.api.GregTech_API;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
 import gregtech.api.interfaces.ITexture;
@@ -15,6 +17,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_Extractor_Bronze extends GT_MetaTileEntity_BasicMachine_Bronze {
+
+    @Override
+    protected UITexture getGuiProgressTexture() {
+        return GTGuiTextures.PROGRESSBAR_EXTRACT_STEAM.get(getSteamGuiVariant());
+    }
+
     public GT_MetaTileEntity_Extractor_Bronze(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, "Extracting your first Rubber", 1, 1, false);
     }
