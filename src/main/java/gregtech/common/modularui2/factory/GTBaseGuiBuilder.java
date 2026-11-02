@@ -155,7 +155,7 @@ public final class GTBaseGuiBuilder {
                     panelSync,
                     uiSettings,
                     button
-                ).name(panelName);
+                );
             }));
             column.child(button);
         }
