@@ -551,6 +551,26 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
     }
 
     @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public boolean allowSelectCircuit() {
+        return true;
+    }
+
+    @Override
+    protected int getGuiProgressDirection() {
+        return mGUIParameterA;
+    }
+
+    @Override
+    protected int getGuiProgressSegments() {
+        return mGUIParameterB;
+    }
+
+    @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_Container_BasicMachine(aPlayerInventory, aBaseMetaTileEntity);
     }
@@ -562,16 +582,50 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
 
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        if (!super.allowPutStack(aBaseMetaTileEntity, aIndex, aSide, aStack)) return false;
-        if (isIgnoreInput) return true;
-        if (mInventory[aIndex] != null) return true;
+        if (!super.allowPutStack(aBaseMetaTileEntity, aIndex, aSide, aStack)) {
+            return false;
+        }
+        if (isIgnoreInput || mInventory[aIndex] != null) {
+            return true;
+        }
         switch (mInputSlotCount) {
             case 0:
                 return false;
             case 1:
-                return getFillableStack() == null ? !mRequiresFluidForFiltering && getRecipeList().containsInput(aStack) : null != getRecipeList().findRecipe(getBaseMetaTileEntity(), mLastRecipe, true, V[mTier], new FluidStack[]{getFillableStack()}, getSpecialSlot(), new ItemStack[]{aStack});
+                if (getFillableStack() == null) {
+                    return !mRequiresFluidForFiltering && getRecipeList().containsInput(aStack);
+                }
+                return getRecipeList().findRecipe(
+                    getBaseMetaTileEntity(),
+                    mLastRecipe,
+                    true,
+                    V[mTier],
+                    new FluidStack[]{getFillableStack()},
+                    getSpecialSlot(),
+                    appendSelectedCircuit(aStack)
+                ) != null;
             case 2:
-                return (!mRequiresFluidForFiltering || getFillableStack() != null) && (((getInputAt(0) != null && getInputAt(1) != null) || (getInputAt(0) == null && getInputAt(1) == null ? getRecipeList().containsInput(aStack) : (getRecipeList().containsInput(aStack) && null != getRecipeList().findRecipe(getBaseMetaTileEntity(), mLastRecipe, true, V[mTier], new FluidStack[]{getFillableStack()}, getSpecialSlot(), aIndex == getInputSlot() ? new ItemStack[]{aStack, getInputAt(1)} : new ItemStack[]{getInputAt(0), aStack})))));
+                if (mRequiresFluidForFiltering && getFillableStack() == null) {
+                    return false;
+                }
+                if (getInputAt(0) != null && getInputAt(1) != null) {
+                    return true;
+                }
+                if (getInputAt(0) == null && getInputAt(1) == null) {
+                    return getRecipeList().containsInput(aStack);
+                }
+                ItemStack[] inputs = aIndex == getInputSlot()
+                    ? new ItemStack[]{aStack, getInputAt(1)}
+                    : new ItemStack[]{getInputAt(0), aStack};
+                return getRecipeList().containsInput(aStack) && getRecipeList().findRecipe(
+                    getBaseMetaTileEntity(),
+                    mLastRecipe,
+                    true,
+                    V[mTier],
+                    new FluidStack[]{getFillableStack()},
+                    getSpecialSlot(),
+                    appendSelectedCircuit(inputs)
+                ) != null;
             default:
                 int tID = getBaseMetaTileEntity().getMetaTileID();
                 if (tID >= 211 && tID <= 218 || tID >= 1180 && tID <= 1187 || tID >= 10783 && tID <= 10786 || tID >= 12080 && tID <= 12085 || tID >= 13010 && tID <= 13019){// assemblers IDs

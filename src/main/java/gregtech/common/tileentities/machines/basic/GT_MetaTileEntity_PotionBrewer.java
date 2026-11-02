@@ -89,4 +89,9 @@ public class GT_MetaTileEntity_PotionBrewer
     public int getCapacity() {
         return 750;
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

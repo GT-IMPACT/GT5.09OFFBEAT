@@ -18,6 +18,12 @@ import static gregtech.api.enums.Textures.BlockIcons.*;
  * This Example Implementation still works, however I use something completely different in my own Code.
  */
 public class GT_MetaTileEntity_E_Furnace extends GT_MetaTileEntity_BasicMachine {
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
     public GT_MetaTileEntity_E_Furnace(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 1, "Not like using a Commodore 64", 1, 1, "E_Furnace.png", "smelting",
                 

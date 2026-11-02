@@ -97,4 +97,8 @@ public class GT_MetaTileEntity_OrganicReplicator extends GT_MetaTileEntity_Basic
         return 100000;
     }
 
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

@@ -54,4 +54,9 @@ public class GT_MetaTileEntity_Printer
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return null;
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

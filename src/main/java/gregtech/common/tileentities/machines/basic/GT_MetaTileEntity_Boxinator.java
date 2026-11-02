@@ -174,4 +174,9 @@ public class GT_MetaTileEntity_Boxinator
         }
         return false;
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

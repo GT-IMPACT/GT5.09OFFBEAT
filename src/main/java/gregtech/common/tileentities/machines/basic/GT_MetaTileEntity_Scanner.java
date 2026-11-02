@@ -358,4 +358,9 @@ public class GT_MetaTileEntity_Scanner
     public void startProcess() {
         sendLoopStart((byte) 1);
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

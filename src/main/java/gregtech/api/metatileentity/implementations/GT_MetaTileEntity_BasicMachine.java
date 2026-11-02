@@ -1,5 +1,9 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
@@ -7,6 +11,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_Container_BasicMachine;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
+import gregtech.api.interfaces.IConfigurationCircuitSupport;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.objects.GT_ItemStack;
@@ -17,6 +22,9 @@ import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
+import gregtech.common.gui.modularui.singleblock.base.MTEBasicMachineBaseGui;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +55,9 @@ import static net.minecraft.util.StatCollector.translateToLocalFormatted;
  * This is the main construct for my Basic Machines such as the Automatic Extractor
  * Extend this class to make a simple Machine
  */
-public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_BasicTank {
+public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_BasicTank
+    implements IConfigurationCircuitSupport {
+
     @Override
     @Optional.Method(modid = "Waila")
     public void getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
@@ -192,24 +202,80 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
      *                  12 = SideFacingPipeActive
      *                  13 = SideFacingPipeInactive
      */
-    public GT_MetaTileEntity_BasicMachine(int aID, String aName, String aNameRegional, int aTier, int aAmperage, String aDescription, int aInputSlotCount, int aOutputSlotCount, String aGUIName, String aNEIName, ITexture... aOverlays) {
-        super(aID, aName, aNameRegional, aTier, OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 1, aDescription, aOverlays);
+    public GT_MetaTileEntity_BasicMachine(
+        int aID,
+        String aName,
+        String aNameRegional,
+        int aTier,
+        int aAmperage,
+        String aDescription,
+        int aInputSlotCount,
+        int aOutputSlotCount,
+        String aGUIName,
+        String aNEIName,
+        ITexture... aOverlays
+    ) {
+        super(
+            aID,
+            aName,
+            aNameRegional,
+            aTier,
+            OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 2,
+            aDescription,
+            aOverlays
+        );
         mInputSlotCount = Math.max(0, aInputSlotCount);
         mOutputItems = new ItemStack[Math.max(0, aOutputSlotCount)];
         mAmperage = aAmperage;
         mGUIName = aGUIName;
         mNEIName = aNEIName;
     }
-    public GT_MetaTileEntity_BasicMachine(int aID, String aName, String aNameRegional, int aTier, int aAmperage, String[] aDescription, int aInputSlotCount, int aOutputSlotCount, String aGUIName, String aNEIName, ITexture... aOverlays) {
-        super(aID, aName, aNameRegional, aTier, OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 1, aDescription, aOverlays);
+    public GT_MetaTileEntity_BasicMachine(
+        int aID,
+        String aName,
+        String aNameRegional,
+        int aTier,
+        int aAmperage,
+        String[] aDescription,
+        int aInputSlotCount,
+        int aOutputSlotCount,
+        String aGUIName,
+        String aNEIName,
+        ITexture... aOverlays
+    ) {
+        super(
+            aID,
+            aName,
+            aNameRegional,
+            aTier,
+            OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 2,
+            aDescription,
+            aOverlays
+        );
         mInputSlotCount = Math.max(0, aInputSlotCount);
         mOutputItems = new ItemStack[Math.max(0, aOutputSlotCount)];
         mAmperage = aAmperage;
         mGUIName = aGUIName;
         mNEIName = aNEIName;
     }
-    public GT_MetaTileEntity_BasicMachine(String aName, int aTier, int aAmperage, String aDescription, ITexture[][][] aTextures, int aInputSlotCount, int aOutputSlotCount, String aGUIName, String aNEIName) {
-        super(aName, aTier, OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 1, aDescription, aTextures);
+    public GT_MetaTileEntity_BasicMachine(
+        String aName,
+        int aTier,
+        int aAmperage,
+        String aDescription,
+        ITexture[][][] aTextures,
+        int aInputSlotCount,
+        int aOutputSlotCount,
+        String aGUIName,
+        String aNEIName
+    ) {
+        super(
+            aName,
+            aTier,
+            OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 2,
+            aDescription,
+            aTextures
+        );
         mInputSlotCount = Math.max(0, aInputSlotCount);
         mOutputItems = new ItemStack[Math.max(0, aOutputSlotCount)];
         mAmperage = aAmperage;
@@ -217,8 +283,24 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         mNEIName = aNEIName;
     }
     
-    public GT_MetaTileEntity_BasicMachine(String aName, int aTier, int aAmperage, String[] aDescription, ITexture[][][] aTextures, int aInputSlotCount, int aOutputSlotCount, String aGUIName, String aNEIName) {
-        super(aName, aTier, OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 1, aDescription, aTextures);
+    public GT_MetaTileEntity_BasicMachine(
+        String aName,
+        int aTier,
+        int aAmperage,
+        String[] aDescription,
+        ITexture[][][] aTextures,
+        int aInputSlotCount,
+        int aOutputSlotCount,
+        String aGUIName,
+        String aNEIName
+    ) {
+        super(
+            aName,
+            aTier,
+            OTHER_SLOT_COUNT + aInputSlotCount + aOutputSlotCount + 2,
+            aDescription,
+            aTextures
+        );
         mInputSlotCount = Math.max(0, aInputSlotCount);
         mOutputItems = new ItemStack[Math.max(0, aOutputSlotCount)];
         mAmperage = aAmperage;
@@ -298,7 +380,45 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     @Override
     public boolean isValidSlot(int aIndex) {
-        return aIndex > 0 && super.isValidSlot(aIndex) && aIndex != OTHER_SLOT_COUNT + mInputSlotCount + mOutputItems.length;
+        return aIndex > 0 && super.isValidSlot(aIndex)
+            && aIndex != OTHER_SLOT_COUNT + mInputSlotCount + mOutputItems.length
+            && aIndex != getCircuitSlot();
+    }
+
+    @Override
+    public int getCircuitSlot() {
+        // Append after the fluid display so existing inventories keep their saved slot indices.
+        return OTHER_SLOT_COUNT + mInputSlotCount + mOutputItems.length + 1;
+    }
+
+    @Override
+    public boolean allowSelectCircuit() {
+        return false;
+    }
+
+    @Override
+    public int getCircuitSlotY() {
+        int rows = (Math.max(mInputSlotCount, mOutputItems.length) + 2) / 3;
+        return 63 + Math.max(0, rows - 2) * 18;
+    }
+
+    @Override
+    public void setInventorySlotContents(int aIndex, ItemStack aStack) {
+        if (aIndex == getCircuitSlot() && aStack != null) {
+            if (!(aStack.getItem() instanceof GT_IntegratedCircuit_Item)
+                || aStack.getItemDamage() < 0 || aStack.getItemDamage() > GhostCircuitItemStackHandler.MAX_CONFIG) {
+                aStack = null;
+            } else {
+                aStack = aStack.copy();
+                aStack.stackSize = 0;
+            }
+        }
+        super.setInventorySlotContents(aIndex, aStack);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int aIndex, int aAmount) {
+        return aIndex == getCircuitSlot() ? null : super.decrStackSize(aIndex, aAmount);
     }
 
     @Override
@@ -491,6 +611,22 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     }
 
     @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings uiSettings) {
+        return new MTEBasicMachineBaseGui<>(this, displaysInputFluid(), displaysOutputFluid())
+            .progressDirection(getGuiProgressDirection())
+            .progressSegments(getGuiProgressSegments())
+            .build(data, syncManager, uiSettings);
+    }
+
+    protected int getGuiProgressDirection() {
+        return 0;
+    }
+
+    protected int getGuiProgressSegments() {
+        return 1;
+    }
+
+    @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_Container_BasicMachine(aPlayerInventory, aBaseMetaTileEntity);
     }
@@ -528,6 +664,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
+        setInventorySlotContents(getCircuitSlot(), mInventory[getCircuitSlot()]);
         mFluidTransfer = aNBT.getBoolean("mFluidTransfer");
         mItemTransfer = aNBT.getBoolean("mItemTransfer");
         mHasBeenUpdated = aNBT.getBoolean("mHasBeenUpdated");
@@ -782,8 +919,20 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     protected ItemStack[] getAllInputs() {
         ItemStack[] rInputs = new ItemStack[mInputSlotCount];
-        for (int i = 0; i < mInputSlotCount; i++) rInputs[i] = getInputAt(i);
-        return rInputs;
+        for (int i = 0; i < mInputSlotCount; i++) {
+            rInputs[i] = getInputAt(i);
+        }
+        return appendSelectedCircuit(rInputs);
+    }
+
+    protected final ItemStack[] appendSelectedCircuit(ItemStack... inputs) {
+        ItemStack circuit = mInventory[getCircuitSlot()];
+        if (!allowSelectCircuit() || circuit == null) {
+            return inputs;
+        }
+        ItemStack[] recipeInputs = Arrays.copyOf(inputs, inputs.length + 1);
+        recipeInputs[inputs.length] = circuit;
+        return recipeInputs;
     }
 
     protected boolean isOutputEmpty() {
