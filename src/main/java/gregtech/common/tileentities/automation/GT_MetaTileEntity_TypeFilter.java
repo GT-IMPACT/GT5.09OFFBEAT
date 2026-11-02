@@ -1,5 +1,10 @@
 package gregtech.common.tileentities.automation;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import gregtech.common.gui.modularui.singleblock.MTETypeFilterGui;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
@@ -59,6 +64,16 @@ public class GT_MetaTileEntity_TypeFilter
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_TypeFilter(aPlayerInventory, aBaseMetaTileEntity);
+    }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTETypeFilterGui(this).build(data, syncManager, settings);
     }
 
     public void clickTypeIcon(boolean aRightClick) {

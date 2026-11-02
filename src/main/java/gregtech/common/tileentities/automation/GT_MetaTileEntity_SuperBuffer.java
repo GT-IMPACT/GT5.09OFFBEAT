@@ -1,5 +1,10 @@
 package gregtech.common.tileentities.automation;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import gregtech.common.gui.modularui.singleblock.MTESuperBufferGui;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -47,5 +52,15 @@ public class GT_MetaTileEntity_SuperBuffer
     @Override
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_SuperBuffer(aPlayerInventory, aBaseMetaTileEntity);
+    }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTESuperBufferGui(this).build(data, syncManager, settings);
     }
 }
