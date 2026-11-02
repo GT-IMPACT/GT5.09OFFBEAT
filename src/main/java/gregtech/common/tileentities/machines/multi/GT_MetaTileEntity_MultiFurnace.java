@@ -10,7 +10,6 @@ import gregtech.api.enums.HeatingCoil;
 import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.SmeltingProcessingLogic;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -30,7 +29,6 @@ import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
 
 import java.util.ArrayList;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -97,10 +95,6 @@ public class GT_MetaTileEntity_MultiFurnace
                 Casings.HEAT_PROOF.getTexture(),
                 TextureFactory.of(OVERLAY_FRONT_MULTI_SMELTER),
                 TextureFactory.builder().addIcon(OVERLAY_FRONT_MULTI_SMELTER_GLOW).glow().build()};
-    }
-
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "MultiFurnace.png");
     }
 
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {

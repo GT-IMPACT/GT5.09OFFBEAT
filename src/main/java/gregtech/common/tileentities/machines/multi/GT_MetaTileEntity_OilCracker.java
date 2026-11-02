@@ -2,7 +2,6 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -25,7 +24,6 @@ import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -107,11 +105,6 @@ public class GT_MetaTileEntity_OilCracker extends
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_OIL_CRACKER_GLOW).glow().build() };
         }
         return new ITexture[] { Casings.CLEAN_STAINLESS_STEEL.getTexture() };
-    }
-
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
-                "OilCrackingUnit.png");
     }
 
     @Override

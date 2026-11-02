@@ -1,7 +1,6 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.GT_Mod;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -22,7 +21,6 @@ import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Recipe;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -89,12 +87,6 @@ public class GT_MetaTileEntity_LargeChemicalReactor
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_LARGE_CHEMICAL_REACTOR_GLOW).glow().build() };
         }
         return new ITexture[] { Casings.CHEMICALLY_INERT.getTexture() };
-    }
-
-    @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
-                "LargeChemicalReactor.png");
     }
 
     @Override

@@ -3,7 +3,6 @@ package gregtech.common.tileentities.machines.multi;
 import gregtech.GT_Mod;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.HatchElement;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.logic.BoilerProcessingLogic;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.interfaces.ITexture;
@@ -15,7 +14,6 @@ import gregtech.api.metatileentity.implementations.*;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -191,11 +189,6 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_LARGE_BOILER_GLOW).glow().build()};
         }
         return new ITexture[]{getCasingType().getTexture()};
-    }
-
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
-                "LargeBoiler.png");
     }
 
     public boolean isCorrectMachinePart(ItemStack aStack) {

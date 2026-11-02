@@ -9,7 +9,6 @@ import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.ProcessingWorldChanges;
@@ -26,7 +25,6 @@ import gregtech.api.util.StructureRequirements;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -100,11 +98,6 @@ public abstract class GT_MetaTileEntity_DrillerBase
         super.loadNBTData(aNBT);
         workState = aNBT.getInteger("workState");
         if (aNBT.hasKey("isPickingPipes")) workState = aNBT.getBoolean("isPickingPipes") ? STATE_UPWARD : STATE_DOWNWARD;
-    }
-
-    @Override
-    public Object getClientGUI(int id, InventoryPlayer inventory, IGregTechTileEntity base) {
-        return new GT_GUIContainer_ProcessingMachine(inventory, base, getLocalName(), "MultiblockDisplay.png");
     }
 
     @Override

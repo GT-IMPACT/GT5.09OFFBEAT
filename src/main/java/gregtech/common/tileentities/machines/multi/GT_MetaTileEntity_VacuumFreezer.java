@@ -3,7 +3,6 @@ package gregtech.common.tileentities.machines.multi;
 import static gregtech.api.enums.Textures.BlockIcons.*;
 import static space.impact.structures.structure.StructureUtility.transpose;
 
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -11,7 +10,6 @@ import java.util.List;
 
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.HatchElement;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -83,10 +81,6 @@ public class GT_MetaTileEntity_VacuumFreezer
             rTexture = new ITexture[]{Casings.FROST_PROOF.getTexture()};
         }
         return rTexture;
-    }
-
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "VacuumFreezer.png");
     }
 
     @Override

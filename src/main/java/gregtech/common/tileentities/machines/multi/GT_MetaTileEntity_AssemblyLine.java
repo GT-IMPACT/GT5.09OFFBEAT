@@ -7,7 +7,6 @@ import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.AssemblyLineProcessingLogic;
 import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.ItemList;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -21,7 +20,6 @@ import gregtech.api.util.GT_Utility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import ic2.core.Ic2Items;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -121,10 +119,6 @@ public class GT_MetaTileEntity_AssemblyLine
                     TextureFactory.builder().addIcon(OVERLAY_FRONT_ASSEMBLY_LINE_GLOW).glow().build()};
         }
         return new ITexture[]{Casings.SOLID_STEEL.getTexture()};
-    }
-
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "AssemblyLine.png");
     }
 
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {

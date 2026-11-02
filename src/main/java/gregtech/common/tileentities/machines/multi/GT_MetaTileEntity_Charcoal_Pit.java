@@ -2,7 +2,6 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.OrePrefixes;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -16,7 +15,6 @@ import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.GTStructureChannels;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -109,11 +107,6 @@ public class GT_MetaTileEntity_Charcoal_Pit
     @Override
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {
         return null;
-    }
-
-    @Override
-    public Object getClientGUI(int id, InventoryPlayer inventory, IGregTechTileEntity base) {
-        return new GT_GUIContainer_ProcessingMachine(inventory, base, getLocalName(), "MultiblockDisplay.png");
     }
 
     @Override

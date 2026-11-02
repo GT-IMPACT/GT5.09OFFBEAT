@@ -16,7 +16,6 @@ import space.impact.structures.structure.StructureDefinition;
 
 import static space.impact.structures.structure.StructureUtility.onElementPass;
 import static space.impact.structures.structure.StructureUtility.transpose;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.TurbineProcessingLogic;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -25,7 +24,6 @@ import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -61,12 +59,6 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
     @Override
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return getMaxEfficiency(aStack) > 0;
-    }
-
-    @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
-                "LargeTurbine.png");
     }
 
     public abstract ICasing getCasingType();

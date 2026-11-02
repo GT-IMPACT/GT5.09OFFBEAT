@@ -1,7 +1,7 @@
 package gregtech.api.metatileentity.implementations;
 
 import gregtech.GT_Mod;
-import gregtech.api.gui.GT_Container_ProcessingMachine;
+import gregtech.common.gui.modularui.multiblock.MTEProcessingMultiBlockGui;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
@@ -10,7 +10,10 @@ import gregtech.api.logic.ProcessingPersistence;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map_NonGTRecipes;
-import net.minecraft.entity.player.InventoryPlayer;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -654,7 +657,12 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     }
 
     @Override
-    public Object getServerGUI(int id, InventoryPlayer player, IGregTechTileEntity base) {
-        return new GT_Container_ProcessingMachine(player, base);
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEProcessingMultiBlockGui(this).build(data, syncManager, settings);
     }
 }

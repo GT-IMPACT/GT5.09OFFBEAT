@@ -4,7 +4,6 @@ import gregtech.api.enums.Casings;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.HatchElement;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.IIconContainer;
@@ -24,7 +23,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -164,11 +162,6 @@ public abstract class GT_MetaTileEntity_FusionComputer
 
     @Override
     public abstract long maxEUStore();
-
-    @Override
-    public Object getClientGUI(int id, InventoryPlayer inventory, IGregTechTileEntity base) {
-        return new GT_GUIContainer_ProcessingMachine(inventory, base, getLocalName(), "FusionComputer.png");
-    }
 
     public abstract MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity);
 
