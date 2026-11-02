@@ -1,7 +1,6 @@
 package gregtech.common.covers;
 
 import gregtech.api.covers.CoverContext;
-import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.util.GT_CoverBehavior;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -11,7 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 /** Compatibility for existing addon behaviors; persistent data is owned by this cover object. */
 @Deprecated
-public final class CoverLegacyBehavior extends CoverLegacyData {
+public class CoverLegacyBehavior extends CoverLegacyData {
 
     private final GT_CoverBehavior behavior;
 
@@ -22,6 +21,13 @@ public final class CoverLegacyBehavior extends CoverLegacyData {
 
     public GT_CoverBehavior getBehavior() {
         return behavior;
+    }
+
+    protected final void setGuiVariable(int value) {
+        if (isValid()) {
+            coverData = value;
+            markGuiChanged();
+        }
     }
 
     @Override
@@ -67,6 +73,9 @@ public final class CoverLegacyBehavior extends CoverLegacyData {
 
     @Override
     public boolean openGUI(EntityPlayer player) {
+        if (useMui2()) {
+            return super.openGUI(player);
+        }
         return isValid() && behavior.onCoverShiftRightclick(
             side(),
             coverID,

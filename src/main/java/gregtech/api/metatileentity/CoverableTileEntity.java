@@ -82,7 +82,7 @@ public abstract class CoverableTileEntity extends BaseTileEntity implements ICov
         if (cover.getCoverID() == 0) {
             return gregtech.api.GregTech_API.sNoBehavior;
         }
-        if (cover instanceof CoverLegacyBehavior) {
+        if (cover instanceof CoverLegacyBehavior && !cover.useMui2()) {
             return ((CoverLegacyBehavior) cover).getBehavior();
         }
         if (compatibilityBehaviors[side] == null) {

@@ -139,6 +139,17 @@ public class Cover implements IGuiHolder<CoverGuiData> {
         needsUpdate = aUpdate;
     }
 
+    protected final void markGuiChanged() {
+        ICoverable tile = getTile();
+        if (!isValid() || tile.getWorld() == null || !tile.isServerSide()) {
+            return;
+        }
+        needsUpdate = true;
+        tile.issueCoverUpdate((byte) coverSide.ordinal());
+        tile.markDirty();
+        tile.getWorld().getChunkFromBlockCoords(tile.getXCoord(), tile.getZCoord()).setChunkModified();
+    }
+
     public boolean allowsTickRateAddition() {
         return true;
     }
