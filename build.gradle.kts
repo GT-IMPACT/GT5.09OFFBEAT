@@ -42,6 +42,7 @@ dependencies {
 
     // maven impact
 
+    // Compatibility classes required internally by MUI2 2.3.92; GregTech no longer uses MUI1 APIs.
     api("com.github.GTNewHorizons:modularui:1.1.24:dev")
     api("com.github.GTNewHorizons:ModularUI2:2.3.92-1.7.10:dev") {
         // Reuse the compatibility artifact instead of resolving a second MUI1 version.

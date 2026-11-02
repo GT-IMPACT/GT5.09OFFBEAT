@@ -1,8 +1,7 @@
 package gregtech.api.gui;
 
 import codechicken.nei.recipe.GuiCraftingRecipe;
-import com.gtnewhorizons.modularui.api.drawable.AdaptableUITexture;
-import com.gtnewhorizons.modularui.api.drawable.UITexture;
+import com.cleanroommc.modularui.drawable.UITexture;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Dyes;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -37,15 +36,32 @@ import static gregtech.api.gui.GT_Container_ProcessingMachine.SCREEN_WIDTH;
 
 /** GTNH GregTech controls, rendered over server-validated holographic slots. */
 public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMachine {
-    private static final UITexture BACKGROUND = AdaptableUITexture.of("gregtech", "gui/background/singleblock_default",
-            176, 166, 4);
-    private static final UITexture SCREEN = AdaptableUITexture.of("gregtech", "gui/picture/screen_black", 16, 16, 2);
+    private static final UITexture BACKGROUND = UITexture.builder()
+            .location("gregtech", "gui/background/singleblock_default")
+            .imageSize(176, 166)
+            .adaptable(4)
+            .build();
+    private static final UITexture SCREEN = UITexture.builder()
+            .location("gregtech", "gui/picture/screen_black")
+            .imageSize(16, 16)
+            .adaptable(2)
+            .build();
     private static final UITexture ITEM_SLOT = texture("slot/item_standard");
-    private static final UITexture CONTROLLER_SLOT = AdaptableUITexture.of("gregtech", "gui/slot/item_standard",
-            18, 18, 1);
-    private static final UITexture BUTTON = AdaptableUITexture.of("gregtech", "gui/button/standard", 18, 18, 1);
-    private static final UITexture BUTTON_PRESSED = AdaptableUITexture.of("gregtech", "gui/button/standard_pressed", 18,
-            18, 1);
+    private static final UITexture CONTROLLER_SLOT = UITexture.builder()
+            .location("gregtech", "gui/slot/item_standard")
+            .imageSize(18, 18)
+            .adaptable(1)
+            .build();
+    private static final UITexture BUTTON = UITexture.builder()
+            .location("gregtech", "gui/button/standard")
+            .imageSize(18, 18)
+            .adaptable(1)
+            .build();
+    private static final UITexture BUTTON_PRESSED = UITexture.builder()
+            .location("gregtech", "gui/button/standard_pressed")
+            .imageSize(18, 18)
+            .adaptable(1)
+            .build();
     private static final UITexture[] VOIDING = { overlay("void_excess_none"), overlay("void_excess_item"),
             overlay("void_excess_fluid"), overlay("void_excess_all") };
     private static final UITexture[] SEPARATION = { overlay("input_separation_off"), overlay("input_separation_on") };
