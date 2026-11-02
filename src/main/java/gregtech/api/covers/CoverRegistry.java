@@ -2,18 +2,28 @@ package gregtech.api.covers;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_CoverBehavior;
-import gregtech.api.util.GT_Utility;
 import gregtech.common.covers.Cover;
+import gregtech.common.covers.CoverArm;
+import gregtech.common.covers.CoverConveyor;
 import gregtech.common.covers.CoverControlsWork;
+import gregtech.common.covers.CoverFluidfilter;
+import gregtech.common.covers.CoverFluidRegulator;
 import gregtech.common.covers.CoverLegacyBehavior;
 import gregtech.common.covers.CoverNone;
+import gregtech.common.covers.CoverPump;
+import gregtech.common.covers.GT_Cover_Arm;
+import gregtech.common.covers.GT_Cover_Conveyor;
 import gregtech.common.covers.GT_Cover_ControlsWork;
+import gregtech.common.covers.GT_Cover_Fluidfilter;
+import gregtech.common.covers.GT_Cover_FluidRegulator;
+import gregtech.common.covers.GT_Cover_Pump;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -74,10 +84,8 @@ public final class CoverRegistry {
             return registration.getFactory().buildCover(context);
         }
         GT_CoverBehavior oldBehavior = GregTech_API.getCoverBehavior(context.getCoverID());
-        if (oldBehavior instanceof GT_Cover_ControlsWork) {
-            return new CoverControlsWork(context, getCoverTexture(context.getCoverItem()));
-        }
-        return new CoverLegacyBehavior(context, oldBehavior);
+        BiFunction<CoverContext, GT_CoverBehavior, Cover> factory = getNativeFactory(oldBehavior);
+        return factory == null ? new CoverLegacyBehavior(context, oldBehavior) : factory.apply(context, oldBehavior);
     }
 
     public static CoverPlacer getCoverPlacer(ItemStack item) {
@@ -91,7 +99,29 @@ public final class CoverRegistry {
 
     public static boolean isNativeCover(ItemStack item) {
         return item != null && (getRegistration(item) != null
-            || GregTech_API.getCoverBehavior(item) instanceof GT_Cover_ControlsWork);
+            || getNativeFactory(GregTech_API.getCoverBehavior(item)) != null);
+    }
+
+    private static BiFunction<CoverContext, GT_CoverBehavior, Cover> getNativeFactory(GT_CoverBehavior behavior) {
+        if (behavior instanceof GT_Cover_ControlsWork) {
+            return (context, unused) -> new CoverControlsWork(context, getCoverTexture(context.getCoverItem()));
+        }
+        if (behavior instanceof GT_Cover_Conveyor) {
+            return CoverConveyor::new;
+        }
+        if (behavior instanceof GT_Cover_Pump) {
+            return CoverPump::new;
+        }
+        if (behavior instanceof GT_Cover_Arm) {
+            return CoverArm::new;
+        }
+        if (behavior instanceof GT_Cover_Fluidfilter) {
+            return CoverFluidfilter::new;
+        }
+        if (behavior instanceof GT_Cover_FluidRegulator) {
+            return CoverFluidRegulator::new;
+        }
+        return null;
     }
 
     public static ITexture getCoverTexture(ItemStack item) {
