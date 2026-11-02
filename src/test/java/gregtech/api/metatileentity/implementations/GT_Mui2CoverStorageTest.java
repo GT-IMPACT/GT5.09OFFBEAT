@@ -5,11 +5,11 @@ import gregtech.api.GregTech_API;
 import gregtech.api.metatileentity.CoverableTileEntity;
 import gregtech.api.net.GT_Packet;
 import gregtech.api.net.GT_Packet_CoverData;
+import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.covers.Cover;
 import gregtech.common.covers.CoverControlsWork;
 import gregtech.common.covers.GT_Cover_ControlsWork;
-import gregtech.common.covers.GT_Cover_Shutter;
 import gregtech.common.covers.conditions.RedstoneCondition;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -51,9 +51,10 @@ public class GT_Mui2CoverStorageTest {
         Launch.blackboard.put("fml.deobfuscatedEnvironment", true);
         GT_ProcessingTestSupport.ProcessingWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
         int controllerId = GT_Utility.stackToInt(new ItemStack(Items.stick));
-        int shutterId = GT_Utility.stackToInt(new ItemStack(Items.apple));
+        int legacyId = GT_Utility.stackToInt(new ItemStack(Items.apple));
         GregTech_API.registerCoverBehavior(new ItemStack(Items.stick), new GT_Cover_ControlsWork());
-        GregTech_API.registerCoverBehavior(new ItemStack(Items.apple), new GT_Cover_Shutter());
+        GregTech_API.registerCoverBehavior(new ItemStack(Items.apple), new GT_CoverBehavior() {
+        });
         CoverTile first = new CoverTile(world);
         CoverTile second = new CoverTile(world);
         first.xCoord = -19;
@@ -84,7 +85,7 @@ public class GT_Mui2CoverStorageTest {
         } else if ("legacy".equals(scenario)) {
             int[] ids = new int[6];
             int[] data = new int[6];
-            ids[ForgeDirection.EAST.ordinal()] = shutterId;
+            ids[ForgeDirection.EAST.ordinal()] = legacyId;
             data[ForgeDirection.EAST.ordinal()] = 3;
             first.load(new NBTTagCompound(), ids, data);
             Cover cover = first.getCoverAtSide(ForgeDirection.EAST);

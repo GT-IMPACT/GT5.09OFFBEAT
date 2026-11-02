@@ -12,36 +12,70 @@ import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_DoesWork extends GT_CoverBehavior {
 
-    public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity, long aTimer) {
-        if ((aTileEntity instanceof IMachineProgress)) {
-            if (aCoverVariable < 2) {
-                int tScale = ((IMachineProgress) aTileEntity).getMaxProgress() / 15;
-                if ((tScale > 0) && (((IMachineProgress) aTileEntity).hasThingsToDo())) {
-                    aTileEntity.setOutputRedstoneSignal(aSide, aCoverVariable % 2 == 0 ? (byte) (((IMachineProgress) aTileEntity).getProgress() / tScale) : (byte) (15 - ((IMachineProgress) aTileEntity).getProgress() / tScale));
-                } else {
-                    aTileEntity.setOutputRedstoneSignal(aSide, (byte) (aCoverVariable % 2 == 0 ? 0 : 15));
-                }
+    public int doCoverThings(
+        byte aSide,
+        byte aInputRedstone,
+        int aCoverID,
+        int aCoverVariable,
+        ICoverable aTileEntity,
+        long aTimer
+    ) {
+        int signal = 0;
+        if (aTileEntity instanceof IMachineProgress) {
+            IMachineProgress machine = (IMachineProgress) aTileEntity;
+            boolean inverted = (aCoverVariable & 1) != 0;
+            if ((aCoverVariable & 4) != 0) {
+                signal = inverted == machine.isAllowedToWork() ? 0 : 15;
+            } else if ((aCoverVariable & 2) != 0) {
+                signal = inverted == (machine.getMaxProgress() == 0) ? 0 : 15;
             } else {
-                aTileEntity.setOutputRedstoneSignal(aSide, (byte) ((aCoverVariable % 2 == 0 ? 1 : 0) != (((IMachineProgress) aTileEntity).getMaxProgress() == 0 ? 1 : 0) ? 0 : 15));
+                int scale = machine.getMaxProgress() / 15;
+                if (scale > 0 && machine.hasThingsToDo()) {
+                    signal = inverted ? 15 - machine.getProgress() / scale : machine.getProgress() / scale;
+                } else {
+                    signal = inverted ? 15 : 0;
+                }
             }
-        } else {
-            aTileEntity.setOutputRedstoneSignal(aSide, (byte) 0);
         }
+        aTileEntity.setOutputRedstoneSignal(aSide, (byte) signal);
         return aCoverVariable;
     }
 
-    public int onCoverScrewdriverclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-        aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 4;
-        if(aCoverVariable <0){aCoverVariable = 3;}
-        switch(aCoverVariable) {
-            case 0: GT_Utility.sendChatToPlayer(aPlayer, trans("018", "Normal")); break; // Progress scaled
-            case 1: GT_Utility.sendChatToPlayer(aPlayer, trans("019", "Inverted")); break; // ^ inverted
-            case 2: GT_Utility.sendChatToPlayer(aPlayer, trans("020", "Ready to work")); break; // Not Running
-            case 3: GT_Utility.sendChatToPlayer(aPlayer, trans("021", "Not ready to work")); break; // Running
+    public int onCoverScrewdriverclick(
+        byte aSide,
+        int aCoverID,
+        int aCoverVariable,
+        ICoverable aTileEntity,
+        EntityPlayer aPlayer,
+        float aX,
+        float aY,
+        float aZ
+    ) {
+        aCoverVariable = Math.floorMod(aCoverVariable + (aPlayer.isSneaking() ? -1 : 1), 6);
+        switch (aCoverVariable) {
+            case 0:
+                GT_Utility.sendChatToPlayer(aPlayer, trans("018", "Normal"));
+                break;
+            case 1:
+                GT_Utility.sendChatToPlayer(aPlayer, trans("019", "Inverted"));
+                break;
+            case 2:
+                GT_Utility.sendChatToPlayer(aPlayer, trans("020", "Ready to work"));
+                break;
+            case 3:
+                GT_Utility.sendChatToPlayer(aPlayer, trans("021", "Not ready to work"));
+                break;
+            case 4:
+                GT_Utility.sendChatToPlayer(aPlayer, StatCollector.translateToLocal("gt.interact.desc.mach_on"));
+                break;
+            case 5:
+                GT_Utility.sendChatToPlayer(aPlayer, StatCollector.translateToLocal("gt.interact.desc.mach_off"));
+                break;
         }
         return aCoverVariable;
     }
