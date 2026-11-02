@@ -80,6 +80,8 @@ dependencies {
     // AE stack interfaces reference Minecraft client types even in server-side storage tests.
     testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.3") { isTransitive = false }
     testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
+    // MUI2 client input tests construct the viewport matrices normally supplied by GTNHExtLib.
+    testRuntimeOnly("org.joml:joml:1.10.8")
     // Unit tests load GUI factory signatures without Forge's optional-interface transformer.
     testRuntimeOnly("com.github.GTNewHorizons:lwjgl3ify:3.0.34:api") { isTransitive = false }
     testRuntimeOnly("curse.maven:neverenoughanimation-1062347:7664003-sources-7663978") {
