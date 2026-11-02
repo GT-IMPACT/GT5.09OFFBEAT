@@ -24,6 +24,7 @@ import gregtech.common.covers.CoverNeedMaintenance;
 import gregtech.common.covers.CoverNone;
 import gregtech.common.covers.CoverPlayerDetector;
 import gregtech.common.covers.CoverPump;
+import gregtech.common.covers.CoverRedstoneWirelessBase;
 import gregtech.common.covers.CoverShutter;
 import gregtech.common.covers.GT_Cover_Arm;
 import gregtech.common.covers.GT_Cover_Conveyor;
@@ -37,6 +38,7 @@ import gregtech.common.covers.GT_Cover_LiquidMeter;
 import gregtech.common.covers.GT_Cover_NeedMaintainance;
 import gregtech.common.covers.GT_Cover_PlayerDetector;
 import gregtech.common.covers.GT_Cover_Pump;
+import gregtech.common.covers.GT_Cover_RedstoneWirelessBase;
 import gregtech.common.covers.GT_Cover_Shutter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -155,6 +157,9 @@ public final class CoverRegistry {
         }
         if (behavior instanceof GT_Cover_PlayerDetector) {
             return CoverPlayerDetector::new;
+        }
+        if (behavior instanceof GT_Cover_RedstoneWirelessBase) {
+            return CoverRedstoneWirelessBase::new;
         }
         return null;
     }
