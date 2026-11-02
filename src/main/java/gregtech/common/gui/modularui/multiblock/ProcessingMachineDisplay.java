@@ -126,13 +126,17 @@ public class ProcessingMachineDisplay extends Widget<ProcessingMachineDisplay> i
     }
 
     @Override
-    public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+    public void drawBackground(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         applyGuiTint();
         BACKGROUND.draw(0, 0, GUI_WIDTH, GUI_HEIGHT);
         SCREEN.draw(SCREEN_LEFT, SCREEN_TOP, SCREEN_WIDTH, SCREEN_HEIGHT);
         drawInventoryFrames();
         drawControls();
         GL11.glColor4f(1, 1, 1, 1);
+    }
+
+    @Override
+    public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         drawText(Minecraft.getMinecraft().fontRenderer);
     }
 

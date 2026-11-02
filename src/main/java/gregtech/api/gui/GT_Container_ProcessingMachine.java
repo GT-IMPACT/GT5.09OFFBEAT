@@ -54,7 +54,7 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
             + (PLAYER_INVENTORY_X - 1 - GUI_BORDER - CONTROL_BANK_WIDTH) / 2 + 1;
     private static final int RIGHT_CONTROL_X = GUI_WIDTH - LEFT_CONTROL_X - 16;
     public static final int CONTROLLER_FRAME_SIZE = 26;
-    public static final int CONTROLLER_X = (PLAYER_INVENTORY_X - 1 + 162 + GUI_WIDTH - GUI_BORDER - 16) / 2;
+    public static final int CONTROLLER_X = (PLAYER_INVENTORY_X - 1 + 162 + GUI_WIDTH - 16) / 2;
     public static final int CONTROLLER_Y = PLAYER_INVENTORY_Y + 58 + 17 - (CONTROLLER_FRAME_SIZE + 16) / 2;
     private static final int[] VOIDING_PROTECTION = { PROTECT_ITEMS | PROTECT_FLUIDS, PROTECT_FLUIDS, PROTECT_ITEMS,
             0 };
