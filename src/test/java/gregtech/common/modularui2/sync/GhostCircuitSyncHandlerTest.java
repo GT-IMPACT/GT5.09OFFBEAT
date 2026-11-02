@@ -105,7 +105,7 @@ public class GhostCircuitSyncHandlerTest {
         assertEquals(0, restored.getStackInSlot(0).stackSize);
 
         List<ItemStack> configurations = GhostCircuitItemStackHandler.getAllConfigurations();
-        assertEquals(25, configurations.size());
+        assertEquals(27, configurations.size());
         for (int index = 0; index < configurations.size(); index++) {
             assertSame(circuit, configurations.get(index).getItem());
             assertEquals(index, configurations.get(index).getItemDamage());
@@ -124,10 +124,19 @@ public class GhostCircuitSyncHandlerTest {
         assertNull(phantom.extractItem(0, Integer.MAX_VALUE, false));
         assertEquals(7, phantom.getCircuitConfig());
         assertFalse(phantom.isItemValid(0, new ItemStack(Items.stick)));
-        assertFalse(phantom.isItemValid(0, new ItemStack(circuit, 1, 25)));
-        phantom.setStackInSlot(0, new ItemStack(circuit, 1, 25));
+        for (int configuration : new int[]{25, 26}) {
+            assertTrue(phantom.isItemValid(0, new ItemStack(circuit, 1, configuration)));
+            phantom.setCircuitConfig(configuration);
+            ItemStackHandler reloaded = new ItemStackHandler(4);
+            reloaded.deserializeNBT(inventory.serializeNBT());
+            assertEquals(configuration, new GhostCircuitItemStackHandler(machine(reloaded)).getCircuitConfig());
+            assertEquals(0, reloaded.getStackInSlot(2).stackSize);
+        }
+        phantom.setCircuitConfig(7);
+        assertFalse(phantom.isItemValid(0, new ItemStack(circuit, 1, 27)));
+        phantom.setStackInSlot(0, new ItemStack(circuit, 1, 27));
         assertEquals(7, phantom.getCircuitConfig());
-        assertThrows(IllegalArgumentException.class, () -> phantom.setCircuitConfig(25));
+        assertThrows(IllegalArgumentException.class, () -> phantom.setCircuitConfig(27));
         assertThrows(IllegalArgumentException.class, () -> phantom.setCircuitConfig(-2));
         phantom.setCircuitConfig(GhostCircuitItemStackHandler.NO_CONFIG);
         assertFalse(phantom.hasCircuit());
@@ -160,15 +169,25 @@ public class GhostCircuitSyncHandlerTest {
         sync.click(1, false, null);
         assertEquals(GhostCircuitItemStackHandler.NO_CONFIG, phantom.getCircuitConfig());
         sync.scroll(-1000);
-        assertEquals(24, phantom.getCircuitConfig());
+        assertEquals(26, phantom.getCircuitConfig());
         sync.click(0, false, null);
         assertEquals(GhostCircuitItemStackHandler.NO_CONFIG, phantom.getCircuitConfig());
         sync.scroll(Integer.MAX_VALUE);
         assertEquals(0, phantom.getCircuitConfig());
         sync.click(2, false, new ItemStack(circuit, 1, 8));
         assertEquals(0, phantom.getCircuitConfig());
-        sync.click(0, false, new ItemStack(circuit, 1, 25));
+        sync.click(0, false, new ItemStack(circuit, 1, 27));
         assertEquals(0, phantom.getCircuitConfig());
+
+        for (int configuration : new int[]{25, 26}) {
+            ItemStack selected = new ItemStack(circuit, 4, configuration);
+            sync.click(0, false, selected);
+            assertEquals(configuration, phantom.getCircuitConfig());
+            assertEquals(4, selected.stackSize);
+        }
+        sync.click(0, false, null);
+        assertFalse(phantom.hasCircuit());
+        sync.click(0, false, null);
 
         PacketBuffer packet = new PacketBuffer(Unpooled.buffer());
         try {

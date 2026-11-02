@@ -2,10 +2,13 @@ package gregtech.api.metatileentity.implementations;
 
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
-import gregtech.api.gui.GT_Container_ProcessingMachine;
+import gregtech.api.enums.ItemList;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Cleanroom;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -96,7 +99,7 @@ public class GT_AdvancedProcessingTest {
     }
 
     @Test
-    public void crackerReadsCircuitsFromControllerAndBusesAndPreservesFluidZones() throws Throwable {
+    public void crackerReadsGhostCircuitsAndBusesAndPreservesFluidZones() throws Throwable {
         run("crackerInputs");
     }
 
@@ -445,6 +448,9 @@ public class GT_AdvancedProcessingTest {
     }
 
     private static void crackerInputs() throws Exception {
+        if (!ItemList.Circuit_Integrated.hasBeenSet()) {
+            new GT_IntegratedCircuit_Item();
+        }
         for (boolean controller : new boolean[] { false, true }) {
             for (boolean separated : new boolean[] { false, true }) {
                 try (Scenario scenario = new Scenario("OilCracker", 1)) {
@@ -453,7 +459,7 @@ public class GT_AdvancedProcessingTest {
                     FluidStack steam = new FluidStack(fluid("steam"), 100);
                     GT_Recipe recipe = f.map.addRecipe(
                             false,
-                            new ItemStack[] { new ItemStack(Items.stick, 0) },
+                            new ItemStack[] { GT_Utility.getIntegratedCircuit(0) },
                             null,
                             null,
                             null,
@@ -472,15 +478,14 @@ public class GT_AdvancedProcessingTest {
                     assertEquals(100, feedstock.mFluid.amount);
                     assertEquals(100, reagent.mFluid.amount);
 
-                    ItemStack circuit = new ItemStack(Items.stick);
+                    ItemStack circuit = GT_Utility.getIntegratedCircuit(0);
+                    circuit.stackSize = 1;
                     if (controller) {
-                        GT_StructureIntegrationTest.TestPlayer player =
-                                new GT_StructureIntegrationTest.TestPlayer(f.fixture.world);
-                        GT_Container_ProcessingMachine container = (GT_Container_ProcessingMachine)
-                                scenario.machine.getServerGUI(0, player.inventory, f.fixture.tile);
-                        assertEquals(1, container.getSlotCount());
-                        container.getSlot(container.getSlotStartIndex()).putStack(circuit);
-                        assertSame(circuit, scenario.machine.mInventory[1]);
+                        assertFalse(scenario.machine.hasControllerSlotInGui());
+                        assertTrue(scenario.machine.allowSelectCircuit());
+                        GhostCircuitItemStackHandler ghost = new GhostCircuitItemStackHandler(scenario.machine);
+                        ghost.setCircuitConfig(0);
+                        assertEquals(0, ghost.getStackInSlot(0).stackSize);
                     } else {
                         f.fixture.items(circuit);
                     }

@@ -2,8 +2,11 @@ package gregtech.api.metatileentity.implementations;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
+import gregtech.api.enums.ItemList;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GTStructureUtility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_HeatExchanger;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -277,22 +280,21 @@ final class GT_HeatExchangerStructureChecks {
         circuit.machine.construct(new ItemStack(Items.stick), false);
         circuit.requiredHatches();
         assertTrue(circuit.recheck());
-        Item integratedCircuit = new Item() {
-            @Override
-            public String getUnlocalizedName(ItemStack stack) {
-                return "gt.integrated_circuit";
-            }
-        };
-        circuit.machine.mInventory[1] = new ItemStack(integratedCircuit, 1, 25);
+        if (!ItemList.Circuit_Integrated.hasBeenSet()
+            || !(ItemList.Circuit_Integrated.getItem() instanceof GT_IntegratedCircuit_Item)) {
+            new GT_IntegratedCircuit_Item();
+        }
+        new GhostCircuitItemStackHandler(circuit.machine).setCircuitConfig(24);
         GT_MetaTileEntity_Hatch_Input hot = (GT_MetaTileEntity_Hatch_Input) field(circuit.machine, "mInputHotFluidHatch");
         hot.mFluid = FluidRegistry.getFluidStack("lava", 100);
         assertTrue(circuit.machine.checkRecipe(null));
-        assertEquals(100, field(circuit.machine, "superheated_threshold"));
-        assertEquals(256, circuit.machine.mEUt);
+        assertEquals(137, field(circuit.machine, "superheated_threshold"));
+        assertEquals(262, circuit.machine.mEUt);
         circuit.machine.mMaxProgresstime = 0;
         hot.mFluid = FluidRegistry.getFluidStack("water", 100);
         assertFalse("Unrelated fluid is not a heat source", circuit.machine.checkRecipe(null));
-        assertEquals("Rejected input must not mutate the previous cycle", 100, field(circuit.machine, "superheated_threshold"));
+        assertEquals("Rejected input must not mutate the previous cycle", 137,
+            field(circuit.machine, "superheated_threshold"));
     }
 
     private static void checkTooltip() throws Exception {

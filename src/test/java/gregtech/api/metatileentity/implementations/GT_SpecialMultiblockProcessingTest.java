@@ -5,8 +5,10 @@ import gregtech.api.enums.Materials;
 import gregtech.api.enums.ItemList;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
 import gregtech.GT_Mod;
 import gregtech.common.GT_Pollution;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import gregtech.common.tileentities.machines.multi.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -57,6 +59,9 @@ public class GT_SpecialMultiblockProcessingTest {
     }
 
     private static void boiler(String model) throws Exception {
+        if (!ItemList.Circuit_Integrated.hasBeenSet()) {
+            new GT_IntegratedCircuit_Item();
+        }
         ItemList.Cell_Empty.set(new ItemStack(Items.bucket));
         ItemList.IC2_Fuel_Can_Filled.set(new ItemStack(Items.lava_bucket));
         ItemList.IC2_ForgeHammer.set(new ItemStack(Items.iron_pickaxe));
@@ -65,30 +70,32 @@ public class GT_SpecialMultiblockProcessingTest {
         int rawEnergy = new int[]{400, 600, 800, 1000}[index];
         int rawDuration = new int[]{40, 30, 26, 24}[index]; // One vanilla coal, 1600 furnace ticks.
         int efficiencyIncrease = new int[]{16, 12, 8, 4}[index];
-        for (int config = 0; config <= 25; config++) for (boolean warmedUp : new boolean[]{false, true}) {
-            GT_MetaTileEntity_LargeBoiler machine = (GT_MetaTileEntity_LargeBoiler)
+        for (int config = 0; config <= GhostCircuitItemStackHandler.MAX_CONFIG; config++) {
+            for (boolean warmedUp : new boolean[]{false, true}) {
+                GT_MetaTileEntity_LargeBoiler machine = (GT_MetaTileEntity_LargeBoiler)
                     GT_MultiblockRecipeProcessingTest.machine("LargeBoiler_" + model);
-            Fixture f = new Fixture(machine, 1);
-            ItemStack coal = new ItemStack(Items.coal, 2);
-            f.items(coal);
-            if (config != 0) machine.mInventory[1] = circuit(config);
-            machine.mEfficiency = warmedUp ? 10000 : 0;
-            assertTrue(model + " circuit=" + config, machine.checkRecipe(null));
-            int energy = Math.max(25, rawEnergy - 25 * config);
-            int duration = warmedUp ? rawDuration * rawEnergy / energy : rawDuration;
-            assertEquals(1, coal.stackSize);
-            assertEquals(energy, machine.mEUt);
-            assertEquals(duration, machine.mMaxProgresstime);
-            assertEquals(duration * efficiencyIncrease > 5000 ? 0 : duration * efficiencyIncrease,
+                Fixture f = new Fixture(machine, 1);
+                ItemStack coal = new ItemStack(Items.coal, 2);
+                f.items(coal);
+                new GhostCircuitItemStackHandler(machine).setCircuitConfig(config);
+                machine.mEfficiency = warmedUp ? 10000 : 0;
+                assertTrue(model + " circuit=" + config, machine.checkRecipe(null));
+                int energy = Math.max(25, rawEnergy - 25 * config);
+                int duration = warmedUp ? rawDuration * rawEnergy / energy : rawDuration;
+                assertEquals(1, coal.stackSize);
+                assertEquals(energy, machine.mEUt);
+                assertEquals(duration, machine.mMaxProgresstime);
+                assertEquals(duration * efficiencyIncrease > 5000 ? 0 : duration * efficiencyIncrease,
                     machine.mEfficiencyIncrease);
-            NBTTagCompound tag = new NBTTagCompound();
-            machine.saveNBTData(tag);
-            GT_MetaTileEntity_LargeBoiler restored = (GT_MetaTileEntity_LargeBoiler)
+                NBTTagCompound tag = new NBTTagCompound();
+                machine.saveNBTData(tag);
+                GT_MetaTileEntity_LargeBoiler restored = (GT_MetaTileEntity_LargeBoiler)
                     GT_MultiblockRecipeProcessingTest.machine("LargeBoiler_" + model);
-            new Fixture(restored, 1);
-            restored.loadNBTData(tag);
-            assertEquals(energy, restored.mEUt);
-            assertEquals(duration, restored.mMaxProgresstime);
+                new Fixture(restored, 1);
+                restored.loadNBTData(tag);
+                assertEquals(energy, restored.mEUt);
+                assertEquals(duration, restored.mMaxProgresstime);
+            }
         }
         GT_MetaTileEntity_LargeBoiler machine = (GT_MetaTileEntity_LargeBoiler)
                 GT_MultiblockRecipeProcessingTest.machine("LargeBoiler_" + model);
@@ -103,12 +110,6 @@ public class GT_SpecialMultiblockProcessingTest {
         assertTrue(machine.onRunningTick(null));
         assertEquals(rawEnergy * 2, output.mFluid.amount);
         assertEquals(1000 - (rawEnergy * 2 + 160) / 160, water.mFluid.amount);
-    }
-
-    private static ItemStack circuit(int config) {
-        return new ItemStack(new Item() {
-            @Override public String getUnlocalizedName(ItemStack stack) { return "gt.integrated_circuit"; }
-        }, 1, config);
     }
 
     private static GT_MetaTileEntity_Hatch_Output output(Fixture f) {

@@ -127,6 +127,16 @@ public class GT_Mui2SingleblockCircuitTest {
         assertEquals(24, fixture.ghost.getCircuitConfig());
         assertEquals(0, fixture.ghost.getStackInSlot(0).stackSize);
 
+        for (int configuration : new int[]{25, 26}) {
+            GT_Recipe configured = recipe(configuration, Items.diamond);
+            fixture.fillInputs();
+            fixture.ghost.setCircuitConfig(configuration);
+            assertEquals(GT_MetaTileEntity_BasicMachine.FOUND_AND_SUCCESSFULLY_USED_RECIPE, machine.checkRecipe(true));
+            assertSame(configured, machine.mLastRecipe);
+            assertEquals(configuration, fixture.ghost.getCircuitConfig());
+            assertEquals(0, fixture.ghost.getStackInSlot(0).stackSize);
+        }
+
         fixture.fillInputs();
         fixture.ghost.setCircuitConfig(GhostCircuitItemStackHandler.NO_CONFIG);
         assertEquals(GT_MetaTileEntity_BasicMachine.DID_NOT_FIND_RECIPE, machine.checkRecipe(true));
@@ -279,9 +289,13 @@ public class GT_Mui2SingleblockCircuitTest {
         sendSelection(circuitSync, 24);
         assertEquals(24, fixture.ghost.getCircuitConfig());
         sendSelection(circuitSync, 25);
-        assertEquals(24, fixture.ghost.getCircuitConfig());
+        assertEquals(25, fixture.ghost.getCircuitConfig());
+        sendSelection(circuitSync, 26);
+        assertEquals(26, fixture.ghost.getCircuitConfig());
+        sendSelection(circuitSync, 27);
+        assertEquals(26, fixture.ghost.getCircuitConfig());
         sendSelection(circuitSync, -2);
-        assertEquals(24, fixture.ghost.getCircuitConfig());
+        assertEquals(26, fixture.ghost.getCircuitConfig());
         sendSelection(circuitSync, GhostCircuitItemStackHandler.NO_CONFIG);
         assertFalse(fixture.ghost.hasCircuit());
         sendSelection(circuitSync, 0);
