@@ -13,16 +13,22 @@ import gregtech.common.covers.Cover;
 import gregtech.common.covers.CoverArm;
 import gregtech.common.covers.CoverConveyor;
 import gregtech.common.covers.CoverControlsWork;
+import gregtech.common.covers.CoverEUMeter;
 import gregtech.common.covers.CoverFluidfilter;
 import gregtech.common.covers.CoverFluidRegulator;
+import gregtech.common.covers.CoverItemMeter;
 import gregtech.common.covers.CoverLegacyBehavior;
+import gregtech.common.covers.CoverLiquidMeter;
 import gregtech.common.covers.CoverNone;
 import gregtech.common.covers.CoverPump;
 import gregtech.common.covers.GT_Cover_Arm;
 import gregtech.common.covers.GT_Cover_Conveyor;
 import gregtech.common.covers.GT_Cover_ControlsWork;
+import gregtech.common.covers.GT_Cover_EUMeter;
 import gregtech.common.covers.GT_Cover_Fluidfilter;
 import gregtech.common.covers.GT_Cover_FluidRegulator;
+import gregtech.common.covers.GT_Cover_ItemMeter;
+import gregtech.common.covers.GT_Cover_LiquidMeter;
 import gregtech.common.covers.GT_Cover_Pump;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -120,6 +126,15 @@ public final class CoverRegistry {
         }
         if (behavior instanceof GT_Cover_FluidRegulator) {
             return CoverFluidRegulator::new;
+        }
+        if (behavior instanceof GT_Cover_EUMeter) {
+            return CoverEUMeter::new;
+        }
+        if (behavior instanceof GT_Cover_ItemMeter) {
+            return CoverItemMeter::new;
+        }
+        if (behavior instanceof GT_Cover_LiquidMeter) {
+            return CoverLiquidMeter::new;
         }
         return null;
     }
