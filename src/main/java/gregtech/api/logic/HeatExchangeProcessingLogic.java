@@ -2,6 +2,7 @@ package gregtech.api.logic;
 
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_ModHandler;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,7 +46,8 @@ public final class HeatExchangeProcessingLogic extends ProcessingLogic {
             return Result.failure(CheckRecipeResult.NO_RECIPE);
         }
         int configuration = circuit.getAsInt();
-        int reduction = configuration >= 1 && configuration <= 25 ? configuration - 1 : 0;
+        int reduction = configuration >= 1 && configuration <= GT_IntegratedCircuit_Item.MAX_CONFIG
+            ? configuration - 1 : 0;
         float efficiency = 1f - reduction * penalty.get();
         int nextThreshold = (4000 - 150 * reduction) / (lava ? 4 : 5);
         int amount = Math.min(hot.amount, nextThreshold * 2);

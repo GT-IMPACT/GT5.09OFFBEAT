@@ -14,7 +14,7 @@ import java.util.List;
 public class GhostCircuitItemStackHandler implements IItemHandlerModifiable {
 
     public static final int NO_CONFIG = -1;
-    public static final int MAX_CONFIG = 24;
+    public static final int MAX_CONFIG = GT_IntegratedCircuit_Item.MAX_CONFIG;
 
     private final IItemHandlerModifiable inventory;
     private final int circuitSlot;

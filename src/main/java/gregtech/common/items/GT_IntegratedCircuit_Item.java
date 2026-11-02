@@ -7,7 +7,11 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.items.GT_Generic_Item;
-import gregtech.api.util.*;
+import gregtech.api.util.GT_Config;
+import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_Log;
+import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +29,11 @@ import static gregtech.api.util.GT_Utility.ItemNBT.getIntegratedAmount;
 import static gregtech.api.util.GT_Utility.ItemNBT.setIntegratedAmount;
 
 public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
+
+    public static final int MAX_CONFIG = 26;
+
     private final static String aTextEmptyRow = "   ";
-    protected IIcon[] mIconDamage = new IIcon[25];
+    protected IIcon[] mIconDamage = new IIcon[MAX_CONFIG + 1];
     public GT_IntegratedCircuit_Item() {
         super("integrated_circuit", "Programmed Circuit", "");
         setHasSubtypes(true);
@@ -68,10 +75,14 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
         int toolMode = getIntegratedAmount(stack);
         if (!aPlayer.isSneaking()) {
             ++toolMode;
-            if (toolMode > 24) toolMode = 0;
+            if (toolMode > MAX_CONFIG) {
+                toolMode = 0;
+            }
         } else {
             --toolMode;
-            if (toolMode < 0) toolMode = 24;
+            if (toolMode < 0) {
+                toolMode = MAX_CONFIG;
+            }
         }
         setIntegratedAmount(stack, toolMode);
         GT_Utility.sendChatToPlayer(aPlayer, GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated", "Configuration") +": " + EnumChatFormatting.YELLOW + toolMode);

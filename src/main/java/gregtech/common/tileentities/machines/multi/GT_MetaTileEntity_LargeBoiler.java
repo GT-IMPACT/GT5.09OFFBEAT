@@ -14,6 +14,7 @@ import gregtech.api.metatileentity.implementations.*;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -227,7 +228,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
             return 0;
         }
         int configuration = circuit.getItemDamage();
-        return configuration >= 1 && configuration <= 25 ? configuration : 0;
+        return configuration >= 1 && configuration <= GT_IntegratedCircuit_Item.MAX_CONFIG ? configuration : 0;
     }
 
     @Override

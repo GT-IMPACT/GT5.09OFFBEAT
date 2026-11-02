@@ -58,7 +58,7 @@ public class GT_MetaTileEntity_HeatExchanger
             .atLeast(ExchangerHatch.COLD).build();
     private static IStructureDefinition<GT_MetaTileEntity_HeatExchanger> structureDefinition;
     private int casingCount;
-    public static float penalty_per_config = 0.015f;  // penalize 1.5% efficiency per circuitry level (1-25)
+    public static float penalty_per_config = 0.015f;  // penalize 1.5% efficiency per circuitry level above 1
 
     private GT_MetaTileEntity_Hatch_Input mInputHotFluidHatch;
     private GT_MetaTileEntity_Hatch_Output mOutputColdFluidHatch;
