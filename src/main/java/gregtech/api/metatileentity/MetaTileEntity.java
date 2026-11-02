@@ -4,7 +4,7 @@ import appeng.api.implementations.IPowerChannelState;
 import appeng.api.util.AECableType;
 import appeng.core.localization.WailaText;
 import appeng.me.helpers.AENetworkProxy;
-import com.gtnewhorizons.modularui.api.forge.ItemStackHandler;
+import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,6 +19,7 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Client;
+import gregtech.common.gui.modularui.util.MachineItemHandler;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
@@ -113,7 +114,7 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
         getBaseMetaTileEntity().setMetaTileID((short) aID);
         GT_LanguageManager.addStringLocalization("gt.blockmachines." + mName + ".name", aRegionalName);
         mInventory = new ItemStack[aInvSlotCount];
-        inventoryHandler = new ItemStackHandler(mInventory);
+        inventoryHandler = new MachineItemHandler(mInventory, this);
     }
 
     /**
@@ -121,7 +122,7 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
      */
     public MetaTileEntity(String aName, int aInvSlotCount) {
         mInventory = new ItemStack[aInvSlotCount];
-        inventoryHandler = new ItemStackHandler(mInventory);
+        inventoryHandler = new MachineItemHandler(mInventory, this);
         mName = aName;
     }
 

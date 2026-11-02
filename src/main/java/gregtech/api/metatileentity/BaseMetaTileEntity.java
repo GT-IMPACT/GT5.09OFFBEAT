@@ -12,9 +12,6 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
-import com.gtnewhorizons.modularui.api.screen.ITileWithModularUI;
-import com.gtnewhorizons.modularui.api.screen.ModularWindow;
-import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
@@ -76,7 +73,6 @@ import space.impact.structures.alignment.enumerable.ExtendedFacing;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Supplier;
 
 import static gregtech.GT_Mod.GT_FML_LOGGER;
 import static gregtech.api.enums.GT_Values.NW;
@@ -93,9 +89,8 @@ import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
         @Optional.Interface(iface = "appeng.me.helpers.IGridProxyable", modid = "appliedenergistics2", striprefs = true),
         @Optional.Interface(iface = "appeng.api.storage.ICellContainer", modid = "appliedenergistics2", striprefs = true)})
 public class BaseMetaTileEntity
-        extends BaseTileEntity
+        extends CoverableTileEntity
         implements IGregTechTileEntity,
-        ITileWithModularUI,
         IActionHost,
         ICellContainer,
         IGridProxyable,
@@ -157,6 +152,7 @@ public class BaseMetaTileEntity
             e.printStackTrace(GT_Log.err);
         }
         try {
+            writeCoverNBT(aNBT, false);
             aNBT.setInteger("mID", mID);
             aNBT.setLong("mStoredSteam", mStoredSteam);
             aNBT.setLong("mStoredEnergy", mStoredEnergy);
@@ -293,6 +289,7 @@ public class BaseMetaTileEntity
             else mSidedRedstone = new byte[]{15, 15, 15, 15, 15, 15};
 
         for (byte i = 0; i < 6; i++) mCoverBehaviors[i] = GregTech_API.getCoverBehavior(mCoverSides[i]);
+        readCoverNBT(aNBT, mCoverSides, mCoverData);
     }
 
     private boolean createNewMetatileEntity(short aID) {
@@ -401,14 +398,10 @@ public class BaseMetaTileEntity
                         for (byte i = (byte) (tCode - 2); i < 6; i++)
                             if (getCoverIDAtSide(i) != 0) {
                                 tCode++;
-                                GT_CoverBehavior tCover = getCoverBehaviorAtSide(i);
-                                int tCoverTickRate = tCover.getTickRate(i, getCoverIDAtSide(i), mCoverData[i], this);
-                                if (tCoverTickRate > 0 && mTickTimer % tCoverTickRate == 0) {
-                                    mCoverData[i] = tCover.doCoverThings(i, getInputRedstoneSignal(i), getCoverIDAtSide(i), mCoverData[i], this, mTickTimer);
-                                    if (!hasValidMetaTileEntity()) {
-                                        mRunningThroughTick = false;
-                                        return;
-                                    }
+                                tickCoverAtSide(i, getInputRedstoneSignal(i), mTickTimer);
+                                if (!hasValidMetaTileEntity()) {
+                                    mRunningThroughTick = false;
+                                    return;
                                 }
                             }
 
@@ -617,6 +610,7 @@ public class BaseMetaTileEntity
                                                 oRedstoneData = (byte) (((mSidedRedstone[0] > 0) ? 1 : 0) | ((mSidedRedstone[1] > 0) ? 2 : 0) | ((mSidedRedstone[2] > 0) ? 4 : 0) | ((mSidedRedstone[3] > 0) ? 8 : 0) | ((mSidedRedstone[4] > 0) ? 16 : 0) | ((mSidedRedstone[5] > 0) ? 32 : 0)),
                                                 oColor = mColor),
                                         xCoord, zCoord);
+                                sendCoverDataIfNeeded();
                                 mSendClientData = false;
                             }
                         }
@@ -687,12 +681,7 @@ public class BaseMetaTileEntity
             createNewMetatileEntity(mID);
         }
 
-        mCoverSides[0] = aCover0;
-        mCoverSides[1] = aCover1;
-        mCoverSides[2] = aCover2;
-        mCoverSides[3] = aCover3;
-        mCoverSides[4] = aCover4;
-        mCoverSides[5] = aCover5;
+        receiveCoverIDs(new int[]{aCover0, aCover1, aCover2, aCover3, aCover4, aCover5});
 
         for (byte i = 0; i < 6; i++) mCoverBehaviors[i] = GregTech_API.getCoverBehavior(mCoverSides[i]);
 
@@ -711,12 +700,7 @@ public class BaseMetaTileEntity
             createNewMetatileEntity(mID);
         }
 
-        mCoverSides[0] = aCover0;
-        mCoverSides[1] = aCover1;
-        mCoverSides[2] = aCover2;
-        mCoverSides[3] = aCover3;
-        mCoverSides[4] = aCover4;
-        mCoverSides[5] = aCover5;
+        receiveCoverIDs(new int[]{aCover0, aCover1, aCover2, aCover3, aCover4, aCover5});
 
         for (byte i = 0; i < 6; i++) mCoverBehaviors[i] = GregTech_API.getCoverBehavior(mCoverSides[i]);
 
@@ -846,11 +830,15 @@ public class BaseMetaTileEntity
 
     @Override
     public void issueCoverUpdate(byte aSide) {
+        markCoverForUpdate(aSide);
         issueClientUpdate();
     }
 
     @Override
     public void receiveCoverData(byte coverSide, int coverID, int coverData) {
+        if (getCoverAtSide(ForgeDirection.getOrientation(coverSide)).useMui2()) {
+            return;
+        }
         if ((coverSide >= 0 && coverSide < 6) && (mCoverSides[coverSide] == coverID))
             setCoverDataAtSide(coverSide, coverData);
     }
@@ -871,11 +859,15 @@ public class BaseMetaTileEntity
     }
 
     public ITexture getCoverTexture(byte aSide) {
-        if (getCoverIDAtSide(aSide) == 0) return null;
+        if (getCoverIDAtSide(aSide) == 0) {
+            return null;
+        }
         if (GT_Mod.instance.isClientSide() && (GT_Client.hideValue & 0x1) != 0) {
             return BlockIcons.HIDDEN_TEXTURE[0]; // See through
         }
-        return GregTech_API.sCovers.get(new GT_ItemStack(getCoverIDAtSide(aSide)));
+        gregtech.common.covers.Cover cover = getCoverAtSide(ForgeDirection.getOrientation(aSide));
+        ITexture texture = cover.getOverlayTexture();
+        return texture == null ? gregtech.api.covers.CoverRegistry.getCoverTexture(cover.asItemStack()) : texture;
     }
 
     @Override
@@ -1414,6 +1406,7 @@ public class BaseMetaTileEntity
     public ArrayList<ItemStack> getDrops() {
         ItemStack rStack = new ItemStack(GregTech_API.sBlockMachines, 1, mID);
         NBTTagCompound tNBT = new NBTTagCompound();
+        writeCoverNBT(tNBT, true);
         if (mRecipeStuff != null && !mRecipeStuff.hasNoTags()) tNBT.setTag("GT.CraftingComponents", mRecipeStuff);
         if (mMuffler) tNBT.setBoolean("mMuffler", mMuffler);
         if (mLockUpgrade) tNBT.setBoolean("mLockUpgrade", mLockUpgrade);
@@ -1783,29 +1776,27 @@ public class BaseMetaTileEntity
 
     @Override
     public GT_CoverBehavior getCoverBehaviorAtSide(byte aSide) {
-        return aSide >= 0 && aSide < mCoverBehaviors.length ? mCoverBehaviors[aSide] : GregTech_API.sNoBehavior;
+        return getCompatibleCoverBehavior(aSide);
     }
 
     @Override
     public void setCoverIDAtSide(byte aSide, int aID) {
-        if (aSide >= 0 && aSide < 6) {
-            mCoverSides[aSide] = aID;
-            mCoverData[aSide] = 0;
-            mCoverBehaviors[aSide] = GregTech_API.getCoverBehavior(aID);
-            issueCoverUpdate(aSide);
-            issueBlockUpdate();
-        }
+        setAttachedCoverID(aSide, aID);
     }
 
     @Override
     public void setCoverItemAtSide(byte aSide, ItemStack aCover) {
-        GregTech_API.getCoverBehavior(aCover).placeCover(aSide, aCover, this);
+        if (gregtech.api.covers.CoverRegistry.isNativeCover(aCover)) {
+            gregtech.api.covers.CoverRegistry.getCoverPlacer(aCover)
+                .placeCover(null, aCover, this, ForgeDirection.getOrientation(aSide));
+        } else {
+            GregTech_API.getCoverBehavior(aCover).placeCover(aSide, aCover, this);
+        }
     }
 
     @Override
     public int getCoverIDAtSide(byte aSide) {
-        if (aSide >= 0 && aSide < 6) return mCoverSides[aSide];
-        return 0;
+        return aSide >= 0 && aSide < 6 ? getCoverAtSide(ForgeDirection.getOrientation(aSide)).getCoverID() : 0;
     }
 
     @Override
@@ -1820,18 +1811,20 @@ public class BaseMetaTileEntity
 
     @Override
     public boolean canPlaceCoverItemAtSide(byte aSide, ItemStack aCover) {
-        return getCoverIDAtSide(aSide) == 0;
+        return aSide >= 0 && aSide < 6 && getCoverIDAtSide(aSide) == 0
+            && (!gregtech.api.covers.CoverRegistry.isNativeCover(aCover)
+                || gregtech.api.covers.CoverRegistry.getCoverPlacer(aCover)
+                    .isCoverPlaceable(ForgeDirection.getOrientation(aSide), aCover, this));
     }
 
     @Override
     public void setCoverDataAtSide(byte aSide, int aData) {
-        if (aSide >= 0 && aSide < 6) mCoverData[aSide] = aData;
+        setAttachedCoverData(aSide, aData);
     }
 
     @Override
     public int getCoverDataAtSide(byte aSide) {
-        if (aSide >= 0 && aSide < 6) return mCoverData[aSide];
-        return 0;
+        return aSide >= 0 && aSide < 6 ? getCoverAtSide(ForgeDirection.getOrientation(aSide)).getLegacyData() : 0;
     }
 
     public byte getLightValue() {
@@ -2417,25 +2410,6 @@ public class BaseMetaTileEntity
         return getMetaTileEntity() instanceof IConstructable ? (IConstructable) getMetaTileEntity() : null;
     }
     
-    protected Supplier<Boolean> getValidator() {
-        return () -> !this.isDead();
-    }
-    
-    public boolean useModularUI() {
-        return false;
-    }
-    
-    public ModularWindow createModularUI(UIBuildContext buildContext) {
-         return null;
-    }
-    
-    @Override
-    public ModularWindow createWindow(UIBuildContext buildContext) {
-        if (!useModularUI()) return null;
-        buildContext.setValidator(getValidator());
-        return createModularUI(buildContext);
-    }
-    
     private class BasicAlignment implements IAlignment {
         
         @Override
@@ -2494,6 +2468,16 @@ public class BaseMetaTileEntity
                                 World world, int x, int y, int z) {
         if (hasValidMetaTileEntity()) {
             mMetaTileEntity.getWailaNBTData(player, tile, tag, world, x, y, z);
+        }
+    }
+
+    @Override
+    protected void syncLegacyCoverSnapshots() {
+        for (byte side = 0; side < 6; side++) {
+            gregtech.common.covers.Cover cover = getCoverAtSide(ForgeDirection.getOrientation(side));
+            mCoverSides[side] = cover.getCoverID();
+            mCoverData[side] = cover.getLegacyData();
+            mCoverBehaviors[side] = getCompatibleCoverBehavior(side);
         }
     }
 }

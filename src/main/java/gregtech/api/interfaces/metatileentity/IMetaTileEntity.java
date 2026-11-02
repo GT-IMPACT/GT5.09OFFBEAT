@@ -1,6 +1,12 @@
 package gregtech.api.interfaces.metatileentity;
 
-import com.gtnewhorizons.modularui.api.forge.ItemStackHandler;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.interfaces.ITexture;
@@ -9,6 +15,9 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IGregtechWailaProvider;
 import gregtech.api.interfaces.tileentity.IMachineBlockUpdateable;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.modularui2.GTGuiTheme;
+import gregtech.api.modularui2.GTGuiThemes;
+import gregtech.api.modularui2.GTModularScreen;
 import gregtech.api.util.GT_Config;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -34,7 +43,8 @@ import java.util.List;
  * <p/>
  * Don't implement this yourself and expect it to work. Extend @MetaTileEntity itself.
  */
-public interface IMetaTileEntity extends IGregtechWailaProvider, ISidedInventory, IFluidTank, IFluidHandler, IGearEnergyTileEntity, IMachineBlockUpdateable {
+public interface IMetaTileEntity extends IGregtechWailaProvider, ISidedInventory, IFluidTank, IFluidHandler,
+        IGearEnergyTileEntity, IMachineBlockUpdateable, IGuiHolder<PosGuiData> {
     /**
      * This determines the BaseMetaTileEntity belonging to this MetaTileEntity by using the Meta ID of the Block itself.
      * <p/>
@@ -455,11 +465,35 @@ public interface IMetaTileEntity extends IGregtechWailaProvider, ISidedInventory
         return true;
     }
     
-    default boolean useModularUI() {
+    default IItemHandlerModifiable getInventoryHandler() {
+        return null;
+    }
+
+    /** Each machine explicitly opts in after its slots and controls have been migrated. */
+    default boolean useMui2() {
         return false;
     }
-    
-    default ItemStackHandler getInventoryHandler() {
-        return null;
+
+    default String getGuiId() {
+        return getMetaName();
+    }
+
+    default String getLocalName() {
+        return getMetaName();
+    }
+
+    default GTGuiTheme getGuiTheme() {
+        return GTGuiThemes.STANDARD;
+    }
+
+    @Override
+    default ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        throw new UnsupportedOperationException("MUI2 GUI is not implemented for " + getGuiId());
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    default ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new GTModularScreen(mainPanel, getGuiTheme());
     }
 }

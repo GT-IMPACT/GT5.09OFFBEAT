@@ -390,7 +390,14 @@ public class GT_Block_Machines extends GT_Generic_Block implements IDebugableBlo
     }
 
     @Override
-    public void breakBlock(World aWorld, int aX, int aY, int aZ, Block par5, int par6) {
+    public void breakBlock(
+        World aWorld,
+        int aX,
+        int aY,
+        int aZ,
+        Block par5,
+        int par6
+    ) {
         GregTech_API.causeMachineUpdate(aWorld, aX, aY, aZ);
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if (tTileEntity instanceof IGregTechTileEntity) {
@@ -416,7 +423,17 @@ public class GT_Block_Machines extends GT_Generic_Block implements IDebugableBlo
                 }
             }
         }
-        super.breakBlock(aWorld, aX, aY, aZ, par5, par6);
+        if (tTileEntity instanceof gregtech.api.metatileentity.CoverableTileEntity) {
+            ((gregtech.api.metatileentity.CoverableTileEntity) tTileEntity).onBaseTileDestroyed();
+        }
+        super.breakBlock(
+            aWorld,
+            aX,
+            aY,
+            aZ,
+            par5,
+            par6
+        );
         aWorld.removeTileEntity(aX, aY, aZ);
     }
 

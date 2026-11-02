@@ -43,6 +43,10 @@ dependencies {
     // maven impact
 
     api("com.github.GTNewHorizons:modularui:1.1.24:dev")
+    api("com.github.GTNewHorizons:ModularUI2:2.3.92-1.7.10:dev") {
+        // Reuse the compatibility artifact instead of resolving a second MUI1 version.
+        exclude(group = "com.github.GTNewHorizons", module = "ModularUI")
+    }
     api("com.github.GTNewHorizons:IC2NuclearControl:2.6.2:dev")
     compileOnlyApi("com.github.GTNewHorizons:Translocator:1.1.2.21:dev")
     compileOnlyApi("com.github.GTNewHorizons:chisel:2.11.0-GTNH")
@@ -75,6 +79,11 @@ dependencies {
     // AE stack interfaces reference Minecraft client types even in server-side storage tests.
     testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.3") { isTransitive = false }
     testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
+    // Unit tests load GUI factory signatures without Forge's optional-interface transformer.
+    testRuntimeOnly("com.github.GTNewHorizons:lwjgl3ify:3.0.34:api") { isTransitive = false }
+    testRuntimeOnly("curse.maven:neverenoughanimation-1062347:7664003-sources-7663978") {
+        isTransitive = false
+    }
 }
 
 tasks.test {
