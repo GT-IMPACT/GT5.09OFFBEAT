@@ -1,10 +1,16 @@
 package gregtech.common.tileentities.automation;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import gregtech.common.gui.modularui.singleblock.MTEItemDistributorGui;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Buffer;
+import gregtech.api.modularui2.GTGuis;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
@@ -19,6 +25,24 @@ import net.minecraft.tileentity.TileEntity;
 public class GT_MetaTileEntity_ItemDistributor extends GT_MetaTileEntity_Buffer {
     private byte[] itemsPerSide = new byte[6];
     private byte currentSide = 0, currentSideItemCount = 0;
+
+    public byte getItemsPerSide(int side) {
+        if (side < 0 || side >= itemsPerSide.length) {
+            throw new IndexOutOfBoundsException("Side: " + side);
+        }
+        return itemsPerSide[side];
+    }
+
+    public void setItemsPerSide(int side, byte count) {
+        if (side < 0 || side >= itemsPerSide.length) {
+            throw new IndexOutOfBoundsException("Side: " + side);
+        }
+        if (count < 0) {
+            return;
+        }
+        itemsPerSide[side] = count;
+        GTGuis.markDirty(this);
+    }
 
     public GT_MetaTileEntity_ItemDistributor(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 28, new String[]{
@@ -60,6 +84,16 @@ public class GT_MetaTileEntity_ItemDistributor extends GT_MetaTileEntity_Buffer 
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_ItemDistributor(aPlayerInventory, aBaseMetaTileEntity);
+    }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEItemDistributorGui(this).build(data, syncManager, settings);
     }
 
     public ITexture getOverlayIcon() {

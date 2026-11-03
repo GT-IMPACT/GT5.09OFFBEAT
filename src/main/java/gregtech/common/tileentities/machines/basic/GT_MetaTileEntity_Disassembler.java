@@ -144,4 +144,9 @@ public class GT_MetaTileEntity_Disassembler
                         aStack.getTagCompound() != null) && (
                         aStack.getTagCompound().getCompoundTag("GT.CraftingComponents") != null);
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

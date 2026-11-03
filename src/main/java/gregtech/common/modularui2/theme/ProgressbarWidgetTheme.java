@@ -1,0 +1,77 @@
+package gregtech.common.modularui2.theme;
+
+import com.cleanroommc.modularui.api.drawable.IDrawable;
+import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.theme.WidgetTheme;
+import com.cleanroommc.modularui.utils.Color;
+import com.cleanroommc.modularui.utils.JsonHelper;
+import com.google.gson.JsonObject;
+
+public class ProgressbarWidgetTheme extends WidgetTheme {
+
+    private final UITexture emptyTexture;
+    private final UITexture fullTexture;
+    private final int imageSize;
+
+    public ProgressbarWidgetTheme(UITexture emptyTexture, UITexture fullTexture, int imageSize) {
+        super(
+            0,
+            0,
+            null,
+            Color.WHITE.main,
+            0xFF404040,
+            false,
+            0
+        );
+        this.emptyTexture = emptyTexture;
+        this.fullTexture = fullTexture;
+        this.imageSize = imageSize;
+    }
+
+    public ProgressbarWidgetTheme(UITexture wholeTexture, int imageSize) {
+        this(wholeTexture.getSubArea(0, 0, 1, 0.5f), wholeTexture.getSubArea(0, 0.5f, 1, 1), imageSize);
+    }
+
+    public ProgressbarWidgetTheme(ProgressbarWidgetTheme parent, JsonObject json, JsonObject fallback) {
+        super(parent, json, fallback);
+        this.imageSize = JsonHelper.getInt(json, parent.getImageSize(), "imageSize");
+        if (json.has("wholeTexture")) {
+            IDrawable wholeTexture = JsonHelper.deserialize(json, IDrawable.class, IDrawable.EMPTY, "wholeTexture");
+            if (wholeTexture instanceof UITexture) {
+                UITexture texture = (UITexture) wholeTexture;
+                this.emptyTexture = texture.getSubArea(0, 0, 1, 0.5f);
+                this.fullTexture = texture.getSubArea(0, 0.5f, 1, 1);
+                return;
+            }
+        }
+        IDrawable deserializedEmptyTexture = JsonHelper
+            .deserialize(json, IDrawable.class, parent.getEmptyTexture(), "emptyTexture");
+        IDrawable deserializedFullTexture = JsonHelper
+            .deserialize(json, IDrawable.class, parent.getFullTexture(), "fullTexture");
+        if (deserializedEmptyTexture instanceof UITexture && deserializedFullTexture instanceof UITexture) {
+            this.emptyTexture = (UITexture) deserializedEmptyTexture;
+            this.fullTexture = (UITexture) deserializedFullTexture;
+            return;
+        }
+        this.emptyTexture = null;
+        this.fullTexture = null;
+    }
+
+    public UITexture getEmptyTexture() {
+        return emptyTexture;
+    }
+
+    public UITexture getFullTexture() {
+        return fullTexture;
+    }
+
+    public int getImageSize() {
+        return imageSize;
+    }
+
+    @Override
+    public WidgetTheme withNoHoverBackground() {
+        return this;
+    }
+}
+

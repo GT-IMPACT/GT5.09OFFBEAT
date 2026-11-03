@@ -3,7 +3,6 @@ package gregtech.common.tileentities.machines.multi;
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.HatchElement;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.TimedProcessingLogic;
 import gregtech.api.interfaces.ICasing;
@@ -21,7 +20,6 @@ import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.StructureRequirements;
 import ic2.core.block.BlockIC2Door;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
@@ -457,11 +455,6 @@ public class GT_MetaTileEntity_Cleanroom
         }
         return new ITexture[]{Casings.PLASCRETE.getTexture()};
     }
-
-	@Override
-	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-		return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "MultiblockDisplay.png");
-	}
 
 	@Override
 	public GT_Recipe.GT_Recipe_Map getRecipeMap() {

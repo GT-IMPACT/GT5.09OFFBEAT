@@ -7,6 +7,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingM
 import gregtech.api.net.GT_Packet_ProcessingOutputs;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
+import gregtech.common.gui.modularui.multiblock.ProcessingGuiControls;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -53,7 +54,7 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
             + (PLAYER_INVENTORY_X - 1 - GUI_BORDER - CONTROL_BANK_WIDTH) / 2 + 1;
     private static final int RIGHT_CONTROL_X = GUI_WIDTH - LEFT_CONTROL_X - 16;
     public static final int CONTROLLER_FRAME_SIZE = 26;
-    public static final int CONTROLLER_X = (PLAYER_INVENTORY_X - 1 + 162 + GUI_WIDTH - GUI_BORDER - 16) / 2;
+    public static final int CONTROLLER_X = (PLAYER_INVENTORY_X - 1 + 162 + GUI_WIDTH - 16) / 2;
     public static final int CONTROLLER_Y = PLAYER_INVENTORY_Y + 58 + 17 - (CONTROLLER_FRAME_SIZE + 16) / 2;
     private static final int[] VOIDING_PROTECTION = { PROTECT_ITEMS | PROTECT_FLUIDS, PROTECT_FLUIDS, PROTECT_ITEMS,
             0 };
@@ -178,39 +179,7 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
         if (!isControlVisible(slot)) {
             return null;
         }
-        GT_MetaTileEntity_ProcessingMultiBlockBase<?> machine = machine();
-        int modes = machine.getProcessingModes();
-        switch (slot) {
-        case VOIDING_SLOT:
-            if ((machine.getSupportedProcessingModes() & (PROTECT_ITEMS | PROTECT_FLUIDS)) == PROTECT_FLUIDS) {
-                machine.setProcessingModes(modes ^ PROTECT_FLUIDS);
-                break;
-            }
-            int index = voidingIndex(modes);
-            int next = Math.floorMod(index + (mouseButton == 1 ? -1 : 1), VOIDING_PROTECTION.length);
-            machine.setProcessingModes((modes & ~(PROTECT_ITEMS | PROTECT_FLUIDS)) | VOIDING_PROTECTION[next]);
-            break;
-        case SEPARATION_SLOT:
-            machine.setProcessingModes(modes ^ SEPARATE_INPUTS);
-            break;
-        case BATCH_SLOT:
-            machine.setProcessingModes(modes ^ BATCH);
-            break;
-        case LOCK_SLOT:
-            machine.setProcessingModes(modes ^ LOCK_RECIPE);
-            break;
-        case POWER_SLOT:
-            if (mTileEntity.isAllowedToWork()) {
-                mTileEntity.disableWorking();
-            } else {
-                mTileEntity.enableWorking();
-            }
-            machine.markDirty();
-            break;
-        case RECIPE_MAP_SLOT:
-            machine.cycleRecipeMap(mouseButton == 1);
-            break;
-        }
+        ProcessingGuiControls.click(machine(), slot, mouseButton);
         detectAndSendChanges();
         return null;
     }

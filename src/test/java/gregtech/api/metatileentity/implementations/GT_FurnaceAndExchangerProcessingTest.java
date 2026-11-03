@@ -1,9 +1,14 @@
 package gregtech.api.metatileentity.implementations;
 
+import gregtech.api.enums.ItemList;
 import gregtech.api.gui.GT_Container_ProcessingMachine;
 import gregtech.api.gui.GT_ProcessingOutputSummary;
 import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.Fixture;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.GameRuntime;
 import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_HeatExchanger;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiFurnace;
 import net.minecraft.init.Blocks;
@@ -20,10 +25,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
-import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.*;
-import static org.junit.Assert.*;
+import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.fluid;
+import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.setField;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GT_FurnaceAndExchangerProcessingTest {
+
     private static GameRuntime runtime;
 
     @BeforeClass
@@ -101,11 +110,14 @@ public class GT_FurnaceAndExchangerProcessingTest {
     }
 
     @Test
-    public void guiOnlyShowsApplicableControlsAndCircuitSlot() throws Throwable {
+    public void guiOnlyShowsApplicableControlsAndExchangerUsesVirtualCircuit() throws Throwable {
         run("controls");
     }
 
     public static void runScenario(String scenario, String ignored) throws Throwable {
+        if (!ItemList.Circuit_Integrated.hasBeenSet()) {
+            new GT_IntegratedCircuit_Item();
+        }
         for (String name : new String[] { "steam", "ic2distilledwater", "ic2hotcoolant", "ic2coolant",
                 "ic2superheatedsteam", "ic2pahoehoelava" }) {
             fluid(name);
@@ -223,18 +235,35 @@ public class GT_FurnaceAndExchangerProcessingTest {
 
     private static void ports() throws Exception {
         for (boolean lava : new boolean[] { true, false }) {
-            Exchanger s = new Exchanger();
-            s.hot.mFluid = lava ? new FluidStack(FluidRegistry.LAVA, 2000)
+            for (int configuration : new int[]{0, 24}) {
+                Exchanger s = new Exchanger();
+                GhostCircuitItemStackHandler circuit = new GhostCircuitItemStackHandler(s.machine);
+                circuit.setCircuitConfig(configuration);
+                assertTrue(s.machine.mInventory[s.machine.getCircuitSlot()].getItem()
+                    instanceof GT_IntegratedCircuit_Item);
+                s.hot.mFluid = lava ? new FluidStack(FluidRegistry.LAVA, 2000)
                     : FluidRegistry.getFluidStack("ic2hotcoolant", 1600);
-            assertTrue(s.machine.checkRecipe(null));
-            assertEquals(0, s.hot.getFluidAmount());
-            assertEquals(lava ? "ic2pahoehoelava" : "ic2coolant", s.cold.mFluid.getFluid().getName());
-            assertEquals(lava ? 2000 : 1600, s.cold.getFluidAmount());
-            assertEquals(0, s.steam.getFluidAmount());
-            assertTrue(s.machine.onRunningTick(null));
-            assertEquals("ic2superheatedsteam", s.steam.mFluid.getFluid().getName());
-            assertEquals(lava ? 8000 : 16000, s.steam.getFluidAmount());
-            assertEquals(0, s.machine.lEUt);
+                int initialHot = s.hot.getFluidAmount();
+                int processed = initialHot;
+                int expectedHeat = lava ? 8000 : 16000;
+                if (configuration == 24) {
+                    processed = lava ? 274 : 220;
+                    expectedHeat = lava ? 717 : 1440;
+                }
+                assertTrue(s.machine.checkRecipe(null));
+                assertEquals(initialHot - processed, s.hot.getFluidAmount());
+                assertEquals(lava ? "ic2pahoehoelava" : "ic2coolant", s.cold.mFluid.getFluid().getName());
+                assertEquals(processed, s.cold.getFluidAmount());
+                assertEquals(0, s.steam.getFluidAmount());
+                assertEquals(configuration, circuit.getCircuitConfig());
+                assertEquals(0, circuit.getStackInSlot(0).stackSize);
+                s.machine.loadNBTData(save(s.machine));
+                assertEquals(configuration, circuit.getCircuitConfig());
+                assertTrue(s.machine.onRunningTick(null));
+                assertEquals("ic2superheatedsteam", s.steam.mFluid.getFluid().getName());
+                assertEquals(expectedHeat, s.steam.getFluidAmount());
+                assertEquals(0, s.machine.lEUt);
+            }
         }
     }
 
@@ -316,7 +345,9 @@ public class GT_FurnaceAndExchangerProcessingTest {
             machine.loadNBTData(save(machine));
             GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(fixture.world);
             GT_Container_ProcessingMachine gui = new GT_Container_ProcessingMachine(player.inventory, fixture.tile);
-            assertEquals(thermal ? 1 : 0, gui.getSlotCount());
+            assertEquals(0, gui.getSlotCount());
+            assertEquals(thermal, machine.allowSelectCircuit());
+            assertFalse(machine.hasControllerSlotInGui());
             assertEquals(!thermal, gui.isControlVisible(GT_Container_ProcessingMachine.NEI_SLOT));
             assertEquals(!thermal, gui.isControlVisible(GT_Container_ProcessingMachine.BATCH_SLOT));
             assertEquals(!thermal, gui.isControlVisible(GT_Container_ProcessingMachine.SEPARATION_SLOT));

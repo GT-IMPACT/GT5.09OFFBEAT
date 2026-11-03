@@ -1,8 +1,18 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.Textures;
+import gregtech.api.enums.TieredVariant;
+import gregtech.api.modularui2.GTGuiTheme;
+import gregtech.api.modularui2.GTGuiThemes;
+import gregtech.api.modularui2.GTGuiTextures;
+import gregtech.common.gui.modularui.singleblock.base.MTEBasicMachineBaseGui;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_ItemStack;
 
@@ -33,6 +43,33 @@ public abstract class GT_MetaTileEntity_BasicMachine_Bronze extends GT_MetaTileE
     }
     */
     public boolean mNeedsSteamVenting = false;
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    protected TieredVariant getSteamGuiVariant() {
+        return TieredVariant.BRONZE;
+    }
+
+    @Override
+    public GTGuiTheme getGuiTheme() {
+        return GTGuiThemes.TIERED_VARIANTS.get(getSteamGuiVariant());
+    }
+
+    protected UITexture getGuiProgressTexture() {
+        return GTGuiTextures.PROGRESSBAR_ARROW_STEAM.get(getSteamGuiVariant());
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEBasicMachineBaseGui<>(this, false, false)
+            .progressTexture(getGuiProgressTexture())
+            .progressDirection(getGuiProgressDirection())
+            .progressSegments(getGuiProgressSegments())
+            .build(data, syncManager, settings);
+    }
 
     public GT_MetaTileEntity_BasicMachine_Bronze(int aID, String aName, String aNameRegional, String aDescription, int aInputSlotCount, int aOutputSlotCount, boolean aBricked) {
         super(aID, aName, aNameRegional, aBricked ? 1 : 0, 0, aDescription, aInputSlotCount, aOutputSlotCount, "", "");

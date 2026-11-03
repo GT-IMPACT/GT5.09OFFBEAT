@@ -63,4 +63,9 @@ public class GT_MetaTileEntity_AirCondenser extends GT_MetaTileEntity_BasicMachi
         }
         return DID_NOT_FIND_RECIPE;
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

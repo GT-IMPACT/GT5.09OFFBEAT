@@ -3,7 +3,6 @@ package gregtech.common.tileentities.machines.multi;
 import gregtech.GT_Mod;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.HatchElement;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.logic.BoilerProcessingLogic;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.interfaces.ITexture;
@@ -15,7 +14,7 @@ import gregtech.api.metatileentity.implementations.*;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
-import net.minecraft.entity.player.InventoryPlayer;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -193,11 +192,6 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         return new ITexture[]{getCasingType().getTexture()};
     }
 
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
-                "LargeBoiler.png");
-    }
-
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
     }
@@ -220,7 +214,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
     @Override
-    public boolean hasControllerSlotInGui() {
+    public boolean allowSelectCircuit() {
         return true;
     }
 
@@ -229,12 +223,12 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
     private int circuitConfiguration() {
-        ItemStack circuit = mInventory[1];
+        ItemStack circuit = getConfigurationCircuit();
         if (circuit == null || !circuit.getUnlocalizedName().startsWith("gt.integrated_circuit")) {
             return 0;
         }
         int configuration = circuit.getItemDamage();
-        return configuration >= 1 && configuration <= 25 ? configuration : 0;
+        return configuration >= 1 && configuration <= GT_IntegratedCircuit_Item.MAX_CONFIG ? configuration : 0;
     }
 
     @Override

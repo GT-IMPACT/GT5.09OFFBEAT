@@ -1,5 +1,7 @@
 package gregtech.common.tileentities.machines.steam;
 
+import com.cleanroommc.modularui.drawable.UITexture;
+import gregtech.api.modularui2.GTGuiTextures;
 import gregtech.api.GregTech_API;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
 import gregtech.api.interfaces.ITexture;
@@ -20,6 +22,12 @@ import static gregtech.api.enums.GT_Values.V;
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class GT_MetaTileEntity_Macerator_Steel extends GT_MetaTileEntity_BasicMachine_Steel {
+
+    @Override
+    protected UITexture getGuiProgressTexture() {
+        return GTGuiTextures.PROGRESSBAR_MACERATE_STEAM.get(getSteamGuiVariant());
+    }
+
     public GT_MetaTileEntity_Macerator_Steel(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, "Macerating your Ores", 1, 1, false);
     }

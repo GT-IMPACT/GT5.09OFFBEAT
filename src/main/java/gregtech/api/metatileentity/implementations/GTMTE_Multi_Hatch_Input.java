@@ -1,6 +1,5 @@
 package gregtech.api.metatileentity.implementations;
 
-import com.gtnewhorizons.modularui.common.fluid.FluidStackTank;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -16,7 +15,6 @@ import net.minecraftforge.fluids.FluidTankInfo;
 public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
 
     private final FluidStack[] mStoredFluid;
-    private final FluidStackTank[] fluidTanks;
     public final int mCapacityPer;
 
     public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, int capacityPer) {
@@ -25,29 +23,19 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
                 "Capacity per slot: " + GT_Utility.formatNumbers(capacityPer) + "L"
         });
         this.mStoredFluid = new FluidStack[aSlot];
-        fluidTanks = new FluidStackTank[aSlot];
         mCapacityPer = capacityPer;
     }
 
     public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, String[] aDescription, int capacityPer) {
         super(aID, aSlot, aName, aNameRegional, aTier, aDescription);
         this.mStoredFluid = new FluidStack[aSlot];
-        fluidTanks = new FluidStackTank[aSlot];
         mCapacityPer = capacityPer;
     }
 
     public GTMTE_Multi_Hatch_Input(String aName, int aSlot, int aTier, String[] aDescription, ITexture[][][] aTextures, int capacityPer) {
         super(aName, aSlot, aTier, aDescription, aTextures);
         this.mStoredFluid = new FluidStack[aSlot];
-        fluidTanks = new FluidStackTank[aSlot];
         mCapacityPer = capacityPer;
-        for (int i = 0; i < aSlot; i++) {
-            final int index = i;
-            fluidTanks[i] = new FluidStackTank(
-                    () -> mStoredFluid[index],
-                    fluid -> mStoredFluid[index] = fluid,
-                    mCapacityPer);
-        }
     }
 
     @Override
@@ -82,6 +70,11 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
     @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return null;
+    }
+
+    @Override
+    public boolean useMui2() {
+        return false;
     }
 
     @Override

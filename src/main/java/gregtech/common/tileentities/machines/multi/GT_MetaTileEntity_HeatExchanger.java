@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import gregtech.api.enums.HatchElement;
 import gregtech.api.interfaces.IHatchElement;
-import gregtech.api.gui.GT_GUIContainer_ProcessingMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -34,7 +33,6 @@ import space.impact.structures.hint.HintColor;
 import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -60,7 +58,7 @@ public class GT_MetaTileEntity_HeatExchanger
             .atLeast(ExchangerHatch.COLD).build();
     private static IStructureDefinition<GT_MetaTileEntity_HeatExchanger> structureDefinition;
     private int casingCount;
-    public static float penalty_per_config = 0.015f;  // penalize 1.5% efficiency per circuitry level (1-25)
+    public static float penalty_per_config = 0.015f;  // penalize 1.5% efficiency per circuitry level above 1
 
     private GT_MetaTileEntity_Hatch_Input mInputHotFluidHatch;
     private GT_MetaTileEntity_Hatch_Output mOutputColdFluidHatch;
@@ -129,10 +127,6 @@ public class GT_MetaTileEntity_HeatExchanger
         return new ITexture[]{Casings.STABLE_TITANIUM.getTexture()};
     }
 
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_ProcessingMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeHeatExchanger.png");
-    }
-
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
     }
@@ -140,14 +134,14 @@ public class GT_MetaTileEntity_HeatExchanger
     @Override
     protected ProcessingLogic createProcessingLogic() {
         return new HeatExchangeProcessingLogic(() -> {
-            ItemStack circuit = mInventory[1];
+            ItemStack circuit = getConfigurationCircuit();
             return circuit != null && circuit.getUnlocalizedName().startsWith("gt.integrated_circuit")
                     ? circuit.getItemDamage() : 0;
         }, () -> penalty_per_config);
     }
 
     @Override
-    public boolean hasControllerSlotInGui() {
+    public boolean allowSelectCircuit() {
         return true;
     }
 

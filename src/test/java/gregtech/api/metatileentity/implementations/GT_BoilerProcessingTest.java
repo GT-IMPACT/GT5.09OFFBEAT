@@ -11,9 +11,14 @@ import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.ProcessingOutputs;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.Fixture;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.GameRuntime;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.ProcessingWorld;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeBoiler;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -33,11 +38,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.*;
-import static org.junit.Assert.*;
+import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.fluid;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class GT_BoilerProcessingTest {
+
     private static GameRuntime runtime;
     private static boolean fuelHandlerRegistered;
     private final String model;
@@ -122,6 +133,9 @@ public class GT_BoilerProcessingTest {
         ItemList.IC2_Fuel_Can_Filled.set(new ItemStack(Items.lava_bucket));
         ItemList.IC2_ForgeHammer.set(new ItemStack(Items.iron_pickaxe));
         ItemList.IC2_WireCutter.set(new ItemStack(Items.shears));
+        if (!ItemList.Circuit_Integrated.hasBeenSet()) {
+            new GT_IntegratedCircuit_Item();
+        }
         Materials.Water.mFluid = FluidRegistry.WATER;
         fluid("steam");
         fluid("ic2distilledwater");
@@ -268,7 +282,9 @@ public class GT_BoilerProcessingTest {
                     tile.setWorldObj(world);
                     tile.setInitialValuesAsNBT(null, (short) id);
                     GT_MetaTileEntity_LargeBoiler boiler = (GT_MetaTileEntity_LargeBoiler) tile.getMetaTileEntity();
+                    // Old physical items remain intact; the actual selection lives in its own zero-count slot.
                     boiler.mInventory[1] = new ItemStack(Items.paper, 1, 7);
+                    selectCircuit(boiler, 7);
                     boiler.setProcessingModes(modes);
                     if (enabled) {
                         tile.enableWorking();
@@ -286,11 +302,19 @@ public class GT_BoilerProcessingTest {
                     assertEquals(modes & (ProcessingLogic.PROTECT_ITEMS | ProcessingLogic.PROTECT_FLUIDS),
                             restored.getProcessingModes());
                     assertEquals(7, restored.mInventory[1].getItemDamage());
+                    assertSame(Items.paper, restored.mInventory[1].getItem());
+                    assertEquals(1, restored.mInventory[1].stackSize);
+                    GhostCircuitItemStackHandler restoredCircuit = new GhostCircuitItemStackHandler(restored);
+                    assertEquals(7, restoredCircuit.getCircuitConfig());
+                    assertTrue(restored.mInventory[restored.getCircuitSlot()].getItem()
+                        instanceof GT_IntegratedCircuit_Item);
+                    assertEquals(0, restored.mInventory[restored.getCircuitSlot()].stackSize);
+                    assertFalse(restored.hasControllerSlotInGui());
                     GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(world);
                     GT_Container_ProcessingMachine gui = new GT_Container_ProcessingMachine(player.inventory,
                             restoredTile);
-                    assertEquals(43, gui.inventorySlots.size());
-                    assertEquals(1, gui.getSlotCount());
+                    assertEquals(42, gui.inventorySlots.size());
+                    assertEquals(0, gui.getSlotCount());
                     for (int slot : new int[] { GT_Container_ProcessingMachine.BATCH_SLOT,
                             GT_Container_ProcessingMachine.LOCK_SLOT,
                             GT_Container_ProcessingMachine.SEPARATION_SLOT }) {
@@ -353,7 +377,7 @@ public class GT_BoilerProcessingTest {
         ItemStack fuel = fuel(100, 8);
         s.machine.mInputBusses.clear();
         s.fixture.items(fuel);
-        s.machine.mInventory[1] = circuit(7);
+        selectCircuit(s.machine, 7);
         int adjustedHeat = Math.max(25, s.machine.getEUt() - 175);
         long expectedHeat = 0;
         long burntTicks = 0;
@@ -375,7 +399,7 @@ public class GT_BoilerProcessingTest {
     private static void resume(String model) throws Exception {
         for (boolean legacy : new boolean[] { false, true }) {
             Scenario s = new Scenario(model);
-            s.machine.mInventory[1] = circuit(3);
+            selectCircuit(s.machine, 3);
             s.machine.setProcessingModes(ProcessingLogic.PROTECT_FLUIDS);
             assertTrue(s.machine.checkRecipe(null));
             s.machine.mProgresstime = 2;
@@ -406,13 +430,13 @@ public class GT_BoilerProcessingTest {
         ItemStack fuel = fuel(160000, 2);
         s.fixture.items(fuel);
         s.machine.mEfficiency = 0;
-        s.machine.mInventory[1] = circuit(1);
+        selectCircuit(s.machine, 1);
         assertTrue(s.machine.checkRecipe(null));
         assertEquals(0, s.machine.mEfficiency);
         assertEquals(0, s.machine.mEfficiencyIncrease);
         int heat = s.machine.getEUt() - 25;
         assertEquals(heat, s.machine.mEUt);
-        s.machine.mInventory[1] = circuit(25);
+        selectCircuit(s.machine, 24);
         for (int tick = 1; tick <= 10; tick++) {
             s.machine.loadNBTData(s.save());
             assertTrue(s.machine.onRunningTick(null));
@@ -422,7 +446,7 @@ public class GT_BoilerProcessingTest {
         }
         s.finish();
         assertTrue(s.machine.checkRecipe(null));
-        assertEquals(Math.max(25, s.machine.getEUt() - 625), s.machine.mEUt);
+        assertEquals(Math.max(25, s.machine.getEUt() - 600), s.machine.mEUt);
     }
 
     private static void snapshots(String model) throws Exception {
@@ -469,13 +493,11 @@ public class GT_BoilerProcessingTest {
         return Math.multiplyExact(time, ratio) / 100;
     }
 
-    private static ItemStack circuit(int configuration) {
-        return new ItemStack(new Item() {
-            @Override
-            public String getUnlocalizedName(ItemStack stack) {
-                return "gt.integrated_circuit";
-            }
-        }, 1, configuration);
+    private static void selectCircuit(GT_MetaTileEntity_LargeBoiler machine, int configuration) {
+        GhostCircuitItemStackHandler circuit = new GhostCircuitItemStackHandler(machine);
+        circuit.setCircuitConfig(configuration);
+        assertEquals(configuration, machine.mInventory[machine.getCircuitSlot()].getItemDamage());
+        assertEquals(0, machine.mInventory[machine.getCircuitSlot()].stackSize);
     }
 
     private static ItemStack fuel(int burnTime, int count) {

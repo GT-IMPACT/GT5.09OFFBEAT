@@ -1,5 +1,7 @@
 package gregtech.api.logic;
 
+import gregtech.api.enums.OutputBusType;
+import gregtech.api.enums.OutputHatchType;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_OutputBus;
@@ -8,9 +10,11 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Outpu
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import java.util.IdentityHashMap;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -33,6 +37,8 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
     private final Map<GT_MetaTileEntity_Hatch, ItemStack[]> slots = new IdentityHashMap<>();
     private final Map<GT_MetaTileEntity_Hatch_Output, FluidStack> tanks = new IdentityHashMap<>();
     private final Map<GT_MetaTileEntity_Hatch, Long> meReserved = new IdentityHashMap<>();
+    private final Map<GT_MetaTileEntity_Hatch_OutputBus_ME, List<ItemStack>> meItemReserved = new IdentityHashMap<>();
+    private final Map<GT_MetaTileEntity_Hatch_Output_ME, List<FluidStack>> meFluidReserved = new IdentityHashMap<>();
 
     public ProcessingOutputs(GT_MetaTileEntity_MultiBlockBase machine) {
         this.machine = machine;
@@ -64,6 +70,8 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
         slots.clear();
         tanks.clear();
         meReserved.clear();
+        meItemReserved.clear();
+        meFluidReserved.clear();
         if (protectItems) {
             for (ItemStack stack : ProcessingInputs.copyItems(items)) {
                 if (stack != null) {
@@ -130,32 +138,41 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
     }
 
     private void insertItem(ItemStack stack, boolean simulate) {
-        for (GT_MetaTileEntity_Hatch_OutputBus bus : machine.mOutputBusses) {
-            if (stack.stackSize <= 0) {
-                return;
-            }
-            if (!isValidMetaTileEntity(bus)) {
-                continue;
-            }
-            if (bus instanceof GT_MetaTileEntity_Hatch_OutputBus_ME) {
-                GT_MetaTileEntity_Hatch_OutputBus_ME me = (GT_MetaTileEntity_Hatch_OutputBus_ME) bus;
-                int amount = (int) Math.min(stack.stackSize, Math.max(0,
-                        me.getProcessingCapacity(stack) - (simulate ? meReserved.getOrDefault(me, 0L) : 0)));
-                if (amount == 0) {
+        for (OutputBusType type : OutputBusType.VALUES) {
+            for (GT_MetaTileEntity_Hatch_OutputBus bus : machine.mOutputBusses) {
+                if (stack.stackSize <= 0) {
+                    return;
+                }
+                if (!isValidMetaTileEntity(bus)) {
                     continue;
                 }
-                if (simulate) {
-                    meReserved.put(me, meReserved.getOrDefault(me, 0L) + amount);
-                } else {
-                    ItemStack part = stack.copy();
-                    part.stackSize = amount;
-                    if (!me.storeAll(part)) {
+                if (type != bus.getBusType() || type.isFiltered() && !bus.isFilteredToItem(stack)) {
+                    continue;
+                }
+                if (bus instanceof GT_MetaTileEntity_Hatch_OutputBus_ME) {
+                    GT_MetaTileEntity_Hatch_OutputBus_ME me = (GT_MetaTileEntity_Hatch_OutputBus_ME) bus;
+                    int amount = (int) Math.min(stack.stackSize, Math.max(0,
+                            me.getProcessingCapacity(stack, simulate ? getReservedItemAmount(me, stack) : 0)
+                                    - (simulate ? meReserved.getOrDefault(me, 0L) : 0)));
+                    if (amount == 0) {
                         continue;
                     }
+                    if (simulate) {
+                        meReserved.put(me, meReserved.getOrDefault(me, 0L) + amount);
+                        ItemStack reserved = stack.copy();
+                        reserved.stackSize = amount;
+                        meItemReserved.computeIfAbsent(me, hatch -> new ArrayList<>()).add(reserved);
+                    } else {
+                        ItemStack part = stack.copy();
+                        part.stackSize = amount;
+                        if (!me.storeAll(part)) {
+                            continue;
+                        }
+                    }
+                    stack.stackSize -= amount;
+                } else {
+                    insertSlots(bus, stack, simulate, 0, bus.mInventory.length);
                 }
-                stack.stackSize -= amount;
-            } else {
-                insertSlots(bus, stack, simulate, 0, bus.mInventory.length);
             }
         }
         for (GT_MetaTileEntity_Hatch_Output hatch : machine.mOutputHatches) {
@@ -192,13 +209,13 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
     }
 
     private void insertFluid(FluidStack stack, int outputIndex, boolean simulate) {
-        // Restricted hatches retain their existing priority.
-        for (boolean restricted : new boolean[] { true, false }) {
+        for (OutputHatchType type : OutputHatchType.VALUES) {
             for (GT_MetaTileEntity_Hatch_Output hatch : fluidHatches) {
                 if (stack.amount <= 0) {
                     return;
                 }
-                if (!isValidMetaTileEntity(hatch) || (hatch.mMode != 0) != restricted
+                if (!isValidMetaTileEntity(hatch) || type != hatch.getHatchType()
+                        || type.isFiltered() && !hatch.isFilteredToFluid(stack)
                         || !fluidFilter.accepts(hatch, stack, outputIndex)) {
                     continue;
                 }
@@ -213,9 +230,13 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
                 if (hatch instanceof GT_MetaTileEntity_Hatch_Output_ME) {
                     GT_MetaTileEntity_Hatch_Output_ME me = (GT_MetaTileEntity_Hatch_Output_ME) hatch;
                     amount = (int) Math.min(stack.amount, Math.max(0,
-                            me.getProcessingCapacity(stack) - (simulate ? meReserved.getOrDefault(me, 0L) : 0)));
+                            me.getProcessingCapacity(stack, simulate ? getReservedFluidAmount(me, stack) : 0)
+                                    - (simulate ? meReserved.getOrDefault(me, 0L) : 0)));
                     if (simulate) {
                         meReserved.put(me, meReserved.getOrDefault(me, 0L) + amount);
+                        FluidStack reserved = stack.copy();
+                        reserved.amount = amount;
+                        meFluidReserved.computeIfAbsent(me, output -> new ArrayList<>()).add(reserved);
                     }
                 } else {
                     FluidStack present = simulate && tanks.containsKey(hatch) ? tanks.get(hatch)
@@ -242,5 +263,31 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
                 stack.amount -= amount;
             }
         }
+    }
+
+    private long getReservedItemAmount(GT_MetaTileEntity_Hatch_OutputBus_ME bus, ItemStack stack) {
+        List<ItemStack> reserved = meItemReserved.get(bus);
+        long amount = 0;
+        if (reserved != null) {
+            for (ItemStack previous : reserved) {
+                if (GT_Utility.areStacksEqual(previous, stack)) {
+                    amount += previous.stackSize;
+                }
+            }
+        }
+        return amount;
+    }
+
+    private long getReservedFluidAmount(GT_MetaTileEntity_Hatch_Output_ME hatch, FluidStack stack) {
+        List<FluidStack> reserved = meFluidReserved.get(hatch);
+        long amount = 0;
+        if (reserved != null) {
+            for (FluidStack previous : reserved) {
+                if (previous.isFluidEqual(stack)) {
+                    amount += previous.amount;
+                }
+            }
+        }
+        return amount;
     }
 }

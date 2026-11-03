@@ -1,39 +1,56 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import java.lang.ref.WeakReference;
+
 import gregtech.api.enums.ItemList;
+import gregtech.api.enums.OutputHatchType;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_Container_Fluid_Hatch;
-import gregtech.api.gui.GT_GUIContainer_Fluid_Hatch;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IFluidLockableMui2;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.gui.modularui.hatch.MTEHatchOutputGui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
-public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
+public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch implements IFluidLockableMui2 {
 	
 	public byte mMode = 0;
 	public FluidStack lockedFluid = null;
-	private EntityPlayer playerThatLockedfluid = null;
+    private WeakReference<EntityPlayer> playerThatLockedfluid;
 	
 	public GT_MetaTileEntity_Hatch_Output(int aID, String aName, String aNameRegional, int aTier) {
-		super(aID, aName, aNameRegional, aTier, 3, new String[]{
-				"Fluid Output for Multiblocks",
-				"Capacity: " + GT_Utility.formatNumbers((2L << aTier + 2) * 1000L) + "L",
-				"Right click with screwdriver to restrict output",
-				"Can be restricted to put out Items and/or Steam/No Steam/1 specific Fluid",
-				"Restricted Output Hatches are given priority for Multiblock Fluid output"});
+        super(
+            aID,
+            aName,
+            aNameRegional,
+            aTier,
+            4,
+            new String[]{
+                "Fluid Output for Multiblocks",
+                "Capacity: " + GT_Utility.formatNumbers((2L << aTier + 2) * 1000L) + "L",
+                "Right click with screwdriver to restrict output",
+                "Can be restricted to put out Items and/or Steam/No Steam/1 specific Fluid",
+                "Restricted Output Hatches are given priority for Multiblock Fluid output"}
+        );
 	}
 	
 	public GT_MetaTileEntity_Hatch_Output(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
@@ -43,6 +60,15 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	public GT_MetaTileEntity_Hatch_Output(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
 		super(aName, aTier, 4, aDescription, aTextures);
 	}
+
+    public byte getMode() {
+        return mMode;
+    }
+
+    public void setMode(byte mode) {
+        mMode = mode;
+        lockFluid(isFluidLocked());
+    }
 	
 	@Override
 	public ITexture[] getTexturesActive(ITexture aBaseTexture) {
@@ -66,7 +92,7 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	
 	@Override
 	public boolean isValidSlot(int aIndex) {
-		return aIndex != getStackDisplaySlot() && aIndex != 3;
+		return aIndex != getStackDisplaySlot() && aIndex != getLockedDisplaySlot();
 	}
 	
 	@Override
@@ -91,15 +117,15 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 		return true;
 	}
 	
-	@Override
-	public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-		return new GT_Container_Fluid_Hatch(aPlayerInventory, aBaseMetaTileEntity);
-	}
-	
-	@Override
-	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-		return new GT_GUIContainer_Fluid_Hatch(aPlayerInventory, aBaseMetaTileEntity, getLocalName());
-	}
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEHatchOutputGui(this).build(data, syncManager, settings);
+    }
 	
 	@Override
 	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
@@ -124,30 +150,47 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 		}
 	}
 	
-	public void doDisplayThings() {
-		int tDisplayStackSlot = 3;
-		if (lockedFluid == null) {
-			if (ItemList.Display_Fluid.isStackEqual(mInventory[tDisplayStackSlot], true, true)) {
-				mInventory[tDisplayStackSlot] = null;
-			}
-		} else if (isFluidLocked()) {
-			mInventory[tDisplayStackSlot] = GT_Utility.getFluidDisplayStack(new FluidStack(lockedFluid, 0), true);
-		}
-	}
+    public int getLockedDisplaySlot() {
+        return 3;
+    }
+
+    public void doDisplayThings() {
+        int displaySlot = getLockedDisplaySlot();
+        if (displaySlot < 0 || displaySlot >= mInventory.length) {
+            return;
+        }
+        if (lockedFluid == null) {
+            if (ItemList.Display_Fluid.isStackEqual(mInventory[displaySlot], true, true)) {
+                mInventory[displaySlot] = null;
+            }
+        } else if (isFluidLocked()) {
+            mInventory[displaySlot] = GT_Utility.getFluidDisplayStack(new FluidStack(lockedFluid, 0), true);
+        }
+    }
 	
 	@Override
-	public void saveNBTData(NBTTagCompound aNBT) {
-		super.saveNBTData(aNBT);
-		aNBT.setByte("mMode", mMode);
-		if (lockedFluid != null) aNBT.setTag("lockedFluid", lockedFluid.writeToNBT(new NBTTagCompound()));
-	}
+    public void saveNBTData(NBTTagCompound nbt) {
+        super.saveNBTData(nbt);
+        nbt.setByte("mMode", mMode);
+        if (lockedFluid != null) {
+            nbt.setTag("lockedFluid", lockedFluid.writeToNBT(new NBTTagCompound()));
+        } else {
+            nbt.removeTag("lockedFluid");
+        }
+        nbt.removeTag("lockedFluidName");
+    }
 	
 	@Override
-	public void loadNBTData(NBTTagCompound aNBT) {
-		super.loadNBTData(aNBT);
-		mMode       = aNBT.getByte("mMode");
-		lockedFluid = FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag("lockedFluid"));
-	}
+    public void loadNBTData(NBTTagCompound nbt) {
+        super.loadNBTData(nbt);
+        mMode = nbt.getByte("mMode");
+        lockedFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("lockedFluid"));
+        if (!nbt.hasKey("lockedFluid") && nbt.hasKey("lockedFluidName")) {
+            Fluid fluid = FluidRegistry.getFluid(nbt.getString("lockedFluidName"));
+            lockedFluid = fluid == null ? null : new FluidStack(fluid, 0);
+        }
+        playerThatLockedfluid = null;
+    }
 	
 	@Override
 	public boolean doesFillContainers() {
@@ -156,7 +199,7 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	
 	@Override
 	public boolean doesEmptyContainers() {
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -194,73 +237,113 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 		return (2 << mTier + 2) * 1000;
 	}
 	
-	@Override
-	public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-		if (!getBaseMetaTileEntity().getCoverBehaviorAtSide(aSide).isGUIClickable(aSide, getBaseMetaTileEntity().getCoverIDAtSide(aSide), getBaseMetaTileEntity().getCoverDataAtSide(aSide), getBaseMetaTileEntity()))
-			return;
-		if (aPlayer.isSneaking()) {
-			mMode = (byte) ((mMode + 9) % 10);
-		} else {
-			mMode = (byte) ((mMode + 1) % 10);
-		}
-		String inBrackets;
-		switch (mMode) {
-			case 0:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("108", "Outputs misc. Fluids, Steam and Items"));
-				this.setLockedFluidName(null);
-				break;
-			case 1:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("109", "Outputs Steam and Items"));
-				this.setLockedFluidName(null);
-				break;
-			case 2:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("110", "Outputs Steam and misc. Fluids"));
-				this.setLockedFluidName(null);
-				break;
-			case 3:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("111", "Outputs Steam"));
-				this.setLockedFluidName(null);
-				break;
-			case 4:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("112", "Outputs misc. Fluids and Items"));
-				this.setLockedFluidName(null);
-				break;
-			case 5:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("113", "Outputs only Items"));
-				this.setLockedFluidName(null);
-				break;
-			case 6:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("114", "Outputs only misc. Fluids"));
-				this.setLockedFluidName(null);
-				break;
-			case 7:
-				GT_Utility.sendChatToPlayer(aPlayer, trans("115", "Outputs nothing"));
-				this.setLockedFluidName(null);
-				break;
-			case 8:
-				playerThatLockedfluid = aPlayer;
-				if (mFluid == null) {
-					this.setLockedFluidName(null);
-					inBrackets = trans("115.3", "currently none, will be locked to the next that is put in");
-				} else {
-					this.setLockedFluidName(this.getDrainableStack().getUnlocalizedName());
-					inBrackets = this.getDrainableStack().getLocalizedName();
-				}
-				GT_Utility.sendChatToPlayer(aPlayer, String.format("%s (%s)", trans("151.1", "Outputs items and 1 specific Fluid"), inBrackets));
-				break;
-			case 9:
-				playerThatLockedfluid = aPlayer;
-				if (mFluid == null) {
-					this.setLockedFluidName(null);
-					inBrackets = trans("115.3", "currently none, will be locked to the next that is put in");
-				} else {
-					this.setLockedFluidName(this.getDrainableStack().getUnlocalizedName());
-					inBrackets = this.getDrainableStack().getLocalizedName();
-				}
-				GT_Utility.sendChatToPlayer(aPlayer, String.format("%s (%s)", trans("151.2", "Outputs 1 specific Fluid"), inBrackets));
-				break;
-		}
-	}
+    @Override
+    public void onScrewdriverRightClick(
+        byte side,
+        EntityPlayer player,
+        float x,
+        float y,
+        float z
+    ) {
+        if (!isGuiClickable(side)) {
+            return;
+        }
+        mMode = (byte) ((mMode + (player.isSneaking() ? 9 : 1)) % 10);
+        if (mMode < 8) {
+            setLockedFluid(null);
+            player.addChatMessage(new ChatComponentTranslation(getLangKeyForMode(mMode)));
+        } else {
+            playerThatLockedfluid = new WeakReference<>(player);
+            Object fluidName;
+            if (mFluid == null) {
+                setLockedFluid(null);
+                fluidName = new ChatComponentTranslation("GT5U.chat.hatch.output.in_brackets.none");
+            } else {
+                setLockedFluid(getDrainableStack().getFluid());
+                fluidName = getDrainableStack().getLocalizedName();
+            }
+            player.addChatMessage(new ChatComponentTranslation(getLangKeyForMode(mMode), fluidName));
+        }
+    }
+
+    public static String getLangKeyForMode(byte mode) {
+        switch (mode) {
+            case 0:
+                return "GT5U.chat.hatch.output.fluid_steam_item";
+            case 1:
+                return "GT5U.chat.hatch.output.steam_item";
+            case 2:
+                return "GT5U.chat.hatch.output.steam_fluid";
+            case 3:
+                return "GT5U.chat.hatch.output.steam";
+            case 4:
+                return "GT5U.chat.hatch.output.fluid_item";
+            case 5:
+                return "GT5U.chat.hatch.output.item";
+            case 6:
+                return "GT5U.chat.hatch.output.fluid";
+            case 7:
+                return "GT5U.chat.hatch.output.nothing";
+            case 8:
+                return "GT5U.chat.hatch.output.items_and_specific_fluid";
+            case 9:
+                return "GT5U.chat.hatch.output.specific_fluid";
+            default:
+                return "";
+        }
+    }
+
+    private boolean isGuiClickable(byte side) {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        return base.getCoverBehaviorAtSide(side).isGUIClickable(
+            side,
+            base.getCoverIDAtSide(side),
+            base.getCoverDataAtSide(side),
+            base
+        );
+    }
+
+    private boolean tryToLockHatch(EntityPlayer player, byte side) {
+        if (!isGuiClickable(side) || !isFluidLocked()) {
+            return false;
+        }
+        ItemStack current = player.inventory.getCurrentItem();
+        if (current == null) {
+            return false;
+        }
+        FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(current);
+        if (fluid == null && current.getItem() instanceof IFluidContainerItem) {
+            fluid = ((IFluidContainerItem) current.getItem()).getFluid(current);
+        }
+        if (fluid == null || !acceptsFluidLock(fluid.getFluid())) {
+            return false;
+        }
+        if (getLockedFluid() != null && !getLockedFluid().equals(fluid.getFluid())) {
+            String name = getLockedFluid().getName();
+            FluidStack locked = FluidRegistry.getFluidStack(name, 1);
+            player.addChatMessage(new ChatComponentTranslation(
+                "GT5U.chat.hatch.output.fluid.already_locked", locked == null ? name : locked.getLocalizedName()));
+        } else {
+            setLockedFluid(fluid.getFluid());
+            player.addChatMessage(new ChatComponentTranslation(getLangKeyForMode(mMode), fluid.getLocalizedName()));
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onRightclick(
+        IGregTechTileEntity base,
+        EntityPlayer player,
+        byte side,
+        float x,
+        float y,
+        float z
+    ) {
+        if (tryToLockHatch(player, side)) {
+            return true;
+        }
+        return super.onRightclick(base, player, side, x, y, z);
+    }
 	
 	public String trans(String aKey, String aEnglish) {
 		return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_" + aKey, aEnglish, false);
@@ -281,6 +364,20 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	public boolean isFluidLocked() {
 		return mMode == 8 || mMode == 9;
 	}
+
+    public boolean isFiltered() {
+        return isFluidLocked();
+    }
+
+    public boolean isFilteredToFluid(FluidStack stack) {
+        return !isFluidLocked() || getLockedFluidName() == null
+                || getLockedFluidName().equals(stack.getFluid().getUnlocalizedName());
+    }
+
+    public OutputHatchType getHatchType() {
+        // Legacy steam, liquid and automatic-lock modes already precede unrestricted hatches.
+        return mMode != 0 ? OutputHatchType.StandardFiltered : OutputHatchType.StandardUnfiltered;
+    }
 	
 	public String getLockedFluidName() {
 		if (lockedFluid == null) {
@@ -293,25 +390,72 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 		setLockedFluid(FluidRegistry.getFluid(lockedFluidName));
 	}
 	
-	public void setLockedFluid(Fluid lockedFluidName) {
-		if (lockedFluidName != null) {
-			this.lockedFluid = new FluidStack(lockedFluidName, 0);
-		} else {
-			this.lockedFluid = null;
-		}
-	}
+    @Override
+    public void setLockedFluid(Fluid fluid) {
+        lockedFluid = fluid == null ? null : new FluidStack(fluid, 0);
+        markStorageDirty();
+    }
+
+    @Override
+    public Fluid getLockedFluid() {
+        return lockedFluid == null ? null : lockedFluid.getFluid();
+    }
+
+    @Override
+    public void lockFluid(boolean lock) {
+        if (lock) {
+            if (!isFluidLocked()) {
+                mMode = 9;
+            }
+            Fluid fluid = mFluid == null ? null : mFluid.getFluid();
+            setLockedFluid(getLockedFluid() == null ? fluid : getLockedFluid());
+        } else {
+            if (isFluidLocked()) {
+                mMode = 0;
+            }
+            setLockedFluid(null);
+        }
+    }
+
+    @Override
+    public boolean acceptsFluidLock(Fluid fluid) {
+        return true;
+    }
+
+    public boolean canStoreFluid(FluidStack fluid) {
+        if (fluid == null || fluid.getFluid() == null) {
+            return false;
+        }
+        if (mFluid != null && !GT_Utility.areFluidsEqual(mFluid, fluid)) {
+            return false;
+        }
+        if (isFluidLocked()) {
+            return getLockedFluid() == null || getLockedFluid().equals(fluid.getFluid());
+        }
+        return GT_ModHandler.isSteam(fluid) ? outputsSteam() : outputsLiquids();
+    }
+
+    @Override
+    public boolean isFluidInputAllowed(FluidStack fluid) {
+        return canStoreFluid(fluid);
+    }
 	
 	@Override
 	public int getTankPressure() {
 		return +100;
 	}
 	
-	@Override
-	public void onEmptyingContainerWhenEmpty() {
-		if (this.lockedFluid == null && this.mFluid != null && isFluidLocked()) {
-			this.setLockedFluid(this.mFluid.getFluid());
-			doDisplayThings();
-			GT_Utility.sendChatToPlayer(playerThatLockedfluid, String.format(trans("151.4", "Sucessfully locked Fluid to %s"), mFluid.getLocalizedName()));
-		}
-	}
+    @Override
+    public void onEmptyingContainerWhenEmpty() {
+        if (lockedFluid == null && mFluid != null && isFluidLocked()) {
+            setLockedFluid(mFluid.getFluid());
+            doDisplayThings();
+            EntityPlayer player = playerThatLockedfluid == null ? null : playerThatLockedfluid.get();
+            if (player != null) {
+                player.addChatMessage(new ChatComponentTranslation(
+                        "GT5U.chat.hatch.output.fluid.locked_to", mFluid.getLocalizedName()));
+                playerThatLockedfluid = null;
+            }
+        }
+    }
 }

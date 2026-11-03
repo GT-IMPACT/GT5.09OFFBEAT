@@ -148,4 +148,9 @@ public class GT_MetaTileEntity_Massfabricator
     public int getCapacity() {
         return Math.max(sUUAperUUM, 1000);
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

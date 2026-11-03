@@ -1,6 +1,11 @@
 package gregtech.common.tileentities.machines.basic;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.api.render.TextureFactory;
+import gregtech.common.gui.modularui.singleblock.MTEDigitalTransformerGui;
 import gregtech.common.gui.GT_Container_DigitalTransformer;
 import gregtech.common.gui.GT_GUIContainer_DigitalTransformer;
 import cpw.mods.fml.relauncher.Side;
@@ -25,6 +30,7 @@ import static gregtech.api.enums.Textures.BlockIcons.MACHINE_CASINGS;
 
 	
 public class GT_MetaTileEntity_Digital_Transformer extends GT_MetaTileEntity_Transformer {
+
 	    public int EUT=0,AMP=0;
 	    public boolean producing=true;
 
@@ -60,7 +66,74 @@ public class GT_MetaTileEntity_Digital_Transformer extends GT_MetaTileEntity_Tra
 	        return rTextures;
 	    }
 	    
-		@Override
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEDigitalTransformerGui(this).build(data, syncManager, settings);
+    }
+
+    public boolean adjustOutputSettings(int action, boolean shift) {
+        switch (action) {
+            case 0:
+                EUT -= shift ? 512 : 64;
+                break;
+            case 1:
+                EUT /= shift ? 512 : 64;
+                break;
+            case 2:
+                AMP -= shift ? 512 : 64;
+                break;
+            case 3:
+                AMP /= shift ? 512 : 64;
+                break;
+            case 4:
+                EUT -= shift ? 16 : 1;
+                break;
+            case 5:
+                EUT /= shift ? 16 : 2;
+                break;
+            case 6:
+                AMP -= shift ? 16 : 1;
+                break;
+            case 7:
+                AMP /= shift ? 16 : 2;
+                break;
+            case 8:
+                EUT += shift ? 512 : 64;
+                break;
+            case 9:
+                EUT *= shift ? 512 : 64;
+                break;
+            case 10:
+                AMP += shift ? 512 : 64;
+                break;
+            case 11:
+                AMP *= shift ? 512 : 64;
+                break;
+            case 12:
+                EUT += shift ? 16 : 1;
+                break;
+            case 13:
+                EUT *= shift ? 16 : 2;
+                break;
+            case 14:
+                AMP += shift ? 16 : 1;
+                break;
+            case 15:
+                AMP *= shift ? 16 : 2;
+                break;
+            default:
+                return false;
+        }
+        producing = (long) EUT * AMP >= 0;
+        return true;
+    }
+
+    @Override
 	    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
 	        return new GT_Container_DigitalTransformer(aPlayerInventory, aBaseMetaTileEntity);
 	    }

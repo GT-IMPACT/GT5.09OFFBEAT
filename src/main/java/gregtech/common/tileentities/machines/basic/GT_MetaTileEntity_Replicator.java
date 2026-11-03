@@ -139,4 +139,9 @@ public class GT_MetaTileEntity_Replicator
         }
         return sHeaviestElementMass;
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

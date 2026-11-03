@@ -1,6 +1,7 @@
 package gregtech.api.metatileentity.implementations;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.ItemList;
 import gregtech.api.gui.GT_Container_ProcessingMachine;
 import gregtech.api.gui.GT_ProcessingOutputSummary;
 import gregtech.api.gui.GT_Slot_Holo;
@@ -12,7 +13,10 @@ import gregtech.api.net.GT_Packet_ProcessingOutputs;
 import com.google.common.io.ByteStreams;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
 import gregtech.api.util.OverclockCalculator;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -964,34 +968,46 @@ public class GT_SharedProcessingTest {
     }
 
     @Test
-    public void chemicalReactorControllerSlotSuppliesNonConsumedRecipeSelector() throws Throwable {
+    public void chemicalReactorGhostCircuitSuppliesNonConsumedRecipeSelector() throws Throwable {
         run("chemicalReactorController");
     }
 
     private static void chemicalReactorController() throws Exception {
+        if (!ItemList.Circuit_Integrated.hasBeenSet()) {
+            new GT_IntegratedCircuit_Item();
+        }
         for (boolean separated : new boolean[] { false, true }) {
             GT_MultiblockRecipeProcessingTest.RecipeFixture f =
                     new GT_MultiblockRecipeProcessingTest.RecipeFixture("LargeChemicalReactor", 1);
             try {
-                f.register(24, 80);
-                f.recipe.mInputs[1].stackSize = 0;
+                f.recipe = f.map.addRecipe(
+                    false,
+                    new ItemStack[]{new ItemStack(Items.iron_ingot, 2), GT_Utility.getIntegratedCircuit(0)},
+                    new ItemStack[]{new ItemStack(Items.gold_ingot, 3), new ItemStack(Items.flint, 2)},
+                    null,
+                    new int[]{10000, 1},
+                    new FluidStack[]{new FluidStack(fluid("processing_water"), 100),
+                        new FluidStack(fluid("processing_reagent"), 50)},
+                    new FluidStack[]{new FluidStack(fluid("processing_product"), 75)},
+                    80,
+                    24,
+                    0
+                );
+                assertNotNull(f.recipe);
                 f.fill();
                 f.machine.mInputBusses.clear();
                 f.fixture.items(f.iron);
                 GT_MetaTileEntity_ProcessingMultiBlockBase<?> machine =
                         (GT_MetaTileEntity_ProcessingMultiBlockBase<?>) f.machine;
                 machine.setProcessingModes(separated ? ProcessingLogic.SEPARATE_INPUTS : 0);
-                GT_StructureIntegrationTest.TestPlayer player =
-                        new GT_StructureIntegrationTest.TestPlayer(f.fixture.world);
-                GT_Container_ProcessingMachine container = (GT_Container_ProcessingMachine)
-                        machine.getServerGUI(0, player.inventory, f.fixture.tile);
-                assertEquals(1, container.getSlotCount());
-                Slot controller = container.getSlot(container.getSlotStartIndex());
-                assertFalse(controller instanceof GT_Slot_Holo);
+                assertFalse(machine.hasControllerSlotInGui());
+                assertTrue(machine.allowSelectCircuit());
                 assertFalse(machine.checkRecipe(null));
                 f.assertUnconsumed();
-                controller.putStack(f.stick);
-                assertSame(f.stick, machine.mInventory[1]);
+                GhostCircuitItemStackHandler ghost = new GhostCircuitItemStackHandler(machine);
+                ghost.setCircuitConfig(0);
+                assertEquals(0, ghost.getStackInSlot(0).stackSize);
+                assertNull(machine.mInventory[1]);
                 assertTrue(machine.checkRecipe(null));
                 assertEquals(3, f.stick.stackSize);
                 assertEquals(4, f.iron.stackSize);
@@ -1059,7 +1075,7 @@ public class GT_SharedProcessingTest {
                 assertEquals(controllerIndex, container.getShiftClickStartIndex());
                 Slot controller = container.getSlot(controllerIndex);
                 assertFalse(controller instanceof GT_Slot_Holo);
-                assertEquals(231, controller.xDisplayPosition);
+                assertEquals(233, controller.xDisplayPosition);
                 assertEquals(210, controller.yDisplayPosition);
                 scenario.machine.mInventory[1] = new ItemStack(Items.stick, 5);
                 assertEquals(5, container.transferStackInSlot(player, controllerIndex).stackSize);

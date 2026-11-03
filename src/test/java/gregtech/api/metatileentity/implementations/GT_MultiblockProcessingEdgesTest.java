@@ -24,7 +24,10 @@ public class GT_MultiblockProcessingEdgesTest {
 
     @Test public void splitItemStacksPreservePerMachineRules() throws Throwable { run("splitItems"); }
     @Test public void splitFluidStacksPreservePerMachineRules() throws Throwable { run("splitFluids"); }
-    @Test public void controllerSlotIsOnlyUsedBySupportingMachines() throws Throwable { run("controller"); }
+    @Test
+    public void legacyControllerInventoryDoesNotSupplyRecipeInputs() throws Throwable {
+        run("controller");
+    }
     @Test public void blastFurnaceHeatThresholdAndDiscounts() throws Throwable { run("heat"); }
     @Test public void chemicalCleanroomRejectionDoesNotConsumeInputs() throws Throwable { run("cleanroom"); }
     @Test public void overflowFailureCurrentlyConsumesInputs() throws Throwable { run("overflow"); }
@@ -121,14 +124,9 @@ public class GT_MultiblockProcessingEdgesTest {
                 f.machine.mInputBusses.get(0).mInventory[1] = null;
                 f.machine.mInventory[1] = f.stick;
 
-                boolean supported = model.equals("LargeChemicalReactor");
-                assertEquals(model, supported, f.machine.checkRecipe(null));
-                assertEquals(model, supported ? 2 : 3, f.stick.stackSize);
-                if (supported) {
-                    f.assertConsumed();
-                } else {
-                    f.assertUnconsumed();
-                }
+                assertFalse(model, f.machine.checkRecipe(null));
+                assertEquals(model, 3, f.stick.stackSize);
+                f.assertUnconsumed();
             });
         }
     }

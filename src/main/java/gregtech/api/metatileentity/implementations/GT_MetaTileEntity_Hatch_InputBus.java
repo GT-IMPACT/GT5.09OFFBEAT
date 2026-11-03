@@ -1,50 +1,83 @@
 package gregtech.api.metatileentity.implementations;
 
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.*;
+import gregtech.api.interfaces.IConfigurationCircuitSupport;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-
 import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GT_InventoryUtils;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
+import gregtech.common.gui.modularui.hatch.MTEHatchInputBusGui;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 
-import static gregtech.api.util.GT_OreDictUnificator.isItemStackInstanceOf;
+public class GT_MetaTileEntity_Hatch_InputBus extends GT_MetaTileEntity_Hatch
+    implements IConfigurationCircuitSupport {
 
-public class GT_MetaTileEntity_Hatch_InputBus extends GT_MetaTileEntity_Hatch {
     public GT_Recipe_Map mRecipeMap = null;
     public boolean disableSort;
+    public boolean disableFilter = true;
+    public boolean disableLimited = true;
+
+    public static int getSlots(int tier) {
+        return (tier + 1) * (tier + 1);
+    }
 
     public GT_MetaTileEntity_Hatch_InputBus(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, getSlots(aTier), new String[]{
+        super(
+            aID,
+            aName,
+            aNameRegional,
+            aTier,
+            getSlots(aTier) + 1,
+            new String[]{
                 "Item Input for Multiblocks",
-                "Shift + right click with screwdriver to turn Sort mode on/off",
-                "Capacity: " + getSlots(aTier) + " stack" + (getSlots(aTier) >= 2 ? "s" : "")});
+                "Screwdriver: toggle input filter",
+                "Shift + screwdriver: cycle sorting and insertion limit",
+                "Capacity: " + getSlots(aTier) + " stack" + (getSlots(aTier) >= 2 ? "s" : "")
+            }
+        );
     }
 
-    public GT_MetaTileEntity_Hatch_InputBus(int aID, String aName, String aNameRegional, int aTier, int aAmountSlots, String[] aDesc) {
-        super(aID, aName, aNameRegional, aTier, aAmountSlots, aDesc);
+    public GT_MetaTileEntity_Hatch_InputBus(
+        int aID,
+        String aName,
+        String aNameRegional,
+        int aTier,
+        int aAmountSlots,
+        String[] aDesc
+    ) {
+        super(aID, aName, aNameRegional, aTier, aAmountSlots + 1, aDesc);
     }
 
-    public GT_MetaTileEntity_Hatch_InputBus(String aName, int aTier, int aAmountSlots, String[] aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, aAmountSlots, aDescription, aTextures);
+    public GT_MetaTileEntity_Hatch_InputBus(
+        String aName,
+        int aTier,
+        int aAmountSlots,
+        String[] aDescription,
+        ITexture[][][] aTextures
+    ) {
+        super(aName, aTier, aAmountSlots + 1, aDescription, aTextures);
     }
 
     public GT_MetaTileEntity_Hatch_InputBus(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, aTier < 1 ? 1 : aTier <= 6  ? (aTier + 1) * (aTier + 1) : 64, aDescription, aTextures);
+        super(aName, aTier, getSlots(aTier) + 1, aDescription, aTextures);
     }
 
     public GT_MetaTileEntity_Hatch_InputBus(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, aTier < 1 ? 1 : aTier <= 6  ? (aTier + 1) * (aTier + 1) : 64, aDescription, aTextures);
+        super(aName, aTier, getSlots(aTier) + 1, aDescription, aTextures);
     }
 
     @Override
@@ -74,77 +107,83 @@ public class GT_MetaTileEntity_Hatch_InputBus extends GT_MetaTileEntity_Hatch {
 
     @Override
     public boolean isValidSlot(int aIndex) {
-        return true;
+        return aIndex >= 0 && aIndex < getCircuitSlot();
     }
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_Hatch_InputBus(mName, mTier, mDescriptionArray, mTextures);
+        return new GT_MetaTileEntity_Hatch_InputBus(mName, mTier, getCircuitSlot(), mDescriptionArray, mTextures);
     }
 
     @Override
     public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-        if (aBaseMetaTileEntity.isClientSide()) return true;
+        if (aBaseMetaTileEntity.isClientSide()) {
+            return true;
+        }
         aBaseMetaTileEntity.openGUI(aPlayer);
         return true;
     }
 
     @Override
-    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        switch (mTier) {
-            case 0:
-                return new GT_Container_1by1(aPlayerInventory, aBaseMetaTileEntity);
-            case 1:
-                return new GT_Container_2by2(aPlayerInventory, aBaseMetaTileEntity);
-            case 2:
-                return new GT_Container_3by3(aPlayerInventory, aBaseMetaTileEntity);
-            case 3:
-                return  new GT_Container_4by4(aPlayerInventory, aBaseMetaTileEntity);
-            default:
-                return new GT_Container_NbyN(aPlayerInventory, aBaseMetaTileEntity, mTier<=6?mTier+1:8);
-        }
+    public boolean useMui2() {
+        return true;
     }
 
     @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        switch (mInventory.length) {
-            case 1:
-                return new GT_GUIContainer_1by1(aPlayerInventory, aBaseMetaTileEntity, "Input Bus");
-            case 4:
-                return new GT_GUIContainer_2by2(aPlayerInventory, aBaseMetaTileEntity, "Input Bus");
-            case 9:
-                return new GT_GUIContainer_3by3(aPlayerInventory, aBaseMetaTileEntity, "Input Bus");
-            case 16:
-                return new GT_GUIContainer_4by4(aPlayerInventory, aBaseMetaTileEntity, "Input Bus");
-            default:
-                return new GT_GUIContainer_NbyN(aPlayerInventory, aBaseMetaTileEntity, "Input Bus", mTier<=6?mTier+1:8);
-        }
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEHatchInputBusGui(this).build(data, syncManager, settings);
     }
 
     @Override
-    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTimer) {
-        if (aBaseMetaTileEntity.isServerSide() && aBaseMetaTileEntity.hasInventoryBeenModified()) {
-            fillStacksIntoFirstSlots();
+    public boolean allowSelectCircuit() {
+        return true;
+    }
+
+    @Override
+    public int getCircuitSlot() {
+        return mInventory.length - 1;
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        if (index == getCircuitSlot() && stack != null) {
+            if (!(stack.getItem() instanceof GT_IntegratedCircuit_Item)
+                || stack.getItemDamage() < 0 || stack.getItemDamage() > GhostCircuitItemStackHandler.MAX_CONFIG) {
+                stack = null;
+            } else {
+                stack = stack.copy();
+                stack.stackSize = 0;
+            }
+        }
+        super.setInventorySlotContents(index, stack);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int index, int amount) {
+        return index == getCircuitSlot() ? null : super.decrStackSize(index, amount);
+    }
+
+    @Override
+    public void onPostTick(IGregTechTileEntity base, long timer) {
+        if (base.isServerSide()) {
+            updateSlots();
         }
     }
 
     public void updateSlots() {
-        for (int i = 0; i < mInventory.length; i++)
-            if (mInventory[i] != null && mInventory[i].stackSize <= 0) mInventory[i] = null;
-        fillStacksIntoFirstSlots();
+        for (int index = 0; index < getCircuitSlot(); index++) {
+            if (mInventory[index] != null && mInventory[index].stackSize <= 0) {
+                mInventory[index] = null;
+            }
+        }
+        if (!disableSort) {
+            fillStacksIntoFirstSlots();
+        }
     }
 
     protected void fillStacksIntoFirstSlots() {
-        if (disableSort) {
-            for (int i = 0; i < mInventory.length; i++)
-                for (int j = i + 1; j < mInventory.length; j++)
-                    if (mInventory[j] != null && mInventory[j].stackSize <= 0 && (mInventory[i] == null || GT_Utility.areStacksEqual(mInventory[i], mInventory[j])))
-                        GT_Utility.moveStackFromSlotAToSlotB(getBaseMetaTileEntity(), getBaseMetaTileEntity(), j, i, (byte) 64, (byte) 1, (byte) 64, (byte) 1);
-        } else {
-            for (int i = 0; i < mInventory.length; i++)
-                for (int j = i + 1; j < mInventory.length; j++)
-                    if (mInventory[j] != null && (mInventory[i] == null || GT_Utility.areStacksEqual(mInventory[i], mInventory[j])))
-                        GT_Utility.moveStackFromSlotAToSlotB(getBaseMetaTileEntity(), getBaseMetaTileEntity(), j, i, (byte) 64, (byte) 1, (byte) 64, (byte) 1);
+        if (GT_InventoryUtils.compactInventory(mInventory, 0, getCircuitSlot())) {
+            markDirty();
         }
     }
 
@@ -152,54 +191,86 @@ public class GT_MetaTileEntity_Hatch_InputBus extends GT_MetaTileEntity_Hatch {
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
         aNBT.setBoolean("disableSort", disableSort);
+        aNBT.setBoolean("disableFilter", disableFilter);
+        aNBT.setBoolean("disableLimited", disableLimited);
+        if (mRecipeMap != null) {
+            aNBT.setString("recipeMap", mRecipeMap.mUnlocalizedName);
+        }
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         disableSort = aNBT.getBoolean("disableSort");
-    }
-
-    @Override
-    public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-        if (!getBaseMetaTileEntity().getCoverBehaviorAtSide(aSide).isGUIClickable(aSide, getBaseMetaTileEntity().getCoverIDAtSide(aSide), getBaseMetaTileEntity().getCoverDataAtSide(aSide), getBaseMetaTileEntity()))
-            return;
-        if (aPlayer.isSneaking()) {
-            disableSort = !disableSort;
-            GT_Utility.sendChatToPlayer(aPlayer, trans("200", "Sort mode: " + (disableSort ? "Disabled" : "Enabled")));
+        // These controls did not exist in legacy saves of this branch.
+        disableFilter = !aNBT.hasKey("disableFilter") || aNBT.getBoolean("disableFilter");
+        disableLimited = !aNBT.hasKey("disableLimited") || aNBT.getBoolean("disableLimited");
+        mRecipeMap = null;
+        for (GT_Recipe_Map map : GT_Recipe_Map.sMappings) {
+            if (map.mUnlocalizedName.equals(aNBT.getString("recipeMap"))) {
+                mRecipeMap = map;
+                break;
+            }
         }
+        setInventorySlotContents(getCircuitSlot(), mInventory[getCircuitSlot()]);
     }
 
     @Override
-    public String trans(String aKey, String aEnglish) {
-        return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_" + aKey, aEnglish, false);
+    public void onScrewdriverRightClick(
+        byte side,
+        EntityPlayer player,
+        float x,
+        float y,
+        float z
+    ) {
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        if (!base.getCoverBehaviorAtSide(side).isGUIClickable(side, base.getCoverIDAtSide(side),
+            base.getCoverDataAtSide(side), base)) {
+            return;
+        }
+        if (player.isSneaking()) {
+            if (disableSort) {
+                disableSort = false;
+            } else if (disableLimited) {
+                disableLimited = false;
+            } else {
+                disableSort = true;
+                disableLimited = true;
+            }
+            GT_Utility.sendChatToPlayer(player,
+                StatCollector.translateToLocal("GT5U.hatch.disableSort." + disableSort) + "   "
+                    + StatCollector.translateToLocal("GT5U.hatch.disableLimited." + disableLimited));
+        } else {
+            disableFilter = !disableFilter;
+            GT_Utility.sendChatToPlayer(player,
+                StatCollector.translateToLocal("GT5U.hatch.disableFilter." + disableFilter));
+        }
+        markDirty();
     }
 
     @Override
-    public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return false;
+    public String trans(String key, String english) {
+        return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_" + key, english, false);
     }
 
     @Override
-    public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-//        boolean checkPut = false;
-//        /**
-//         * allow input all tier circuits
-//         */
-//        if (isItemStackInstanceOf(aStack, "circuitBasic")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitGood")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitAdvanced")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitData")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitElite")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitMaster")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitUltimate")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitSuperconductor")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitInfinite")) checkPut = true;
-//        if (isItemStackInstanceOf(aStack, "circuitBio")) checkPut = true;
+    public boolean allowPullStack(IGregTechTileEntity base, int index, byte side, ItemStack stack) {
+        return isValidSlot(index) && side == base.getFrontFacing();
+    }
 
-//        if (GT_Utility.areStacksEqual(GT_OreDictUnificator.get(OrePrefixes.bolt, Materials.BlueAlloy, 1L), aStack)) checkPut = true;
-//        if (aSide == getBaseMetaTileEntity().getFrontFacing() && (mRecipeMap == null || mRecipeMap.containsInput(aStack))) checkPut = true;
-//        return checkPut;
-        return aSide == aBaseMetaTileEntity.getFrontFacing();
+    @Override
+    public boolean allowPutStack(IGregTechTileEntity base, int index, byte side, ItemStack stack) {
+        return isValidSlot(index) && side == base.getFrontFacing()
+            && (mRecipeMap == null || disableFilter || mRecipeMap.containsInput(stack))
+            && (disableLimited || limitedAllowPutStack(index, stack));
+    }
+
+    protected boolean limitedAllowPutStack(int index, ItemStack stack) {
+        for (int slot = 0; slot < getSizeInventory(); slot++) {
+            if (GT_Utility.areStacksEqual(GT_OreDictUnificator.get_nocopy(stack), mInventory[slot])) {
+                return slot == index;
+            }
+        }
+        return mInventory[index] == null;
     }
 }

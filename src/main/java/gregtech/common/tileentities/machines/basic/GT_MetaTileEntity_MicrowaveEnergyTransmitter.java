@@ -1,5 +1,9 @@
 package gregtech.common.tileentities.machines.basic;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ConfigCategories;
 import gregtech.api.enums.Materials;
@@ -16,6 +20,7 @@ import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_MicrowaveEnergyTransmitter;
 import gregtech.common.gui.GT_GUIContainer_MicrowaveEnergyTransmitter;
+import gregtech.common.gui.modularui.singleblock.MTEMicrowaveEnergyTransmitterGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -74,6 +79,16 @@ public class GT_MetaTileEntity_MicrowaveEnergyTransmitter extends GT_MetaTileEnt
     @Override
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_MicrowaveEnergyTransmitter(aPlayerInventory, aBaseMetaTileEntity);
+    }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEMicrowaveEnergyTransmitterGui(this).build(data, syncManager, settings);
     }
 
     @Override

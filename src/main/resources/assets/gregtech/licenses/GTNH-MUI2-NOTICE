@@ -1,0 +1,31 @@
+The MUI2 UI foundation is adapted from GTNewHorizons/GT5-Unofficial:
+https://github.com/GTNewHorizons/GT5-Unofficial/tree/f0472cfbd44ab9c8d5a27df7e98c64a42eb1c03f
+
+Upstream source revision: f0472cfbd44ab9c8d5a27df7e98c64a42eb1c03f.
+License: GNU LGPL v3; see the accompanying GTNH-LGPL-3.0 file.
+
+The theme builder, theme keys, texture IDs, core texture declarations, steam
+texture variants, progressbar theme and modular screen are adapted for this
+project's Java 8 API. GTNH addon-specific integrations are excluded.
+
+The native Cover, CoverContext, CoverFactory, CoverPlacer, CoverRegistry,
+CoverRegistration, CoverPlacementPredicate, CoverLegacyData and CoverNone APIs
+are adapted from the same revision. CoverableTileEntity ports object ownership,
+attachment lifecycle, per-side persistence and synchronization into this fork's
+existing machine and pipe base classes. The old integer APIs are deprecated
+compatibility views; attached Cover objects own the persistent state.
+CoverLegacyBehavior and NativeCoverBehavior preserve existing addon behaviors
+while native cover implementations use the object API and MUI2 directly.
+
+PNG resources under textures/gui/mui2 are copied from that revision without
+image changes. Their source paths and SHA-256 hashes are recorded in
+GTNH-MUI2-ASSETS.json. They are isolated from the existing GUI resources.
+Some texture declarations in upstream point to missing optional primitive
+variants; those use the corresponding standard texture as an explicit fallback.
+The neutral ingot and disabled power icon are copied from the same revision's
+miscutils and tectech resource namespaces. The manifest records every fallback.
+
+Upstream credits include Jimbno / UU-Tex and GTNH texture contributors.
+
+GTFluidSlot reuses this fork's existing GT_FluidDisplayStackRenderer for its
+amount label, retaining the original precision, font scale and positioning.

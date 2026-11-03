@@ -222,4 +222,9 @@ public class GT_MetaTileEntity_Miner extends GT_MetaTileEntity_BasicMachine {
         return mFakePlayer;
     }
 
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
 }

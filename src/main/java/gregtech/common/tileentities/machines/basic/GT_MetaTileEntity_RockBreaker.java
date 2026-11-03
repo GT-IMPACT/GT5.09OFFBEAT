@@ -100,4 +100,9 @@ public class GT_MetaTileEntity_RockBreaker
         }
         return 0;
     }
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
 }

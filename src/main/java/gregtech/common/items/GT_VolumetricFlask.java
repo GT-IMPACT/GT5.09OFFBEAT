@@ -1,11 +1,18 @@
 
 package gregtech.common.items;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiFactories;
+import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.enums.GT_Values;
 import gregtech.api.items.GT_Generic_Item;
+import gregtech.common.gui.modularui.item.VolumetricFlaskGui;
 import ic2.core.util.LiquidUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -22,15 +29,24 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.List;
 
 import static gregtech.api.enums.GT_Values.RES_PATH_ITEM;
-import static ic2.core.util.LiquidUtil.*;
+import static ic2.core.util.LiquidUtil.drainContainerStack;
+import static ic2.core.util.LiquidUtil.fillContainerStack;
+import static ic2.core.util.LiquidUtil.placeFluid;
 
 
-public class GT_VolumetricFlask extends GT_Generic_Item implements IFluidContainerItem {
+public class GT_VolumetricFlask extends GT_Generic_Item
+    implements IFluidContainerItem, IGuiHolder<PlayerInventoryGuiData> {
+
     private final int maxCapacity;
     @SideOnly(Side.CLIENT)
     public IIcon iconWindow;
@@ -54,9 +70,20 @@ public class GT_VolumetricFlask extends GT_Generic_Item implements IFluidContain
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (!world.isRemote && isEmpty(stack) && getMovingObjectPositionFromPlayer(world, player, true) == null)
-            player.openGui(GT_Values.GT, 1010, world, 0, 0, 0);
+        if (!world.isRemote && isEmpty(stack) && getMovingObjectPositionFromPlayer(world, player, true) == null) {
+            GuiFactories.playerInventory().openFromMainHand(player);
+        }
         return super.onItemRightClick(stack, world, player);
+    }
+
+    @Override
+    public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new VolumetricFlaskGui(data).build();
+    }
+
+    @Override
+    public ModularScreen createScreen(PlayerInventoryGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen("gregtech", mainPanel);
     }
 
     @Override
@@ -130,6 +157,9 @@ public class GT_VolumetricFlask extends GT_Generic_Item implements IFluidContain
     }
 
     public void setCapacity(ItemStack stack, int capacity) {
+        if (stack == null || capacity <= 0) {
+            return;
+        }
         capacity = Math.min(capacity, getMaxCapacity());
         NBTTagCompound nbt = stack.getTagCompound();
         if (nbt == null) {

@@ -1,13 +1,21 @@
 package gregtech.common.tileentities.boilers;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.enums.TieredVariant;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.modularui2.GTGuiTheme;
+import gregtech.api.modularui2.GTGuiThemes;
+import gregtech.common.gui.modularui.singleblock.MTEBoilerGui;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -29,6 +37,31 @@ public abstract class GT_MetaTileEntity_Boiler
     public int mLossTimer = 0;
     public FluidStack mSteam = null;
     public boolean mHadNoWater = false;
+
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public GTGuiTheme getGuiTheme() {
+        return GTGuiThemes.TIERED_VARIANTS.get(isSteelGui() ? TieredVariant.STEEL : TieredVariant.BRONZE);
+    }
+
+    private boolean isSteelGui() {
+        return this instanceof GT_MetaTileEntity_Boiler_Steel
+            || this instanceof GT_MetaTileEntity_Boiler_Lava
+            || this instanceof GT_MetaTileEntity_Boiler_Solar_Steel;
+    }
+
+    public int getGuiSteamCapacity() {
+        return isSteelGui() ? 32000 : 16000;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEBoilerGui(this).build(data, syncManager, settings);
+    }
 
     public GT_MetaTileEntity_Boiler(int aID, String aName, String aNameRegional, String aDescription, ITexture... aTextures) {
         super(aID, aName, aNameRegional, 0, 4, aDescription, aTextures);

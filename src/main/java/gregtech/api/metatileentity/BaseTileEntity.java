@@ -4,6 +4,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
 import gregtech.api.net.GT_Packet_Block_Event;
+import gregtech.api.modularui2.GTGuis;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -110,7 +111,16 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
 
     @Override
     public final boolean openGUI(EntityPlayer aPlayer, int aID) {
-        if (aPlayer == null) return false;
+        if (aPlayer == null) {
+            return false;
+        }
+        if (aID == 0 && this instanceof IGregTechTileEntity) {
+            IGregTechTileEntity tile = (IGregTechTileEntity) this;
+            IMetaTileEntity machine = tile.getMetaTileEntity();
+            if (machine != null && machine.useMui2()) {
+                return GTGuis.open(aPlayer, machine);
+            }
+        }
         aPlayer.openGui(GT, aID, worldObj, xCoord, yCoord, zCoord);
         return true;
     }

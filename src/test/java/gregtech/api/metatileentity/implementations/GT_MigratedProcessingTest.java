@@ -268,24 +268,17 @@ public class GT_MigratedProcessingTest {
                     assertEquals(3, restored.mInventory[1].stackSize);
                     assertSame(machine.getRecipeMap(), restored.getRecipeMap());
                     GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(world);
-                    GT_Container_ProcessingMachine container = (GT_Container_ProcessingMachine) restored.getServerGUI(0,
+                    GT_Container_ProcessingMachine container = new GT_Container_ProcessingMachine(
                             player.inventory, restoredTile);
                     for (int index = 0; index < GT_Container_ProcessingMachine.CONTROL_COUNT; index++) {
                         assertTrue(container.getSlot(index) instanceof GT_Slot_Holo);
                     }
-                    boolean supportsController = model.equals("LargeChemicalReactor") || model.equals("OilCracker");
-                    int controllerSlots = supportsController ? 1 : 0;
-                    assertEquals(model, supportsController, restored.hasControllerSlotInGui());
-                    assertEquals(42 + controllerSlots, container.inventorySlots.size());
-                    assertEquals(controllerSlots, container.getSlotCount());
-                    assertEquals(controllerSlots, container.getShiftClickSlotCount());
-                    if (supportsController) {
-                        assertFalse(container.getSlot(container.getSlotStartIndex()) instanceof GT_Slot_Holo);
-                        assertSame(
-                                restored.mInventory[1],
-                                container.getSlot(container.getSlotStartIndex()).getStack()
-                        );
-                    }
+                    boolean supportsCircuit = model.equals("LargeChemicalReactor") || model.equals("OilCracker");
+                    assertEquals(model, supportsCircuit, restored.allowSelectCircuit());
+                    assertFalse(restored.hasControllerSlotInGui());
+                    assertEquals(42, container.inventorySlots.size());
+                    assertEquals(0, container.getSlotCount());
+                    assertEquals(0, container.getShiftClickSlotCount());
                 }
             }
         } finally {

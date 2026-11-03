@@ -5,6 +5,7 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
+import gregtech.api.modularui2.GTGuis;
 import gregtech.api.commands.RecipesReload;
 import gregtech.api.enchants.Enchantment_EnderDamage;
 import gregtech.api.enchants.Enchantment_Radioactivity;
@@ -65,6 +66,7 @@ import static space.impact.gregtech.BuildConfigKt.MODNAME;
 
 @Mod(modid = MODID, name = MODNAME, version = "MC1710",  useMetadata = false,
 dependencies =  " required-after:IC2;" +
+        " required-after:modularui2@[2.3.92-1.7.10,);" +
         " required-after:impactapi@[1.1.0,);" +
         " after:Forestry;" +
         " after:appliedenergistics2;" +
@@ -126,6 +128,7 @@ public class GT_Mod implements IGT_Mod {
         if (GregTech_API.sPreloadStarted) {
             return;
         }
+        GTGuis.init();
         try {
             for (Runnable tRunnable : GregTech_API.sBeforeGTPreload) {
                 tRunnable.run();

@@ -38,6 +38,7 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
                 new GT_Packet_TileEntity(), new GT_Packet_Sound(), new GT_Packet_Block_Event(), new GT_Packet_Ores(),
                 new GT_Packet_Pollution(), new MessageSetFlaskCapacity(), new GT_Packet_TileEntityCover(), new GT_Packet_TileEntityCoverGUI(),
                 new GT_Packet_Block_Event_Four_Int(), new GT_Packet_OutputHatch(), new GT_Packet_ProcessingOutputs(),
+                new GT_Packet_CoverData(),
         };
     }
 

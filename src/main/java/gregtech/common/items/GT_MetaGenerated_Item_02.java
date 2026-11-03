@@ -390,7 +390,12 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
                 e.printStackTrace(GT_Log.err);
             }
         }
-        ItemList.Display_ITS_FREE.set(addItem(tLastID = 766, "ITS FREE", "(or at least almost free)", new Object[]{SubTag.INVISIBLE}));
+        ItemList.Display_ITS_FREE.set(addItem(
+            tLastID = 765,
+            "ITS FREE",
+            "(or at least almost free)",
+            new Object[]{SubTag.INVISIBLE}
+        ));
     }
 
     public boolean onLeftClickEntity(ItemStack aStack, EntityPlayer aPlayer, Entity aEntity) {
