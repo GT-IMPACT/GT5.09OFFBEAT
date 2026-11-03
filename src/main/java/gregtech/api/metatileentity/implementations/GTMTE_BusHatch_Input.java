@@ -1,8 +1,10 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_Container_BusHatch_Input;
-import gregtech.api.gui.GT_GUIContainer_BusHatch_Input;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
@@ -11,8 +13,8 @@ import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.gui.modularui.hatch.MTEBusHatchInputGui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,22 +81,24 @@ public class GTMTE_BusHatch_Input extends GT_MetaTileEntity_Hatch {
 		return new ITexture[]{aBaseTexture, TextureFactory.of(Textures.BlockIcons.OVERLAY_PIPE_IN)};
 	}
 	
-	@Override
-	public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-		if (aBaseMetaTileEntity.isClientSide()) return true;
-		aBaseMetaTileEntity.openGUI(aPlayer);
-		return true;
-	}
+    @Override
+    public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
+        if (aBaseMetaTileEntity.isClientSide()) {
+            return true;
+        }
+        aBaseMetaTileEntity.openGUI(aPlayer);
+        return true;
+    }
 	
-	@Override
-	public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-		return new GT_Container_BusHatch_Input(aPlayerInventory, aBaseMetaTileEntity);
-	}
-	
-	@Override
-	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-		return new GT_GUIContainer_BusHatch_Input(aPlayerInventory, aBaseMetaTileEntity, getLocalName());
-	}
+    @Override
+    public boolean useMui2() {
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEBusHatchInputGui(this).build(data, syncManager, settings);
+    }
 	
 	@Override
 	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTimer) {
