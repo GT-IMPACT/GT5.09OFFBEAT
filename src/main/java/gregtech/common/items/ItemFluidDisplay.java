@@ -3,16 +3,18 @@ package gregtech.common.items;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.Materials;
+import gregtech.api.items.GT_Generic_Item;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-/** GTNH fluid tooltip hook called directly by ModularUI2's fluid widgets. */
-public final class ItemFluidDisplay {
+/** GTNH item type and tooltip API used by ModularUI2 and NEI. */
+public abstract class ItemFluidDisplay extends GT_Generic_Item {
 
-    private ItemFluidDisplay() {
+    protected ItemFluidDisplay() {
+        super("GregTech_FluidDisplay", "Fluid Display", null);
     }
 
     @SideOnly(Side.CLIENT)

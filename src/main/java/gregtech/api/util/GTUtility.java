@@ -18,6 +18,10 @@ public final class GTUtility {
         return GT_Utility.getFluidDisplayStack(fluid);
     }
 
+    public static FluidStack getFluidFromDisplayStack(ItemStack stack) {
+        return GT_Utility.getFluidFromDisplayStack(stack);
+    }
+
     public static byte convertRatioToRedstone(long used, long max, int threshold, boolean inverted) {
         byte signal;
         if (used <= 0) {
