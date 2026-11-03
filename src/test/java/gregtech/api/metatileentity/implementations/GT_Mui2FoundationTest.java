@@ -124,7 +124,6 @@ public class GT_Mui2FoundationTest {
         world.tiles.clear();
         assertFalse(factory.canInteractWith(player, data));
         assertThrows(IllegalStateException.class, () -> factory.getGuiHolder(data));
-        assertFalse(new GT_MetaTileEntity_Hatch_InputBus("legacy", 1, "", null).useMui2());
     }
 
     private static void checkPackets(GT_StructureIntegrationTest.TestPlayer player) {

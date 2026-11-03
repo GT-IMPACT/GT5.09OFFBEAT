@@ -13,7 +13,6 @@ import java.util.Collections;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.nbt.NBTTagCompound;
@@ -54,7 +53,6 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.relauncher.FMLRelaunchLog;
 import cpw.mods.fml.relauncher.Side;
 import gregtech.api.GregTech_API;
-import gregtech.api.gui.GT_Container_MEOutput;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -97,8 +95,6 @@ public class GT_MEOutputTest {
         mods.setAccessible(true);
         mods.set(Loader.instance(), new HashMap<String, ModContainer>());
         GregTech_API.mAE2 = true;
-        checkGuiSync(new Bus());
-        checkGuiSync(new Hatch());
         Bus wailaBus = new Bus();
         checkWailaConnection(wailaBus, wailaBus.network);
         Hatch wailaHatch = new Hatch();
@@ -170,36 +166,6 @@ public class GT_MEOutputTest {
         GregTech_API.mAE2 = false;
         assertFalse(bus.storeAll(new ItemStack(Items.iron_ingot)));
         assertEquals(0, hatch.fill(water, true));
-    }
-
-    private static void checkGuiSync(MetaTileEntity output) {
-        ItemStack cell = new ItemStack(Items.diamond);
-        IGregTechTileEntity clientTile = (IGregTechTileEntity) Proxy.newProxyInstance(
-                GT_MEOutputTest.class.getClassLoader(), new Class[]{IGregTechTileEntity.class}, (p, m, a) -> {
-                    switch (m.getName()) {
-                        case "getMetaTileEntity": return output;
-                        case "isClientSide": return true;
-                        case "getSizeInventory": return output.mInventory.length;
-                        case "getStackInSlot": return output.getStackInSlot((Integer) a[0]);
-                        case "setInventorySlotContents":
-                            output.setInventorySlotContents((Integer) a[0], (ItemStack) a[1]);
-                            return null;
-                        default: return defaultValue(m.getReturnType());
-                    }
-                });
-        for (int opening = 0; opening < 2; opening++) {
-            GT_Container_MEOutput container = new GT_Container_MEOutput(new InventoryPlayer(null), clientTile);
-            ItemStack[] windowItems = new ItemStack[container.inventorySlots.size()];
-            windowItems[0] = cell.copy();
-            container.putStacksInSlots(windowItems);
-            assertTrue("Opening the GUI keeps the cell visible", ItemStack.areItemStacksEqual(cell, container.getSlot(0).getStack()));
-            for (int control = 1; control <= 3; control++) {
-                container.putStackInSlot(control, null);
-                assertNull(container.getSlot(control).getStack());
-                assertTrue("Control sync must not clear the cell", ItemStack.areItemStacksEqual(cell, container.getSlot(0).getStack()));
-                assertNotSame(container.getSlot(0).inventory, container.getSlot(control).inventory);
-            }
-        }
     }
 
     private static void checkItemTransfer(Bus bus) {

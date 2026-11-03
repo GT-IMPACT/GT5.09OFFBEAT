@@ -215,7 +215,7 @@ public class GT_Mui2MeterCoverTest {
         preview.updateCacheFromSource(false);
         assertSame(Items.ender_pearl, ((ItemStack) preview.getValue()).getItem());
         fixture.intValue("slot", Integer.MAX_VALUE);
-        assertEquals(3, meter.getSlot());
+        assertEquals(bus.getSizeInventory() - 1, meter.getSlot());
         fixture.intValue("slot", Integer.MIN_VALUE);
         assertEquals(-1, meter.getSlot());
         fixture.intValue("threshold", -1);

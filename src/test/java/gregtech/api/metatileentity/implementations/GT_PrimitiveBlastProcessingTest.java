@@ -11,13 +11,11 @@ import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe;
 import gregtech.common.GT_RecipeAdder;
-import gregtech.common.gui.GT_Container_PrimitiveBlastFurnace;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_BrickedBlastFurnace;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_BronzeBlastFurnace;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_PrimitiveBlastFurnace;
 import gregtech.loaders.misc.GT_Achievements;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -119,7 +117,7 @@ public class GT_PrimitiveBlastProcessingTest {
     }
 
     @Test
-    public void sixWorkingSlotsAndGuiCoordinatesRemainUnchanged() throws Throwable {
+    public void sixWorkingSlotsKeepLiveInventoryHandlerBindings() throws Throwable {
         run("inventory");
     }
 
@@ -388,16 +386,19 @@ public class GT_PrimitiveBlastProcessingTest {
 
     private static void inventory(boolean bronze) {
         Furnace furnace = new Furnace(bronze);
-        GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(furnace.world);
-        GT_Container_PrimitiveBlastFurnace gui = new GT_Container_PrimitiveBlastFurnace(player.inventory, furnace.tile);
-        assertEquals(6, gui.getSlotCount());
-        assertEquals(3, gui.getShiftClickSlotCount());
         assertEquals(6, furnace.machine.mInventory.length);
+        assertEquals(6, furnace.machine.getInventoryHandler().getSlots());
         for (int i = 0; i < 6; i++) {
-            Slot slot = (Slot) gui.inventorySlots.get(i);
-            assertEquals(i < 3 ? 34 : 86 + (i - 3) * 18, slot.xDisplayPosition);
-            assertEquals(i < 3 ? 16 + i * 18 : 25, slot.yDisplayPosition);
+            ItemStack stack = new ItemStack(i < 3 ? Items.apple : Items.iron_ingot, i + 1);
+            furnace.machine.getInventoryHandler().setStackInSlot(i, stack);
+            assertSame(stack, furnace.machine.mInventory[i]);
+            assertSame(stack, furnace.machine.getInventoryHandler().getStackInSlot(i));
         }
+        assertEquals(2, furnace.machine.getInventoryHandler().extractItem(3, 2, true).stackSize);
+        assertEquals(4, furnace.machine.mInventory[3].stackSize);
+        assertEquals(2, furnace.machine.getInventoryHandler().extractItem(3, 2, false).stackSize);
+        assertEquals(2, furnace.machine.mInventory[3].stackSize);
+        assertSame(furnace.machine.mInventory[3], furnace.machine.getInventoryHandler().getStackInSlot(3));
     }
 
     private static void staleSave(boolean bronze) throws Exception {
