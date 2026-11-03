@@ -1,14 +1,19 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.enums.Casings;
+import gregtech.api.enums.TieredVariant;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-
+import gregtech.api.modularui2.GTGuiTheme;
+import gregtech.api.modularui2.GTGuiThemes;
 import gregtech.api.render.TextureFactory;
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_BRONZEBLASTFURNACE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_BRONZEBLASTFURNACE_ACTIVE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_BRONZEBLASTFURNACE_ACTIVE_GLOW;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_BRONZEPLATEDBRICKS;
 
 public class GT_MetaTileEntity_BronzeBlastFurnace
         extends GT_MetaTileEntity_PrimitiveBlastFurnace {
@@ -25,6 +30,11 @@ public class GT_MetaTileEntity_BronzeBlastFurnace
 
     public GT_MetaTileEntity_BronzeBlastFurnace(String aName) {
         super(aName);
+    }
+
+    @Override
+    public GTGuiTheme getGuiTheme() {
+        return GTGuiThemes.TIERED_VARIANTS.get(TieredVariant.BRONZE);
     }
 
 	public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {

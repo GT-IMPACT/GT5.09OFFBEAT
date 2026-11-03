@@ -1,12 +1,19 @@
 package gregtech.common.tileentities.machines.multi;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import cpw.mods.fml.common.Optional;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.TieredVariant;
 import gregtech.api.interfaces.ICasing;
 import gregtech.api.interfaces.ISecondaryDescribable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.modularui2.GTGuiTheme;
+import gregtech.api.modularui2.GTGuiThemes;
 import gregtech.api.logic.InventoryProcessingOutputs;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
@@ -19,14 +26,12 @@ import gregtech.api.util.GT_Utility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import gregtech.api.util.MultiblockTooltipCache;
 import gregtech.common.GT_Pollution;
-import gregtech.common.gui.GT_Container_PrimitiveBlastFurnace;
-import gregtech.common.gui.GT_GUIContainer_PrimitiveBlastFurnace;
+import gregtech.common.gui.modularui.multiblock.MTEBrickedBlastFurnaceGui;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -208,14 +213,19 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
     }
 
     @Override
-    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_Container_PrimitiveBlastFurnace(aPlayerInventory, aBaseMetaTileEntity);
+    public boolean useMui2() {
+        return true;
     }
 
-	@Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-		return new GT_GUIContainer_PrimitiveBlastFurnace(aPlayerInventory, aBaseMetaTileEntity, getName(), GT_Recipe.GT_Recipe_Map.sPrimitiveBlastRecipes.mNEIName);
-	}
+    @Override
+    public GTGuiTheme getGuiTheme() {
+        return GTGuiThemes.TIERED_VARIANTS.get(TieredVariant.PRIMITIVE);
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEBrickedBlastFurnaceGui(this).build(data, syncManager, settings);
+    }
 
     public abstract ICasing getCasingType();
 
