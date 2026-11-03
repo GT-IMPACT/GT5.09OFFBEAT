@@ -19,8 +19,6 @@ import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.net.GT_Packet_Pollution;
 import gregtech.api.objects.*;
 import gregtech.api.util.*;
-import gregtech.common.gui.GT_ContainerVolumetricFlask;
-import gregtech.common.gui.GT_GUIContainerVolumetricFlask;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
@@ -1404,7 +1402,8 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                 return new ContainerElectricArmor1(aPlayer,
                         new InventoryArmor(ModularArmor_Item.class, aPlayer.getCurrentEquippedItem()));
             case 10:
-                return new GT_ContainerVolumetricFlask(aPlayer.inventory);
+                // Reserve the old flask GUI ID; item windows now open through MUI2's inventory factory.
+                return null;
             // case 20: //todo Laptop server gui?
             // if (tTileEntity instanceof IGregTechTileEntity) {
             // IGregTechTileEntity te = (IGregTechTileEntity) aWorld.getTileEntity(aX, aY,
@@ -1484,7 +1483,8 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                                 new InventoryArmor(ModularArmor_Item.class, aPlayer.getCurrentEquippedItem())),
                         aPlayer);
             case 10:
-                return new GT_GUIContainerVolumetricFlask(new GT_ContainerVolumetricFlask(aPlayer.inventory));
+                // Reserve the old flask GUI ID; item windows now open through MUI2's inventory factory.
+                return null;
             // case 20: //todo Laptop client gui?
             // if (tTileEntity instanceof IGregTechTileEntity) {
             // IGregTechTileEntity te = (IGregTechTileEntity) aWorld.getTileEntity(aX, aY,

@@ -1837,3 +1837,5 @@ GT5U.chat.hatch.output.fluid.locked_to=Successfully locked Fluid to %s
 GT5U.machines.basic_tank.liquid_amount=Liquid Amount
 GT5U.gui.text.repair_info=Right-click hatch with Duct Tape to repair all issues.\nClick the maintenance slot with a tool to repair its issue.
 GT5U.gui.text.autorepair_info=Consumes 4 Duct Tape, 2 Lubricant Cells,\n4 Steel Screws, and 2 Advanced Circuits\nfor each autorepair.
+GT5U.gui.text.volumetric_flask.capacity=Capacity
+GT5U.gui.text.volumetric_flask.max_capacity=Max Capacity of %s

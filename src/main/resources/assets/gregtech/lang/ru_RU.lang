@@ -1536,3 +1536,5 @@ GT5U.chat.hatch.output.fluid.locked_to=Установлена конкретна
 GT5U.machines.basic_tank.liquid_amount=Количество
 GT5U.gui.text.repair_info=ПКМ по люку изолентой исправляет все неполадки.\nНажмите инструментом на слот обслуживания, чтобы исправить его неполадку.
 GT5U.gui.text.autorepair_info=Расходует 4 изоленты, 2 капсулы смазки,\n4 стальных винта и 2 продвинутые электросхемы\nза каждый авторемонт.
+GT5U.gui.text.volumetric_flask.capacity=Ёмкость
+GT5U.gui.text.volumetric_flask.max_capacity=Max Capacity of %s

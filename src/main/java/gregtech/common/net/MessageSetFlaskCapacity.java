@@ -4,13 +4,8 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import gregtech.api.net.GT_Packet;
-import gregtech.common.items.GT_VolumetricFlask;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 
 public final class MessageSetFlaskCapacity extends GT_Packet {
     private int capacity, dimID, playerID;
@@ -54,14 +49,6 @@ public final class MessageSetFlaskCapacity extends GT_Packet {
 
     @Override
     public void process(IBlockAccess aWorld) {
-        World w = DimensionManager.getWorld(dimID);
-        if (w != null && w.getEntityByID(playerID) instanceof EntityPlayer) {
-            ItemStack stack = ((EntityPlayer) w.getEntityByID(playerID)).getHeldItem();
-            if ((stack != null) && (stack.stackSize > 0)) {
-                Item item = stack.getItem();
-                if ((item instanceof GT_VolumetricFlask))
-                    ((GT_VolumetricFlask) item).setCapacity(stack, capacity);
-            }
-        }
+        // Keep packet ID 5 reserved; the flask now uses its MUI2 inventory GUI synchronization.
     }
 }
