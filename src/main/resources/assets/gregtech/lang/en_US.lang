@@ -1802,6 +1802,20 @@ GT5U.hatch.disableLimited.false=Limiting mode §aOn§r
 GT5U.bus.filterTooltip.empty=§aDrag item from NEI to set output filter
 GT5U.bus.filterTooltip.full=§aClick to clear output filter
 
+GT5U.hatch.additionalConnection.true=ME channels connect to any side
+GT5U.hatch.additionalConnection.false=ME channels connect to front side only
+GT5U.hatch.outputme.checkMode.true=Check Mode §cOn§r
+GT5U.hatch.outputme.checkMode.false=Check Mode §aOff§r
+GT5U.hatch.outputme.checkMode.desc=NOTE: Check Mode checks whether there is enough space for the output, resulting in more lag.
+GT5U.hatch.outputme.cacheMode.true=Cache Mode §cOn§r
+GT5U.hatch.outputme.cacheMode.false=Cache Mode §aOff§r
+GT5U.hatch.outputme.cacheMode.desc=Stores to the internal cell instead of to the ME Network.
+GT5U.hatch.outputme.toggle_checking=Toggle Checking Mode
+GT5U.hatch.outputme.toggle_caching=Toggle Caching Mode
+GT5U.hatch.outputme.settings.saved=ME output settings saved to Data Stick
+GT5U.hatch.outputme.settings.loaded=ME output settings loaded from Data Stick
+GT5U.hatch.outputme.settings.invalid=Invalid ME output Data Stick settings
+
 GT5U.machines.hatch_output.lockfluid.label=Locked Fluid
 GT5U.machines.hatch_output.lockfluid.empty=None
 GT5U.gui.text.hatch.output.cycle=Click to cycle modes

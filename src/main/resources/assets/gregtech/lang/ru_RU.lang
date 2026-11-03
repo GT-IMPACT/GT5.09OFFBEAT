@@ -1501,6 +1501,20 @@ GT5U.hatch.disableLimited.false=Ограничительный режим §aВ�
 GT5U.bus.filterTooltip.empty=§aПеретащите предмет из NEI, чтобы установить выходной фильтр
 GT5U.bus.filterTooltip.full=§aНажмите, чтобы очистить выходной фильтр
 
+GT5U.hatch.additionalConnection.true=МЭ каналы подключаются к любой стороне
+GT5U.hatch.additionalConnection.false=МЭ каналы подключаются только к передней стороне
+GT5U.hatch.outputme.checkMode.true=Режим проверки §cВкл§r
+GT5U.hatch.outputme.checkMode.false=Режим проверки §aОткл§r
+GT5U.hatch.outputme.checkMode.desc=ПРИМЕЧАНИЕ: В режиме проверки проверяется, достаточно ли места для вывода, что приводит к увеличению задержки.
+GT5U.hatch.outputme.cacheMode.true=Режим кеширования §cВкл§r
+GT5U.hatch.outputme.cacheMode.false=Режим кеширования §aОткл§r
+GT5U.hatch.outputme.cacheMode.desc=Сохраняет во внутреннюю ячейку, а не в МЭ сеть.
+GT5U.hatch.outputme.toggle_checking=Toggle Checking Mode
+GT5U.hatch.outputme.toggle_caching=Переключить режим кэширования
+GT5U.hatch.outputme.settings.saved=Настройки ME-выхода сохранены на Data Stick
+GT5U.hatch.outputme.settings.loaded=Настройки ME-выхода загружены с Data Stick
+GT5U.hatch.outputme.settings.invalid=Некорректные настройки ME-выхода на Data Stick
+
 GT5U.machines.hatch_output.lockfluid.label=Закреплено
 GT5U.machines.hatch_output.lockfluid.empty=Нет
 GT5U.gui.text.hatch.output.cycle=Click to cycle modes

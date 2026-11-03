@@ -2340,7 +2340,10 @@ public class BaseMetaTileEntity
 
     @Override
     @Optional.Method(modid = "appliedenergistics2")
-    public int getPriority() { return 0; }
+    public int getPriority() {
+        return mMetaTileEntity instanceof IMEOutput
+                ? ((IMEOutput) mMetaTileEntity).getMEOutputStorage().getPriority() : 0;
+    }
 
     @Override
     @Optional.Method(modid = "appliedenergistics2")
