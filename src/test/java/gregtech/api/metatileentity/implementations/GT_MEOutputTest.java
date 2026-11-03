@@ -362,7 +362,7 @@ public class GT_MEOutputTest {
         assertFalse(storage.isValidCell(new ItemStack(Items.iron_ingot)));
         assertEquals(1000000, storage.getCapacity());
         fixture.filtered = true;
-        assertFalse(storage.canStore(fixture.newStack(1)));
+        assertTrue("Non-workbench cells have no GTNH partition filter", storage.canStore(fixture.newStack(1)));
         fixture.filtered = false;
         assertTrue(storage.canStore(fixture.newStack(1)));
         storage.setCacheMode(true);
