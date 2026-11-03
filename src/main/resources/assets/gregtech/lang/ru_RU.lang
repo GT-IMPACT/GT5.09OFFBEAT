@@ -1534,3 +1534,5 @@ GT5U.chat.hatch.output.specific_fluid=Вывод конкретной жидко
 GT5U.chat.hatch.output.fluid.already_locked=Hatch is locked to a different fluid. To change the locking, empty it and made it locked to the next fluid with a screwdriver. Currently locked to %s
 GT5U.chat.hatch.output.fluid.locked_to=Установлена конкретная жидкость: %s
 GT5U.machines.basic_tank.liquid_amount=Количество
+GT5U.gui.text.repair_info=ПКМ по люку изолентой исправляет все неполадки.\nНажмите инструментом на слот обслуживания, чтобы исправить его неполадку.
+GT5U.gui.text.autorepair_info=Расходует 4 изоленты, 2 капсулы смазки,\n4 стальных винта и 2 продвинутые электросхемы\nза каждый авторемонт.

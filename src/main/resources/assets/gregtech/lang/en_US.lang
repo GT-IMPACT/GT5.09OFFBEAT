@@ -1835,3 +1835,5 @@ GT5U.chat.hatch.output.specific_fluid=Outputs 1 specific Fluid (%s)
 GT5U.chat.hatch.output.fluid.already_locked=Hatch is locked to a different fluid. To change the locking, empty it and made it locked to the next fluid with a screwdriver. Currently locked to %s
 GT5U.chat.hatch.output.fluid.locked_to=Successfully locked Fluid to %s
 GT5U.machines.basic_tank.liquid_amount=Liquid Amount
+GT5U.gui.text.repair_info=Right-click hatch with Duct Tape to repair all issues.\nClick the maintenance slot with a tool to repair its issue.
+GT5U.gui.text.autorepair_info=Consumes 4 Duct Tape, 2 Lubricant Cells,\n4 Steel Screws, and 2 Advanced Circuits\nfor each autorepair.

@@ -1,33 +1,39 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
-import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_Container_2by2;
-import gregtech.api.gui.GT_Container_MaintenanceHatch;
-import gregtech.api.gui.GT_GUIContainer_2by2;
-import gregtech.api.gui.GT_GUIContainer_MaintenanceHatch;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.gui.modularui.hatch.MTEHatchMaintenanceGui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_AUTOMAINTENANCE;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_AUTOMAINTENANCE_GLOW;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_AUTOMAINTENANCE_IDLE;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_AUTOMAINTENANCE_IDLE_GLOW;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_DUCTTAPE;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_MAINTENANCE;
 
 public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch {
+
+    private static ItemStack[] autoMaintenanceInputs;
+
     public boolean mWrench = false, mScrewdriver = false, mSoftHammer = false, mHardHammer = false, mSolderingTool = false, mCrowbar = false, mAuto;
 
     public GT_MetaTileEntity_Hatch_Maintenance(int aID, String aName, String aNameRegional, int aTier) {
@@ -48,6 +54,18 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
     public GT_MetaTileEntity_Hatch_Maintenance(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, boolean aAuto) {
         super(aName, aTier, aAuto ? 4 : 1, aDescription, aTextures);
         mAuto = aAuto;
+    }
+
+    public static ItemStack[] getAutoMaintenanceInputs() {
+        if (autoMaintenanceInputs == null) {
+            autoMaintenanceInputs = new ItemStack[] {
+                ItemList.Duct_Tape.get(4),
+                GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Lubricant, 2),
+                GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 4),
+                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 2)
+            };
+        }
+        return autoMaintenanceInputs;
     }
 
     @Override
@@ -123,22 +141,40 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
     }
 
     @Override
-    public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer, byte aSide, float aX, float aY, float aZ) {
-        if (aBaseMetaTileEntity.isClientSide()) return true;
-        if (aSide == aBaseMetaTileEntity.getFrontFacing()) aBaseMetaTileEntity.openGUI(aPlayer);
+    public boolean onRightclick(
+        IGregTechTileEntity aBaseMetaTileEntity,
+        EntityPlayer aPlayer,
+        byte aSide,
+        float aX,
+        float aY,
+        float aZ
+    ) {
+        if (aSide != aBaseMetaTileEntity.getFrontFacing()) {
+            return false;
+        }
+        if (aBaseMetaTileEntity.isClientSide()) {
+            return true;
+        }
+        ItemStack stack = aPlayer.getCurrentEquippedItem();
+        if (stack != null && GT_OreDictUnificator.isItemStackInstanceOf(stack, "craftingDuctTape")) {
+            applyDuctTape();
+            if (--stack.stackSize == 0) {
+                aPlayer.inventory.mainInventory[aPlayer.inventory.currentItem] = null;
+            }
+        } else {
+            aBaseMetaTileEntity.openGUI(aPlayer);
+        }
         return true;
     }
 
     @Override
-    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        if (mAuto) return new GT_Container_2by2(aPlayerInventory, aBaseMetaTileEntity);
-        return new GT_Container_MaintenanceHatch(aPlayerInventory, aBaseMetaTileEntity);
+    public boolean useMui2() {
+        return true;
     }
 
     @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        if (mAuto) return new GT_GUIContainer_2by2(aPlayerInventory, aBaseMetaTileEntity, getLocalName());
-        return new GT_GUIContainer_MaintenanceHatch(aPlayerInventory, aBaseMetaTileEntity);
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEHatchMaintenanceGui(this, mAuto).build(data, syncManager, settings);
     }
 
     public void updateSlots() {
@@ -160,10 +196,7 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
     }
 
     public boolean isRecipeInputEqual(boolean aDecreaseStacksizeBySuccess) {
-        ItemStack[] mInputs=new ItemStack[]{ItemList.Duct_Tape.get(4, new Object[]{}),
-                GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Lubricant, 2),
-                GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 4),
-                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 2)};
+        ItemStack[] mInputs = getAutoMaintenanceInputs();
 
         int amt;
 
@@ -214,21 +247,35 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
     }
 
     public void onToolClick(ItemStack aStack, EntityLivingBase aPlayer) {
-        if (aStack == null || aPlayer == null) return;
-        if (GT_Utility.isStackInList(aStack, GregTech_API.sWrenchList) && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer))
+        if (aStack == null || aPlayer == null) {
+            return;
+        }
+        if (GT_Utility.isStackInList(aStack, GregTech_API.sWrenchList) && !mWrench
+            && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer)) {
             mWrench = true;
-        if (GT_Utility.isStackInList(aStack, GregTech_API.sScrewdriverList) && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer))
+        }
+        if (GT_Utility.isStackInList(aStack, GregTech_API.sScrewdriverList) && !mScrewdriver
+            && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer)) {
             mScrewdriver = true;
-        if (GT_Utility.isStackInList(aStack, GregTech_API.sSoftHammerList) && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer))
+        }
+        if (GT_Utility.isStackInList(aStack, GregTech_API.sSoftHammerList) && !mSoftHammer
+            && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer)) {
             mSoftHammer = true;
-        if (GT_Utility.isStackInList(aStack, GregTech_API.sHardHammerList) && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer))
+        }
+        if ((GT_Utility.isStackInList(aStack, GregTech_API.sHardHammerList)
+            || GT_OreDictUnificator.isItemStackInstanceOf(aStack, "craftingToolJackHammer")) && !mHardHammer
+            && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer)) {
             mHardHammer = true;
-        if (GT_Utility.isStackInList(aStack, GregTech_API.sCrowbarList) && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer))
+        }
+        if (GT_Utility.isStackInList(aStack, GregTech_API.sCrowbarList) && !mCrowbar
+            && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer)) {
             mCrowbar = true;
-        if (GT_ModHandler.useSolderingIron(aStack, aPlayer)) mSolderingTool = true;
+        }
+        if (!mSolderingTool && GT_ModHandler.useSolderingIron(aStack, aPlayer)) {
+            mSolderingTool = true;
+        }
         if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "craftingDuctTape")) {
-            mWrench = mScrewdriver = mSoftHammer = mHardHammer = mCrowbar = mSolderingTool = true;
-            getBaseMetaTileEntity().setActive(false);
+            applyDuctTape();
             aStack.stackSize--;
         }
         if (mSolderingTool && aPlayer instanceof EntityPlayerMP) {
@@ -238,6 +285,26 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
             } catch (Exception ignored) {
             }
         }
+    }
+
+    private void applyDuctTape() {
+        mWrench = mScrewdriver = mSoftHammer = mHardHammer = mCrowbar = mSolderingTool = true;
+        getBaseMetaTileEntity().setActive(false);
+    }
+
+    public boolean isAutoMaintenanceInput(ItemStack stack) {
+        for (ItemStack input : getAutoMaintenanceInputs()) {
+            if (GT_Utility.areUnificationsEqual(input, stack, true)
+                || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, stack), input, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return isAutoMaintenanceInput(stack) && super.isItemValidForSlot(index, stack);
     }
 
     @Override
