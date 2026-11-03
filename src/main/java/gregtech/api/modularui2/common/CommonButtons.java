@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 /** Shared GTNH controls. Registered sync values are bound by key instead of registered twice. */
 public final class CommonButtons {
 
-    private static final int TOOLTIP_DELAY = 20;
+    private static final int TOOLTIP_DELAY = 0;
 
     private CommonButtons() {
     }
