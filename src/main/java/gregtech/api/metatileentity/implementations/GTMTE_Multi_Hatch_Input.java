@@ -73,6 +73,11 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
     }
 
     @Override
+    public boolean useMui2() {
+        return false;
+    }
+
+    @Override
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return null;
     }

@@ -64,7 +64,8 @@ public class MTEMachineWithFluidScreenBaseGui<T extends GT_MetaTileEntity_Tiered
         ParentWidget<?> screen = CommonWidgets.createFluidScreen(FLUID_SCREEN_WIDTH, FLUID_SCREEN_HEIGHT);
         Flow text = Flow.column().coverChildren().childPadding(1)
             .crossAxisAlignment(Alignment.CrossAxis.START)
-            .child(IKey.lang("gt.ui.tank.amount").asWidget().widgetTheme(GTWidgetThemes.DISPLAY_TEXT_WHITE))
+            .child(IKey.lang("GT5U.machines.basic_tank.liquid_amount").asWidget()
+                .widgetTheme(GTWidgetThemes.DISPLAY_TEXT_WHITE))
             .child(IKey.dynamic(() -> GT_Utility.formatNumbers(tank.getFluidAmount()))
                 .asWidget().widgetTheme(GTWidgetThemes.DISPLAY_TEXT_WHITE));
         return screen.child(text).child(createFluidSlot(panel, syncManager, tank));
