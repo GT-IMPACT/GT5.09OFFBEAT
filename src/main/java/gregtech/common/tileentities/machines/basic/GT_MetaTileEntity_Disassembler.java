@@ -72,7 +72,7 @@ public class GT_MetaTileEntity_Disassembler
     public int checkRecipe() {
         if (getInputAt(0) == null) return DID_NOT_FIND_RECIPE;
         NBTTagCompound tNBT = getInputAt(0).getTagCompound();
-        if (tNBT != null) {
+        if (tNBT != null && tNBT.hasKey("GT.CraftingComponents", 10)) {
             tNBT = tNBT.getCompoundTag("GT.CraftingComponents");
             if (tNBT != null) {
                 boolean isAnyOutput = false;
@@ -139,10 +139,12 @@ public class GT_MetaTileEntity_Disassembler
 
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide,
                                  ItemStack aStack) {
-        return //(aIndex == 4 && GT_Utility.areStacksEqual(aStack, new ItemStack(Items.egg))) ||
-                (super.allowPutStack(aBaseMetaTileEntity, aIndex, aSide, aStack)) && (
-                        aStack.getTagCompound() != null) && (
-                        aStack.getTagCompound().getCompoundTag("GT.CraftingComponents") != null);
+        if (!super.allowPutStack(aBaseMetaTileEntity, aIndex, aSide, aStack)) {
+            return false;
+        }
+        NBTTagCompound tag = aStack.getTagCompound();
+        return getRecipeList().containsInput(aStack)
+                || (tag != null && tag.hasKey("GT.CraftingComponents", 10));
     }
 
     @Override
