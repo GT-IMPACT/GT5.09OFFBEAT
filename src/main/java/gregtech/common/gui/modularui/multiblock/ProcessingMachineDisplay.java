@@ -250,33 +250,14 @@ public class ProcessingMachineDisplay extends Widget<ProcessingMachineDisplay> i
             lines.add(new ScreenLine(StatCollector.translateToLocalFormatted("gt.interact.desc.mb.mode",
                     activeRecipeMapName())));
         }
-        if ((container.mDisplayErrorCode & 63) != 0) {
-            lines.add(new ScreenLine(EnumChatFormatting.RED + text("maintenance.detected")));
-            String[] tools = { "wrench", "screwdriver", "soft_hammer", "hard_hammer", "soldering_tool", "crowbar" };
-            List<String> requiredTools = new ArrayList<>();
-            for (int index = 0; index < tools.length; index++) {
-                if ((container.mDisplayErrorCode & (1 << index)) != 0) {
-                    requiredTools.add(text("maintenance.tool." + tools[index]));
-                }
-            }
-            lines.add(new ScreenLine(String.join(", ", requiredTools)));
-        }
-        if ((container.mDisplayErrorCode & 64) != 0) {
-            lines.add(new ScreenLine(EnumChatFormatting.RED + trans("138", "Incomplete Structure.")));
-        }
-        if (container.mDisplayErrorCode == 0) {
-            if (container.mActive != 0) {
-                lines.add(new ScreenLine(StatCollector.translateToLocal("gt.interact.desc.mb.running")));
-            } else if (!container.allowedToWork) {
-                lines.add(new ScreenLine(StatCollector.translateToLocal("gt.interact.desc.mb.idle")));
-            }
-        }
-        if (container.result != CheckRecipeResult.NONE) {
-            lines.add(new ScreenLine(resultColor(container.result)
-                    + StatCollector.translateToLocal(container.result.translationKey())));
+        for (String line : statusLines()) {
+            lines.add(new ScreenLine(line));
         }
         if (container.mMaxProgressTime > 0) {
             lines.add(new ScreenLine(currentProgress(container)));
+        }
+        for (String line : container.machineInfo) {
+            lines.add(new ScreenLine(line));
         }
         if (container.energyCapacity > 0) {
             lines.add(new ScreenLine(StatCollector.translateToLocalFormatted("gt.processing.stored_energy",
@@ -305,6 +286,41 @@ public class ProcessingMachineDisplay extends Widget<ProcessingMachineDisplay> i
             }
         }
         return wrapped;
+    }
+
+    /** Status and failure details shared by specialized machine displays. */
+    protected List<String> statusLines() {
+        ProcessingGuiState container = state;
+        List<String> lines = new ArrayList<>();
+        if (!container.isDisplayReady()) {
+            return lines;
+        }
+        if ((container.mDisplayErrorCode & 63) != 0) {
+            lines.add(EnumChatFormatting.RED + text("maintenance.detected"));
+            String[] tools = { "wrench", "screwdriver", "soft_hammer", "hard_hammer", "soldering_tool", "crowbar" };
+            List<String> requiredTools = new ArrayList<>();
+            for (int index = 0; index < tools.length; index++) {
+                if ((container.mDisplayErrorCode & (1 << index)) != 0) {
+                    requiredTools.add(text("maintenance.tool." + tools[index]));
+                }
+            }
+            lines.add(String.join(", ", requiredTools));
+        }
+        if ((container.mDisplayErrorCode & 64) != 0) {
+            lines.add(EnumChatFormatting.RED + trans("138", "Incomplete Structure."));
+        }
+        if (container.mDisplayErrorCode == 0) {
+            if (container.mActive != 0) {
+                lines.add(StatCollector.translateToLocal("gt.interact.desc.mb.running"));
+            } else if (!container.allowedToWork) {
+                lines.add(StatCollector.translateToLocal("gt.interact.desc.mb.idle"));
+            }
+        }
+        if (container.result != CheckRecipeResult.NONE) {
+            lines.add(resultColor(container.result)
+                    + StatCollector.translateToLocal(container.result.translationKey()));
+        }
+        return lines;
     }
 
     private static EnumChatFormatting resultColor(CheckRecipeResult result) {

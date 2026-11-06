@@ -31,7 +31,13 @@ public final class WorldProcessingLogic extends ProcessingLogic {
             if (operation.eut > power) {
                 return Result.failure(CheckRecipeResult.INSUFFICIENT_POWER);
             }
-            efficiencyAdjustedEUt(operation.eut, request.efficiency);
+            if (operation.eut >= 0) {
+                efficiencyAdjustedEUt(operation.eut, request.efficiency);
+            } else {
+                long generation = Math.negateExact(operation.eut);
+                Math.addExact(Math.multiplyExact(generation / 10000, request.efficiency),
+                        generation % 10000 * request.efficiency / 10000);
+            }
             CheckRecipeResult fit = request.outputs.canFit(operation.items, operation.fluids,
                     request.enabled(PROTECT_ITEMS), request.enabled(PROTECT_FLUIDS));
             if (!fit.wasSuccessful()) {
@@ -54,7 +60,7 @@ public final class WorldProcessingLogic extends ProcessingLogic {
         private final BooleanSupplier commit;
 
         public Operation(long eut, int duration, ItemStack[] items, FluidStack[] fluids, BooleanSupplier commit) {
-            if (eut < 0 || duration <= 0) {
+            if (eut == Long.MIN_VALUE || duration <= 0) {
                 throw new IllegalArgumentException("Invalid world operation cycle");
             }
             status = CheckRecipeResult.SUCCESS;

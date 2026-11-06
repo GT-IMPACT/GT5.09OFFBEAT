@@ -67,6 +67,7 @@ import static gregtech.api.logic.ProcessingLogic.PROTECT_FLUIDS;
 import static gregtech.api.logic.ProcessingLogic.PROTECT_ITEMS;
 import static gregtech.api.logic.ProcessingLogic.SEPARATE_INPUTS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -286,6 +287,7 @@ public class GT_Mui2MultiblockGuiTest {
                 boolean allowed = fixture.tile.isAllowedToWork();
                 fixture.press(POWER_SLOT, button, shift);
                 assertEquals(!allowed, fixture.tile.isAllowedToWork());
+                assertEquals(!allowed, machine.powerNotification);
                 fixture.press(POWER_SLOT, button, shift);
                 assertEquals(allowed, fixture.tile.isAllowedToWork());
             }
@@ -326,6 +328,7 @@ public class GT_Mui2MultiblockGuiTest {
         source.maps = maps(2);
         Fixture fixture = new Fixture(source);
         source.availableParallel = 4097;
+        source.info = new String[]{"Temperature: 700 K", "Fuel: 16000 L"};
         source.setProcessingModes(BATCH | PROTECT_FLUIDS | LOCK_RECIPE);
         source.setActiveRecipeMap(source.maps.get(1));
         source.lEUt = Long.MIN_VALUE + 0x12345678L;
@@ -365,6 +368,7 @@ public class GT_Mui2MultiblockGuiTest {
         sendSnapshot(client, incomplete);
         assertFalse(client.isDisplayReady());
         transferSnapshot(server, client);
+        assertArrayEquals(source.info, (String[]) field(client, "machineInfo"));
         assertTrue(client.isDisplayReady());
         assertEquals(source.getProcessingModes(), field(client, "modes"));
         assertSame(CheckRecipeResult.ITEM_OUTPUT_FULL, field(client, "result"));
@@ -684,6 +688,8 @@ public class GT_Mui2MultiblockGuiTest {
 
     private static final class TestMachine extends GT_MetaTileEntity_VacuumFreezer {
 
+        private String[] info = new String[0];
+        private boolean powerNotification;
         private int supportedModes = ProcessingLogic.ALL_MODES;
         private List<GT_Recipe_Map> maps = maps(1);
         private boolean nei = true;
@@ -695,6 +701,16 @@ public class GT_Mui2MultiblockGuiTest {
 
         private TestMachine() {
             super("mui2_multiblock_test");
+        }
+
+        @Override
+        public String[] getProcessingInfo() {
+            return info;
+        }
+
+        @Override
+        public void onProcessingPowerChanged(boolean enabled) {
+            powerNotification = enabled;
         }
 
         @Override

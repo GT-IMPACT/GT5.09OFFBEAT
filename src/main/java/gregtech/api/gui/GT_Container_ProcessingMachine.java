@@ -90,7 +90,10 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
             addSlotToContainer(new GT_Slot_Holo(controls, index, x, controlY(index), false, false, 1));
         }
         if (machine().hasControllerSlotInGui()) {
-            addSlotToContainer(new Slot(mTileEntity, 1, CONTROLLER_X, CONTROLLER_Y));
+            int index = machine().getControllerSlotIndex();
+            addSlotToContainer(machine().isControllerSlotInput()
+                    ? new Slot(mTileEntity, index, CONTROLLER_X, CONTROLLER_Y)
+                    : new GT_Slot_Output(mTileEntity, index, CONTROLLER_X, CONTROLLER_Y));
         }
     }
 

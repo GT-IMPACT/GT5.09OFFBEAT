@@ -9,6 +9,8 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingM
 import gregtech.api.recipe.check.CheckRecipeResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fluids.FluidStack;
 
 /** Publishes the legacy processing state and output snapshot together through MUI2. */
@@ -31,6 +33,7 @@ public final class ProcessingGuiState {
     long energyCapacity;
     ItemStack[] outputItems = new ItemStack[0];
     FluidStack[] outputFluids = new FluidStack[0];
+    String[] machineInfo = new String[0];
     int mDisplayErrorCode;
     int mActive;
     int mProgressTime;
@@ -78,6 +81,11 @@ public final class ProcessingGuiState {
         }
         ProcessingPersistence.writeItems(snapshot, "items", machine.mOutputItems);
         ProcessingPersistence.writeFluids(snapshot, "fluids", machine.mOutputFluids);
+        NBTTagList info = new NBTTagList();
+        for (String line : machine.getProcessingInfo()) {
+            info.appendTag(new NBTTagString(line));
+        }
+        snapshot.setTag("machineInfo", info);
         snapshot.setInteger("error", base.getErrorDisplayID());
         snapshot.setInteger("active", base.isActive() ? 1 : 0);
         snapshot.setInteger("progress", base.getProgress());
@@ -114,6 +122,11 @@ public final class ProcessingGuiState {
         energyCapacity = snapshot.getLong("energyCapacity");
         outputItems = ProcessingPersistence.readItems(snapshot, "items");
         outputFluids = ProcessingPersistence.readFluids(snapshot, "fluids");
+        NBTTagList info = snapshot.getTagList("machineInfo", 8);
+        machineInfo = new String[info.tagCount()];
+        for (int index = 0; index < machineInfo.length; index++) {
+            machineInfo[index] = info.getStringTagAt(index);
+        }
         mDisplayErrorCode = snapshot.getInteger("error");
         mActive = snapshot.getInteger("active");
         mProgressTime = snapshot.getInteger("progress");

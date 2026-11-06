@@ -54,6 +54,20 @@ public final class ProcessingInputs {
         return new ProcessingInputs(this);
     }
 
+    /** Synthetic machine-provided ingredients are consumed only in this attempt's private inventory. */
+    public ProcessingInputs withVirtualItems(Collection<ItemStack> suppliedItems) {
+        List<ItemStack> combined = new ArrayList<>();
+        Collections.addAll(combined, originals);
+        for (ItemStack item : suppliedItems) {
+            if (item != null) {
+                combined.add(item.copy());
+            }
+        }
+        List<FluidStack> fluids = new ArrayList<>();
+        Collections.addAll(fluids, originalFluids);
+        return new ProcessingInputs(combined, fluids, this::isUnchanged);
+    }
+
     /** Recheck a machine resource immediately before committing any inventory changes. */
     public ProcessingInputs withCommitGuard(BooleanSupplier guard) {
         return new ProcessingInputs(this, () -> sourceUnchanged.getAsBoolean() && guard.getAsBoolean());

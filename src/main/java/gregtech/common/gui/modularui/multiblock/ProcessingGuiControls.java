@@ -123,6 +123,7 @@ public final class ProcessingGuiControls {
                 } else {
                     base.enableWorking();
                 }
+                machine.onProcessingPowerChanged(base.isAllowedToWork());
                 machine.markDirty();
                 break;
             case RECIPE_MAP_SLOT:

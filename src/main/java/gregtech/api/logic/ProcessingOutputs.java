@@ -24,7 +24,7 @@ import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Mult
  * Shared simulation and delivery rules. Delivery subtracts only what the
  * destination accepted.
  */
-public final class ProcessingOutputs implements ProcessingOutputAccess {
+public final class ProcessingOutputs implements IProcessingOutputSink {
     @FunctionalInterface
     public interface FluidOutputFilter {
         boolean accepts(GT_MetaTileEntity_Hatch_Output hatch, FluidStack fluid, int outputIndex);
@@ -39,6 +39,20 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
     private final Map<GT_MetaTileEntity_Hatch, Long> meReserved = new IdentityHashMap<>();
     private final Map<GT_MetaTileEntity_Hatch_OutputBus_ME, List<ItemStack>> meItemReserved = new IdentityHashMap<>();
     private final Map<GT_MetaTileEntity_Hatch_Output_ME, List<FluidStack>> meFluidReserved = new IdentityHashMap<>();
+
+    private final List<OutputInventory> additionalInventories = new ArrayList<>();
+    private final List<IProcessingFluidOutput> additionalTanks = new ArrayList<>();
+    private final Map<IProcessingFluidOutput, FluidStack> additionalTankContents = new IdentityHashMap<>();
+
+    public ProcessingOutputs addInventory(GT_MetaTileEntity_Hatch hatch, int firstSlot, int slotCount) {
+        additionalInventories.add(new OutputInventory(hatch, firstSlot, slotCount));
+        return this;
+    }
+
+    public ProcessingOutputs addFluidOutput(IProcessingFluidOutput output) {
+        additionalTanks.add(output);
+        return this;
+    }
 
     public ProcessingOutputs(GT_MetaTileEntity_MultiBlockBase machine) {
         this.machine = machine;
@@ -69,6 +83,7 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
             boolean protectFluids) {
         slots.clear();
         tanks.clear();
+        additionalTankContents.clear();
         meReserved.clear();
         meItemReserved.clear();
         meFluidReserved.clear();
@@ -102,6 +117,12 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
         for (GT_MetaTileEntity_Hatch_Output hatch : fluidHatches) {
             if (isValidMetaTileEntity(hatch) && !(hatch instanceof GT_MetaTileEntity_Hatch_Output_ME)
                     && hatch.getFluidAmount() > 0) {
+                return false;
+            }
+        }
+        for (IProcessingFluidOutput output : additionalTanks) {
+            FluidStack stored = output.getStoredFluid();
+            if (stored != null && stored.amount > 0) {
                 return false;
             }
         }
@@ -179,6 +200,11 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
             if (stack.stackSize > 0 && isValidMetaTileEntity(hatch) && hatch.outputsItems()
                     && !(hatch instanceof GT_MetaTileEntity_Hatch_Output_ME)) {
                 insertSlots(hatch, stack, simulate, 1, 2);
+            }
+        }
+        for (OutputInventory output : additionalInventories) {
+            if (stack.stackSize > 0 && isValidMetaTileEntity(output.hatch)) {
+                insertSlots(output.hatch, stack, simulate, output.firstSlot, output.endSlot);
             }
         }
     }
@@ -263,6 +289,33 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
                 stack.amount -= amount;
             }
         }
+        for (int pass = 0; pass < 2 && stack.amount > 0; pass++) {
+            for (IProcessingFluidOutput output : additionalTanks) {
+                if (pass == 0 && !output.isRestricted() || !output.accepts(stack)) {
+                    continue;
+                }
+                FluidStack stored = simulate && additionalTankContents.containsKey(output)
+                        ? additionalTankContents.get(output) : output.getStoredFluid();
+                if (stored != null && stored.amount > 0 && !stored.isFluidEqual(stack)) {
+                    continue;
+                }
+                int storedAmount = stored == null ? 0 : stored.amount;
+                int accepted = Math.min(stack.amount, Math.max(0, output.getCapacity() - storedAmount));
+                accepted = Math.min(accepted, output.fill(stack, false));
+                if (accepted <= 0) {
+                    continue;
+                }
+                FluidStack part = stack.copy();
+                part.amount = accepted;
+                if (simulate) {
+                    part.amount += storedAmount;
+                    additionalTankContents.put(output, part);
+                } else {
+                    accepted = output.fill(part, true);
+                }
+                stack.amount -= accepted;
+            }
+        }
     }
 
     private long getReservedItemAmount(GT_MetaTileEntity_Hatch_OutputBus_ME bus, ItemStack stack) {
@@ -290,4 +343,20 @@ public final class ProcessingOutputs implements ProcessingOutputAccess {
         }
         return amount;
     }
+    private static final class OutputInventory {
+
+        private final GT_MetaTileEntity_Hatch hatch;
+        private final int firstSlot;
+        private final int endSlot;
+
+        private OutputInventory(GT_MetaTileEntity_Hatch hatch, int firstSlot, int slotCount) {
+            if (firstSlot < 0 || slotCount < 0 || firstSlot > hatch.mInventory.length - slotCount) {
+                throw new IllegalArgumentException("Output slots are outside the hatch inventory");
+            }
+            this.hatch = hatch;
+            this.firstSlot = firstSlot;
+            endSlot = firstSlot + slotCount;
+        }
+    }
+
 }

@@ -238,6 +238,107 @@ public class GT_SharedProcessingTest {
     }
 
     @Test
+    public void machineDurationBonusPrecedesBatchWithoutChangingPower() throws Throwable {
+        run("durationBonusBeforeBatch");
+    }
+
+    private static void durationBonusBeforeBatch() {
+        try (Scenario scenario = new Scenario(1)) {
+            scenario.recipe(24, 80, false);
+            ItemStack input = scenario.inputs(8, false);
+            scenario.machine.getProcessingLogic().setDurationAfterOverclock(duration -> duration / 4);
+            scenario.machine.setProcessingModes(ProcessingLogic.BATCH);
+            assertTrue(scenario.machine.checkRecipe(null));
+            assertEquals(6, scenario.machine.getCurrentOperations());
+            assertEquals(120, scenario.machine.mMaxProgresstime);
+            assertEquals(-24, scenario.machine.lEUt);
+            assertEquals(2, input.stackSize);
+        }
+    }
+
+    @Test
+    public void guaranteedOutputPolicyIncludesZeroChanceOutputs() throws Throwable {
+        run("guaranteedOutputPolicy");
+    }
+
+    private static void guaranteedOutputPolicy() {
+        try (Scenario scenario = new Scenario(1)) {
+            GT_Recipe recipe = scenario.recipe(24, 80, false);
+            recipe.mChances[0] = 0;
+            scenario.inputs(1, false);
+            scenario.machine.getProcessingLogic().setOutputChances(false);
+            assertTrue(scenario.machine.checkRecipe(null));
+            assertEquals(Items.gold_ingot, scenario.machine.mOutputItems[0].getItem());
+            assertEquals(1, scenario.machine.mOutputItems[0].stackSize);
+        }
+    }
+
+    @Test
+    public void invalidDurationBonusDoesNotConsumeInputs() throws Throwable {
+        run("invalidDurationBonus");
+    }
+
+    private static void invalidDurationBonus() {
+        try (Scenario scenario = new Scenario(1)) {
+            scenario.recipe(24, 80, false);
+            ItemStack input = scenario.inputs(2, false);
+            scenario.machine.getProcessingLogic().setDurationAfterOverclock(duration -> 0);
+            assertFalse(scenario.machine.checkRecipe(null));
+            assertEquals(2, input.stackSize);
+            assertEquals(0, scenario.machine.mMaxProgresstime);
+        }
+    }
+
+    @Test
+    public void additionalResourceLimitsBatchAndCommitsOnce() throws Throwable {
+        run("additionalResourceBatch");
+    }
+
+    private static void additionalResourceBatch() {
+        try (Scenario scenario = new Scenario(1)) {
+            scenario.recipe(24, 1, false);
+            ItemStack input = scenario.inputs(64, false);
+            int[] resource = { 3 };
+            int[] commits = { 0 };
+            scenario.machine.getProcessingLogic()
+                    .setOperationLimit(recipe -> resource[0])
+                    .setRecipeCommitHandler((recipe, operations) -> {
+                        resource[0] -= operations;
+                        commits[0]++;
+                    });
+            scenario.machine.setProcessingModes(ProcessingLogic.BATCH);
+            assertTrue(scenario.machine.checkRecipe(null));
+            assertEquals(3, scenario.machine.getCurrentOperations());
+            assertEquals(61, input.stackSize);
+            assertEquals(0, resource[0]);
+            assertEquals(1, commits[0]);
+        }
+    }
+
+    @Test
+    public void changedAdditionalResourceRejectsBeforeAnyCommit() throws Throwable {
+        run("additionalResourceChanged");
+    }
+
+    private static void additionalResourceChanged() {
+        try (Scenario scenario = new Scenario(1)) {
+            scenario.recipe(24, 80, false);
+            ItemStack input = scenario.inputs(2, false);
+            int[] reads = { 0 };
+            int[] commits = { 0 };
+            scenario.machine.getProcessingLogic()
+                    .setOperationLimit(recipe -> reads[0]++ == 0 ? 1 : 0)
+                    .setRecipeCommitHandler((recipe, operations) -> {
+                        commits[0]++;
+                    });
+            assertFalse(scenario.machine.checkRecipe(null));
+            assertEquals(CheckRecipeResult.INPUT_CHANGED, scenario.machine.getProcessingResult());
+            assertEquals(2, input.stackSize);
+            assertEquals(0, commits[0]);
+        }
+    }
+
+    @Test
     public void globalMaintenanceBypassPreservesEfficiencyAndRunningCycle() throws Throwable {
         run("globalMaintenanceBypass");
     }

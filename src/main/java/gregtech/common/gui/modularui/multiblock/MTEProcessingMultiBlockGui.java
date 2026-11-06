@@ -25,6 +25,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static gregtech.api.gui.GT_Container_ProcessingMachine.CONTROL_COUNT;
 import static gregtech.api.gui.GT_Container_ProcessingMachine.CONTROLLER_X;
@@ -48,8 +49,17 @@ public final class MTEProcessingMultiBlockGui {
     }
 
     public ModularPanel build(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return build(data, syncManager, settings, state -> new ProcessingMachineDisplay(machine, state));
+    }
+
+    public ModularPanel build(
+        PosGuiData data,
+        PanelSyncManager syncManager,
+        UISettings settings,
+        Function<ProcessingGuiState, ProcessingMachineDisplay> displayFactory
+    ) {
         ProcessingGuiState state = new ProcessingGuiState(machine, syncManager);
-        ProcessingMachineDisplay display = new ProcessingMachineDisplay(machine, state);
+        ProcessingMachineDisplay display = displayFactory.apply(state);
         ModularPanel panel = GTGuis.mteTemplatePanelBuilder(machine, data, syncManager, settings)
             .setWidth(GUI_WIDTH)
             .setHeight(GUI_HEIGHT)
@@ -63,13 +73,14 @@ public final class MTEProcessingMultiBlockGui {
             .disableHoverBackground()
             .child(display);
         if (machine.hasControllerSlotInGui()) {
+            int controllerSlot = machine.getControllerSlotIndex();
             syncManager.registerSlotGroup("controller", 1);
             panel.child(new ItemSlot()
                 .name("processing_controller")
-                .slot(new MachineModularSlot(machine.getInventoryHandler(), 1, machine.getBaseMetaTileEntity())
-                    .slotGroup("controller"))
+                .slot(new MachineModularSlot(machine.getInventoryHandler(), controllerSlot, machine.getBaseMetaTileEntity())
+                    .slotGroup("controller").accessibility(machine.isControllerSlotInput(), true))
                 .invisible()
-                .overlay(new DynamicDrawable(() -> machine.isInventorySlotLocked(1)
+                .overlay(new DynamicDrawable(() -> machine.isInventorySlotLocked(controllerSlot)
                     ? GTGuiTextures.OVERLAY_BUTTON_LOCKED.asIcon().size(16) : IDrawable.EMPTY))
                 .pos(CONTROLLER_X - 1, CONTROLLER_Y - 1));
         }

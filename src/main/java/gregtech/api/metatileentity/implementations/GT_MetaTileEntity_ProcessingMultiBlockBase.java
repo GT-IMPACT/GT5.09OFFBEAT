@@ -10,6 +10,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.ProcessingOutputs;
+import gregtech.api.logic.IProcessingOutputSink;
 import gregtech.api.logic.ProcessingPersistence;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
@@ -54,9 +55,17 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         super(name, CIRCUIT_SLOT + 1);
     }
 
+    protected GT_MetaTileEntity_ProcessingMultiBlockBase(int id, String name, String regionalName, int slots) {
+        super(id, name, regionalName, slots);
+    }
+
+    protected GT_MetaTileEntity_ProcessingMultiBlockBase(String name, int slots) {
+        super(name, slots);
+    }
+
     protected abstract ProcessingLogic createProcessingLogic();
 
-    protected ProcessingOutputs createProcessingOutputs() {
+    protected IProcessingOutputSink createProcessingOutputs() {
         return new ProcessingOutputs(this);
     }
 
@@ -128,11 +137,16 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return Collections.emptyList();
     }
 
+    protected GT_Recipe_Map getDefaultRecipeMap() {
+        List<GT_Recipe_Map> maps = getRecipeMaps();
+        return maps.isEmpty() ? null : maps.get(0);
+    }
+
     @Override
     public GT_Recipe_Map getRecipeMap() {
         List<GT_Recipe_Map> maps = getRecipeMaps();
         if (selectedRecipeMap == null) {
-            return maps.isEmpty() ? null : maps.get(0);
+            return getDefaultRecipeMap();
         }
         for (GT_Recipe_Map map : maps) {
             if (map.mUnlocalizedName.equals(selectedRecipeMap)) {
@@ -244,6 +258,21 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return processingModes;
     }
 
+    public int getControllerSlotIndex() {
+        return 1;
+    }
+
+    public boolean isControllerSlotInput() {
+        return true;
+    }
+
+    public void onProcessingPowerChanged(boolean enabled) {
+    }
+
+    public String[] getProcessingInfo() {
+        return new String[0];
+    }
+
     public int getSupportedProcessingModes() {
         return ProcessingLogic.ALL_MODES;
     }
@@ -350,7 +379,8 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     protected List<ProcessingInputs> collectProcessingInputs() {
         List<ItemStack> allItems = getStoredInputs();
         List<FluidStack> fluids = getStoredFluids();
-        int controllerSlot = allowSelectCircuit() ? getCircuitSlot() : usesControllerSlotAsRecipeInput() ? 1 : -1;
+        int controllerSlot = allowSelectCircuit() ? getCircuitSlot()
+                : usesControllerSlotAsRecipeInput() ? getControllerSlotIndex() : -1;
         ItemStack controller = getStackInSlot(controllerSlot);
         BooleanSupplier sourceUnchanged = () -> sameReferences(allItems, getStoredInputs())
                 && sameReferences(fluids, getStoredFluids())
@@ -360,29 +390,34 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
                     new ProcessingInputs(withControllerInput(allItems, controller), fluids, sourceUnchanged));
         }
         List<ProcessingInputs> groups = new ArrayList<>();
-        for (GTMTE_BusHatch_Input bus : mInputBusHatches) {
-            if (isValidMetaTileEntity(bus)) {
-                groups.add(
-                        new ProcessingInputs(withControllerInput(GTMTE_BusHatch_Input.getStoredInputs(bus), controller),
-                                fluids, sourceUnchanged));
+        for (GT_MetaTileEntity_Hatch bus : getProcessingInputBuses()) {
+            if (!isValidMetaTileEntity(bus)) {
+                continue;
             }
-        }
-        for (GT_MetaTileEntity_Hatch_InputBus bus : mInputBusses) {
-            if (isValidMetaTileEntity(bus)) {
-                List<ItemStack> items = new ArrayList<>();
+            List<ItemStack> items = new ArrayList<>();
+            if (bus instanceof GTMTE_BusHatch_Input) {
+                items.addAll(GTMTE_BusHatch_Input.getStoredInputs((GTMTE_BusHatch_Input) bus));
+            } else {
                 for (int i = bus.mInventory.length - 1; i >= 0; i--) {
                     if (bus.mInventory[i] != null) {
                         items.add(bus.mInventory[i]);
                     }
                 }
-                groups.add(new ProcessingInputs(withControllerInput(items, controller), fluids, sourceUnchanged));
             }
+            groups.add(new ProcessingInputs(withControllerInput(items, controller), fluids, sourceUnchanged));
         }
         if (groups.isEmpty()) {
             groups.add(new ProcessingInputs(withControllerInput(Collections.emptyList(), controller), fluids,
                     sourceUnchanged));
         }
         return groups;
+    }
+
+    protected List<GT_MetaTileEntity_Hatch> getProcessingInputBuses() {
+        List<GT_MetaTileEntity_Hatch> hatches = new ArrayList<>();
+        hatches.addAll(mInputBusHatches);
+        hatches.addAll(mInputBusses);
+        return hatches;
     }
 
     private static List<ItemStack> withControllerInput(List<ItemStack> inputs, ItemStack controller) {
@@ -406,37 +441,60 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return true;
     }
 
-    /** Sum of hatch voltages, as in GTNH; amperage does not raise the voltage tier. */
+    protected List<GT_MetaTileEntity_Hatch> getProcessingEnergyHatches() {
+        List<GT_MetaTileEntity_Hatch> hatches = new ArrayList<>();
+        hatches.addAll(mEnergyHatches);
+        hatches.addAll(mEnergyHatchesMulti);
+        return hatches;
+    }
+
+    protected List<GT_MetaTileEntity_Hatch> getProcessingDynamos() {
+        List<GT_MetaTileEntity_Hatch> hatches = new ArrayList<>();
+        hatches.addAll(mDynamoHatches);
+        hatches.addAll(mDynamoHatchesMulti);
+        return hatches;
+    }
+
+    /** Sum of nominal voltages; additional amperage does not raise the tier. */
     protected long getTotalInputVoltage() {
         long voltage = 0;
-        for (GT_MetaTileEntity_Hatch_Energy hatch : mEnergyHatches) {
+        for (GT_MetaTileEntity_Hatch hatch : getProcessingEnergyHatches()) {
             if (isValidMetaTileEntity(hatch)) {
-                voltage += hatch.getBaseMetaTileEntity().getInputVoltage();
-            }
-        }
-        for (GT_MetaTileEntity_Hatch_EnergyMulti hatch : mEnergyHatchesMulti) {
-            if (isValidMetaTileEntity(hatch)) {
-                voltage += hatch.getBaseMetaTileEntity().getInputVoltage();
+                voltage = Math.addExact(voltage, hatch.getBaseMetaTileEntity().getInputVoltage());
             }
         }
         return voltage;
+    }
+
+    @Override
+    public long getAverageInputVoltage() {
+        long voltage = 0;
+        int count = 0;
+        for (GT_MetaTileEntity_Hatch hatch : getProcessingEnergyHatches()) {
+            if (isValidMetaTileEntity(hatch)) {
+                voltage = Math.addExact(voltage, hatch.getBaseMetaTileEntity().getInputVoltage());
+                count++;
+            }
+        }
+        return count == 0 ? 0 : voltage / count;
     }
 
     protected long getProcessingAmperage() {
         long amps = 0;
         int ordinary = 0;
         int multi = 0;
-        for (GT_MetaTileEntity_Hatch_Energy hatch : mEnergyHatches) {
-            if (isValidMetaTileEntity(hatch)) {
-                ordinary++;
-                amps = Math.addExact(amps,
-                        hatch.maxEUInput() <= 0 ? 0 : hatch.getRatedInputThroughput() / hatch.maxEUInput());
+        for (GT_MetaTileEntity_Hatch hatch : getProcessingEnergyHatches()) {
+            if (!isValidMetaTileEntity(hatch)) {
+                continue;
             }
-        }
-        for (GT_MetaTileEntity_Hatch_EnergyMulti hatch : mEnergyHatchesMulti) {
-            if (isValidMetaTileEntity(hatch)) {
+            if (hatch instanceof GT_MetaTileEntity_Hatch_EnergyMulti) {
                 multi++;
-                amps = Math.addExact(amps, hatch.Amp);
+                amps = Math.addExact(amps, ((GT_MetaTileEntity_Hatch_EnergyMulti) hatch).Amp);
+            } else if (hatch instanceof GT_MetaTileEntity_Hatch_Energy) {
+                ordinary++;
+                GT_MetaTileEntity_Hatch_Energy energy = (GT_MetaTileEntity_Hatch_Energy) hatch;
+                amps = Math.addExact(amps,
+                        energy.maxEUInput() <= 0 ? 0 : energy.getRatedInputThroughput() / energy.maxEUInput());
             }
         }
         return ordinary == 1 && multi == 0 ? 1 : amps;
@@ -447,9 +505,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         if (required <= 0) {
             return true;
         }
-        List<GT_MetaTileEntity_Hatch> hatches = new ArrayList<>();
-        hatches.addAll(mEnergyHatches);
-        hatches.addAll(mEnergyHatchesMulti);
+        List<GT_MetaTileEntity_Hatch> hatches = getProcessingEnergyHatches();
         long missing = required;
         for (GT_MetaTileEntity_Hatch hatch : hatches) {
             if (isValidMetaTileEntity(hatch)) {
@@ -504,9 +560,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         if (energy <= 0) {
             return true;
         }
-        List<GT_MetaTileEntity_Hatch> dynamos = new ArrayList<>();
-        dynamos.addAll(mDynamoHatches);
-        dynamos.addAll(mDynamoHatchesMulti);
+        List<GT_MetaTileEntity_Hatch> dynamos = getProcessingDynamos();
         long capacity = 0;
         long firstVoltage = -1;
         for (GT_MetaTileEntity_Hatch hatch : dynamos) {
@@ -545,7 +599,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
 
     @Override
     protected void completeRecipe() {
-        ProcessingOutputs outputs = createProcessingOutputs();
+        IProcessingOutputSink outputs = createProcessingOutputs();
         if (legacyOutputs) {
             try {
                 mOutputFluids = outputs.prepareFluids(mOutputFluids);
@@ -673,7 +727,9 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
                 setInventorySlotContents(getCircuitSlot(), legacyCircuit);
             }
         }
-        setInventorySlotContents(getCircuitSlot(), mInventory[getCircuitSlot()]);
+        if (getCircuitSlot() >= 0) {
+            setInventorySlotContents(getCircuitSlot(), mInventory[getCircuitSlot()]);
+        }
         legacyOutputs = !tag.hasKey("processing") || processing.getBoolean("legacyOutputs");
         selectedRecipeMap = processing.hasKey("recipeMap") ? processing.getString("recipeMap") : null;
         getProcessingLogic().clearRecipeCache();
@@ -686,7 +742,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
             processingModes = 0;
             cycleModes = 0;
             waitingForOutput = false;
-            currentParallel = mMaxProgresstime > 0 ? 1 : 0;
+            currentParallel = mMaxProgresstime > 0 ? Math.max(1, getLegacyCycleParallel(tag)) : 0;
             currentOperations = currentParallel;
             processingResult = mMaxProgresstime > 0 ? CheckRecipeResult.SUCCESS : CheckRecipeResult.NONE;
             return;
@@ -701,6 +757,10 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         mOutputFluids = ProcessingPersistence.readFluids(processing, "fluids");
         processingResult = waitingForOutput ? CheckRecipeResult.WAITING_FOR_OUTPUT
                 : mMaxProgresstime > 0 ? CheckRecipeResult.SUCCESS : CheckRecipeResult.NONE;
+    }
+
+    protected int getLegacyCycleParallel(NBTTagCompound tag) {
+        return 1;
     }
 
     @Override

@@ -9,9 +9,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
+import java.util.function.LongUnaryOperator;
+import java.util.function.BiConsumer;
+import java.util.function.ToIntFunction;
 import java.util.function.Supplier;
 
 /**
@@ -38,10 +43,44 @@ public class ProcessingLogic {
     private boolean subTickParallelBypassesLimit = false;
     private boolean powerRequired = true;
     private int itemOutputLimit = Integer.MAX_VALUE;
+    private int fluidOutputLimit = Integer.MAX_VALUE;
     private GT_Recipe.GT_Recipe_Map lastMap;
     private GT_Recipe cachedRecipe;
     private NBTTagCompound lockedRecipe;
     private int availableParallel = 1;
+    private IntUnaryOperator durationAfterOverclock = duration -> duration;
+    private boolean outputChances = true;
+    private LongUnaryOperator eutAfterOverclock = eut -> eut;
+    private ToIntFunction<GT_Recipe> operationLimit = recipe -> Integer.MAX_VALUE;
+    private BiConsumer<GT_Recipe, Integer> recipeCommitHandler = (recipe, operations) -> {
+    };
+
+    public ProcessingLogic setOperationLimit(ToIntFunction<GT_Recipe> limit) {
+        operationLimit = Objects.requireNonNull(limit);
+        return this;
+    }
+
+    /** Runs once after all checks and ingredient commit; the handler must not reject the prepared operation. */
+    public ProcessingLogic setRecipeCommitHandler(BiConsumer<GT_Recipe, Integer> handler) {
+        recipeCommitHandler = Objects.requireNonNull(handler);
+        return this;
+    }
+
+    public ProcessingLogic setEUtAfterOverclock(LongUnaryOperator modifier) {
+        eutAfterOverclock = Objects.requireNonNull(modifier);
+        return this;
+    }
+
+    /** Machine bonuses applied after overclocking and before sequential batching. */
+    public ProcessingLogic setDurationAfterOverclock(IntUnaryOperator modifier) {
+        durationAfterOverclock = Objects.requireNonNull(modifier);
+        return this;
+    }
+
+    public ProcessingLogic setOutputChances(boolean enabled) {
+        outputChances = enabled;
+        return this;
+    }
 
     public ProcessingLogic setRecipeMapSupplier(Supplier<GT_Recipe.GT_Recipe_Map> supplier) {
         recipeMapSupplier = supplier;
@@ -69,6 +108,14 @@ public class ProcessingLogic {
             throw new IllegalArgumentException("Negative output limit");
         }
         itemOutputLimit = limit;
+        return this;
+    }
+
+    public ProcessingLogic setFluidOutputLimit(int limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("Negative output limit");
+        }
+        fluidOutputLimit = limit;
         return this;
     }
 
@@ -154,9 +201,11 @@ public class ProcessingLogic {
                         ? ProcessingPersistence.recipeIdentity(map, recipe)
                         : null;
                 // Everything that can reject the recipe has completed. Commit once.
-                if (recipeMapSupplier.get() != map || !result.consumed.commit()) {
+                if (recipeMapSupplier.get() != map || operationLimit.applyAsInt(recipe) < result.operations
+                        || !result.consumed.commit()) {
                     return Result.failure(CheckRecipeResult.INPUT_CHANGED);
                 }
+                recipeCommitHandler.accept(recipe, result.operations);
                 cachedRecipe = recipe.mCanBeBuffered ? recipe : null;
                 lockedRecipe = nextLock;
                 return result;
@@ -247,6 +296,10 @@ public class ProcessingLogic {
             return Result.failure(CheckRecipeResult.INSUFFICIENT_POWER);
         }
         int limit = normalLimit;
+        int resourceLimit = operationLimit.applyAsInt(recipe);
+        if (resourceLimit <= 0) {
+            return Result.failure(CheckRecipeResult.MACHINE_CONDITION);
+        }
         if (subTickParallelBypassesLimit) {
             double multiplier = calculator.calculate(recipe.mEUt, recipe.mDuration, power,
                     normalLimit).subTickMultiplier;
@@ -255,7 +308,7 @@ public class ProcessingLogic {
                 limit = (int) Math.min(limit, power / recipePower);
             }
         }
-        int parallel = ParallelHelper.byInputs(recipe, inputs, limit);
+        int parallel = ParallelHelper.byInputs(recipe, inputs, Math.min(limit, resourceLimit));
         parallel = fitOutputs(recipe, parallel, request);
         if (parallel <= 0) {
             CheckRecipeResult status = outputStatus(recipe, 1, request);
@@ -265,12 +318,23 @@ public class ProcessingLogic {
         // power multiplier.
         int poweredParallel = Math.min(normalLimit, parallel);
         OverclockCalculator.Result clock = calculator.calculate(recipe.mEUt, recipe.mDuration, power, poweredParallel);
-        efficiencyAdjustedEUt(clock.eut, request.efficiency);
+        long cycleEUt = eutAfterOverclock.applyAsLong(clock.eut);
+        if (cycleEUt < 0) {
+            throw new ArithmeticException("Negative recipe power");
+        }
+        if (cycleEUt > power) {
+            return Result.failure(CheckRecipeResult.INSUFFICIENT_POWER);
+        }
+        efficiencyAdjustedEUt(cycleEUt, request.efficiency);
+        int cycleDuration = durationAfterOverclock.applyAsInt(clock.duration);
+        if (cycleDuration <= 0) {
+            throw new OverclockCalculator.DurationOverflowException();
+        }
         int count = ParallelHelper.byInputs(recipe, inputs,
-                ParallelHelper.batchLimit(parallel, clock.duration, request.enabled(BATCH)));
+                Math.min(resourceLimit, ParallelHelper.batchLimit(parallel, cycleDuration, request.enabled(BATCH))));
         count = fitOutputs(recipe, count, request);
         count = Math.max(parallel, count);
-        long duration = ((long) clock.duration * count + parallel - 1) / parallel;
+        long duration = ((long) cycleDuration * count + parallel - 1) / parallel;
         if (duration > Integer.MAX_VALUE) {
             throw new OverclockCalculator.DurationOverflowException();
         }
@@ -280,7 +344,7 @@ public class ProcessingLogic {
         }
         ItemStack[] itemOutputs = itemOutputs(recipe, count, request.random);
         FluidStack[] fluidOutputs = request.outputs.prepareFluids(fluidOutputs(recipe, count));
-        return new Result(CheckRecipeResult.SUCCESS, consumed, recipe, clock.eut, (int) duration, parallel, count,
+        return new Result(CheckRecipeResult.SUCCESS, consumed, recipe, cycleEUt, (int) duration, parallel, count,
                 itemOutputs, fluidOutputs);
     }
 
@@ -297,11 +361,11 @@ public class ProcessingLogic {
     private ItemStack[] itemOutputs(GT_Recipe recipe, int count, IntUnaryOperator random) {
         ItemStack[] outputs = new ItemStack[Math.min(itemOutputLimit, recipe.mOutputs.length)];
         for (int i = 0; i < outputs.length; i++) {
-            if (recipe.mOutputs[i] == null || recipe.getOutputChance(i) <= 0) {
+            if (recipe.mOutputs[i] == null || outputChances && recipe.getOutputChance(i) <= 0) {
                 continue;
             }
             int successes = count;
-            if (random != null && recipe.getOutputChance(i) < 10000) {
+            if (outputChances && random != null && recipe.getOutputChance(i) < 10000) {
                 successes = 0;
                 for (int j = 0; j < count; j++) {
                     if (random.applyAsInt(10000) < recipe.getOutputChance(i)) {
@@ -318,8 +382,9 @@ public class ProcessingLogic {
         return outputs;
     }
 
-    private static FluidStack[] fluidOutputs(GT_Recipe recipe, int count) {
-        FluidStack[] outputs = ProcessingInputs.copyFluids(recipe.mFluidOutputs);
+    private FluidStack[] fluidOutputs(GT_Recipe recipe, int count) {
+        FluidStack[] outputs = ProcessingInputs.copyFluids(Arrays.copyOf(recipe.mFluidOutputs,
+                Math.min(fluidOutputLimit, recipe.mFluidOutputs.length)));
         for (FluidStack output : outputs) {
             if (output != null) {
                 output.amount = outputAmount(output.amount, count);

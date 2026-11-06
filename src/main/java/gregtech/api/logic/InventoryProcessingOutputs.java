@@ -9,10 +9,11 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * Each recipe output keeps its corresponding slot in the controller inventory.
  */
-public final class InventoryProcessingOutputs implements ProcessingOutputAccess {
+public final class InventoryProcessingOutputs implements IProcessingOutputSink {
     private final IInventory inventory;
     private final int firstSlot;
     private final int slotCount;
+    private boolean alwaysProtectItems;
 
     public InventoryProcessingOutputs(IInventory inventory, int firstSlot, int slotCount) {
         if (firstSlot < 0 || slotCount < 0 || firstSlot > inventory.getSizeInventory() - slotCount) {
@@ -23,10 +24,15 @@ public final class InventoryProcessingOutputs implements ProcessingOutputAccess 
         this.slotCount = slotCount;
     }
 
+    public InventoryProcessingOutputs setAlwaysProtectItems(boolean enabled) {
+        alwaysProtectItems = enabled;
+        return this;
+    }
+
     @Override
     public CheckRecipeResult canFit(ItemStack[] items, FluidStack[] fluids, boolean protectItems,
             boolean protectFluids) {
-        if (protectItems) {
+        if (protectItems || alwaysProtectItems) {
             for (int i = 0; i < items.length; i++) {
                 ItemStack item = items[i];
                 if (item != null && item.stackSize > availableSpace(i, item)) {
@@ -69,6 +75,23 @@ public final class InventoryProcessingOutputs implements ProcessingOutputAccess 
                 item.stackSize -= accepted;
             }
             complete &= item.stackSize == 0;
+        }
+        return complete;
+    }
+
+    @Override
+    public boolean deliver(ItemStack[] items, FluidStack[] fluids, boolean protectItems, boolean protectFluids) {
+        boolean complete = deliver(items);
+        if (fluids != null) {
+            for (FluidStack fluid : fluids) {
+                if (fluid != null && fluid.amount > 0) {
+                    if (protectFluids) {
+                        complete = false;
+                    } else {
+                        fluid.amount = 0;
+                    }
+                }
+            }
         }
         return complete;
     }
