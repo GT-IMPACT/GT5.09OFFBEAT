@@ -405,7 +405,8 @@ public class GT_MetaTileEntity_AirFilter
     @Override
     public String[] addInfoData() {
         final ArrayList<String> ll = new ArrayList<>();
-        ll.add("Pollution reduction: "+ EnumChatFormatting.GREEN + mPollutionReduction + EnumChatFormatting.RESET+" gibbl/t (for Chunk)");
+        ll.add("Pollution reduction: " + EnumChatFormatting.GREEN + mPollutionReduction
+                + EnumChatFormatting.RESET + " gibbl/10s (for Chunk)");
         final String[] a = new String[ll.size()];
         return ll.toArray(a);
     }
