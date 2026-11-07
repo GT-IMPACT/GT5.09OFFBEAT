@@ -6,24 +6,25 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicBatteryBuffer;
-import gregtech.api.util.GT_CoverBehavior;
+import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.modularui.cover.CoverEUMeterGui;
 import gregtech.common.gui.modularui.cover.base.CoverBaseGui;
 import io.netty.buffer.ByteBuf;
+import java.util.function.ToLongFunction;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.Fluid;
 
-import java.util.function.ToLongFunction;
-
-/** GTNH energy detector with migration of this fork's twelve legacy modes. */
-public class CoverEUMeter extends CoverLegacyBehavior implements IInvertable {
+public class CoverEUMeter extends CoverLegacyData implements IInvertable {
 
     private long threshold;
 
-    public CoverEUMeter(CoverContext context, GT_CoverBehavior behavior) {
-        super(context, behavior);
+    public CoverEUMeter(CoverContext context) {
+        super(context);
     }
 
     public EnergyType getType() {
@@ -89,7 +90,7 @@ public class CoverEUMeter extends CoverLegacyBehavior implements IInvertable {
         } else if (nbt instanceof NBTTagCompound) {
             NBTTagCompound tag = (NBTTagCompound) nbt;
             coverData = EnergyType.getEnergyType(tag.getInteger("typeOrdinal")).ordinal() * 2
-                + (tag.getBoolean("inverted") ? 1 : 0);
+                    + (tag.getBoolean("inverted") ? 1 : 0);
             threshold = Math.max(0, tag.getLong("threshold"));
         }
     }
@@ -153,11 +154,11 @@ public class CoverEUMeter extends CoverLegacyBehavior implements IInvertable {
         ELECTRICITY_STORAGE("electricity", ICoverable::getStoredEU, ICoverable::getEUCapacity),
         STEAM_STORAGE("steam", ICoverable::getStoredSteam, ICoverable::getSteamCapacity),
         AVERAGE_ELECTRIC_INPUT("average_in", ICoverable::getAverageElectricInput,
-            tile -> tile.getInputVoltage() * tile.getInputAmperage()),
+                tile -> tile.getInputVoltage() * tile.getInputAmperage()),
         AVERAGE_ELECTRIC_OUTPUT("average_out", ICoverable::getAverageElectricOutput,
-            tile -> tile.getOutputVoltage() * tile.getOutputAmperage()),
+                tile -> tile.getOutputVoltage() * tile.getOutputAmperage()),
         ELECTRICITY_STORAGE_INCLUDING_BATTERIES("eu_stored", tile -> batteryEnergy(tile, 0),
-            tile -> batteryEnergy(tile, 1));
+                tile -> batteryEnergy(tile, 1));
 
         private final String key;
         private final ToLongFunction<ICoverable> stored;
@@ -202,5 +203,121 @@ public class CoverEUMeter extends CoverLegacyBehavior implements IInvertable {
             }
             return index == 0 ? tile.getStoredEU() : tile.getEUCapacity();
         }
+    }
+
+    @Override
+    public void onCoverScrewdriverClick(EntityPlayer player, float x, float y, float z) {
+        coverData = (coverData + (player.isSneaking() ? -1 : 1)) % 12;
+        if (coverData < 0) {
+            coverData = 11;
+        }
+        switch (coverData) {
+        case 0:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_031", "Normal Universal Storage"));
+            break;
+
+        case 1:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_032", "Inverted Universal Storage"));
+            break;
+
+        case 2:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_033", "Normal Electricity Storage"));
+            break;
+
+        case 3:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_034", "Inverted Electricity Storage"));
+            break;
+
+        case 4:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_035", "Normal Steam Storage"));
+            break;
+
+        case 5:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_036", "Inverted Steam Storage"));
+            break;
+
+        case 6:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_037", "Normal Average Electric Input"));
+            break;
+
+        case 7:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_038", "Inverted Average Electric Input"));
+            break;
+
+        case 8:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_039", "Normal Average Electric Output"));
+            break;
+
+        case 9:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager
+                    .addStringLocalization("Interaction_DESCRIPTION_Index_040", "Inverted Average Electric Output"));
+            break;
+
+        case 10:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager.addStringLocalization(
+                    "Interaction_DESCRIPTION_Index_041", "Normal Electricity Storage(Including Batteries)"));
+            break;
+
+        case 11:
+            GT_Utility.sendChatToPlayer(player, GT_LanguageManager.addStringLocalization(
+                    "Interaction_DESCRIPTION_Index_042", "Inverted Electricity Storage(Including Batteries)"));
+            break;
+
+        }
+        markGuiChanged();
+    }
+
+    @Override
+    public boolean letsEnergyIn() {
+        return true;
+    }
+
+    @Override
+    public boolean letsEnergyOut() {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidIn(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidOut(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsIn(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsOut(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean manipulatesSidedRedstoneOutput() {
+        return true;
+    }
+
+    @Override
+    public int getMinimumTickRate() {
+        return 20;
+    }
+
+    @Override
+    public boolean hasCoverGUI() {
+        return true;
     }
 }

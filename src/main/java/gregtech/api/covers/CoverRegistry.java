@@ -1,9 +1,5 @@
 package gregtech.api.covers;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
-
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.ICoverable;
@@ -11,35 +7,63 @@ import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_CoverBehavior;
 import gregtech.common.covers.Cover;
 import gregtech.common.covers.CoverArm;
-import gregtech.common.covers.CoverConveyor;
+import gregtech.common.covers.CoverBlastproof;
 import gregtech.common.covers.CoverControlsWork;
+import gregtech.common.covers.CoverConveyor;
+import gregtech.common.covers.CoverCrafting;
+import gregtech.common.covers.CoverDefault;
 import gregtech.common.covers.CoverDoesWork;
+import gregtech.common.covers.CoverDrain;
 import gregtech.common.covers.CoverEUMeter;
-import gregtech.common.covers.CoverFluidfilter;
+import gregtech.common.covers.CoverEnergyOnly;
 import gregtech.common.covers.CoverFluidRegulator;
+import gregtech.common.covers.CoverFluidfilter;
 import gregtech.common.covers.CoverItemMeter;
 import gregtech.common.covers.CoverLegacyBehavior;
+import gregtech.common.covers.CoverLens;
 import gregtech.common.covers.CoverLiquidMeter;
 import gregtech.common.covers.CoverNeedMaintenance;
 import gregtech.common.covers.CoverNone;
 import gregtech.common.covers.CoverPlayerDetector;
 import gregtech.common.covers.CoverPump;
+import gregtech.common.covers.CoverRedstoneConductor;
+import gregtech.common.covers.CoverRedstoneSignalizer;
 import gregtech.common.covers.CoverRedstoneWirelessBase;
+import gregtech.common.covers.CoverScreen;
 import gregtech.common.covers.CoverShutter;
+import gregtech.common.covers.CoverSolarPanel;
+import gregtech.common.covers.CoverVent;
 import gregtech.common.covers.GT_Cover_Arm;
-import gregtech.common.covers.GT_Cover_Conveyor;
+import gregtech.common.covers.GT_Cover_Blastproof;
 import gregtech.common.covers.GT_Cover_ControlsWork;
+import gregtech.common.covers.GT_Cover_Conveyor;
+import gregtech.common.covers.GT_Cover_Crafting;
 import gregtech.common.covers.GT_Cover_DoesWork;
+import gregtech.common.covers.GT_Cover_Drain;
 import gregtech.common.covers.GT_Cover_EUMeter;
-import gregtech.common.covers.GT_Cover_Fluidfilter;
+import gregtech.common.covers.GT_Cover_EnergyOnly;
 import gregtech.common.covers.GT_Cover_FluidRegulator;
+import gregtech.common.covers.GT_Cover_Fluidfilter;
 import gregtech.common.covers.GT_Cover_ItemMeter;
+import gregtech.common.covers.GT_Cover_Lens;
 import gregtech.common.covers.GT_Cover_LiquidMeter;
 import gregtech.common.covers.GT_Cover_NeedMaintainance;
 import gregtech.common.covers.GT_Cover_PlayerDetector;
 import gregtech.common.covers.GT_Cover_Pump;
-import gregtech.common.covers.GT_Cover_RedstoneWirelessBase;
+import gregtech.common.covers.GT_Cover_RedstoneConductor;
+import gregtech.common.covers.GT_Cover_RedstoneReceiverExternal;
+import gregtech.common.covers.GT_Cover_RedstoneReceiverInternal;
+import gregtech.common.covers.GT_Cover_RedstoneSignalizer;
+import gregtech.common.covers.GT_Cover_RedstoneTransmitterExternal;
+import gregtech.common.covers.GT_Cover_RedstoneTransmitterInternal;
+import gregtech.common.covers.GT_Cover_Screen;
 import gregtech.common.covers.GT_Cover_Shutter;
+import gregtech.common.covers.GT_Cover_SolarPanel;
+import gregtech.common.covers.GT_Cover_Vent;
+import gregtech.common.covers.modes.WirelessRole;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -50,8 +74,8 @@ public final class CoverRegistry {
     private static final Map<GT_ItemStack, CoverRegistration> COVERS = new ConcurrentHashMap<>();
     private static final CoverPlacer DEFAULT_COVER_PLACER = CoverPlacer.builder().build();
     public static final CoverPlacer PRIMITIVE_COVER_PLACER = CoverPlacer.builder().allowOnPrimitiveBlock().build();
-    public static final CoverPlacer INTERCEPTS_RIGHT_CLICK_COVER_PLACER =
-        CoverPlacer.builder().blocksCoverableGuiOpening().build();
+    public static final CoverPlacer INTERCEPTS_RIGHT_CLICK_COVER_PLACER = CoverPlacer.builder()
+            .blocksCoverableGuiOpening().build();
     public static final Cover NO_COVER = new CoverNone(new CoverContext(0, ForgeDirection.UNKNOWN, null));
 
     private CoverRegistry() {
@@ -72,7 +96,7 @@ public final class CoverRegistry {
     }
 
     public static void registerDecorativeCover(ItemStack item, ITexture texture) {
-        registerCover(item, texture, context -> new Cover(context, texture), PRIMITIVE_COVER_PLACER);
+        registerCover(item, texture, CoverDefault::new, PRIMITIVE_COVER_PLACER);
     }
 
     private static CoverRegistration getRegistration(ItemStack item) {
@@ -110,12 +134,15 @@ public final class CoverRegistry {
     }
 
     public static boolean isCover(ItemStack item) {
-        return item != null && (getRegistration(item) != null || GregTech_API.sCovers.containsKey(new GT_ItemStack(item)));
+        return item != null
+                && (getRegistration(item) != null || GregTech_API.sCovers.containsKey(new GT_ItemStack(item)));
     }
 
     public static boolean isNativeCover(ItemStack item) {
-        return item != null && (getRegistration(item) != null
-            || getNativeFactory(GregTech_API.getCoverBehavior(item)) != null);
+        return item != null
+                && (getRegistration(item) != null || (GregTech_API.sCovers.containsKey(new GT_ItemStack(item))
+                        || GregTech_API.sCoverBehaviors.containsKey(new GT_ItemStack(item)))
+                        && getNativeFactory(GregTech_API.getCoverBehavior(item)) != null);
     }
 
     private static BiFunction<CoverContext, GT_CoverBehavior, Cover> getNativeFactory(GT_CoverBehavior behavior) {
@@ -123,43 +150,87 @@ public final class CoverRegistry {
             return (context, unused) -> new CoverControlsWork(context, getCoverTexture(context.getCoverItem()));
         }
         if (behavior instanceof GT_Cover_Conveyor) {
-            return CoverConveyor::new;
+            return (context, legacy) -> new CoverConveyor(context, ((GT_Cover_Conveyor) legacy).mTickRate,
+                    ((GT_Cover_Conveyor) legacy).getMaxStacks());
         }
         if (behavior instanceof GT_Cover_Pump) {
-            return CoverPump::new;
+            return (context, legacy) -> new CoverPump(context, ((GT_Cover_Pump) legacy).mTransferRate);
         }
         if (behavior instanceof GT_Cover_Arm) {
-            return CoverArm::new;
+            return (context, legacy) -> new CoverArm(context, ((GT_Cover_Arm) legacy).mTickRate);
         }
         if (behavior instanceof GT_Cover_Fluidfilter) {
-            return CoverFluidfilter::new;
+            return (context, legacy) -> new CoverFluidfilter(context);
         }
         if (behavior instanceof GT_Cover_FluidRegulator) {
-            return CoverFluidRegulator::new;
+            return (context, legacy) -> new CoverFluidRegulator(context,
+                    ((GT_Cover_FluidRegulator) legacy).mTransferRate, ((GT_Cover_FluidRegulator) legacy).isSteam);
         }
         if (behavior instanceof GT_Cover_EUMeter) {
-            return CoverEUMeter::new;
+            return (context, legacy) -> new CoverEUMeter(context);
         }
         if (behavior instanceof GT_Cover_ItemMeter) {
-            return CoverItemMeter::new;
+            return (context, legacy) -> new CoverItemMeter(context);
         }
         if (behavior instanceof GT_Cover_LiquidMeter) {
-            return CoverLiquidMeter::new;
+            return (context, legacy) -> new CoverLiquidMeter(context);
         }
         if (behavior instanceof GT_Cover_Shutter) {
-            return CoverShutter::new;
+            return (context, legacy) -> new CoverShutter(context);
         }
         if (behavior instanceof GT_Cover_DoesWork) {
-            return CoverDoesWork::new;
+            return (context, legacy) -> new CoverDoesWork(context);
         }
         if (behavior instanceof GT_Cover_NeedMaintainance) {
-            return CoverNeedMaintenance::new;
+            return (context, legacy) -> new CoverNeedMaintenance(context);
         }
         if (behavior instanceof GT_Cover_PlayerDetector) {
-            return CoverPlayerDetector::new;
+            return (context, legacy) -> new CoverPlayerDetector(context);
         }
-        if (behavior instanceof GT_Cover_RedstoneWirelessBase) {
-            return CoverRedstoneWirelessBase::new;
+        if (behavior instanceof GT_Cover_RedstoneTransmitterExternal) {
+            return (context, legacy) -> new CoverRedstoneWirelessBase(context, WirelessRole.TRANSMITTER_EXTERNAL);
+        }
+        if (behavior instanceof GT_Cover_RedstoneTransmitterInternal) {
+            return (context, legacy) -> new CoverRedstoneWirelessBase(context, WirelessRole.TRANSMITTER_INTERNAL);
+        }
+        if (behavior instanceof GT_Cover_RedstoneReceiverExternal) {
+            return (context, legacy) -> new CoverRedstoneWirelessBase(context, WirelessRole.RECEIVER_EXTERNAL);
+        }
+        if (behavior instanceof GT_Cover_RedstoneReceiverInternal) {
+            return (context, legacy) -> new CoverRedstoneWirelessBase(context, WirelessRole.RECEIVER_INTERNAL);
+        }
+        if (behavior instanceof GT_Cover_Blastproof) {
+            return (context, legacy) -> new CoverBlastproof(context, ((GT_Cover_Blastproof) legacy).getLevel());
+        }
+        if (behavior instanceof GT_Cover_Lens) {
+            return (context, legacy) -> new CoverLens(context, ((GT_Cover_Lens) legacy).getColor());
+        }
+        if (behavior instanceof GT_Cover_SolarPanel) {
+            return (context, legacy) -> new CoverSolarPanel(context, ((GT_Cover_SolarPanel) legacy).getVoltage());
+        }
+        if (behavior instanceof GT_Cover_Vent) {
+            return (context, legacy) -> new CoverVent(context, ((GT_Cover_Vent) legacy).getEfficiency());
+        }
+        if (behavior instanceof GT_Cover_Crafting) {
+            return (context, legacy) -> new CoverCrafting(context);
+        }
+        if (behavior instanceof GT_Cover_EnergyOnly) {
+            return (context, legacy) -> new CoverEnergyOnly(context);
+        }
+        if (behavior instanceof GT_Cover_Drain) {
+            return (context, legacy) -> new CoverDrain(context);
+        }
+        if (behavior instanceof GT_Cover_RedstoneConductor) {
+            return (context, legacy) -> new CoverRedstoneConductor(context);
+        }
+        if (behavior instanceof GT_Cover_RedstoneSignalizer) {
+            return (context, legacy) -> new CoverRedstoneSignalizer(context);
+        }
+        if (behavior instanceof GT_Cover_Screen) {
+            return (context, legacy) -> new CoverScreen(context);
+        }
+        if (behavior instanceof gregtech.api.objects.GT_Cover_Default) {
+            return (context, legacy) -> new CoverDefault(context);
         }
         return null;
     }

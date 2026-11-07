@@ -5,7 +5,7 @@ import gregtech.api.covers.CoverContext;
 import gregtech.api.covers.CoverRegistry;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IMachineProgress;
-import gregtech.api.util.GT_CoverBehavior;
+import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.covers.modes.MachineProcessingCondition;
 import gregtech.common.covers.modes.TransferMode;
@@ -29,20 +29,17 @@ public class CoverFluidRegulator extends Cover {
     public static final int TICK_RATE_MIN = 1;
     public static final int TICK_RATE_MAX = 2048;
 
-    private final GT_Cover_FluidRegulator behavior;
+    private final boolean steamOnly;
     private final int transferRate;
     private boolean allowFluid;
     private int tickRate = TICK_RATE_MIN;
     private int speed;
     private Conditional condition = Conditional.ALWAYS;
 
-    public CoverFluidRegulator(CoverContext context, GT_CoverBehavior behavior) {
+    public CoverFluidRegulator(CoverContext context, int transferRate, boolean steamOnly) {
         super(context, CoverRegistry.getCoverTexture(context.getCoverItem()));
-        if (!(behavior instanceof GT_Cover_FluidRegulator)) {
-            throw new IllegalArgumentException("Fluid regulator behavior is required");
-        }
-        this.behavior = (GT_Cover_FluidRegulator) behavior;
-        transferRate = this.behavior.mTransferRate;
+        this.transferRate = transferRate;
+        this.steamOnly = steamOnly;
     }
 
     @Override
@@ -70,8 +67,8 @@ public class CoverFluidRegulator extends Cover {
 
     public CoverFluidRegulator setTickRateForUi(int tickRate) {
         if (isValid()) {
-            int minimumForSpeed = transferRate > 0
-                ? (int) ((Math.abs((long) speed) + transferRate - 1) / transferRate) : TICK_RATE_MIN;
+            int minimumForSpeed = transferRate > 0 ? (int) ((Math.abs((long) speed) + transferRate - 1) / transferRate)
+                    : TICK_RATE_MIN;
             this.tickRate = Math.min(TICK_RATE_MAX, Math.max(TICK_RATE_MIN, Math.max(tickRate, minimumForSpeed)));
             markGuiChanged();
         }
@@ -105,14 +102,14 @@ public class CoverFluidRegulator extends Cover {
         if (condition == Conditional.CONDITIONAL) {
             return MachineProcessingCondition.CONDITIONAL;
         }
-        return condition == Conditional.INVERTED
-            ? MachineProcessingCondition.INVERTED : MachineProcessingCondition.ALWAYS;
+        return condition == Conditional.INVERTED ? MachineProcessingCondition.INVERTED
+                : MachineProcessingCondition.ALWAYS;
     }
 
     public void setMachineProcessingCondition(MachineProcessingCondition mode) {
         if (mode != null) {
             setCondition(mode == MachineProcessingCondition.ALWAYS ? Conditional.ALWAYS
-                : mode == MachineProcessingCondition.CONDITIONAL ? Conditional.CONDITIONAL : Conditional.INVERTED);
+                    : mode == MachineProcessingCondition.CONDITIONAL ? Conditional.CONDITIONAL : Conditional.INVERTED);
         }
     }
 
@@ -153,8 +150,8 @@ public class CoverFluidRegulator extends Cover {
     private void readState(int tickRate, int speed, int condition) {
         this.tickRate = Math.min(TICK_RATE_MAX, Math.max(TICK_RATE_MIN, tickRate));
         this.speed = Math.max(getMinSpeed(), Math.min(getMaxSpeed(), speed));
-        this.condition = condition >= 0 && condition < Conditional.VALUES.length
-            ? Conditional.VALUES[condition] : Conditional.ALWAYS;
+        this.condition = condition >= 0 && condition < Conditional.VALUES.length ? Conditional.VALUES[condition]
+                : Conditional.ALWAYS;
     }
 
     @Override
@@ -185,13 +182,13 @@ public class CoverFluidRegulator extends Cover {
     public void doCoverThings(byte redstone, long timer) {
         ICoverable tile = getTile();
         if (!isValid() || speed == 0 || !condition.isAllowedToWork(coverSide, coverID, tile)
-            || !(tile instanceof IFluidHandler)) {
+                || !(tile instanceof IFluidHandler)) {
             return;
         }
         IFluidHandler source = speed > 0 ? (IFluidHandler) tile
-            : tile.getITankContainerAtSide((byte) coverSide.ordinal());
+                : tile.getITankContainerAtSide((byte) coverSide.ordinal());
         IFluidHandler destination = speed > 0 ? tile.getITankContainerAtSide((byte) coverSide.ordinal())
-            : (IFluidHandler) tile;
+                : (IFluidHandler) tile;
         ForgeDirection drainSide = speed > 0 ? coverSide : coverSide.getOpposite();
         if (source != null && destination != null) {
             allowFluid = true;
@@ -214,7 +211,7 @@ public class CoverFluidRegulator extends Cover {
         }
         liquid = liquid.copy();
         liquid.amount = destination.fill(drainSide.getOpposite(), liquid, false);
-        if (liquid.amount > 0 && behavior.canTransferFluid(liquid)) {
+        if (liquid.amount > 0 && canTransferFluid(liquid)) {
             destination.fill(drainSide.getOpposite(), source.drain(drainSide, liquid.amount, true), true);
         }
     }
@@ -222,8 +219,8 @@ public class CoverFluidRegulator extends Cover {
     @Override
     public void onCoverScrewdriverClick(EntityPlayer player, float x, float y, float z) {
         int step = player.isSneaking() ? 256 : 16;
-        setSpeed((int) Math.max(getMinSpeed(), Math.min(getMaxSpeed(), (long) speed
-            + (faceClickedOnRightSide(x, y, z) ? step : -step))));
+        setSpeed((int) Math.max(getMinSpeed(),
+                Math.min(getMaxSpeed(), (long) speed + (faceClickedOnRightSide(x, y, z) ? step : -step))));
         player.addChatMessage(getScrewdriverClickChat());
     }
 
@@ -232,8 +229,8 @@ public class CoverFluidRegulator extends Cover {
         if (!isValid()) {
             return false;
         }
-        setSpeed((int) Math.max(getMinSpeed(), Math.min(getMaxSpeed(), (long) speed
-            + (faceClickedOnRightSide(x, y, z) ? 1 : -1))));
+        setSpeed((int) Math.max(getMinSpeed(),
+                Math.min(getMaxSpeed(), (long) speed + (faceClickedOnRightSide(x, y, z) ? 1 : -1))));
         player.addChatMessage(getScrewdriverClickChat());
         return true;
     }
@@ -245,12 +242,8 @@ public class CoverFluidRegulator extends Cover {
         if (tickRate == 1) {
             return new ChatComponentTranslation("GT5U.chat.cover.fluid_regulator.rate_1", speed, speed * 20);
         }
-        return new ChatComponentTranslation(
-            "GT5U.chat.cover.fluid_regulator.speed",
-            speed,
-            tickRate,
-            String.format("%.2f", speed * 20d / tickRate)
-        );
+        return new ChatComponentTranslation("GT5U.chat.cover.fluid_regulator.speed", speed, tickRate,
+                String.format("%.2f", speed * 20d / tickRate));
     }
 
     public int getMaxSpeed() {
@@ -355,6 +348,16 @@ public class CoverFluidRegulator extends Cover {
 
         boolean isRedstoneSensitive() {
             return redstoneSensitive;
+        }
+    }
+
+    protected boolean canTransferFluid(FluidStack fluid) {
+        if (!steamOnly) {
+            return true;
+        } else {
+            String fluidName = fluid.getFluid().getUnlocalizedName(fluid);
+            return GT_ModHandler.isSteam(fluid) || fluidName.equals("fluid.steam") || fluidName.equals("ic2.fluidSteam")
+                    || fluidName.equals("fluid.mfr.steam.still.name") || fluidName.equals("ic2.fluidSuperheatedSteam");
         }
     }
 }

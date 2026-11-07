@@ -23,13 +23,6 @@ public class CoverLegacyBehavior extends CoverLegacyData {
         return behavior;
     }
 
-    protected final void setGuiVariable(int value) {
-        if (isValid()) {
-            coverData = value;
-            markGuiChanged();
-        }
-    }
-
     @Override
     protected NBTBase saveDataToNbt() {
         if (behavior instanceof GT_Cover_Fluidfilter) {
@@ -257,4 +250,3 @@ public class CoverLegacyBehavior extends CoverLegacyData {
     }
 
 }
-

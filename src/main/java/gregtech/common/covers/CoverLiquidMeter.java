@@ -4,24 +4,26 @@ import com.google.common.io.ByteArrayDataInput;
 import gregtech.api.covers.CoverContext;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.GT_CoverBehavior;
+import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.modularui.cover.CoverLiquidMeterGui;
 import gregtech.common.gui.modularui.cover.base.CoverBaseGui;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-/** GTNH fluid detector; legacy zero means inverted and is preserved when reading old saves. */
-public class CoverLiquidMeter extends CoverLegacyBehavior implements IInvertable {
+public class CoverLiquidMeter extends CoverLegacyData implements IInvertable {
 
     private int threshold;
 
-    public CoverLiquidMeter(CoverContext context, GT_CoverBehavior behavior) {
-        super(context, behavior);
+    public CoverLiquidMeter(CoverContext context) {
+        super(context);
         coverData = 1;
         tickRateAddition = 4;
     }
@@ -109,7 +111,7 @@ public class CoverLiquidMeter extends CoverLegacyBehavior implements IInvertable
         ICoverable tile = getTile();
         if (tile != null) {
             tile.setOutputRedstoneSignal((byte) coverSide.ordinal(),
-                computeSignalBasedOnFluid(tile, isInverted(), threshold));
+                    computeSignalBasedOnFluid(tile, isInverted(), threshold));
         }
     }
 
@@ -148,5 +150,58 @@ public class CoverLiquidMeter extends CoverLegacyBehavior implements IInvertable
     @Override
     protected CoverBaseGui<?> getCoverGui() {
         return new CoverLiquidMeterGui(this, getMaxCapacity());
+    }
+
+    @Override
+    public void onCoverScrewdriverClick(EntityPlayer player, float x, float y, float z) {
+        if (coverData == 0) {
+            GT_Utility.sendChatToPlayer(player,
+                    GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_055", "Normal"));
+        } else {
+            GT_Utility.sendChatToPlayer(player,
+                    GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_054", "Inverted"));
+        }
+        coverData = coverData == 0 ? 1 : 0;
+        markGuiChanged();
+    }
+
+    @Override
+    public boolean letsEnergyIn() {
+        return true;
+    }
+
+    @Override
+    public boolean letsEnergyOut() {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidIn(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidOut(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsIn(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsOut(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean manipulatesSidedRedstoneOutput() {
+        return true;
+    }
+
+    @Override
+    public boolean hasCoverGUI() {
+        return true;
     }
 }

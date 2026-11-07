@@ -20,22 +20,35 @@ import gregtech.api.covers.CoverRegistry;
 import gregtech.api.modularui2.CoverGuiData;
 import gregtech.api.modularui2.CoverUIFactory;
 import gregtech.api.modularui2.GTGuis;
+import gregtech.api.objects.GT_Cover_Default;
 import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.covers.Cover;
 import gregtech.common.covers.CoverDoesWork;
+import gregtech.common.covers.CoverLegacyBehavior;
+import gregtech.common.covers.CoverMode;
 import gregtech.common.covers.CoverNeedMaintenance;
 import gregtech.common.covers.CoverPlayerDetector;
 import gregtech.common.covers.CoverRedstoneWirelessBase;
 import gregtech.common.covers.CoverShutter;
+import gregtech.common.covers.GT_Cover_Blastproof;
+import gregtech.common.covers.GT_Cover_Crafting;
 import gregtech.common.covers.GT_Cover_DoesWork;
+import gregtech.common.covers.GT_Cover_Drain;
+import gregtech.common.covers.GT_Cover_EnergyOnly;
+import gregtech.common.covers.GT_Cover_Lens;
 import gregtech.common.covers.GT_Cover_NeedMaintainance;
 import gregtech.common.covers.GT_Cover_PlayerDetector;
+import gregtech.common.covers.GT_Cover_RedstoneConductor;
 import gregtech.common.covers.GT_Cover_RedstoneReceiverExternal;
 import gregtech.common.covers.GT_Cover_RedstoneReceiverInternal;
+import gregtech.common.covers.GT_Cover_RedstoneSignalizer;
 import gregtech.common.covers.GT_Cover_RedstoneTransmitterExternal;
 import gregtech.common.covers.GT_Cover_RedstoneTransmitterInternal;
+import gregtech.common.covers.GT_Cover_Screen;
 import gregtech.common.covers.GT_Cover_Shutter;
+import gregtech.common.covers.GT_Cover_SolarPanel;
+import gregtech.common.covers.GT_Cover_Vent;
 import gregtech.common.covers.modes.DetectionMode;
 import gregtech.common.covers.modes.MaintenanceAlertCondition;
 import gregtech.common.covers.modes.PlayerDetectionMode;
@@ -60,6 +73,16 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class GT_Mui2LogicCoverTest {
+
+    @Test
+    public void passiveAndTickingCoversKeepParametersStateAndPlacementIdentity() throws Throwable {
+        run("passive");
+    }
+
+    @Test
+    public void remainingConfigurableCoversUseNativeModesAndKeepTheirLegacyPermissions() throws Throwable {
+        run("remaining");
+    }
 
     @Test
     public void shutterMaintenanceAndPlayerControlsKeepTheirNativeBackingAndNbt() throws Throwable {
@@ -93,6 +116,12 @@ public class GT_Mui2LogicCoverTest {
             GTGuis.init();
             assertSame(CoverUIFactory.INSTANCE, GuiManager.getFactory("gregtech:cover"));
             switch (scenario) {
+                case "passive":
+                    checkPassive();
+                    break;
+                case "remaining":
+                    checkRemaining();
+                    break;
                 case "logic":
                     checkLogic();
                     break;
@@ -107,6 +136,81 @@ public class GT_Mui2LogicCoverTest {
             }
         } finally {
             thread.setName(previousName);
+        }
+    }
+
+    private static void checkPassive() throws Exception {
+        GT_CoverBehavior[] behaviors = {
+            new GT_Cover_Blastproof(42.0F),
+            new GT_Cover_Crafting(),
+            new GT_Cover_Lens((byte) 7),
+            new GT_Cover_Screen(),
+            new GT_Cover_SolarPanel(8192),
+            new GT_Cover_Vent(3)
+        };
+        Item[] items = {Items.apple, Items.stick, Items.paper, Items.coal, Items.quartz, Items.diamond};
+        for (int index = 0; index < behaviors.length; index++) {
+            Fixture fixture = new Fixture(items[index], behaviors[index], false);
+            assertFalse(fixture.cover instanceof CoverLegacyBehavior);
+            Cover cover = fixture.cover;
+            GT_CoverBehavior legacy = behaviors[index];
+            byte side = (byte) ForgeDirection.NORTH.ordinal();
+            assertEquals(legacy.getBlastProofLevel(side, 1, 0, fixture.tile), cover.getBlastProofLevel(), 0.0F);
+            assertEquals(legacy.getLensColor(side, 1, 0, fixture.tile), cover.getLensColor());
+            assertEquals(legacy.alwaysLookConnected(side, 1, 0, fixture.tile), cover.alwaysLookConnected());
+            assertEquals(legacy.getTickRate(side, 1, 0, fixture.tile), cover.getMinimumTickRate());
+            for (int value : new int[]{0, 1, 99, Integer.MIN_VALUE}) {
+                cover.setLegacyData(value);
+                cover.doCoverThings((byte) 0, 101);
+                assertEquals(legacy.doCoverThings(side, (byte) 0, 1, value, fixture.tile, 101), cover.getLegacyData());
+            }
+            fixture.checkNbt();
+        }
+        assertFalse(CoverRegistry.isNativeCover(new ItemStack(Items.flint)));
+    }
+
+    private static void checkRemaining() throws Exception {
+        GT_CoverBehavior[] behaviors = {
+            new GT_Cover_Drain(),
+            new GT_Cover_EnergyOnly(),
+            new GT_Cover_RedstoneConductor(),
+            new GT_Cover_RedstoneSignalizer(),
+            new GT_Cover_Default()
+        };
+        Item[] items = {Items.apple, Items.stick, Items.paper, Items.coal, Items.quartz};
+        for (int index = 0; index < behaviors.length; index++) {
+            Fixture fixture = new Fixture(items[index], behaviors[index]);
+            assertFalse(fixture.cover instanceof CoverLegacyBehavior);
+            CoverMode cover = (CoverMode) fixture.cover;
+            for (int mode = 0; mode < cover.getModeCount(); mode++) {
+                fixture.sendInt("mode", mode);
+                assertEquals(mode, cover.getLegacyData());
+                for (boolean enabled : new boolean[]{false, true}) {
+                    if (enabled) {
+                        fixture.tile.enableWorking();
+                    } else {
+                        fixture.tile.disableWorking();
+                    }
+                    byte side = (byte) ForgeDirection.NORTH.ordinal();
+                    GT_CoverBehavior legacy = behaviors[index];
+                    assertEquals(legacy.letsRedstoneGoIn(side, 1, mode, fixture.tile), cover.letsRedstoneGoIn());
+                    assertEquals(legacy.letsRedstoneGoOut(side, 1, mode, fixture.tile), cover.letsRedstoneGoOut());
+                    assertEquals(legacy.letsEnergyIn(side, 1, mode, fixture.tile), cover.letsEnergyIn());
+                    assertEquals(legacy.letsEnergyOut(side, 1, mode, fixture.tile), cover.letsEnergyOut());
+                    assertEquals(legacy.letsItemsIn(side, 1, mode, 0, fixture.tile), cover.letsItemsIn(0));
+                    assertEquals(legacy.letsItemsOut(side, 1, mode, 0, fixture.tile), cover.letsItemsOut(0));
+                    assertEquals(legacy.letsFluidIn(side, 1, mode, null, fixture.tile), cover.letsFluidIn(null));
+                    assertEquals(legacy.letsFluidOut(side, 1, mode, null, fixture.tile), cover.letsFluidOut(null));
+                    assertEquals(legacy.getTickRate(side, 1, mode, fixture.tile), cover.getMinimumTickRate());
+                    assertEquals(legacy.getRedstoneInput(side, (byte) 9, 1, mode, fixture.tile),
+                        cover.getRedstoneInput((byte) 9));
+                }
+            }
+            fixture.checkNbt();
+            int setting = cover.getLegacyData();
+            fixture.tile.detachCover(ForgeDirection.NORTH);
+            fixture.sendInt("mode", 0);
+            assertEquals(setting, cover.getLegacyData());
         }
     }
 
@@ -290,6 +394,10 @@ public class GT_Mui2LogicCoverTest {
         private final ModularContainer container;
 
         private Fixture(Item item, GT_CoverBehavior behavior) throws Exception {
+            this(item, behavior, true);
+        }
+
+        private Fixture(Item item, GT_CoverBehavior behavior, boolean gui) throws Exception {
             world.putTile(4, 64, 7, tile);
             GT_ProcessingTestSupport.setField(tile, "mTickTimer", 51L);
             player = new GT_StructureIntegrationTest.TestPlayer(world);
@@ -300,6 +408,11 @@ public class GT_Mui2LogicCoverTest {
             tile.setCoverIDAtSide((byte) ForgeDirection.NORTH.ordinal(), id);
             cover = tile.getCoverAtSide(ForgeDirection.NORTH);
             assertTrue(cover.useMui2());
+            if (!gui) {
+                handlers = null;
+                container = null;
+                return;
+            }
             assertTrue(cover.hasCoverGUI());
             ModularSyncManager sync = new ModularSyncManager(false);
             handlers = new PanelSyncManager(sync, true);

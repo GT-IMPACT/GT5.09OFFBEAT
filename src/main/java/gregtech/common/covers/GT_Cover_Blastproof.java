@@ -18,4 +18,8 @@ public class GT_Cover_Blastproof
     public boolean isSimpleCover() {
         return true;
     }
+
+    public float getLevel() {
+        return mLevel;
+    }
 }

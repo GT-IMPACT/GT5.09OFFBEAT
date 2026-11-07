@@ -2,15 +2,15 @@ package gregtech.common.items;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
+import gregtech.api.covers.CoverRegistry;
 import gregtech.api.enums.*;
 import gregtech.api.items.GT_MetaGenerated_Item_X32;
 import gregtech.api.objects.GT_CopiedBlockTexture;
-
 import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.*;
-import gregtech.common.covers.GT_Cover_SolarPanel;
+import gregtech.common.covers.CoverSolarPanel;
 import net.minecraft.block.Block;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.enchantment.Enchantment;
@@ -244,27 +244,33 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
 
         ItemStack aStack = ItemList.Plank_Oak.get(1L);
         ItemStack tStack = new ItemStack(Blocks.planks, 0, 0);
-        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        CoverRegistry.registerDecorativeCover(aStack,
+                TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()));
         
         aStack = ItemList.Plank_Spruce.get(1L);
         tStack = new ItemStack(Blocks.planks, 0, 1);
-        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        CoverRegistry.registerDecorativeCover(aStack,
+                TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()));
     
         aStack = ItemList.Plank_Birch.get(1L);
         tStack = new ItemStack(Blocks.planks, 0, 2);
-        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        CoverRegistry.registerDecorativeCover(aStack,
+                TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()));
         
         aStack = ItemList.Plank_Jungle.get(1L);
         tStack = new ItemStack(Blocks.planks, 0, 3);
-        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        CoverRegistry.registerDecorativeCover(aStack,
+                TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()));
     
         aStack = ItemList.Plank_Acacia.get(1L);
         tStack = new ItemStack(Blocks.planks, 0, 4);
-        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        CoverRegistry.registerDecorativeCover(aStack,
+                TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()));
     
         aStack = ItemList.Plank_DarkOak.get(1L);
         tStack = new ItemStack(Blocks.planks, 0, 5);
-        GregTech_API.registerCover(aStack, TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()), null);
+        CoverRegistry.registerDecorativeCover(aStack,
+                TextureFactory.of(Block.getBlockFromItem(tStack.getItem()), tStack.getItemDamage()));
 
         
         ItemList.Crop_Drop_Plumbilia.set(addItem(tLastID = 500, "Plumbilia Leaf", "Source of Lead"));
@@ -351,9 +357,15 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.Cover_SolarPanel_UEV.set(addItem(tLastID = 588, "Solar Panel (UEV)", "Ultimate Extreme Voltage Solar Panel (Needs cleaning with right click)"));
         ItemList.Cover_SolarPanel_UIV.set(addItem(tLastID = 589, "Solar Panel (UIV)", "Ultimate Insane Voltage Solar Panel (Needs cleaning with right click)"));
         
-        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UHV.get(1L), TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UHV), new GT_Cover_SolarPanel(2097152));
-        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UEV.get(1L), TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UEV), new GT_Cover_SolarPanel(8388608));
-        GregTech_API.registerCover(ItemList.Cover_SolarPanel_UIV.get(1L), TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UIV), new GT_Cover_SolarPanel(33554432));
+        CoverRegistry.registerCover(ItemList.Cover_SolarPanel_UHV.get(1L),
+                TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UHV),
+                context -> new CoverSolarPanel(context, 2097152));
+        CoverRegistry.registerCover(ItemList.Cover_SolarPanel_UEV.get(1L),
+                TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UEV),
+                context -> new CoverSolarPanel(context, 8388608));
+        CoverRegistry.registerCover(ItemList.Cover_SolarPanel_UIV.get(1L),
+                TextureFactory.of(Textures.BlockIcons.SOLARPANEL_UIV),
+                context -> new CoverSolarPanel(context, 33554432));
         
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.red_flower, 1, 0), new ItemStack(Items.dye, 2, 1));
         GT_ModHandler.addExtractionRecipe(new ItemStack(Blocks.red_flower, 1, 1), new ItemStack(Items.dye, 2, 12));

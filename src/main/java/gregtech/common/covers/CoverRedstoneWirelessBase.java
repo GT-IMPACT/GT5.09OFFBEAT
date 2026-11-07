@@ -5,8 +5,8 @@ import gregtech.api.GregTech_API;
 import gregtech.api.covers.CoverContext;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IMachineProgress;
-import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.covers.modes.WirelessRole;
 import gregtech.common.gui.modularui.cover.CoverRedstoneWirelessBaseGui;
 import gregtech.common.gui.modularui.cover.base.CoverBaseGui;
 import io.netty.buffer.ByteBuf;
@@ -15,9 +15,10 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.Fluid;
 
 /** GTNH wireless channels and private-channel flag, retaining all four local transmitter/receiver behaviors. */
-public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
+public class CoverRedstoneWirelessBase extends CoverLegacyData {
 
     public static final int MAX_CHANNEL = 65535;
     public static final int CHANNEL_MASK = 0x0000FFFF;
@@ -26,8 +27,11 @@ public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
     private int frequency;
     private boolean privateChannel;
 
-    public CoverRedstoneWirelessBase(CoverContext context, GT_CoverBehavior behavior) {
-        super(context, behavior);
+    private final WirelessRole role;
+
+    public CoverRedstoneWirelessBase(CoverContext context, WirelessRole role) {
+        super(context);
+        this.role = role;
     }
 
     public int getFrequency() {
@@ -113,10 +117,8 @@ public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
         coverData = getLegacyData();
         ICoverable tile = getTile();
         if (tile != null) {
-            GregTech_API.sWirelessRedstone.put(
-                getMapFrequency(),
-                tile.getOutputRedstoneSignal((byte) coverSide.ordinal())
-            );
+            GregTech_API.sWirelessRedstone.put(getMapFrequency(),
+                    tile.getOutputRedstoneSignal((byte) coverSide.ordinal()));
         }
     }
 
@@ -130,8 +132,7 @@ public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
     }
 
     private boolean isTransmitter() {
-        return getBehavior() instanceof GT_Cover_RedstoneTransmitterExternal
-            || getBehavior() instanceof GT_Cover_RedstoneTransmitterInternal;
+        return role == WirelessRole.TRANSMITTER_EXTERNAL || role == WirelessRole.TRANSMITTER_INTERNAL;
     }
 
     @Override
@@ -140,16 +141,14 @@ public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
         if (tile == null) {
             return;
         }
-        if (getBehavior() instanceof GT_Cover_RedstoneTransmitterExternal) {
+        if (role == WirelessRole.TRANSMITTER_EXTERNAL) {
             GregTech_API.sWirelessRedstone.put(getMapFrequency(), inputRedstone);
-        } else if (getBehavior() instanceof GT_Cover_RedstoneTransmitterInternal) {
-            GregTech_API.sWirelessRedstone.put(
-                getMapFrequency(),
-                tile.getOutputRedstoneSignal((byte) coverSide.ordinal())
-            );
-        } else if (getBehavior() instanceof GT_Cover_RedstoneReceiverExternal) {
+        } else if (role == WirelessRole.TRANSMITTER_INTERNAL) {
+            GregTech_API.sWirelessRedstone.put(getMapFrequency(),
+                    tile.getOutputRedstoneSignal((byte) coverSide.ordinal()));
+        } else if (role == WirelessRole.RECEIVER_EXTERNAL) {
             tile.setOutputRedstoneSignal((byte) coverSide.ordinal(), getWirelessSignal());
-        } else if (getBehavior() instanceof GT_Cover_RedstoneReceiverInternal && tile instanceof IMachineProgress) {
+        } else if (role == WirelessRole.RECEIVER_INTERNAL && tile instanceof IMachineProgress) {
             IMachineProgress machine = (IMachineProgress) tile;
             if (getWirelessSignal() > 0) {
                 machine.enableWorking();
@@ -162,14 +161,12 @@ public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
 
     @Override
     public byte getRedstoneInput(byte input) {
-        return getBehavior() instanceof GT_Cover_RedstoneReceiverInternal ? getWirelessSignal()
-            : super.getRedstoneInput(input);
+        return role == WirelessRole.RECEIVER_INTERNAL ? getWirelessSignal() : super.getRedstoneInput(input);
     }
 
     @Override
     public boolean isRedstoneSensitive(long timer) {
-        return !(getBehavior() instanceof GT_Cover_RedstoneTransmitterInternal
-            || getBehavior() instanceof GT_Cover_RedstoneReceiverExternal);
+        return !(role == WirelessRole.TRANSMITTER_INTERNAL || role == WirelessRole.RECEIVER_EXTERNAL);
     }
 
     @Override
@@ -196,26 +193,26 @@ public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
 
     @Override
     public void onCoverScrewdriverClick(EntityPlayer player, float x, float y, float z) {
-        if ((x > 0.375D && x < 0.625D) || coverSide.offsetX == 0
-            || (y > 0.375D && y < 0.625D) || z <= 0.375D || z >= 0.625D) {
+        if ((x > 0.375D && x < 0.625D) || coverSide.offsetX == 0 || (y > 0.375D && y < 0.625D) || z <= 0.375D
+                || z >= 0.625D) {
             float[] coordinates = GT_Utility.getClickedFacingCoords((byte) coverSide.ordinal(), x, y, z);
             int adjustment;
             switch ((int) (coordinates[0] * 2) + 2 * (int) (coordinates[1] * 2)) {
-                case 0:
-                    adjustment = -32;
-                    break;
-                case 1:
-                    adjustment = 32;
-                    break;
-                case 2:
-                    adjustment = -1024;
-                    break;
-                case 3:
-                    adjustment = 1024;
-                    break;
-                default:
-                    adjustment = 0;
-                    break;
+            case 0:
+                adjustment = -32;
+                break;
+            case 1:
+                adjustment = 32;
+                break;
+            case 2:
+                adjustment = -1024;
+                break;
+            case 3:
+                adjustment = 1024;
+                break;
+            default:
+                adjustment = 0;
+                break;
             }
             setFrequency(frequency + adjustment);
         }
@@ -235,5 +232,60 @@ public class CoverRedstoneWirelessBase extends CoverLegacyBehavior {
     @Override
     protected CoverBaseGui<?> getCoverGui() {
         return new CoverRedstoneWirelessBaseGui(this);
+    }
+
+    @Override
+    public boolean letsEnergyIn() {
+        return true;
+    }
+
+    @Override
+    public boolean letsEnergyOut() {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsIn(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsOut(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidIn(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidOut(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsRedstoneGoIn() {
+        return role == WirelessRole.TRANSMITTER_EXTERNAL;
+    }
+
+    @Override
+    public boolean letsRedstoneGoOut() {
+        return role == WirelessRole.TRANSMITTER_INTERNAL;
+    }
+
+    @Override
+    public boolean manipulatesSidedRedstoneOutput() {
+        return role == WirelessRole.TRANSMITTER_INTERNAL || role == WirelessRole.RECEIVER_EXTERNAL;
+    }
+
+    @Override
+    public int getMinimumTickRate() {
+        return 1;
+    }
+
+    @Override
+    public boolean hasCoverGUI() {
+        return true;
     }
 }

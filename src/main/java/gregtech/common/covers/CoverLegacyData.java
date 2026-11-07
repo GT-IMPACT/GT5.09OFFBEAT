@@ -1,15 +1,12 @@
 package gregtech.common.covers;
 
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagInt;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.google.common.io.ByteArrayDataInput;
-
 import gregtech.api.covers.CoverContext;
 import gregtech.api.interfaces.ITexture;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagInt;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * For legacy covers using an int to store all their data, typically as a bit field. Has fixed storage format of 4 byte.
@@ -51,6 +48,13 @@ public class CoverLegacyData extends Cover {
         return this;
     }
 
+    protected final void setGuiVariable(int value) {
+        if (isValid()) {
+            coverData = value;
+            markGuiChanged();
+        }
+    }
+
     @Override
     protected void readDataFromNbt(NBTBase nbt) {
         this.coverData = nbt instanceof NBTTagInt ? ((NBTTagInt) nbt).func_150287_d() : 0;
@@ -77,4 +81,3 @@ public class CoverLegacyData extends Cover {
     }
 
 }
-

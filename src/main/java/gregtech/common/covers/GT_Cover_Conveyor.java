@@ -252,4 +252,8 @@ public class GT_Cover_Conveyor extends GT_CoverBehavior {
             return false;
         }
     }
+
+    public int getMaxStacks() {
+        return mMaxStacks;
+    }
 }

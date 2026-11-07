@@ -1,16 +1,15 @@
 package gregtech.common.covers;
 
 import gregtech.api.covers.CoverContext;
-import gregtech.api.util.GT_CoverBehavior;
 import gregtech.common.covers.modes.BlockMode;
 import gregtech.common.covers.modes.MachineProcessingCondition;
 import gregtech.common.covers.modes.TransferMode;
 
 /** GTNH's shared transfer settings over the existing twelve persisted conveyor/pump modes. */
-public abstract class CoverIOBase extends CoverLegacyBehavior {
+public abstract class CoverIOBase extends CoverLegacyData {
 
-    protected CoverIOBase(CoverContext context, GT_CoverBehavior behavior) {
-        super(context, behavior);
+    protected CoverIOBase(CoverContext context) {
+        super(context);
     }
 
     @Override
@@ -43,15 +42,15 @@ public abstract class CoverIOBase extends CoverLegacyBehavior {
             return;
         }
         switch (mode) {
-            case ALWAYS:
-                setGuiVariable(coverData > 5 ? 0x6 | coverData & ~0xE : coverData & ~0xE);
-                break;
-            case CONDITIONAL:
-                setGuiVariable(coverData > 5 ? 0x8 | coverData & ~0xE : 0x2 | coverData & ~0xE);
-                break;
-            case INVERTED:
-                setGuiVariable(coverData > 5 ? 0xA | coverData & ~0xE : 0x4 | coverData & ~0xE);
-                break;
+        case ALWAYS:
+            setGuiVariable(coverData > 5 ? 0x6 | coverData & ~0xE : coverData & ~0xE);
+            break;
+        case CONDITIONAL:
+            setGuiVariable(coverData > 5 ? 0x8 | coverData & ~0xE : 0x2 | coverData & ~0xE);
+            break;
+        case INVERTED:
+            setGuiVariable(coverData > 5 ? 0xA | coverData & ~0xE : 0x4 | coverData & ~0xE);
+            break;
         }
     }
 

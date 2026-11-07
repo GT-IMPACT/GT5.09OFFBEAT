@@ -1,6 +1,7 @@
 package gregtech.loaders.oreprocessing;
 
-import gregtech.api.GregTech_API;
+import gregtech.api.covers.CoverRegistry;
+import gregtech.common.covers.CoverLens;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -27,7 +28,14 @@ public class ProcessingLens implements gregtech.api.interfaces.IOreRecipeRegistr
 			default:
 				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.plate, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), new int[]{10000, 2500}, 1200, 120);
 				GT_Values.RA.addLatheRecipe(GT_OreDictUnificator.get(OrePrefixes.gemExquisite, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.lens, aMaterial, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 2L), 2400, 30);
-				GregTech_API.registerCover(aStack, TextureFactory.of(Textures.BlockIcons.MACHINE_CASINGS[2][0], TextureFactory.of(Textures.BlockIcons.OVERLAY_LENS, aMaterial.mRGBa, false)), new gregtech.common.covers.GT_Cover_Lens(aMaterial.mColor.mIndex));
+				CoverRegistry.registerCover(
+                    aStack,
+                    TextureFactory.of(
+                        Textures.BlockIcons.MACHINE_CASINGS[2][0],
+                        TextureFactory.of(Textures.BlockIcons.OVERLAY_LENS, aMaterial.mRGBa, false)
+                    ),
+                    context -> new CoverLens(context, aMaterial.mColor.mIndex)
+                );
 		}
 	}
 }

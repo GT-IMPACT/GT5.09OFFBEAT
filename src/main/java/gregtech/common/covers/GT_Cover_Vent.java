@@ -34,4 +34,8 @@ public class GT_Cover_Vent
     public int getTickRate(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
         return 100;
     }
+
+    public int getEfficiency() {
+        return mEfficiency;
+    }
 }

@@ -15,4 +15,8 @@ public class GT_Cover_Lens
     public byte getLensColor(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
         return this.mColor;
     }
+
+    public byte getColor() {
+        return mColor;
+    }
 }

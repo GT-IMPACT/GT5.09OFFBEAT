@@ -7,7 +7,8 @@ import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_OutputBus_ME;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.GT_CoverBehavior;
+import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.modularui.cover.CoverItemMeterGui;
 import gregtech.common.gui.modularui.cover.base.CoverBaseGui;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_DigitalChestBase;
@@ -17,9 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
+import net.minecraftforge.fluids.Fluid;
 
-/** GTNH item detector, retaining the legacy slot/inversion bits for old-world migration. */
-public class CoverItemMeter extends CoverLegacyBehavior {
+public class CoverItemMeter extends CoverLegacyData {
 
     private static final int SLOT_MASK = 0x03FFFFFF;
     private static final int CONVERTED_BIT = 0x80000000;
@@ -27,8 +28,8 @@ public class CoverItemMeter extends CoverLegacyBehavior {
 
     private int threshold;
 
-    public CoverItemMeter(CoverContext context, GT_CoverBehavior behavior) {
-        super(context, behavior);
+    public CoverItemMeter(CoverContext context) {
+        super(context);
         coverData = CONVERTED_BIT;
         tickRateAddition = 4;
     }
@@ -101,7 +102,7 @@ public class CoverItemMeter extends CoverLegacyBehavior {
         } else if (nbt instanceof NBTTagCompound) {
             NBTTagCompound tag = (NBTTagCompound) nbt;
             coverData = CONVERTED_BIT | (tag.getBoolean("invert") ? INVERT_BIT : 0)
-                | Math.max(0, Math.min(SLOT_MASK, tag.getInteger("slot") + 1));
+                    | Math.max(0, Math.min(SLOT_MASK, tag.getInteger("slot") + 1));
             threshold = Math.max(0, tag.getInteger("threshold"));
         }
     }
@@ -121,17 +122,12 @@ public class CoverItemMeter extends CoverLegacyBehavior {
         threshold = Math.max(0, input.readInt());
     }
 
-    public static byte computeSignalBasedOnItems(
-        ICoverable tile,
-        boolean inverted,
-        int threshold,
-        int slot,
-        int ordinalSide
-    ) {
+    public static byte computeSignalBasedOnItems(ICoverable tile, boolean inverted, int threshold, int slot,
+            int ordinalSide) {
         long maximum = 0;
         long used = 0;
-        IMetaTileEntity machine = tile instanceof IGregTechTileEntity
-            ? ((IGregTechTileEntity) tile).getMetaTileEntity() : null;
+        IMetaTileEntity machine = tile instanceof IGregTechTileEntity ? ((IGregTechTileEntity) tile).getMetaTileEntity()
+                : null;
         if (machine instanceof GT_MetaTileEntity_DigitalChestBase) {
             GT_MetaTileEntity_DigitalChestBase chest = (GT_MetaTileEntity_DigitalChestBase) machine;
             maximum = chest.getMaxItemCount();
@@ -142,7 +138,7 @@ public class CoverItemMeter extends CoverLegacyBehavior {
                 maximum = 64;
             }
         } else {
-            int[] slots = slot >= 0 ? new int[]{slot} : tile.getAccessibleSlotsFromSide(ordinalSide);
+            int[] slots = slot >= 0 ? new int[] { slot } : tile.getAccessibleSlotsFromSide(ordinalSide);
             for (int index : slots) {
                 if (index >= 0 && index < tile.getSizeInventory()) {
                     maximum += 64;
@@ -160,22 +156,43 @@ public class CoverItemMeter extends CoverLegacyBehavior {
     public void doCoverThings(byte inputRedstone, long timer) {
         ICoverable tile = getTile();
         if (tile != null) {
-            tile.setOutputRedstoneSignal((byte) coverSide.ordinal(), computeSignalBasedOnItems(
-                tile,
-                isInverted(),
-                threshold,
-                getSlot(),
-                coverSide.ordinal()
-            ));
+            tile.setOutputRedstoneSignal((byte) coverSide.ordinal(),
+                    computeSignalBasedOnItems(tile, isInverted(), threshold, getSlot(), coverSide.ordinal()));
         }
     }
 
     @Override
     public void onCoverScrewdriverClick(EntityPlayer player, float x, float y, float z) {
-        if (isValid()) {
-            coverData = normalizedVariable();
-            super.onCoverScrewdriverClick(player, x, y, z);
+        ICoverable tile = getTile();
+        coverData = normalizedVariable();
+        if (player.isSneaking()) {
+            if ((coverData & INVERT_BIT) == INVERT_BIT) {
+                coverData = coverData & ~INVERT_BIT;
+                GT_Utility.sendChatToPlayer(player,
+                        GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_NORMAL", "Normal"));
+            } else {
+                coverData = coverData | INVERT_BIT;
+                GT_Utility.sendChatToPlayer(player,
+                        GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_INVERTED", "Inverted"));
+            }
+            markGuiChanged();
+            return;
         }
+        int slot = (coverData & SLOT_MASK) + 1;
+        if (slot > tile.getSizeInventory() || slot > SLOT_MASK) {
+            slot = 0;
+        }
+        if (slot == 0) {
+            GT_Utility.sendChatToPlayer(player,
+                    GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_053", "Slot: ")
+                            + GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_ALL", "All"));
+        } else {
+            GT_Utility.sendChatToPlayer(player,
+                    GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_053", "Slot: ")
+                            + (slot - 1));
+        }
+        coverData = CONVERTED_BIT | (coverData & INVERT_BIT) | slot;
+        markGuiChanged();
     }
 
     @Override
@@ -196,5 +213,45 @@ public class CoverItemMeter extends CoverLegacyBehavior {
     @Override
     protected CoverBaseGui<?> getCoverGui() {
         return new CoverItemMeterGui(this);
+    }
+
+    @Override
+    public boolean letsEnergyIn() {
+        return true;
+    }
+
+    @Override
+    public boolean letsEnergyOut() {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidIn(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsFluidOut(Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsIn(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean letsItemsOut(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean manipulatesSidedRedstoneOutput() {
+        return true;
+    }
+
+    @Override
+    public boolean hasCoverGUI() {
+        return true;
     }
 }
