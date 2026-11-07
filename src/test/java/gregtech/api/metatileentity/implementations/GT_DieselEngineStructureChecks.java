@@ -211,7 +211,7 @@ final class GT_DieselEngineStructureChecks {
         assertTrue(f.machine.mMachine);
         assertEquals(35, source.consumed);
         assertEquals("Item-only bus is not auto-selected", 1, source.stacks.get(1).stackSize);
-        assertEquals(1, f.machine.mQuadrInputHatches.size());
+        assertEquals(1, f.machine.mInputHatches.size());
         assertEquals(1, f.machine.mInputBusHatches.size());
         assertEquals(1, f.machine.mMufflerHatches.size());
         assertEquals(-1, f.build(trigger(true), 100, source));

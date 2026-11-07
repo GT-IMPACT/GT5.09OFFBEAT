@@ -238,7 +238,7 @@ public class GT_MetaTileEntity_DistillationTower
         @Override
         public boolean matchesForPlacement(IMetaTileEntity tile) {
             return this == FLUID_INPUT
-                    ? tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GTMTE_Multi_Hatch_Input
+                    ? tile instanceof GT_MetaTileEntity_Hatch_Input
                             || tile instanceof GTMTE_BusHatch_Input
                     : matches(tile);
         }
@@ -246,7 +246,7 @@ public class GT_MetaTileEntity_DistillationTower
         @Override
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
             if (this == FLUID_INPUT) {
-                return machine.mInputHatches.size() + machine.mQuadrInputHatches.size()
+                return machine.mInputHatches.size()
                         + machine.mInputBusHatches.size();
             }
             return machine.mOutputBusses.size();

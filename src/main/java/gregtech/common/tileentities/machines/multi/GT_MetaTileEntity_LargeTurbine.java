@@ -177,7 +177,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
         public boolean matchesForPlacement(IMetaTileEntity tile) {
             switch (this) {
             case INPUT:
-                return tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GTMTE_Multi_Hatch_Input
+                return tile instanceof GT_MetaTileEntity_Hatch_Input
                         || tile instanceof GTMTE_BusHatch_Input;
             case OUTPUT:
                 return tile instanceof GT_MetaTileEntity_Hatch_Output;
@@ -190,7 +190,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
             switch (this) {
             case INPUT:
-                return machine.mInputHatches.size() + machine.mQuadrInputHatches.size()
+                return machine.mInputHatches.size()
                         + machine.mInputBusHatches.size();
             case OUTPUT:
                 return machine.mOutputHatches.size();

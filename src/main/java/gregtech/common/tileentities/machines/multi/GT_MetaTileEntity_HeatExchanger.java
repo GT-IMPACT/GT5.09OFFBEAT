@@ -19,7 +19,6 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingMultiBlockBase;
-import gregtech.api.metatileentity.implementations.GTMTE_Multi_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GTMTE_BusHatch_Input;
 
 import gregtech.api.render.TextureFactory;
@@ -299,8 +298,7 @@ public class GT_MetaTileEntity_HeatExchanger
         public boolean matchesForPlacement(IMetaTileEntity tile) {
             switch (this) {
                 case WATER:
-                    return tile instanceof GT_MetaTileEntity_Hatch_Input
-                            || tile instanceof GTMTE_Multi_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
                 case STEAM:
                     return tile instanceof GT_MetaTileEntity_Hatch_Output;
                 default:
@@ -312,7 +310,7 @@ public class GT_MetaTileEntity_HeatExchanger
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
             switch (this) {
                 case WATER:
-                    return machine.mInputHatches.size() + machine.mQuadrInputHatches.size()
+                    return machine.mInputHatches.size()
                             + machine.mInputBusHatches.size();
                 case STEAM:
                     return machine.mOutputHatches.size();

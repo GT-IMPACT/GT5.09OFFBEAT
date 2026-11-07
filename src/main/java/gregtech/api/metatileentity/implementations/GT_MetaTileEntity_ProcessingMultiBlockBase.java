@@ -220,11 +220,6 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
                 hatch.mRecipeMap = map;
             }
         }
-        for (GTMTE_Multi_Hatch_Input hatch : mQuadrInputHatches) {
-            if (isValidMetaTileEntity(hatch)) {
-                hatch.mRecipeMap = map;
-            }
-        }
     }
 
     protected final ProcessingLogic getProcessingLogic() {

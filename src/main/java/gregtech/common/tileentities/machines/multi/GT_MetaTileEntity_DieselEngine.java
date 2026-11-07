@@ -334,7 +334,7 @@ public class GT_MetaTileEntity_DieselEngine
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
             switch (this) {
                 case INPUT:
-                    return machine.mInputHatches.size() + machine.mQuadrInputHatches.size() + machine.mInputBusHatches.size();
+                    return machine.mInputHatches.size() + machine.mInputBusHatches.size();
                 case MUFFLER:
                     IGregTechTileEntity base = machine.getBaseMetaTileEntity();
                     ForgeDirection back = ForgeDirection.getOrientation(base.getBackFacing());

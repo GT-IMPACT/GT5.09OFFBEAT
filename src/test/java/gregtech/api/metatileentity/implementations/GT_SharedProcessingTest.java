@@ -1479,6 +1479,92 @@ public class GT_SharedProcessingTest {
         }
     }
 
+    @Test
+    public void multiTankInputsRegisterDrainAndConsumeAllSlotsAfterReload() throws Throwable {
+        run("unifiedMultiTankInputs");
+    }
+
+    private static void unifiedMultiTankInputs() {
+        for (int tanks : new int[] { 4, 9 }) {
+            for (boolean genericAdder : new boolean[] { false, true }) {
+                try (Scenario scenario = new Scenario(1)) {
+                    GTMTE_Multi_Hatch_Input multi = new GTMTE_Multi_Hatch_Input(
+                        "multi-input",
+                        tanks,
+                        2,
+                        new String[0],
+                        null,
+                        32000
+                    );
+                    scenario.fixture.attach(multi);
+                    assertTrue(genericAdder
+                        ? scenario.machine.addToMachineList(multi.getBaseMetaTileEntity(), 0)
+                        : scenario.machine.addInputToMachineList(multi.getBaseMetaTileEntity(), 0));
+                    assertEquals(1, scenario.machine.mInputHatches.size());
+                    assertSame(multi, scenario.machine.mInputHatches.get(0));
+                    assertEquals(1, gregtech.api.enums.HatchElement.InputHatch.count(scenario.machine));
+                    for (int tank = 0; tank < tanks; tank++) {
+                        multi.setFluid(new FluidStack(fluid("unified_input_" + tank), 100), tank);
+                    }
+                    List<FluidStack> stored = scenario.machine.getStoredFluids();
+                    assertEquals(tanks, stored.size());
+                    for (int tank = 0; tank < tanks; tank++) {
+                        assertSame(multi.getFluid(tank), stored.get(tank));
+                    }
+                    FluidStack last = multi.getFluid(tanks - 1).copy();
+                    last.amount = 25;
+                    assertTrue(scenario.machine.depleteInput(last, true));
+                    assertEquals(100, multi.getFluid(tanks - 1).amount);
+                    assertTrue(scenario.machine.depleteInput(last));
+                    assertEquals(75, multi.getFluid(tanks - 1).amount);
+                    multi.mInventory[0] = new ItemStack(Items.stick);
+                    assertFalse(scenario.machine.depleteInput(new ItemStack(Items.stick)));
+                    assertEquals(1, multi.mInventory[0].stackSize);
+
+                    NBTTagCompound saved = new NBTTagCompound();
+                    multi.saveNBTData(saved);
+                    GTMTE_Multi_Hatch_Input restored = new GTMTE_Multi_Hatch_Input(
+                        "multi-restored",
+                        tanks,
+                        2,
+                        new String[0],
+                        null,
+                        32000
+                    );
+                    scenario.fixture.attach(restored);
+                    restored.loadNBTData(saved);
+                    scenario.machine.mInputHatches.clear();
+                    assertTrue(scenario.machine.addInputToMachineList(restored.getBaseMetaTileEntity(), 0));
+                    FluidStack[] required = new FluidStack[tanks];
+                    for (int tank = 0; tank < tanks; tank++) {
+                        required[tank] = restored.getFluid(tank).copy();
+                        assertEquals(tank == tanks - 1 ? 75 : 100, required[tank].amount);
+                    }
+                    GT_Recipe recipe = scenario.map.addRecipe(
+                        false,
+                        new ItemStack[] { new ItemStack(Items.iron_ingot) },
+                        new ItemStack[] { new ItemStack(Items.gold_ingot) },
+                        null,
+                        new int[] { 10000 },
+                        required,
+                        null,
+                        80,
+                        24,
+                        0
+                    );
+                    assertNotNull(recipe);
+                    scenario.inputs(1, false);
+                    assertTrue(scenario.machine.checkRecipe(null));
+                    scenario.machine.updateSlots();
+                    for (int tank = 0; tank < tanks; tank++) {
+                        assertNull(restored.getFluid(tank));
+                    }
+                    assertTrue(scenario.machine.getStoredFluids().isEmpty());
+                }
+            }
+        }
+    }
+
     private static void mapHatchFilters() {
         try (Scenario scenario = new Scenario(1)) {
             GT_Recipe_Map other = GT_Recipe_Map.sCompressorRecipes;
@@ -1489,7 +1575,7 @@ public class GT_SharedProcessingTest {
             scenario.machine.mInputBusHatches.add(combined);
             GTMTE_Multi_Hatch_Input multi = new GTMTE_Multi_Hatch_Input("test", 4, 2, new String[0], null, 32000);
             scenario.fixture.attach(multi);
-            scenario.machine.mQuadrInputHatches.add(multi);
+            scenario.machine.mInputHatches.add(multi);
             assertTrue(scenario.machine.setActiveRecipeMap(other));
             assertSame(other, scenario.machine.mInputBusses.get(0).mRecipeMap);
             assertSame(other, scenario.machine.mInputHatches.get(0).mRecipeMap);

@@ -113,7 +113,6 @@ public abstract class GT_MetaTileEntity_LargeBoiler
             switch (this) {
                 case WATER:
                     return tile instanceof GT_MetaTileEntity_Hatch_Input
-                            || tile instanceof GTMTE_Multi_Hatch_Input
                             || tile instanceof GTMTE_BusHatch_Input;
                 case INPUT:
                     return HatchElement.Input.matches(tile);
@@ -139,7 +138,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
             switch (this) {
                 case WATER:
-                    return machine.mInputHatches.size() + machine.mQuadrInputHatches.size()
+                    return machine.mInputHatches.size()
                             + machine.mInputBusHatches.size();
                 case INPUT:
                     return HatchElement.Input.count(machine);

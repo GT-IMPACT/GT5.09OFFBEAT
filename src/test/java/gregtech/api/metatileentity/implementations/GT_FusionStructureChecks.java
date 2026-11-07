@@ -131,6 +131,15 @@ final class GT_FusionStructureChecks {
         f.putHatch(energy, hatch('E', f.machine.tier()));
         f.putHatch(input, new GT_MetaTileEntity_Hatch_InputBus("test", f.machine.tier(), "test", null));
         assertFalse("An item bus cannot supply a fusion fluid input", f.recheck());
+        f.putHatch(input, new GTMTE_Multi_Hatch_Input(
+            "multi-input",
+            4,
+            f.machine.tier(),
+            new String[0],
+            null,
+            32000
+        ));
+        assertFalse("A multi-fluid hatch cannot replace a mandatory standard fusion input", f.recheck());
         f.putHatch(input, hatch('I', f.machine.tier()));
         Position coil = f.positions('K').get(0);
         int[] cp = f.coords(coil);

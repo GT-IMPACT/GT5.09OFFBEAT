@@ -224,7 +224,6 @@ public class GT_MetaTileEntity_OilCracker extends
             GT_MetaTileEntity_OilCracker cracker = (GT_MetaTileEntity_OilCracker) machine;
             int count = 0;
             ArrayList<GT_MetaTileEntity_Hatch> inputs = new ArrayList<>(machine.mInputHatches);
-            inputs.addAll(machine.mQuadrInputHatches);
             inputs.addAll(machine.mInputBusHatches);
             for (GT_MetaTileEntity_Hatch input : inputs) {
                 if (cracker.isHatchInMiddleRing(input) == (this == REAGENT)) {
@@ -314,7 +313,6 @@ public class GT_MetaTileEntity_OilCracker extends
     public ArrayList<FluidStack> getStoredFluids() {
         ArrayList<FluidStack> rList = new ArrayList<FluidStack>();
         ArrayList<GT_MetaTileEntity_Hatch> tHatches = new ArrayList<>(mInputHatches);
-        tHatches.addAll(mQuadrInputHatches);
         tHatches.addAll(mInputBusHatches);
         for (GT_MetaTileEntity_Hatch tHatch : tHatches) {
             if (!isValidMetaTileEntity(tHatch)) {

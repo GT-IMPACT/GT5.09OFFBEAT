@@ -13,6 +13,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.implementations.GTMTE_Multi_Hatch_Input;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.recipe.check.CheckRecipeResult;
@@ -243,7 +244,13 @@ public abstract class GT_MetaTileEntity_FusionComputer
                         case ENERGY:
                             return machine.mEnergyHatches.size();
                         case INPUT:
-                            return machine.mInputHatches.size();
+                            int standardInputs = 0;
+                            for (GT_MetaTileEntity_Hatch_Input input : machine.mInputHatches) {
+                                if (!(input instanceof GTMTE_Multi_Hatch_Input)) {
+                                    standardInputs++;
+                                }
+                            }
+                            return standardInputs;
                         case OUTPUT:
                             return machine.mOutputHatches.size();
                         default:

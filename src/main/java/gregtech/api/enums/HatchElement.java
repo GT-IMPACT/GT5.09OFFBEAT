@@ -42,12 +42,12 @@ public enum HatchElement implements IHatchElement {
     Input {
         public boolean matches(IMetaTileEntity tile) {
             return tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GT_MetaTileEntity_Hatch_InputBus
-                    || tile instanceof GTMTE_Multi_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
+                    || tile instanceof GTMTE_BusHatch_Input;
         }
 
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
             return machine.mInputHatches.size() + machine.mInputBusses.size()
-                    + machine.mQuadrInputHatches.size() + machine.mInputBusHatches.size();
+                    + machine.mInputBusHatches.size();
         }
 
         public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
@@ -69,11 +69,11 @@ public enum HatchElement implements IHatchElement {
     },
     InputHatch {
         public boolean matches(IMetaTileEntity tile) {
-            return tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GTMTE_Multi_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
+            return tile instanceof GT_MetaTileEntity_Hatch_Input || tile instanceof GTMTE_BusHatch_Input;
         }
 
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
-            return machine.mInputHatches.size() + machine.mQuadrInputHatches.size() + machine.mInputBusHatches.size();
+            return machine.mInputHatches.size() + machine.mInputBusHatches.size();
         }
 
         public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
