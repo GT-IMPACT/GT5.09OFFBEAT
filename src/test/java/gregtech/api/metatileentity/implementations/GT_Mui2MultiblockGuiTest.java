@@ -175,6 +175,13 @@ public class GT_Mui2MultiblockGuiTest {
                         assertFalse(widget instanceof CoverTabButton);
                         assertFalse(widget instanceof GhostCircuitSlotWidget);
                     }
+                    boolean lockVisible = legacy.isControlVisible(LOCK_SLOT);
+                    boolean batchVisible = legacy.isControlVisible(BATCH_SLOT);
+                    if (!nei && mapCount < 2 && lockVisible != batchVisible) {
+                        int loneControl = lockVisible ? LOCK_SLOT : BATCH_SLOT;
+                        assertEquals(legacy.getSlot(POWER_SLOT).xDisplayPosition,
+                            legacy.getSlot(loneControl).xDisplayPosition);
+                    }
                     for (int control = VOIDING_SLOT; control <= RECIPE_MAP_SLOT; control++) {
                         IWidget button = fixture.findWidget("processing_control_" + control);
                         boolean visible = legacy.isControlVisible(control);

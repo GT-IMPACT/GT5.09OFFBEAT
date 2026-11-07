@@ -60,7 +60,10 @@ public final class ProcessingGuiControls {
                 return RIGHT_CONTROL_X - (isControlVisible(machine, SEPARATION_SLOT) ? 18 : 9);
             case SEPARATION_SLOT:
                 return RIGHT_CONTROL_X;
+            case LOCK_SLOT:
+                return LEFT_CONTROL_X + (isControlVisible(machine, BATCH_SLOT) ? 0 : 9);
             case BATCH_SLOT:
+                return LEFT_CONTROL_X + (isControlVisible(machine, LOCK_SLOT) ? 18 : 9);
             case NEI_SLOT:
                 return LEFT_CONTROL_X + 18;
             case POWER_SLOT:
