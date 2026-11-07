@@ -171,10 +171,15 @@ public class GT_Mui2MultiblockGuiTest {
                     assertEquals(GUI_HEIGHT, fixture.panel.getArea().height);
                     IWidget display = fixture.widget("processing_display");
                     assertArea(fixture, display, 0, 0, GUI_WIDTH, GUI_HEIGHT);
+                    int coverTabs = 0;
                     for (IWidget widget : fixture.widgets) {
-                        assertFalse(widget instanceof CoverTabButton);
+                        if (widget instanceof CoverTabButton) {
+                            assertArea(fixture, widget, -17, 1 + 22 * coverTabs, 20, 20);
+                            coverTabs++;
+                        }
                         assertFalse(widget instanceof GhostCircuitSlotWidget);
                     }
+                    assertEquals(6, coverTabs);
                     boolean lockVisible = legacy.isControlVisible(LOCK_SLOT);
                     boolean batchVisible = legacy.isControlVisible(BATCH_SLOT);
                     if (!nei && mapCount < 2 && lockVisible != batchVisible) {

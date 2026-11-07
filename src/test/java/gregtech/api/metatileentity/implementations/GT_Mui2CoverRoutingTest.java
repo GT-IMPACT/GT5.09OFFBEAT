@@ -49,6 +49,7 @@ import gregtech.common.covers.NativeCoverBehavior;
 import gregtech.common.covers.modes.BlockMode;
 import gregtech.common.covers.modes.MachineProcessingCondition;
 import gregtech.common.covers.modes.TransferMode;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_PortableTank;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -73,6 +74,11 @@ public class GT_Mui2CoverRoutingTest {
     @Test
     public void everyConcreteCoverUsesNativeStandaloneAndPopupRouting() throws Throwable {
         run("routing");
+    }
+
+    @Test
+    public void everyConcreteCoverOpensAndReopensFromMultiblockTabs() throws Throwable {
+        run("multiblock_routing");
     }
 
     @Test
@@ -102,7 +108,9 @@ public class GT_Mui2CoverRoutingTest {
             GTGuis.init();
             ItemList.Display_ITS_FREE.set(new ItemStack(Items.paper));
             if ("routing".equals(scenario)) {
-                checkAllRoutes();
+                checkAllRoutes(false);
+            } else if ("multiblock_routing".equals(scenario)) {
+                checkAllRoutes(true);
             } else if ("transfer_modes".equals(scenario)) {
                 checkTransferModes(new GT_Cover_Conveyor(20), 0);
                 checkTransferModes(new GT_Cover_Pump(1000), 1);
@@ -117,7 +125,7 @@ public class GT_Mui2CoverRoutingTest {
         }
     }
 
-    private static void checkAllRoutes() throws Exception {
+    private static void checkAllRoutes(boolean multiblock) throws Exception {
         CoverCase[] cases = {
             new CoverCase(new GT_Cover_Conveyor(20), "cover.conveyor"),
             new CoverCase(new GT_Cover_Pump(1000), "cover.pump"),
@@ -141,7 +149,7 @@ public class GT_Mui2CoverRoutingTest {
         for (int index = 0; index < cases.length; index++) {
             CoverCase coverCase = cases[index];
             String name = coverCase.behavior.getClass().getSimpleName();
-            Fixture fixture = new Fixture(coverCase.behavior, index);
+            Fixture fixture = new Fixture(coverCase.behavior, index, multiblock);
             assertTrue(name, fixture.cover.hasCoverGUI());
             assertTrue(name, fixture.cover.useMui2());
             assertTrue(name, CoverRegistry.isNativeCover(fixture.item));
@@ -365,9 +373,14 @@ public class GT_Mui2CoverRoutingTest {
         private final Panel standalone;
 
         private Fixture(GT_CoverBehavior behavior, int metadata) throws Exception {
+            this(behavior, metadata, false);
+        }
+
+        private Fixture(GT_CoverBehavior behavior, int metadata, boolean multiblock) throws Exception {
             GT_ProcessingTestSupport.ProcessingWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
             tile = new GT_StructureIntegrationTest.TestTile(world,
-                new GT_MetaTileEntity_PortableTank("routing_tank", 1, "", null), ForgeDirection.NORTH);
+                multiblock ? new GT_MetaTileEntity_VacuumFreezer("routing_multiblock")
+                    : new GT_MetaTileEntity_PortableTank("routing_tank", 1, "", null), ForgeDirection.NORTH);
             world.putTile(4, 64, 7, tile);
             GT_ProcessingTestSupport.setField(tile, "mTickTimer", 51L);
             item = new ItemStack(Items.stick, 1, metadata);

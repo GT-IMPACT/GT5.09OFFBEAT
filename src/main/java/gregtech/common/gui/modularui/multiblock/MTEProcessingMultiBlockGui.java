@@ -64,7 +64,6 @@ public final class MTEProcessingMultiBlockGui {
             .setWidth(GUI_WIDTH)
             .setHeight(GUI_HEIGHT)
             .doesAddTitle(false)
-            .doesAddCoverTabs(false)
             .doesAddGregTechLogo(false)
             .doesAddGhostCircuitSlot(false)
             .doesBindPlayerInventory(false)
