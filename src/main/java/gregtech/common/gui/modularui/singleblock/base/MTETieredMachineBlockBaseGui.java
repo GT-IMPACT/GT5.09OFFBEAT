@@ -59,6 +59,9 @@ public class MTETieredMachineBlockBaseGui<T extends GT_MetaTileEntity_TieredMach
 
     protected void registerSyncValues(PanelSyncManager syncManager) {
         syncManager.registerSlotGroup("special", 1, false);
+        if (!supportsPowerSwitch()) {
+            return;
+        }
         syncManager.syncValue("powerSwitch", new BooleanSyncValue(baseMetaTileEntity::isAllowedToWork, value -> {
             if (value) {
                 baseMetaTileEntity.enableWorking();

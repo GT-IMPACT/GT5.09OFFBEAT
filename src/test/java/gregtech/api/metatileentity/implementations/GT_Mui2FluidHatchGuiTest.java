@@ -147,6 +147,7 @@ public class GT_Mui2FluidHatchGuiTest {
 
     private static void checkLayout(Fixture fixture) {
         assertTrue(fixture.machine.useMui2());
+        assertNull(fixture.handlers.findSyncHandlerNullable("powerSwitch", 0));
         assertSame(fixture.machine, MetaTileEntityGuiHandler.INSTANCE.getGuiHolder(fixture.data));
         assertTrue(MetaTileEntityGuiHandler.INSTANCE.canInteractWith(fixture.player, fixture.data));
         assertEquals(38, fixture.container.inventorySlots.size());

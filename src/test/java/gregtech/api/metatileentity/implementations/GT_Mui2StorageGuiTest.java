@@ -124,6 +124,7 @@ public class GT_Mui2StorageGuiTest {
     }
 
     private static void checkTankInventory(Fixture fixture, GT_MetaTileEntity_StorageTank tank) {
+        assertNull(fixture.handlers.findSyncHandlerNullable("powerSwitch", 0));
         assertEquals(38, fixture.container.inventorySlots.size());
         ModularSlot input = fixture.machineSlot(0);
         ModularSlot output = fixture.machineSlot(1);

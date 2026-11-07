@@ -8,4 +8,9 @@ public class MTEBasicGeneratorBaseGui<T extends GT_MetaTileEntity_BasicGenerator
     public MTEBasicGeneratorBaseGui(T machine) {
         super(machine);
     }
+
+    @Override
+    protected boolean supportsPowerSwitch() {
+        return true;
+    }
 }

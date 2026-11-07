@@ -30,4 +30,9 @@ public class MTEHatchBaseGui<T extends GT_MetaTileEntity_Hatch> extends MTEMachi
     protected boolean supportsTopRightCornerFlow() {
         return false;
     }
+
+    @Override
+    protected boolean supportsPowerSwitch() {
+        return false;
+    }
 }

@@ -20,6 +20,16 @@ public class MTEBasicTankBaseGui<T extends GT_MetaTileEntity_BasicTank>
     }
 
     @Override
+    protected boolean supportsTopRightCornerFlow() {
+        return supportsPowerSwitch();
+    }
+
+    @Override
+    protected boolean supportsPowerSwitch() {
+        return false;
+    }
+
+    @Override
     protected ParentWidget<?> createContentSection(ModularPanel panel, PanelSyncManager syncManager) {
         IFluidTank tank = getFluidTank();
         Flow row = Flow.row().coverChildren().childPadding(1).verticalCenter();
