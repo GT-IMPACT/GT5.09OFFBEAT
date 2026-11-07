@@ -30,7 +30,7 @@ public class GT_Mui2FluidInputHatchLogicTest {
     }
 
     @Test
-    public void frontContainerSlotsDecantAcceptedFluidsButDoNotAutofillEmptyContainers() throws Throwable {
+    public void frontContainerSlotsFillAndDecantWithoutLosingFluidOrItems() throws Throwable {
         run("containers");
     }
 
@@ -151,28 +151,34 @@ public class GT_Mui2FluidInputHatchLogicTest {
         }
         assertEquals(2, filled.stackSize);
         assertEquals(2, rejected.stackSize);
-        assertFalse(hatch.doesFillContainers());
+        assertTrue(hatch.doesFillContainers());
         assertTrue(hatch.doesEmptyContainers());
         hatch.fill(new FluidStack(accepted, 5000), true);
         ItemStack empty = new ItemStack(Items.bucket, 3);
         hatch.setInventorySlotContents(0, empty);
         hatch.onPreTick(fixture.tile, 51L);
         assertSame(empty, hatch.getStackInSlot(0));
-        assertEquals(3, empty.stackSize);
-        assertNull(hatch.getStackInSlot(1));
-        assertEquals(5000, hatch.getFluidAmount());
+        assertEquals(2, empty.stackSize);
+        assertSame(Items.water_bucket, hatch.getStackInSlot(1).getItem());
+        assertEquals(1, hatch.getStackInSlot(1).stackSize);
+        assertEquals(4000, hatch.getFluidAmount());
+        hatch.onPreTick(fixture.tile, 52L);
+        assertEquals(2, empty.stackSize);
+        assertEquals(1, hatch.getStackInSlot(1).stackSize);
+        assertEquals(4000, hatch.getFluidAmount());
 
+        hatch.setInventorySlotContents(1, null);
         hatch.setInventorySlotContents(0, filled);
         hatch.onPreTick(fixture.tile, 52L);
         assertEquals(1, filled.stackSize);
         assertSame(Items.bucket, hatch.getStackInSlot(1).getItem());
         assertEquals(1, hatch.getStackInSlot(1).stackSize);
-        assertEquals(6000, hatch.getFluidAmount());
+        assertEquals(5000, hatch.getFluidAmount());
         hatch.setInventorySlotContents(0, rejected);
         hatch.onPreTick(fixture.tile, 53L);
         assertSame(rejected, hatch.getStackInSlot(0));
         assertEquals(2, rejected.stackSize);
-        assertEquals(6000, hatch.getFluidAmount());
+        assertEquals(5000, hatch.getFluidAmount());
         assertEquals(1, hatch.getStackInSlot(1).stackSize);
         hatch.setFillableStack(new FluidStack(accepted, hatch.getCapacity() - 500));
         ItemStack tooLarge = new ItemStack(Items.water_bucket);
@@ -184,6 +190,21 @@ public class GT_Mui2FluidInputHatchLogicTest {
         assertEquals(1, hatch.getStackInSlot(1).stackSize);
         assertSame(accepted, hatch.getFluid().getFluid());
         assertFalse(hatch.getFluid().isFluidEqual(new FluidStack(other, 1)));
+
+        hatch.setInventorySlotContents(1, null);
+        ItemStack lastEmpty = new ItemStack(Items.bucket);
+        hatch.setInventorySlotContents(0, lastEmpty);
+        hatch.setFillableStack(new FluidStack(accepted, 500));
+        hatch.onPreTick(fixture.tile, 55L);
+        assertEquals(1, lastEmpty.stackSize);
+        assertNull(hatch.getStackInSlot(1));
+        assertEquals(500, hatch.getFluidAmount());
+        hatch.fill(new FluidStack(accepted, 500), true);
+        hatch.onPreTick(fixture.tile, 56L);
+        assertSame(Items.water_bucket, hatch.getStackInSlot(1).getItem());
+        assertEquals(0, hatch.getFluidAmount());
+        assertNull(hatch.getFluid());
+        assertTrue(hatch.getStackInSlot(0) == null || hatch.getStackInSlot(0).stackSize == 0);
     }
 
     private static void checkPersistenceAndTools(Fluid accepted, Fluid other) {
