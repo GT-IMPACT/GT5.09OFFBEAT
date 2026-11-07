@@ -279,6 +279,10 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
                 ? map : null;
     }
 
+    public boolean isNEIButtonEnabled() {
+        return true;
+    }
+
     public int getAvailableParallel() {
         return getProcessingLogic().getAvailableParallel();
     }

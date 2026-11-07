@@ -103,7 +103,12 @@ public final class MTEProcessingMultiBlockGui {
         ProcessingMachineDisplay display,
         PanelSyncManager syncManager
     ) {
-        ButtonWidget<?> button = new ProcessingControlButton()
+        ButtonWidget<?> button = new ProcessingControlButton() {
+            @Override
+            protected boolean isButtonEnabled() {
+                return index != NEI_SLOT || machine.isNEIButtonEnabled();
+            }
+        }
             .name("processing_control_" + index)
             .size(18)
             .left(() -> ProcessingGuiControls.controlX(machine, index) - 1, Unit.Measure.PIXEL)
@@ -146,11 +151,20 @@ public final class MTEProcessingMultiBlockGui {
             && syncManager.getContainer().canInteractWith(player);
     }
 
-    private static final class ProcessingControlButton extends ButtonWidget<ProcessingControlButton> {
+    private abstract static class ProcessingControlButton extends ButtonWidget<ProcessingControlButton> {
+
+        protected abstract boolean isButtonEnabled();
+
+        @Override
+        public Result onMousePressed(int mouseButton) {
+            return isButtonEnabled() ? super.onMousePressed(mouseButton) : Result.STOP;
+        }
 
         @Override
         public void drawOverlay(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
-            if (isHovering()) {
+            if (!isButtonEnabled()) {
+                Gui.drawRect(0, 0, 18, 18, 0xa0606060);
+            } else if (isHovering()) {
                 Gui.drawRect(
                     1,
                     1,

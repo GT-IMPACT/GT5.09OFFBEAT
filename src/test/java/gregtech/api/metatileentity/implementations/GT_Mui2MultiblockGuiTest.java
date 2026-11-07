@@ -2,6 +2,7 @@ package gregtech.api.metatileentity.implementations;
 
 import com.cleanroommc.modularui.api.RecipeViewerSettings;
 import com.cleanroommc.modularui.api.widget.IWidget;
+import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -111,6 +112,11 @@ public class GT_Mui2MultiblockGuiTest {
         run("slotLock");
     }
 
+    @Test
+    public void neiButtonAvailabilityMethodChangesWithoutHidingOrReopening() throws Throwable {
+        run("nei_availability");
+    }
+
     private void run(String scenario) throws Throwable {
         try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
             runtime.run(getClass(), scenario, "");
@@ -132,6 +138,9 @@ public class GT_Mui2MultiblockGuiTest {
                     break;
                 case "inventory":
                     checkInventory();
+                    break;
+                case "nei_availability":
+                    checkNeiAvailability();
                     break;
                 case "controls":
                     checkControls();
@@ -272,6 +281,25 @@ public class GT_Mui2MultiblockGuiTest {
             assertEquals(5, returned);
             assertEquals(0, machine.getProcessingModes());
         }
+    }
+
+    private static void checkNeiAvailability() throws Exception {
+        TestMachine machine = new TestMachine();
+        Fixture fixture = new Fixture(machine);
+        fixture.resize();
+        ButtonWidget<?> button = (ButtonWidget<?>) fixture.widget("processing_control_" + NEI_SLOT);
+        int x = button.getArea().x;
+        int y = button.getArea().y;
+        assertEquals(Interactable.Result.SUCCESS, button.onMousePressed(1));
+        machine.neiButtonEnabled = false;
+        assertTrue(button.isEnabled());
+        assertEquals(Interactable.Result.STOP, button.onMousePressed(0));
+        assertEquals(Interactable.Result.STOP, button.onMousePressed(1));
+        fixture.resize();
+        assertEquals(x, button.getArea().x);
+        assertEquals(y, button.getArea().y);
+        machine.neiButtonEnabled = true;
+        assertEquals(Interactable.Result.SUCCESS, button.onMousePressed(1));
     }
 
     private static void checkControls() throws Exception {
@@ -705,6 +733,7 @@ public class GT_Mui2MultiblockGuiTest {
         private int supportedModes = ProcessingLogic.ALL_MODES;
         private List<GT_Recipe_Map> maps = maps(1);
         private boolean nei = true;
+        private boolean neiButtonEnabled = true;
         private boolean controller;
         private boolean controllerLocked;
         private int availableParallel = 1;
@@ -738,6 +767,11 @@ public class GT_Mui2MultiblockGuiTest {
         @Override
         public GT_Recipe_Map getRecipeMapForNEI() {
             return nei ? getRecipeMap() : null;
+        }
+
+        @Override
+        public boolean isNEIButtonEnabled() {
+            return neiButtonEnabled;
         }
 
         @Override
