@@ -17,12 +17,14 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.value.sync.ValueSyncHandler;
 import com.cleanroommc.modularui.widget.WidgetTree;
 import com.cleanroommc.modularui.widgets.ToggleButton;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.google.common.io.ByteStreams;
 import cpw.mods.fml.server.FMLServerHandler;
 import gregtech.api.GregTech_API;
 import gregtech.api.covers.CoverRegistry;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
+import gregtech.api.interfaces.tileentity.IProvideEnergyCover;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.modularui2.CoverGuiData;
 import gregtech.api.modularui2.CoverUIFactory;
@@ -42,7 +44,12 @@ import gregtech.common.tileentities.storage.GT_MetaTileEntity_PortableTank;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_SuperChest;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import ic2.api.item.ElectricItem;
+import ic2.api.item.IElectricItem;
+import ic2.core.item.ElectricItemManager;
+import ic2.core.item.GatewayElectricItemManager;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,9 +59,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -67,6 +76,11 @@ public class GT_Mui2MeterCoverTest {
     @Test
     public void nativeMeterPacketsControlTheActualThresholdedRedstoneOutput() throws Throwable {
         run("controls");
+    }
+
+    @Test
+    public void energyMetersReadExternalStorageAndSynchronizeBatteryCapacity() throws Throwable {
+        run("energy_storage");
     }
 
     @Test
@@ -103,6 +117,9 @@ public class GT_Mui2MeterCoverTest {
             checkEnergyControls();
             checkItemControls();
             checkLiquidControls();
+        } else if ("energy_storage".equals(scenario)) {
+            checkExternalEnergyStorage();
+            checkBatteryCapacitySync();
         } else if ("persistence".equals(scenario)) {
             checkPersistence();
         } else if ("special_hosts".equals(scenario)) {
@@ -186,6 +203,97 @@ public class GT_Mui2MeterCoverTest {
         fixture.longValue("threshold", -1);
         assertEquals(0, meter.getThreshold());
         assertTrue(meter.needsUpdate());
+    }
+
+    private static void checkExternalEnergyStorage() throws Exception {
+        EnergyStorage storage = new EnergyStorage();
+        Fixture fixture = new Fixture(new GT_Cover_EUMeter(), storage);
+        CoverEUMeter meter = (CoverEUMeter) fixture.cover;
+        for (CoverEUMeter.EnergyType type : new CoverEUMeter.EnergyType[] {
+                CoverEUMeter.EnergyType.UNIVERSAL_STORAGE,
+                CoverEUMeter.EnergyType.ELECTRICITY_STORAGE_INCLUDING_BATTERIES
+        }) {
+            fixture.packet(fixture.handlers.findSyncHandler("energy_type", EnumSyncValue.class),
+                packet -> NetworkUtils.writeEnumValue(packet, type));
+            fixture.invert(false);
+            fixture.longValue("threshold", 0);
+            fixture.assertSignal(8);
+            fixture.longValue("threshold", storage.stored + 1);
+            assertEquals(storage.stored + 1, meter.getThreshold());
+            fixture.assertSignal(0);
+            fixture.invert(true);
+            fixture.assertSignal(7);
+            fixture.longValue("threshold", storage.stored);
+            fixture.assertSignal(0);
+            fixture.longValue("threshold", Long.MAX_VALUE);
+            assertEquals(storage.capacity, meter.getThreshold());
+            checkRoundTrip(fixture);
+        }
+        Fixture client = new Fixture(new GT_Cover_EUMeter(), new EnergyStorage());
+        ((CoverEUMeter) client.cover).setType(meter.getType());
+        ((EnergyStorage) client.tile.getMetaTileEntity()).capacity = 0;
+        checkCapacitySync(fixture, client, storage.capacity, 5_000_000_000L);
+        storage.stored = 0;
+        fixture.longValue("threshold", 0);
+        fixture.invert(false);
+        fixture.assertSignal(0);
+        storage.stored = storage.capacity;
+        fixture.assertSignal(15);
+        storage.capacity = storage.stored = 0;
+        fixture.assertSignal(0);
+        fixture.invert(true);
+        fixture.assertSignal(15);
+    }
+
+    private static void checkBatteryCapacitySync() throws Exception {
+        ElectricItem.rawManager = new ElectricItemManager();
+        ElectricItem.manager = new GatewayElectricItemManager();
+        GT_MetaTileEntity_BasicBatteryBuffer buffer = energyBuffer();
+        Fixture fixture = new Fixture(new GT_Cover_EUMeter(), buffer);
+        CoverEUMeter meter = (CoverEUMeter) fixture.cover;
+        meter.setType(CoverEUMeter.EnergyType.ELECTRICITY_STORAGE_INCLUDING_BATTERIES);
+        ItemStack battery = new ItemStack(new BatteryItem());
+        ElectricItem.manager.charge(battery, 2_500_000_000D, 1, true, false);
+        buffer.mInventory[0] = battery;
+        fixture.longValue("threshold", 3_000_000_000L);
+        assertEquals(3_000_000_000L, meter.getThreshold());
+        fixture.assertSignal(0);
+        fixture.longValue("threshold", 2_000_000_000L);
+        fixture.assertSignal(7);
+        Fixture client = new Fixture(new GT_Cover_EUMeter(), energyBuffer());
+        ((CoverEUMeter) client.cover).setType(meter.getType());
+        checkCapacitySync(fixture, client, 5_000_000_100L, 3_000_000_000L);
+        buffer.mInventory[0] = null;
+        checkCapacitySync(fixture, client, 100, 100);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void checkCapacitySync(Fixture server, Fixture client, long expectedCapacity, long threshold)
+            throws Exception {
+        LongSyncValue source = server.handlers.findSyncHandler("energy_capacity", LongSyncValue.class);
+        LongSyncValue target = client.handlers.findSyncHandler("energy_capacity", LongSyncValue.class);
+        assertNotNull(source);
+        assertNotNull(target);
+        source.updateCacheFromSource(false);
+        PacketBuffer packet = new PacketBuffer(Unpooled.buffer());
+        try {
+            source.write(packet);
+            target.read(packet);
+        } finally {
+            packet.release();
+        }
+        assertEquals(expectedCapacity, target.getLongValue());
+        Field validatorField = TextFieldWidget.class.getDeclaredField("validator");
+        validatorField.setAccessible(true);
+        for (IWidget widget : client.widgets) {
+            if (widget instanceof TextFieldWidget) {
+                Function<String, String> validator = (Function<String, String>) validatorField.get(widget);
+                assertEquals(Long.toString(threshold), validator.apply(Long.toString(threshold)));
+                assertEquals(Long.toString(expectedCapacity), validator.apply(Long.toString(Long.MAX_VALUE)));
+                return;
+            }
+        }
+        throw new AssertionError("Missing energy threshold field");
     }
 
     private static void checkItemControls() throws Exception {
@@ -461,6 +569,64 @@ public class GT_Mui2MeterCoverTest {
         private void assertSignal(int expected) {
             cover.doCoverThings((byte) 0, 20);
             assertEquals(expected, tile.getOutputRedstoneSignal((byte) ForgeDirection.WEST.ordinal()));
+        }
+    }
+
+    private static final class EnergyStorage extends GT_MetaTileEntity_BasicBatteryBuffer
+            implements IProvideEnergyCover {
+
+        private long capacity = 8_000_000_000_000_000_000L;
+        private long stored = 4_000_000_000_000_000_000L;
+
+        private EnergyStorage() {
+            super("meter_storage", 1, "", null, 1);
+        }
+
+        @Override
+        public long getStored() {
+            return stored;
+        }
+
+        @Override
+        public long getMaxCapacity() {
+            return capacity;
+        }
+    }
+
+    private static final class BatteryItem extends Item implements IElectricItem {
+
+        private BatteryItem() {
+            setMaxStackSize(1);
+        }
+
+        @Override
+        public boolean canProvideEnergy(ItemStack stack) {
+            return true;
+        }
+
+        @Override
+        public Item getChargedItem(ItemStack stack) {
+            return this;
+        }
+
+        @Override
+        public Item getEmptyItem(ItemStack stack) {
+            return this;
+        }
+
+        @Override
+        public double getMaxCharge(ItemStack stack) {
+            return 5_000_000_000D;
+        }
+
+        @Override
+        public int getTier(ItemStack stack) {
+            return 1;
+        }
+
+        @Override
+        public double getTransferLimit(ItemStack stack) {
+            return 32;
         }
     }
 

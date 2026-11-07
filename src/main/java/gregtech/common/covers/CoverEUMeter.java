@@ -5,12 +5,14 @@ import gregtech.api.covers.CoverContext;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.interfaces.tileentity.IProvideEnergyCover;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicBatteryBuffer;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.modularui.cover.CoverEUMeterGui;
 import gregtech.common.gui.modularui.cover.base.CoverBaseGui;
 import io.netty.buffer.ByteBuf;
+import java.math.BigInteger;
 import java.util.function.ToLongFunction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -122,7 +124,10 @@ public class CoverEUMeter extends CoverLegacyData implements IInvertable {
         } else if (stored >= capacity) {
             signal = 15;
         } else {
-            signal = (byte) (1 + 14 * stored / capacity);
+            long scaled = stored <= Long.MAX_VALUE / 14 ? 14 * stored / capacity
+                    : BigInteger.valueOf(stored).multiply(BigInteger.valueOf(14))
+                            .divide(BigInteger.valueOf(capacity)).longValue();
+            signal = (byte) (1 + scaled);
         }
         if (isInverted()) {
             signal = (byte) (15 - signal);
@@ -179,11 +184,30 @@ public class CoverEUMeter extends CoverLegacyData implements IInvertable {
         }
 
         public long getTileEntityStoredEnergy(ICoverable tile) {
+            IProvideEnergyCover provider = getEnergyProvider(tile);
+            if (provider != null) {
+                return provider.getStored();
+            }
             return stored.applyAsLong(tile);
         }
 
         public long getTileEntityEnergyCapacity(ICoverable tile) {
+            IProvideEnergyCover provider = getEnergyProvider(tile);
+            if (provider != null) {
+                return provider.getMaxCapacity();
+            }
             return capacity.applyAsLong(tile);
+        }
+
+        private IProvideEnergyCover getEnergyProvider(ICoverable tile) {
+            if ((this == UNIVERSAL_STORAGE || this == ELECTRICITY_STORAGE_INCLUDING_BATTERIES)
+                    && tile instanceof IGregTechTileEntity) {
+                IMetaTileEntity machine = ((IGregTechTileEntity) tile).getMetaTileEntity();
+                if (machine instanceof IProvideEnergyCover) {
+                    return (IProvideEnergyCover) machine;
+                }
+            }
+            return null;
         }
 
         public EnergyType getNext() {

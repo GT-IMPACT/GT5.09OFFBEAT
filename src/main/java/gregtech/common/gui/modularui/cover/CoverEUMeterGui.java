@@ -47,11 +47,13 @@ public class CoverEUMeterGui extends CoverBaseGui<CoverEUMeter> {
     }
 
     private Flow makeEnergyThresholdRow(PanelSyncManager syncManager) {
+        LongSyncValue capacity = new LongSyncValue(() -> cover.getType().getTileEntityEnergyCapacity(cover.getTile()));
+        syncManager.syncValue("energy_capacity", capacity);
         LongSyncValue threshold = new LongSyncValue(cover::getThreshold, cover::setThresdhold).allowC2S();
         syncManager.syncValue("threshold", threshold);
         return makeNamedColumn(IKey.lang("gt.interact.desc.EnergyThreshold"))
             .child(makeNumberField(120).value(threshold)
-                .numbersLong(() -> 0L, () -> cover.getType().getTileEntityEnergyCapacity(cover.getTile()))
+                .numbersLong(() -> 0L, capacity::getLongValue)
                 .setFocusOnGuiOpen(true))
             .paddingRight(TICK_RATE_BUTTON_SIZE);
     }
