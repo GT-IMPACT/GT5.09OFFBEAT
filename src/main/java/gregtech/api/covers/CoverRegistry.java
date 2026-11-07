@@ -78,6 +78,11 @@ public final class CoverRegistry {
             .blocksCoverableGuiOpening().build();
     public static final Cover NO_COVER = new CoverNone(new CoverContext(0, ForgeDirection.UNKNOWN, null));
 
+    static {
+        // GT_ItemStack hashes include numeric item IDs, which FML can change when loading a world.
+        GregTech_API.sItemStackMappings.add(COVERS);
+    }
+
     private CoverRegistry() {
     }
 
