@@ -162,11 +162,11 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
 
     /**
      * Selects a supported map for the next cycle without touching in-flight
-     * outputs.
+     * outputs. Legacy NBT loading can call this before the tile has a world.
      */
     public boolean setActiveRecipeMap(GT_Recipe_Map map) {
         IGregTechTileEntity base = getBaseMetaTileEntity();
-        if (base != null && base.isClientSide()) {
+        if (base != null && base.getWorld() != null && base.isClientSide()) {
             return false;
         }
         if (map == null || !getRecipeMaps().contains(map) || map == getRecipeMap()) {

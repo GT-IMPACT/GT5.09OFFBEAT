@@ -183,6 +183,11 @@ public class GT_SharedProcessingTest {
     }
 
     @Test
+    public void recipeMapCanBeRestoredBeforeWorldAttachment() throws Throwable {
+        run("restoreMapBeforeWorldAttachment");
+    }
+
+    @Test
     public void switchingMapsResetsCacheAndRecipeLock() throws Throwable {
         run("mapSwitchResetsRecipeState");
     }
@@ -1365,6 +1370,17 @@ public class GT_SharedProcessingTest {
             assertEquals(1, stick.stackSize);
             assertFalse(scenario.machine.setActiveRecipeMap(null));
             assertFalse(scenario.machine.setActiveRecipeMap(GT_Recipe_Map.sElectrolyzerRecipes));
+        }
+    }
+
+    private static void restoreMapBeforeWorldAttachment() {
+        try (Scenario scenario = new Scenario(1)) {
+            GT_Recipe_Map other = GT_Recipe_Map.sCompressorRecipes;
+            scenario.useMaps(scenario.map, other);
+            scenario.fixture.tile.setWorldObj(null);
+
+            assertTrue(scenario.machine.setActiveRecipeMap(other));
+            assertSame(other, scenario.machine.getRecipeMap());
         }
     }
 
