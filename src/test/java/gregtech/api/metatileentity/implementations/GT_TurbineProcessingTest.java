@@ -9,9 +9,13 @@ import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.logic.ProcessingOutputs;
 import gregtech.api.logic.TurbineProcessingLogic;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.Fixture;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.GameRuntime;
+import gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.ProcessingWorld;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.gui.modularui.multiblock.ProcessingGuiControls;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -30,11 +34,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.*;
-import static org.junit.Assert.*;
+import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.fluid;
+import static gregtech.api.metatileentity.implementations.GT_ProcessingTestSupport.setField;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class GT_TurbineProcessingTest {
+
     private static GameRuntime runtime;
     private final String model;
 
@@ -170,6 +181,9 @@ public class GT_TurbineProcessingTest {
     }
 
     private static void controls(String model) throws Exception {
+        GT_Recipe.GT_Recipe_Map neiMap = model.equals("Gas") ? GT_Recipe.GT_Recipe_Map.sTurbineFuels
+                : model.equals("Plasma") ? GT_Recipe.GT_Recipe_Map.sPlasmaFuels : null;
+        boolean hasNei = neiMap != null;
         int id = 1003;
         IMetaTileEntity previous = GregTech_API.METATILEENTITIES[id];
         GregTech_API.METATILEENTITIES[id] = machine(model);
@@ -206,6 +220,10 @@ public class GT_TurbineProcessingTest {
                     assertFalse(restored.checkguislot);
                     assertEquals("Test rotor", restored.mNameRotorMaterial);
                     assertEquals(Items.iron_ingot, restored.mInventory[1].getItem());
+                    assertSame(neiMap, restored.getRecipeMapForNEI());
+                    assertNull(restored.getRecipeMap());
+                    assertEquals(hasNei,
+                            ProcessingGuiControls.isControlVisible(restored, GT_Container_ProcessingMachine.NEI_SLOT));
                     GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(world);
                     GT_Container_ProcessingMachine gui = new GT_Container_ProcessingMachine(player.inventory,
                             restoredTile) {
@@ -219,7 +237,9 @@ public class GT_TurbineProcessingTest {
                     assertEquals(1, gui.getSlotCount());
                     assertTrue(gui.isControlVisible(GT_Container_ProcessingMachine.POWER_SLOT));
                     assertTrue(gui.isControlVisible(GT_Container_ProcessingMachine.VOIDING_SLOT));
-                    for (int slot : new int[] { 1, 2, 3, GT_Container_ProcessingMachine.NEI_SLOT }) {
+                    assertEquals(hasNei, gui.isControlVisible(GT_Container_ProcessingMachine.NEI_SLOT));
+                    assertEquals(hasNei, gui.getSlot(GT_Container_ProcessingMachine.NEI_SLOT).xDisplayPosition >= 0);
+                    for (int slot : new int[] { 1, 2, 3 }) {
                         assertFalse(gui.isControlVisible(slot));
                         assertTrue("Hidden controls must not leave an interactive slot inside the GUI",
                                 gui.getSlot(slot).xDisplayPosition < 0);
@@ -229,14 +249,16 @@ public class GT_TurbineProcessingTest {
                     gui.slotClick(GT_Container_ProcessingMachine.VOIDING_SLOT, 0, 0, player);
                     assertEquals((modes ^ ProcessingLogic.PROTECT_FLUIDS) & ProcessingLogic.PROTECT_FLUIDS,
                             restored.getProcessingModes());
-                    assertEquals(20, gui.getSlot(GT_Container_ProcessingMachine.POWER_SLOT).xDisplayPosition);
+                    assertEquals(hasNei ? 11 : 20,
+                            gui.getSlot(GT_Container_ProcessingMachine.POWER_SLOT).xDisplayPosition);
                     int visibleControls = 0;
                     for (int slot = 0; slot < GT_Container_ProcessingMachine.CONTROL_COUNT; slot++) {
                         if (gui.getSlot(slot).xDisplayPosition >= 0) {
                             visibleControls++;
                         }
                     }
-                    assertEquals("Only power and fluid protection have active slots", 2, visibleControls);
+                    assertEquals("Power, fluid protection and optional NEI have active slots",
+                            hasNei ? 3 : 2, visibleControls);
                 }
             }
         } finally {

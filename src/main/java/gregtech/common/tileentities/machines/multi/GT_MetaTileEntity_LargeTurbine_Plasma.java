@@ -9,7 +9,6 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.render.TextureFactory;
-import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -41,6 +40,11 @@ public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_Lar
         return turbineTooltip("Large Plasma Generator")
                 .addInfo("Plasma input; an optional output hatch collects cooled material.")
                 .toolTipFinisher();
+    }
+
+    @Override
+    public GT_Recipe_Map getRecipeMapForNEI() {
+        return GT_Recipe_Map.sPlasmaFuels;
     }
 
     @Override

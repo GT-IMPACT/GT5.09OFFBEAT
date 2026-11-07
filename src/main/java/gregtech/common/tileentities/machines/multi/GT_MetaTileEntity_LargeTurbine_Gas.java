@@ -10,7 +10,6 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 
 import gregtech.api.render.TextureFactory;
-import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -43,6 +42,11 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
                 .addInfo("Gas fuel input; requires a muffler hatch.")
                 .addPollutionAmount(getPollutionPerTick(null) * 20)
                 .toolTipFinisher();
+    }
+
+    @Override
+    public GT_Recipe_Map getRecipeMapForNEI() {
+        return GT_Recipe_Map.sTurbineFuels;
     }
 
     @Override
