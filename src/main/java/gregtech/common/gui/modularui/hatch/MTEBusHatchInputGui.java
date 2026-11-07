@@ -6,6 +6,7 @@ import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.FluidSlotSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
@@ -13,7 +14,10 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import gregtech.api.metatileentity.implementations.GTMTE_BusHatch_Input;
 import gregtech.api.modularui2.GTGuis;
+import gregtech.api.modularui2.GTGuiTextures;
 import gregtech.api.modularui2.GTWidgetThemes;
+import gregtech.api.modularui2.common.CommonButtons;
+import gregtech.api.modularui2.common.CommonWidgets;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.modularui.util.BusHatchInputContainer;
 import gregtech.common.gui.modularui.util.MachineFluidTank;
@@ -55,6 +59,19 @@ public class MTEBusHatchInputGui {
                 .pos(79 + (index - 1) % 4 * 18, 7 + (index - 1) / 4 * 18));
         }
         panel.child(itemSlot(machine.getOutputSlot()).name("container_output").pos(43, 61));
+        panel.child(CommonWidgets.createCircuitSlot(syncManager, machine).name("circuit").pos(61, 61));
+        BooleanSyncValue sorting = new BooleanSyncValue(() -> !machine.disableSort, value -> {
+            machine.disableSort = !value;
+            GTGuis.markDirty(machine);
+        }).allowC2S();
+        BooleanSyncValue insertion = new BooleanSyncValue(() -> !machine.disableLimited, value -> {
+            machine.disableLimited = !value;
+            GTGuis.markDirty(machine);
+        }).allowC2S();
+        panel.child(CommonButtons.createToggleButton(sorting, GTGuiTextures.OVERLAY_BUTTON_SORTING_MODE, "GT5U.machines.sorting_mode.tooltip")
+            .name("sorting").size(18).pos(153, 7));
+        panel.child(CommonButtons.createToggleButton(insertion, GTGuiTextures.OVERLAY_BUTTON_ONE_STACK_LIMIT, "GT5U.machines.one_stack_limit.tooltip")
+            .name("insertion_limit").size(18).pos(153, 25));
 
         IFluidTank tank = new MachineFluidTank(machine, false);
         panel.child(new GTFluidSlot()

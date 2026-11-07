@@ -10,6 +10,7 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.MouseData;
 import com.cleanroommc.modularui.value.sync.FluidSlotSyncHandler;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.ModularSyncManager;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.ValueSyncHandler;
@@ -32,8 +33,11 @@ import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.modularui2.GTGuis;
 import gregtech.api.modularui2.MetaTileEntityGuiHandler;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
 import gregtech.common.gui.modularui.util.BusHatchInputContainer;
 import gregtech.common.items.GT_FluidDisplayItem;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
+import gregtech.common.modularui2.sync.GhostCircuitSyncHandler;
 import gregtech.common.modularui2.widget.GhostCircuitSlotWidget;
 import io.netty.buffer.Unpooled;
 import net.minecraft.init.Items;
@@ -84,6 +88,11 @@ public class GT_Mui2BusHatchInputGuiTest {
         run("persistence");
     }
 
+    @Test
+    public void circuitAndModePacketsPreserveItemsAndControlRecipeInsertion() throws Throwable {
+        run("controls");
+    }
+
     private void run(String scenario) throws Throwable {
         try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
             try {
@@ -102,6 +111,7 @@ public class GT_Mui2BusHatchInputGuiTest {
         FMLServerHandler.instance();
         GTGuis.init();
         new GT_FluidDisplayItem();
+        new GT_IntegratedCircuit_Item();
         ItemList.Bottle_Empty.set(Items.glass_bottle);
         FluidContainerData water = new FluidContainerData(
             new FluidStack(FluidRegistry.WATER, 1000),
@@ -122,6 +132,8 @@ public class GT_Mui2BusHatchInputGuiTest {
                 checkFluid(fixture);
             } else if ("persistence".equals(scenario)) {
                 checkPersistence(fixture);
+            } else if ("controls".equals(scenario)) {
+                checkControls(fixture);
             } else {
                 throw new AssertionError(scenario);
             }
@@ -137,8 +149,8 @@ public class GT_Mui2BusHatchInputGuiTest {
         assertSame(fixture.machine, MetaTileEntityGuiHandler.INSTANCE.getGuiHolder(fixture.data));
         assertTrue(fixture.container.canInteractWith(fixture.player));
         assertEquals(54, fixture.container.inventorySlots.size());
-        assertNull(fixture.handlers.findPanelHandlerNullable("ghostCircuitPanel"));
-        assertEquals(19, fixture.machine.mInventory.length);
+        assertNotNull(fixture.handlers.findPanelHandlerNullable("ghostCircuitPanel"));
+        assertEquals(20, fixture.machine.mInventory.length);
         boolean[] playerSlots = new boolean[36];
         for (int index = 0; index < 54; index++) {
             ModularSlot slot = (ModularSlot) fixture.container.inventorySlots.get(index);
@@ -173,22 +185,33 @@ public class GT_Mui2BusHatchInputGuiTest {
         }
         checkFrame(fixture, fixture.itemWidget(17), 43, 61);
         checkFrame(fixture, fixture.display, 54, 31);
+        checkFrame(fixture, fixture.widget("circuit"), 61, 61);
+        checkFrame(fixture, fixture.widget("sorting"), 153, 7);
+        checkFrame(fixture, fixture.widget("insertion_limit"), 153, 25);
         assertFalse(fixture.display.getSyncHandler().isPhantom());
         assertFalse(fixture.display.getSyncHandler().canFillSlot());
         assertFalse(fixture.display.getSyncHandler().canDrainSlot());
         assertFalse(fixture.machineSlot(17).isCanPut());
         assertTrue(fixture.machineSlot(17).isCanTake());
         assertNull(fixture.findMachineSlot(18));
+        assertNull(fixture.findMachineSlot(19));
         int items = 0;
         int displays = 0;
+        int circuits = 0;
+        int toggles = 0;
         List<IWidget> frames = new ArrayList<>();
         for (IWidget widget : fixture.widgets) {
-            assertFalse(widget instanceof GhostCircuitSlotWidget);
-            assertFalse(widget instanceof ToggleButton);
+            if (widget instanceof GhostCircuitSlotWidget) {
+                circuits++;
+            }
+            if (widget instanceof ToggleButton) {
+                toggles++;
+            }
             if (widget instanceof FluidSlot) {
                 displays++;
             }
-            if (!(widget instanceof ItemSlot) && !(widget instanceof FluidSlot)) {
+            if (!(widget instanceof ItemSlot) && !(widget instanceof FluidSlot)
+                    && !(widget instanceof GhostCircuitSlotWidget) && !(widget instanceof ToggleButton)) {
                 continue;
             }
             if (widget instanceof ItemSlot) {
@@ -213,8 +236,10 @@ public class GT_Mui2BusHatchInputGuiTest {
             }
             frames.add(widget);
         }
-        assertEquals(54, items);
+        assertEquals(55, items);
         assertEquals(1, displays);
+        assertEquals(1, circuits);
+        assertEquals(2, toggles);
         fixture.player.inventory.setItemStack(null);
         fixture.player.inventory.setInventorySlotContents(fixture.player.inventory.currentItem, null);
         for (byte side = 0; side < 6; side++) {
@@ -344,6 +369,55 @@ public class GT_Mui2BusHatchInputGuiTest {
         }
     }
 
+    private static void checkControls(Fixture fixture) throws Exception {
+        GhostCircuitSlotWidget circuit = (GhostCircuitSlotWidget) fixture.widget("circuit");
+        ItemStack cursor = new ItemStack(Items.apple, 3);
+        fixture.player.inventory.setItemStack(cursor);
+        PacketBuffer packet = new PacketBuffer(Unpooled.buffer());
+        try {
+            packet.writeShort(26);
+            circuit.getSyncHandler().readOnServer(GhostCircuitSyncHandler.SYNC_CIRCUIT_CONFIG, packet);
+        } finally {
+            packet.release();
+        }
+        assertSame(cursor, fixture.player.inventory.getItemStack());
+        assertEquals(3, cursor.stackSize);
+        GhostCircuitItemStackHandler ghost = new GhostCircuitItemStackHandler(fixture.machine);
+        assertEquals(26, ghost.getCircuitConfig());
+        assertEquals(0, ghost.getStackInSlot(0).stackSize);
+        assertNull(fixture.machine.decrStackSize(fixture.machine.getCircuitSlot(), 1));
+        assertNull(fixture.machine.getInventoryHandler().extractItem(fixture.machine.getCircuitSlot(), 1, false));
+        sendBoolean((ToggleButton) fixture.widget("sorting"), false);
+        assertTrue(fixture.machine.disableSort);
+        fixture.machine.mInventory[5] = new ItemStack(Items.iron_ingot, 4);
+        fixture.machine.updateSlots();
+        assertNotNull(fixture.machine.mInventory[5]);
+        sendBoolean((ToggleButton) fixture.widget("sorting"), true);
+        fixture.machine.updateSlots();
+        assertEquals(4, fixture.machine.mInventory[1].stackSize);
+        assertNull(fixture.machine.mInventory[5]);
+        sendBoolean((ToggleButton) fixture.widget("insertion_limit"), true);
+        assertFalse(fixture.machine.disableLimited);
+        assertTrue(fixture.machine.allowPutStack(fixture.tile, 1, (byte) 2, new ItemStack(Items.iron_ingot)));
+        assertFalse(fixture.machine.allowPutStack(fixture.tile, 2, (byte) 2, new ItemStack(Items.iron_ingot)));
+        assertTrue(fixture.machine.allowPutStack(fixture.tile, 2, (byte) 2, new ItemStack(Items.gold_ingot)));
+        sendBoolean((ToggleButton) fixture.widget("insertion_limit"), false);
+        assertTrue(fixture.machine.allowPutStack(fixture.tile, 2, (byte) 2, new ItemStack(Items.iron_ingot)));
+        assertEquals(26, ghost.getCircuitConfig());
+    }
+
+    private static void sendBoolean(ToggleButton toggle, boolean value) throws Exception {
+        BooleanSyncValue handler = (BooleanSyncValue) toggle.getSyncHandler();
+        assertTrue(handler.isAllowC2S());
+        PacketBuffer packet = new PacketBuffer(Unpooled.buffer());
+        try {
+            packet.writeBoolean(value);
+            handler.readOnServer(ValueSyncHandler.SYNC_VALUE, packet);
+        } finally {
+            packet.release();
+        }
+    }
+
     private static void checkPersistence(Fixture fixture) {
         fixture.player.setSneaking(true);
         fixture.machine.onScrewdriverRightClick((byte) 2, fixture.player, 0.5F, 0.5F, 0.5F);
@@ -358,8 +432,10 @@ public class GT_Mui2BusHatchInputGuiTest {
         fixture.machine.mInventory[17] = new ItemStack(Items.bucket, 7);
         fixture.machine.mFluid = new FluidStack(FluidRegistry.WATER, 27000);
         fixture.machine.mInventory[18] = GT_Utility.getFluidDisplayStack(fixture.machine.mFluid, false);
-        assertEquals(1, GTMTE_BusHatch_Input.getStoredInputs(fixture.machine).size());
-        assertSame(grid, GTMTE_BusHatch_Input.getStoredInputs(fixture.machine).get(0));
+        new GhostCircuitItemStackHandler(fixture.machine).setCircuitConfig(26);
+        fixture.machine.disableLimited = false;
+        assertEquals(2, GTMTE_BusHatch_Input.getStoredInputs(fixture.machine).size());
+        assertSame(grid, GTMTE_BusHatch_Input.getStoredInputs(fixture.machine).get(1));
 
         GameRegistry.registerTileEntity(GT_StructureIntegrationTest.TestTile.class, "mui2_bus_hatch_input_test");
         IMetaTileEntity previous = GregTech_API.METATILEENTITIES[32000];
@@ -374,10 +450,14 @@ public class GT_Mui2BusHatchInputGuiTest {
             GTMTE_BusHatch_Input restored = (GTMTE_BusHatch_Input) tile.getMetaTileEntity();
             assertNotNull(restored);
             assertTrue(restored.useMui2());
-            assertEquals(19, restored.mInventory.length);
+            assertEquals(20, restored.mInventory.length);
             assertEquals(32000, restored.getCapacity());
             assertTrue(restored.disableSort);
             assertTrue(restored.restrictFluid);
+            assertFalse(restored.disableLimited);
+            GhostCircuitItemStackHandler ghost = new GhostCircuitItemStackHandler(restored);
+            assertEquals(26, ghost.getCircuitConfig());
+            assertEquals(0, ghost.getStackInSlot(0).stackSize);
             assertEquals(27000, restored.getFluidAmount());
             assertSame(FluidRegistry.WATER, restored.mFluid.getFluid());
             assertSame(Items.water_bucket, restored.mInventory[0].getItem());
@@ -385,8 +465,9 @@ public class GT_Mui2BusHatchInputGuiTest {
             assertEquals("combined_input", restored.mInventory[1].getTagCompound().getString("preserved"));
             assertSame(Items.bucket, restored.mInventory[17].getItem());
             assertEquals(7, restored.mInventory[17].stackSize);
-            assertEquals(1, GTMTE_BusHatch_Input.getStoredInputs(restored).size());
-            assertSame(restored.mInventory[1], GTMTE_BusHatch_Input.getStoredInputs(restored).get(0));
+            assertEquals(2, GTMTE_BusHatch_Input.getStoredInputs(restored).size());
+            assertSame(ghost.getStackInSlot(0), GTMTE_BusHatch_Input.getStoredInputs(restored).get(0));
+            assertSame(restored.mInventory[1], GTMTE_BusHatch_Input.getStoredInputs(restored).get(1));
         } finally {
             GregTech_API.METATILEENTITIES[32000] = previous;
         }

@@ -7,7 +7,9 @@ import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
+import gregtech.api.util.item.GhostCircuitItemStackHandler;
 import gregtech.common.covers.Cover;
+import gregtech.common.items.GT_IntegratedCircuit_Item;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -71,6 +73,7 @@ public class GT_Mui2BusHatchInputLogicTest {
 
     public static void runScenario(String scenario, String unused) {
         Launch.blackboard.put("fml.deobfuscatedEnvironment", true);
+        new GT_IntegratedCircuit_Item();
         ItemList.Display_Fluid.set(Items.feather);
         ItemList.Bottle_Empty.set(Items.glass_bottle);
         FluidContainerData water = new FluidContainerData(
@@ -143,7 +146,7 @@ public class GT_Mui2BusHatchInputLogicTest {
     private static void checkContainers() {
         Fixture fixture = new Fixture(5000);
         GTMTE_BusHatch_Input hatch = fixture.hatch;
-        assertEquals(19, hatch.mInventory.length);
+        assertEquals(20, hatch.mInventory.length);
         assertEquals(0, hatch.getInputSlot());
         assertEquals(17, hatch.getOutputSlot());
         assertEquals(18, hatch.getStackDisplaySlot());
@@ -242,6 +245,7 @@ public class GT_Mui2BusHatchInputLogicTest {
         assertEquals(5000, hatch.drain(6000, true).amount);
         assertNull(hatch.mFluid);
         hatch.disableSort = true;
+        hatch.disableLimited = false;
         hatch.restrictFluid = true;
         hatch.fill(water("saved", 3456), true);
         NBTTagCompound saved = new NBTTagCompound();
@@ -250,14 +254,16 @@ public class GT_Mui2BusHatchInputLogicTest {
         restored.hatch.loadNBTData(saved);
         assertTrue(restored.hatch.disableSort);
         assertTrue(restored.hatch.restrictFluid);
+        assertFalse(restored.hatch.disableLimited);
         assertEquals(3456, restored.hatch.getFluidAmount());
         assertEquals("saved", restored.hatch.mFluid.tag.getString("variant"));
         assertEquals(5000, restored.hatch.getCapacity());
         assertEquals(5000, ((GTMTE_BusHatch_Input) hatch.newMetaEntity(null)).getCapacity());
-        assertEquals(19, hatch.newMetaEntity(null).mInventory.length);
+        assertEquals(20, hatch.newMetaEntity(null).mInventory.length);
         restored.hatch.loadNBTData(new NBTTagCompound());
         assertFalse(restored.hatch.disableSort);
         assertFalse(restored.hatch.restrictFluid);
+        assertTrue(restored.hatch.disableLimited);
         assertNull(restored.hatch.mFluid);
     }
 
@@ -334,6 +340,31 @@ public class GT_Mui2BusHatchInputLogicTest {
         assertEquals(5, separated.get(1).items[0].stackSize);
         assertEquals(1, separated.get(0).fluids.length);
         assertEquals(1, separated.get(1).fluids.length);
+
+        GhostCircuitItemStackHandler ghost = new GhostCircuitItemStackHandler(hatch);
+        ghost.setCircuitConfig(26);
+        GT_Recipe_Map.sChemicalRecipes.clear();
+        GT_Recipe circuitRecipe = GT_Recipe_Map.sChemicalRecipes.addRecipe(
+            false,
+            new ItemStack[]{new ItemStack(Items.iron_ingot), GT_Utility.getIntegratedCircuit(26)},
+            new ItemStack[]{new ItemStack(Items.diamond)},
+            null,
+            null,
+            new FluidStack[]{new FluidStack(FluidRegistry.WATER, 100)},
+            null,
+            20,
+            8,
+            0
+        );
+        assertNotNull(circuitRecipe);
+        for (int modes : new int[]{0, ProcessingLogic.SEPARATE_INPUTS}) {
+            machine.setProcessingModes(modes);
+            ProcessingInputs withCircuit = machine.inputs().get(0);
+            assertTrue(withCircuit.consume(circuitRecipe, 1));
+            assertTrue(withCircuit.commit());
+            assertEquals(26, ghost.getCircuitConfig());
+            assertEquals(0, ghost.getStackInSlot(0).stackSize);
+        }
     }
 
     private static void checkTools() {
