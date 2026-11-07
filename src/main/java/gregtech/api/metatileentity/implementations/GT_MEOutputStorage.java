@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToLongFunction;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
@@ -37,6 +41,9 @@ import appeng.me.storage.MEInventoryHandler;
 import appeng.tile.inventory.IAEStackInventory;
 import appeng.util.IterationCounter;
 import appeng.util.Platform;
+import gregtech.api.util.GTWaila;
+import gregtech.api.util.GT_Utility;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 
 /** Cell capacity, local-cell mode and flush timing, adapted from GTNH's ME output provider. */
 public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider {
@@ -180,6 +187,159 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
         return defaultCapacity;
     }
 
+    public List<T> getCellContents() {
+        updateCell();
+        List<T> contents = new ArrayList<>();
+        if (cell != null) {
+            IItemList<T> available = cell.getAvailableItems(
+                    (IItemList<T>) cell.getStackType().createPrimitiveList(), IterationCounter.fetchNewId());
+            for (T stack : available) {
+                contents.add(stack.copy());
+            }
+        }
+        return contents;
+    }
+
+    /**
+     * Scanner and WAILA follow GTNH's MTEHatchOutputMEBase, including fixes #7854 and #8593.
+     * The legacy scanner API accepts translated strings instead of GTNH's encoded translation arguments.
+     */
+    public String[] getInfoData(List<T> cached, String langBaseKey, Function<T, String> nameGetter) {
+        updateCell();
+        List<String> info = new ArrayList<>();
+        AENetworkProxy grid = proxy.get();
+        info.add(grid != null && grid.isActive()
+                ? StatCollector.translateToLocal("GT5U.infodata.hatch.crafting_input_me.bus.online")
+                : StatCollector.translateToLocalFormatted("GT5U.infodata.hatch.crafting_input_me.bus.offline", ""));
+        String unit = channel == StorageChannel.FLUIDS ? " L" : "";
+        info.add(StatCollector.translateToLocalFormatted(langBaseKey + ".cache_capacity",
+                EnumChatFormatting.GOLD + GT_Utility.formatNumbers(getCapacity()) + unit + EnumChatFormatting.RESET));
+        processInfoData(langBaseKey, nameGetter, cached, info, unit);
+        if (cacheMode && cell != null) {
+            info.add(StatCollector.translateToLocal("GT5U.waila.hatch.outputme.storage_cache"));
+            processInfoData(langBaseKey, nameGetter, getCellContents(), info, unit);
+        }
+        return info.toArray(new String[0]);
+    }
+
+    private void processInfoData(
+        String langBaseKey,
+        Function<T, String> nameGetter,
+        List<T> stacks,
+        List<String> info,
+        String unit
+    ) {
+        if (stacks.isEmpty()) {
+            info.add(StatCollector.translateToLocal(langBaseKey + ".empty"));
+        } else {
+            info.add(StatCollector.translateToLocalFormatted(langBaseKey + ".contains", stacks.size()));
+            for (int i = 0; i < Math.min(100, stacks.size()); i++) {
+                T stack = stacks.get(i);
+                info.add(nameGetter.apply(stack) + ": " + EnumChatFormatting.GOLD
+                        + GT_Utility.formatNumbers(stack.getStackSize()) + unit + EnumChatFormatting.RESET);
+            }
+        }
+    }
+
+    private void processWailaNBTData(NBTTagCompound tag, String listKey, String countKey, List<T> stacks) {
+        tag.setInteger(countKey, stacks.size());
+        NBTTagList list = new NBTTagList();
+        tag.setTag(listKey, list);
+        stacks.sort((a, b) -> Long.compare(b.getStackSize(), a.getStackSize()));
+        for (int i = 0; i < Math.min(10, stacks.size()); i++) {
+            T stack = stacks.get(i);
+            NBTTagCompound stackTag = new NBTTagCompound();
+            stack.writeToNBT(stackTag);
+            stackTag.setLong("Amount", stack.getStackSize());
+            list.appendTag(stackTag);
+        }
+    }
+
+    public void getWailaNBTData(NBTTagCompound tag, List<T> cached) {
+        tag.setLong("cacheCapacity", getCapacity());
+        tag.setInteger("refreshTime", refreshTicks);
+        tag.setInteger("ticksToFlush", (int) Math.max(0, lastOutputTick + refreshTicks - currentTick));
+        processWailaNBTData(tag, "stacks", "stackCount", cached);
+        if (cacheMode && cell != null) {
+            processWailaNBTData(tag, "cacheStacks", "cacheCount", getCellContents());
+        } else {
+            tag.removeTag("cacheStacks");
+            tag.removeTag("cacheCount");
+        }
+    }
+
+    /** Client rendering from GTNH's WailaHelper; names are resolved from the synchronized NBT. */
+    public static class WailaHelper {
+
+        private static String getLocalizedName(String prefix, NBTTagCompound tag) {
+            if ("fluid".equals(prefix)) {
+                FluidStack fluid = FluidStack.loadFluidStackFromNBT(tag);
+                return fluid == null ? null : fluid.getLocalizedName();
+            }
+            ItemStack stack = ItemStack.loadItemStackFromNBT(tag);
+            return stack == null ? null : stack.getDisplayName();
+        }
+
+        private static int processWailaCache(
+            String prefix,
+            List<String> tooltip,
+            String listKey,
+            String countKey,
+            NBTTagCompound tag,
+            boolean showStackCount
+        ) {
+            NBTTagList stacks = tag.getTagList(listKey, 10);
+            int stackCount = tag.getInteger(countKey);
+            if (stackCount == 0) {
+                tooltip.add(StatCollector.translateToLocal("GT5U.waila.hatch.outputme." + prefix + "_cache_empty"));
+                return 0;
+            }
+            if (showStackCount) {
+                tooltip.add(StatCollector.translateToLocalFormatted("GT5U.waila.hatch.outputme."
+                        + prefix + "_cache_detail", stackCount, stackCount > 1 ? "s" : ""));
+            }
+            for (int i = 0; i < stacks.tagCount(); i++) {
+                NBTTagCompound stackTag = stacks.getCompoundTagAt(i);
+                String name = getLocalizedName(prefix, stackTag);
+                if (name != null) {
+                    tooltip.add(GTWaila.getStackListLine(name, stackTag.getLong("Amount")));
+                }
+            }
+            if (stackCount > stacks.tagCount()) {
+                tooltip.add(StatCollector.translateToLocalFormatted("GT5U.waila.hatch.outputme."
+                        + prefix + "_cache_detail.more", stackCount - stacks.tagCount()));
+            }
+            return stackCount;
+        }
+
+        public static boolean hasWailaAdvancedBody(IWailaDataAccessor accessor) {
+            return accessor.getNBTData().hasKey("cacheCount");
+        }
+
+        public static void getWailaAdvancedBody(String prefix, List<String> tooltip, IWailaDataAccessor accessor) {
+            NBTTagCompound tag = accessor.getNBTData();
+            if (tag.hasKey("cacheCount")) {
+                tooltip.add(StatCollector.translateToLocal("GT5U.waila.hatch.outputme.storage_cache"));
+                processWailaCache(prefix, tooltip, "cacheStacks", "cacheCount", tag, true);
+            }
+        }
+
+        public static void getWailaCacheBody(String prefix, List<String> tooltip, IWailaDataAccessor accessor) {
+            NBTTagCompound tag = accessor.getNBTData();
+            int stackCount = processWailaCache(prefix, tooltip, "stacks", "stackCount", tag, false);
+            int intervalSeconds = tag.getInteger("refreshTime") / 20;
+            if (stackCount == 0) {
+                tooltip.add(StatCollector.translateToLocalFormatted(
+                        "GT5U.waila.hatch.outputme.flush_interval.idle", intervalSeconds));
+            } else {
+                tooltip.add(StatCollector.translateToLocalFormatted(
+                        "GT5U.waila.hatch.outputme.flush_interval",
+                        intervalSeconds,
+                        tag.getInteger("ticksToFlush") / 20));
+            }
+        }
+    }
+
     public boolean isVoidCell() {
         updateCell();
         return voidCell;
@@ -187,6 +347,11 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
 
     public boolean canAccept(long buffered) {
         return buffered < getCapacity() || lastInputTick == currentTick;
+    }
+
+    public boolean canAccept(long buffered, long amount) {
+        // GTNH #7570: Check Mode also enforces the physical buffer limit without a cell.
+        return checkMode ? amount <= getCapacity() - buffered : canAccept(buffered);
     }
 
     public void accepted() {

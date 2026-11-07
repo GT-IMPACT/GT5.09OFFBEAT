@@ -1,12 +1,15 @@
 package gregtech.api.metatileentity.implementations;
 
+import java.io.InputStream;
+import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +17,13 @@ import java.util.List;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,6 +31,9 @@ import net.minecraftforge.fluids.FluidStack;
 import org.junit.Test;
 
 import appeng.api.config.AccessRestriction;
+import appeng.core.AEConfig;
+import appeng.core.AppEng;
+import com.google.common.collect.HashBiMap;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Upgrades;
@@ -47,8 +57,12 @@ import appeng.api.util.AEColor;
 import appeng.items.storage.ItemVoidStorageCell;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.tile.inventory.IAEStackInventory;
+import appeng.util.item.AEItemStack;
+import appeng.util.item.AEFluidStack;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.server.FMLServerHandler;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.OutputBusType;
@@ -59,6 +73,8 @@ import gregtech.api.logic.ProcessingOutputs;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -124,6 +140,16 @@ public class GT_Mui2MEOutputLogicTest {
         run("void");
     }
 
+    @Test
+    public void offlineBuffersAndCellsRemainVisibleInScannerAndWailaSnapshots() throws Throwable {
+        run("display");
+    }
+
+    @Test
+    public void offlineCheckModeWithoutACellEnforcesCapacityAndKeepsRejectedOutput() throws Throwable {
+        run("offlineCapacity");
+    }
+
     private void run(String scenario) throws Throwable {
         try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
             runtime.run(getClass(), scenario, "");
@@ -159,6 +185,10 @@ public class GT_Mui2MEOutputLogicTest {
             checkCapacityOverrides();
         } else if ("void".equals(scenario)) {
             checkVoidCells();
+        } else if ("display".equals(scenario)) {
+            checkDisplay();
+        } else if ("offlineCapacity".equals(scenario)) {
+            checkOfflineCapacity();
         } else {
             throw new AssertionError(scenario);
         }
@@ -752,6 +782,194 @@ public class GT_Mui2MEOutputLogicTest {
         return (ItemVoidStorageCell) constructor.newInstance();
     }
 
+    private static void checkDisplay() throws Exception {
+        Launch.classLoader.registerTransformer("cpw.mods.fml.common.asm.transformers.EventSubscriptionTransformer");
+        FMLServerHandler.instance();
+        AEConfig.instance = new AEConfig(new File("build/tmp/me-output-display/AppliedEnergistics2.cfg"));
+        Launch.classLoader.registerTransformer("appeng.transformer.asm.ASMIntegration");
+        LoadController controller = new LoadController(Loader.instance());
+        HashBiMap<ModContainer, Object> modObjects = HashBiMap.create();
+        ModContainer aeMod = (ModContainer) Proxy.newProxyInstance(GT_Mui2MEOutputLogicTest.class.getClassLoader(),
+                new Class<?>[] { ModContainer.class }, (proxy, method, args) ->
+                        "getModId".equals(method.getName()) ? "appliedenergistics2"
+                                : defaultValue(method.getReturnType()));
+        modObjects.put(aeMod, AppEng.instance());
+        GT_ProcessingTestSupport.setField(controller, "modObjectList", modObjects);
+        GT_ProcessingTestSupport.setField(Loader.instance(), "modController", controller);
+        try (InputStream language = GT_Mui2MEOutputLogicTest.class
+                .getResourceAsStream("/assets/gregtech/lang/en_US.lang")) {
+            StringTranslate.inject(language);
+        }
+        Bus bus = new Bus();
+        Hatch hatch = new Hatch();
+        bus.storeAll(new ItemStack(Items.iron_ingot, 192));
+        hatch.fill(new FluidStack(FluidRegistry.WATER, 64000), true);
+        String itemName = new ItemStack(Items.iron_ingot).getDisplayName();
+        String fluidName = new FluidStack(FluidRegistry.WATER, 1).getLocalizedName();
+        assertTrue(scanner(bus).contains(itemName + ": 192"));
+        assertTrue(scanner(hatch).contains(fluidName + ": 64,000 L"));
+        assertTrue(scanner(bus).contains("1,600"));
+        assertTrue(scanner(hatch).contains("128,000 L"));
+        assertFalse(scanner(bus).contains("Storage Cache:"));
+        assertEquals(0, hatch.getCapacity());
+        assertEquals(0, hatch.getTankInfo(ForgeDirection.NORTH).length);
+        checkWailaSnapshot(bus, 192, false);
+        checkWailaSnapshot(hatch, 64000, false);
+
+        NBTTagCompound saved = new NBTTagCompound();
+        bus.saveNBTData(saved);
+        Bus restoredBus = new Bus();
+        restoredBus.loadNBTData(saved);
+        assertEquals(scanner(bus), scanner(restoredBus));
+        saved = new NBTTagCompound();
+        hatch.saveNBTData(saved);
+        Hatch restoredHatch = new Hatch();
+        restoredHatch.loadNBTData(saved);
+        assertEquals(scanner(hatch), scanner(restoredHatch));
+
+        CellFixture<IAEItemStack> items = new CellFixture<>(StorageChannel.ITEMS, IAEItemStack.class);
+        CellFixture<IAEFluidStack> fluids = new CellFixture<>(StorageChannel.FLUIDS, IAEFluidStack.class);
+        items.contents.add(AEItemStack.create(new ItemStack(Items.gold_ingot)).setStackSize(192));
+        fluids.contents.add(AEFluidStack.create(new FluidStack(FluidRegistry.LAVA, 1)).setStackSize(64000));
+        GT_ProcessingTestSupport.setField(bus, "storage", items.storage);
+        GT_ProcessingTestSupport.setField(hatch, "storage", fluids.storage);
+        assertFalse("A cell outside cache mode is not exposed as output storage",
+                scanner(bus).contains("Storage Cache:"));
+        items.storage.setCacheMode(true);
+        fluids.storage.setCacheMode(true);
+        assertTrue(scanner(bus).contains(new ItemStack(Items.gold_ingot).getDisplayName() + ": 192"));
+        assertTrue(scanner(hatch).contains(new FluidStack(FluidRegistry.LAVA, 1).getLocalizedName() + ": 64,000 L"));
+        assertTrue(scanner(bus).contains("Storage Cache:"));
+        assertTrue(scanner(hatch).contains("Storage Cache:"));
+        checkWailaSnapshot(bus, 192, true);
+        checkWailaSnapshot(hatch, 64000, true);
+        assertEquals(192, items.contents.get(0).getStackSize());
+        assertEquals(64000, fluids.contents.get(0).getStackSize());
+        items.storage.getCellContents().get(0).setStackSize(1);
+        assertEquals("Inspection returns copies, never live cell entries", 192, items.contents.get(0).getStackSize());
+
+        items.contents.clear();
+        long largeAmount = (long) Integer.MAX_VALUE + 100;
+        for (int i = 0; i < 105; i++) {
+            items.contents.add(AEItemStack.create(item("display_" + i, 1)).setStackSize(largeAmount + i));
+        }
+        String[] scanner = bus.getInfoData();
+        assertEquals("Scanner limits each section to 100 entries", 106, scanner.length);
+        NBTTagCompound tag = new NBTTagCompound();
+        bus.getWailaNBTData(null, null, tag, null, 0, 0, 0);
+        assertEquals(105, tag.getInteger("cacheCount"));
+        assertEquals(10, tag.getTagList("cacheStacks", 10).tagCount());
+        assertEquals(largeAmount + 104, tag.getTagList("cacheStacks", 10).getCompoundTagAt(0).getLong("Amount"));
+        IWailaDataAccessor accessor = accessor(tag);
+        List<String> tooltip = new ArrayList<>();
+        bus.getWailaAdvancedBody(null, tooltip, accessor, config());
+        assertTrue(String.join("\n", tooltip).contains("95 more"));
+        items.network.active = true;
+        assertFalse("The network can read the cell while online",
+                items.storage.getCellArray(StorageChannel.ITEMS).isEmpty());
+        items.network.active = false;
+        assertTrue(items.storage.getCellArray(StorageChannel.ITEMS).isEmpty());
+        assertTrue("Offline scanner still lists the cell", scanner(bus).contains("105 cached stacks"));
+        checkClientLocalization(bus, Items.iron_ingot.getUnlocalizedName() + ".name");
+        checkClientLocalization(hatch, "tile.water.name");
+    }
+
+    private static void checkClientLocalization(MetaTileEntity machine, String nameKey) throws Exception {
+        NBTTagCompound tag = new NBTTagCompound();
+        machine.getWailaNBTData(null, null, tag, null, 0, 0, 0);
+        try (InputStream language = new ByteArrayInputStream(
+                (nameKey + "=Client localized name\n").getBytes(StandardCharsets.UTF_8))) {
+            StringTranslate.inject(language);
+        }
+        List<String> tooltip = new ArrayList<>();
+        machine.getWailaBody(null, tooltip, accessor(tag), config());
+        assertTrue("WAILA must resolve names on the client after receiving the NBT: " + nameKey + " " + tooltip,
+                String.join("\n", tooltip).contains("Client localized name"));
+    }
+
+    private static void checkOfflineCapacity() {
+        for (boolean cacheMode : new boolean[] { false, true }) {
+            Bus bus = new Bus();
+            Hatch hatch = new Hatch();
+            bus.getMEOutputStorage().setCacheMode(cacheMode);
+            hatch.getMEOutputStorage().setCacheMode(cacheMode);
+            bus.getMEOutputStorage().setCheckMode(true);
+            hatch.getMEOutputStorage().setCheckMode(true);
+            ItemStack tooMany = new ItemStack(Items.iron_ingot, 1601);
+            assertFalse(bus.storeAll(tooMany));
+            assertEquals(1601, tooMany.stackSize);
+            assertEquals(0, bus.getMEOutputAmount());
+            assertEquals(0, hatch.fill(new FluidStack(FluidRegistry.WATER, 128001), false));
+            assertEquals(0, hatch.fill(new FluidStack(FluidRegistry.WATER, 128001), true));
+            assertEquals(0, hatch.getMEOutputAmount());
+            assertTrue(bus.storeAll(new ItemStack(Items.iron_ingot, 1599)));
+            assertEquals(127999, hatch.fill(new FluidStack(FluidRegistry.WATER, 127999), true));
+            assertFalse(bus.storeAll(new ItemStack(Items.gold_ingot, 2)));
+            assertEquals(0, hatch.fill(new FluidStack(FluidRegistry.LAVA, 2), true));
+            assertTrue(bus.storeAll(new ItemStack(Items.gold_ingot, 1)));
+            assertEquals(1, hatch.fill(new FluidStack(FluidRegistry.LAVA, 1), false));
+            assertEquals(127999, hatch.getMEOutputAmount());
+            assertEquals(1, hatch.fill(new FluidStack(FluidRegistry.LAVA, 1), true));
+            assertFalse(bus.storeAll(new ItemStack(Items.gold_ingot, 1)));
+            assertEquals(0, hatch.fill(new FluidStack(FluidRegistry.LAVA, 1), true));
+            assertEquals(1600, bus.getMEOutputAmount());
+            assertEquals(128000, hatch.getMEOutputAmount());
+
+            bus.getMEOutputStorage().setCheckMode(false);
+            hatch.getMEOutputStorage().setCheckMode(false);
+            assertTrue("The same-tick allowance remains available outside Check Mode",
+                    bus.storeAll(new ItemStack(Items.iron_ingot, 64)));
+            assertEquals(1000, hatch.fill(new FluidStack(FluidRegistry.WATER, 1000), true));
+            bus.onPostTick(bus.getBaseMetaTileEntity(), 1);
+            hatch.onPostTick(hatch.getBaseMetaTileEntity(), 1);
+            assertFalse(bus.storeAll(new ItemStack(Items.iron_ingot, 1)));
+            assertEquals(0, hatch.fill(new FluidStack(FluidRegistry.WATER, 1), true));
+            assertEquals(1664, bus.getMEOutputAmount());
+            assertEquals(129000, hatch.getMEOutputAmount());
+        }
+    }
+
+    private static String scanner(MetaTileEntity machine) {
+        return EnumChatFormatting.getTextWithoutFormattingCodes(String.join("\n", machine.getInfoData()));
+    }
+
+    private static void checkWailaSnapshot(MetaTileEntity machine, long amount, boolean hasCell) {
+        NBTTagCompound tag = new NBTTagCompound();
+        machine.getWailaNBTData(null, null, tag, null, 0, 0, 0);
+        assertEquals(1, tag.getInteger("stackCount"));
+        assertEquals(amount, tag.getTagList("stacks", 10).getCompoundTagAt(0).getLong("Amount"));
+        assertEquals(hasCell, tag.hasKey("cacheCount"));
+        if (hasCell) {
+            assertEquals(amount, tag.getTagList("cacheStacks", 10).getCompoundTagAt(0).getLong("Amount"));
+        }
+        IWailaDataAccessor accessor = accessor(tag);
+        assertEquals(hasCell, machine.hasWailaAdvancedBody(null, accessor, config()));
+        List<String> tooltip = new ArrayList<>();
+        machine.getWailaBody(null, tooltip, accessor, config());
+        assertFalse(String.join("\n", tooltip).contains("Storage Cache:"));
+        tooltip.clear();
+        machine.getWailaAdvancedBody(null, tooltip, accessor, config());
+        assertEquals(hasCell, String.join("\n", tooltip).contains("Storage Cache:"));
+        if (hasCell) {
+            String prefix = machine instanceof Bus ? "item" : "fluid";
+            String empty = StatCollector.translateToLocal("GT5U.waila.hatch.outputme." + prefix + "_cache_empty");
+            assertFalse("Cell names and amounts must deserialize on the client",
+                    String.join("\n", tooltip).contains(empty));
+            assertEquals(3, tooltip.size());
+        }
+    }
+
+    private static IWailaDataAccessor accessor(NBTTagCompound tag) {
+        return (IWailaDataAccessor) Proxy.newProxyInstance(GT_Mui2MEOutputLogicTest.class.getClassLoader(),
+                new Class<?>[] { IWailaDataAccessor.class }, (proxy, method, args) ->
+                        "getNBTData".equals(method.getName()) ? tag : defaultValue(method.getReturnType()));
+    }
+
+    private static IWailaConfigHandler config() {
+        return (IWailaConfigHandler) Proxy.newProxyInstance(GT_Mui2MEOutputLogicTest.class.getClassLoader(),
+                new Class<?>[] { IWailaConfigHandler.class }, (proxy, method, args) -> true);
+    }
+
     private static ItemStack item(String variant, int count) {
         ItemStack item = new ItemStack(Items.gold_ingot, count);
         item.setTagCompound(new NBTTagCompound());
@@ -1064,6 +1282,7 @@ public class GT_Mui2MEOutputLogicTest {
         long buffered;
         long simulated;
         boolean filtered;
+        final List<T> contents = new ArrayList<>();
 
         @SuppressWarnings("unchecked")
         CellFixture(StorageChannel channel, Class<T> stackType) {
@@ -1099,6 +1318,8 @@ public class GT_Mui2MEOutputLogicTest {
                                 return filtered;
                             case "canAccept":
                                 return !filtered;
+                            case "getAvailableItems":
+                                return itemList();
                             case "injectItems":
                                 T input = (T) args[0];
                                 assertEquals(Actionable.SIMULATE, args[1]);
@@ -1132,7 +1353,7 @@ public class GT_Mui2MEOutputLogicTest {
             return (IItemList<T>) Proxy.newProxyInstance(
                 getClass().getClassLoader(),
                 new Class<?>[] { IItemList.class },
-                (proxy, method, args) -> "iterator".equals(method.getName()) ? Collections.<T>emptyList().iterator()
+                (proxy, method, args) -> "iterator".equals(method.getName()) ? contents.iterator()
                         : defaultValue(method.getReturnType())
             );
         }

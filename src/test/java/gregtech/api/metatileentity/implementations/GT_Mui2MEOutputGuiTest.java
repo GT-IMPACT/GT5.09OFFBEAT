@@ -214,12 +214,12 @@ public class GT_Mui2MEOutputGuiTest {
         assertTrue(fixture.storage.isCacheMode());
         fixture.priority.getOnUpdateListener().accept(fixture.priority);
         assertTrue(fixture.priority.isEnabled());
-        for (int priority : new int[]{1, 73, Integer.MAX_VALUE}) {
+        for (int priority : new int[]{Integer.MIN_VALUE, -42, 0, 1, 73, Integer.MAX_VALUE}) {
             sendInt(fixture.priority, priority);
             assertEquals(priority, fixture.storage.getPriority());
         }
-        assertEquals(1d, fixture.priority.parse(fixture.priority.getValidator().apply("0")), 0d);
-        assertEquals(1d, fixture.priority.parse(fixture.priority.getValidator().apply("-42")), 0d);
+        assertEquals(0d, fixture.priority.parse(fixture.priority.getValidator().apply("0")), 0d);
+        assertEquals(-42d, fixture.priority.parse(fixture.priority.getValidator().apply("-42")), 0d);
         assertEquals(Integer.MAX_VALUE,
             fixture.priority.parse(fixture.priority.getValidator().apply("2147483648")), 0d);
         boolean previousAe = GregTech_API.mAE2;

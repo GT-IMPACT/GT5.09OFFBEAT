@@ -18,6 +18,7 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -112,7 +113,9 @@ public class GT_MEOutputTest {
         assertEquals(1000000L + Integer.MAX_VALUE, fluidCount(hatch));
         hatch.onPostTick(hatch.getBaseMetaTileEntity(), 1);
         assertEquals("Full offline hatch rejects the next tick's output", 0, hatch.fill(water, true));
-        assertEquals(128000, hatch.getCapacity());
+        assertEquals(0, hatch.getCapacity());
+        assertEquals(128000, hatch.getMEOutputStorage().getCapacity());
+        assertEquals(0, hatch.getTankInfo(ForgeDirection.NORTH).length);
         NBTTagCompound nbt = new NBTTagCompound();
         hatch.setItemNBT(nbt);
         Hatch restoredHatch = new Hatch();
@@ -264,7 +267,7 @@ public class GT_MEOutputTest {
                     (p, m, a) -> true);
             List<String> tooltip = new ArrayList<>();
             hatch.getWailaBody(null, tooltip, accessor, config);
-            assertEquals(3, tooltip.size());
+            assertEquals(6, tooltip.size());
             assertEquals(expected[i], tooltip.get(1));
             assertTrue(tooltip.get(2).contains("ID: 7"));
             config = (IWailaConfigHandler) Proxy.newProxyInstance(

@@ -10,7 +10,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -33,6 +36,7 @@ import appeng.api.util.AEColor;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import appeng.util.item.AEFluidStack;
 import cpw.mods.fml.common.Optional;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
@@ -46,6 +50,8 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.modularui.hatch.MTEHatchOutputMEGui;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 
 /**
  * Fluid output adapted from GTNH's MTEHatchOutputME and MTEHatchOutputMEBase
@@ -139,7 +145,7 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
         if (!GregTech_API.mAE2 || aFluid == null || aFluid.getFluid() == null || aFluid.amount <= 0) {
             return 0;
         }
-        if (!storage.canAccept(getMEOutputAmount()) || !canStore(aFluid)) {
+        if (!storage.canAccept(getMEOutputAmount(), aFluid.amount) || !canStore(aFluid)) {
             return 0;
         }
         int accepted = aFluid.amount;
@@ -167,7 +173,7 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
 
     @Override
     public int getCapacity() {
-        return (int) Math.min(Integer.MAX_VALUE, storage.getCapacity());
+        return 0;
     }
 
     @Override
@@ -509,19 +515,66 @@ public class GT_MetaTileEntity_Hatch_Output_ME extends GT_MetaTileEntity_Hatch_O
         return true;
     }
 
+    private List<IAEFluidStack> getCacheList() {
+        List<IAEFluidStack> stacks = new ArrayList<>();
+        for (FluidStack cached : cachedFluids) {
+            stacks.add(AEFluidStack.create(cached));
+        }
+        return stacks;
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(
+        EntityPlayerMP player,
+        TileEntity tile,
+        NBTTagCompound tag,
+        World world,
+        int x,
+        int y,
+        int z
+    ) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        storage.getWailaNBTData(tag, getCacheList());
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(
+        ItemStack stack,
+        List<String> tooltip,
+        IWailaDataAccessor accessor,
+        IWailaConfigHandler config
+    ) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        tooltip.add(StatCollector.translateToLocalFormatted(
+                "GT5U.waila.hatch.outputme.fluid_cache_capacity",
+                GT_Utility.formatNumbers(accessor.getNBTData().getLong("cacheCapacity"))));
+        GT_MEOutputStorage.WailaHelper.getWailaCacheBody("fluid", tooltip, accessor);
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public boolean hasWailaAdvancedBody(ItemStack stack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        return GT_MEOutputStorage.WailaHelper.hasWailaAdvancedBody(accessor);
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaAdvancedBody(
+        ItemStack stack,
+        List<String> tooltip,
+        IWailaDataAccessor accessor,
+        IWailaConfigHandler config
+    ) {
+        super.getWailaAdvancedBody(stack, tooltip, accessor, config);
+        GT_MEOutputStorage.WailaHelper.getWailaAdvancedBody("fluid", tooltip, accessor);
+    }
+
     @Override
     public String[] getInfoData() {
-        List<String> info = new ArrayList<String>();
-        long amount = 0;
-        for (FluidStack cached : cachedFluids) {
-            amount += cached.amount;
-        }
-        info.add("ME Output Hatch: " + GT_Utility.formatNumbers(amount) + " / "
-                + GT_Utility.formatNumbers(storage.getCapacity()) + " L buffered");
-        for (FluidStack cached : cachedFluids) {
-            info.add(cached.getLocalizedName() + ": " + GT_Utility.formatNumbers(cached.amount) + " L");
-        }
-        return info.toArray(new String[info.size()]);
+        return storage.getInfoData(getCacheList(), "GT5U.infodata.hatch.output_me",
+                stack -> stack.getFluidStack().getLocalizedName());
     }
 
     @Override

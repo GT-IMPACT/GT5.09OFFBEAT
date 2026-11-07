@@ -10,7 +10,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.factory.PosGuiData;
@@ -32,6 +35,7 @@ import appeng.api.util.AEColor;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.Optional;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
@@ -44,6 +48,8 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.modularui.hatch.MTEHatchOutputBusMEGui;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 
 public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatch_OutputBus
         implements IMEOutput, IPowerChannelState {
@@ -153,7 +159,7 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
         if (!GregTech_API.mAE2 || aStack == null || aStack.stackSize <= 0) {
             return false;
         }
-        if (!storage.canAccept(getMEOutputAmount()) || !canStore(aStack)) {
+        if (!storage.canAccept(getMEOutputAmount(), aStack.stackSize) || !canStore(aStack)) {
             return false;
         }
         storage.accepted();
@@ -617,19 +623,66 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
         return true;
     }
 
+    private List<IAEItemStack> getCacheList() {
+        List<IAEItemStack> stacks = new ArrayList<>();
+        for (ItemStack cached : cachedItems) {
+            stacks.add(AEItemStack.create(cached));
+        }
+        return stacks;
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaNBTData(
+        EntityPlayerMP player,
+        TileEntity tile,
+        NBTTagCompound tag,
+        World world,
+        int x,
+        int y,
+        int z
+    ) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        storage.getWailaNBTData(tag, getCacheList());
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaBody(
+        ItemStack stack,
+        List<String> tooltip,
+        IWailaDataAccessor accessor,
+        IWailaConfigHandler config
+    ) {
+        super.getWailaBody(stack, tooltip, accessor, config);
+        tooltip.add(StatCollector.translateToLocalFormatted(
+                "GT5U.waila.hatch.outputme.item_cache_capacity",
+                GT_Utility.formatNumbers(accessor.getNBTData().getLong("cacheCapacity"))));
+        GT_MEOutputStorage.WailaHelper.getWailaCacheBody("item", tooltip, accessor);
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public boolean hasWailaAdvancedBody(ItemStack stack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        return GT_MEOutputStorage.WailaHelper.hasWailaAdvancedBody(accessor);
+    }
+
+    @Override
+    @Optional.Method(modid = "Waila")
+    public void getWailaAdvancedBody(
+        ItemStack stack,
+        List<String> tooltip,
+        IWailaDataAccessor accessor,
+        IWailaConfigHandler config
+    ) {
+        super.getWailaAdvancedBody(stack, tooltip, accessor, config);
+        GT_MEOutputStorage.WailaHelper.getWailaAdvancedBody("item", tooltip, accessor);
+    }
+
     @Override
     public String[] getInfoData() {
-        List<String> info = new ArrayList<String>();
-        long amount = 0;
-        for (ItemStack cached : cachedItems) {
-            amount += cached.stackSize;
-        }
-        info.add("ME Output Bus: " + GT_Utility.formatNumbers(amount) + " / "
-                + GT_Utility.formatNumbers(storage.getCapacity()) + " items buffered");
-        for (ItemStack cached : cachedItems) {
-            info.add(cached.getDisplayName() + ": " + GT_Utility.formatNumbers(cached.stackSize));
-        }
-        return info.toArray(new String[info.size()]);
+        return storage.getInfoData(getCacheList(), "GT5U.infodata.hatch.output_bus_me",
+                stack -> stack.getItemStack().getDisplayName());
     }
 
     @Optional.Method(modid = "appliedenergistics2")

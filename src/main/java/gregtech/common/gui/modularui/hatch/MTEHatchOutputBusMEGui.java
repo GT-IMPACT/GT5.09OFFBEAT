@@ -61,7 +61,7 @@ public class MTEHatchOutputBusMEGui extends MTEHatchBaseGui<GT_MetaTileEntity_Ha
                 .size(75, 14)
                 .formatAsInteger(true)
                 .value(prioritySyncer)
-                .numbersInt(1, Integer.MAX_VALUE)
+                .numbersInt(Integer.MIN_VALUE, Integer.MAX_VALUE)
                 .setMaxLength(10)
                 .tooltip(t -> t.addLine(IKey.lang("gui.appliedenergistics2.Priority")))
                 .setEnabledIf(t -> isCaching.getBoolValue())

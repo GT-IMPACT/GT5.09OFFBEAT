@@ -1,9 +1,16 @@
 package gregtech.api.util;
 
+import appeng.util.ReadableNumberConverter;
 import mcp.mobius.waila.api.SpecialChars;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
 public abstract class GTWaila {
+
+    public static String getStackListLine(String name, long amount) {
+        return name + ": " + EnumChatFormatting.GOLD
+                + ReadableNumberConverter.INSTANCE.toWideReadableForm(amount) + EnumChatFormatting.RESET;
+    }
 
     public static String getMachineProgressString(boolean isActive, int maxProgresstime, int progresstime) {
         return getMachineProgressString(isActive, true, maxProgresstime, (long) progresstime);
