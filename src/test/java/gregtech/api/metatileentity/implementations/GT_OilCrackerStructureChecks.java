@@ -305,11 +305,11 @@ final class GT_OilCrackerStructureChecks {
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "5 x 3 x 3" : "5 × 3 × 3"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("18"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
-            assertTrue(structure.contains("gt_hatch"));
+            assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.BLUE,
                     EnumChatFormatting.AQUA, EnumChatFormatting.GOLD}) {
-                String marker = color + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));
             }

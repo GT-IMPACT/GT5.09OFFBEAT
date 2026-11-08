@@ -57,19 +57,22 @@ public class GT_MetaTileEntity_LargeChemicalReactor
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Large Chemical Reactor")
-                .addInfo("Has the same recipes as the Chemical Reactor")
-                .addInfo("Accepts fluids instead of fluid cells")
+                .addInfo("Has the same recipes as the Chemical Reactor.")
+                .addInfo("Accepts fluids instead of fluid cells.")
                 .beginStructureBlock(3, 3, 3, false)
-                .addController("Front center")
-                .addRequirements(SHELL, "Any outer casing position, except the coil", SHELL_HINT)
-                .addOtherStructurePart(Casings.PTFE_PIPE, "Center of the structure", 1)
-                .addOtherStructurePart(Casings.CUPRONICKEL_COIL,
-                        "Any of the five faces adjacent to the PTFE pipe, except the controller", 1)
-                .addStructureInfo("At least one cupronickel coil must touch the PTFE pipe; additional cupronickel coils at these five positions are allowed.")
-                .addStructureInfo("Construction keeps existing coils, or places one in a free position next to the PTFE pipe.")
-                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the chemical reactor shell.")
+                .addController("front center")
+                .addStructureSection("Components")
+                .addOtherStructurePart(SHELL.getCasing(), "8+; fill unused shell positions")
+                .addOtherStructurePart(Casings.PTFE_PIPE, "exactly 1; center of the structure")
+                .addOtherStructurePart(Casings.CUPRONICKEL_COIL, "1-5; touching the pipe, except toward the controller")
+                .addStructureInfo("Construction keeps existing coils or places one in a free position if needed.")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Input and Output", "1+ bus or hatch each; shell")
+                .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: available hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 

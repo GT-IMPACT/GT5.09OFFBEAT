@@ -57,21 +57,34 @@ public abstract class GT_MetaTileEntity_LargeBoiler
 
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
+        int steamPerSecond = getEUt() * 40;
+        long steamPerCoal = getEUt() * 2L * runtimeBoost(20);
+        int minimumSteamPerSecond = Math.max(25, getEUt() - 25 * GT_IntegratedCircuit_Item.MAX_CONFIG) * 40;
+
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Large Boiler")
-                .addInfo("Produces " + (getEUt() * 40) * (runtimeBoost(20) / 20f) + "L of Steam with 1 Coal at " + getEUt() * 40 + "L/s")
-                .addInfo("A programmed circuit in the main block throttles the boiler (-1000L/s per config)")
-                .addInfo(String.format(Locale.ROOT, "Diesel fuels have 1/4 efficiency - Takes %.2f seconds to heat up", 500.0 / getEfficiencyIncrease()))
-                .addPollutionAmount(20 * getPollutionPerTick(null))
+                .addInfo("Burns solid or liquid fuel to produce steam from water or distilled water.")
+                .addInfo("At full heat without a circuit: %s L/s; %s L of steam per Coal.", steamPerSecond, steamPerCoal)
+                .addInfo("Steam output increases as the boiler heats up.")
+                .addInfo("Circuit: -1000 L/s per setting; minimum %s L/s.", minimumSteamPerSecond)
+                .addInfo("Diesel fuels have 1/4 efficiency.")
+                .addInfo("Running out of water causes an explosion.")
+                .addInfo("Pollution: %s per second before muffler reduction.", 20 * getPollutionPerTick(null))
                 .beginStructureBlock(3, 5, 3, false)
-                .addController("Front center of the bottom firebox layer")
-                .addRequirements(getFireboxRequirements(), "Bottom layer, replacing fireboxes", FIREBOX_HINT)
-                .addRequirements(getShellRequirements(), "Upper four layers, replacing casings", OUTPUT_HINT)
-                .addOtherStructurePart(getPipeType(), "Vertical column in the center, above the bottom layer", 3)
-                .addStructureInfo("Two inputs are required: a water hatch and a fuel hatch or bus.")
-                .addStructureInfo("Compatible IMPACT fluid and combined input hatches are accepted.")
-                .addStructureInfo("The top center is a casing or output hatch, not a pipe or air.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places water/fuel inputs, maintenance and muffler hatches in the firebox, and steam outputs in the boiler casing.")
+                .addController("front center of the bottom layer")
+                .addStructureSection("Components")
+                .addOtherStructurePart(getCasingType(), "24+; fill unused positions in the upper 4 layers")
+                .addOtherStructurePart(getFireboxType(), "3+; fill unused positions in the bottom layer")
+                .addOtherStructurePart(getPipeType(), "exactly 3; center column above the bottom layer, below the roof")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance Hatch", "1; bottom layer")
+                .addHatchInfo("Input Hatches or Buses", "2+ total, including 1+ hatch for water; bottom layer")
+                .addHatchInfo("Output Hatches", "1+; upper 4 layers (steam)")
+                .addHatchInfo("Muffler", "1; bottom layer, keep exhaust clear")
+                .addStructureHint("Bottom: fireboxes or hatches/buses", FIREBOX_HINT)
+                .addStructureHint("Upper layers: casings or output hatches", OUTPUT_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 

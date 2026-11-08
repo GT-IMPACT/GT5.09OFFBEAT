@@ -68,19 +68,30 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
     }
 
     protected MultiblockTooltipBuilder turbineTooltip(String machineType) {
-        return new MultiblockTooltipBuilder(mName)
+        MultiblockTooltipBuilder tooltip = new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType(machineType)
-                .addInfo("Insert a turbine rotor into the controller GUI to store its characteristics.")
-                .addInfo("The installed rotor remains in its slot and cannot be removed or replaced.")
+                .addInfo("Insert a turbine rotor into the controller; it cannot be removed or replaced.")
                 .beginStructureBlock(3, 3, 4, true)
-                .addController("Front center")
-                .addRequirements(getShellRequirements(), "Shell; hatches only at the centers of the four sides in the two middle layers", SIDE_HINT)
-                .addRequirements(getDynamoRequirements(), "Back center", DYNAMO_HINT)
-                .addAir("Two central blocks between the controller and dynamo")
-                .addStructureInfo("The eight side positions accept hatches or casings; all remaining shell positions require casings.")
-                .addStructureInfo("Compatible IMPACT fluid inputs and multi-amp dynamo hatches are accepted.")
-                .addStructureInfo("Controllers of equally oriented large turbines cannot be two blocks apart horizontally.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places the rear Dynamo Hatch and required fluid, maintenance and exhaust hatches for this turbine in its shell.");
+                .addController("front center")
+                .addStructureInfo("Equally facing turbine controllers cannot be 2 blocks apart horizontally.")
+                .addStructureSection("Components")
+                .addOtherStructurePart(getCasingType(), "24+; fill unused casing positions")
+                .addAir("2 blocks between the controller and dynamo")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance Hatch", "1; around the 2 central air blocks")
+                .addHatchInfo("Input Hatches", "1+; around the 2 central air blocks");
+        if (requiresOutputHatch()) {
+            tooltip.addHatchInfo("Output Hatches", "1+; around the 2 central air blocks");
+        }
+        if (getPollutionPerTick(null) > 0) {
+            tooltip.addHatchInfo("Muffler", "1; around the 2 central air blocks, keep exhaust clear");
+        }
+        return tooltip
+                .addHatchInfo("Dynamo Hatch", "exactly 1; center of the back wall")
+                .addStructureHint("Around the central air: casings or hatches", SIDE_HINT)
+                .addStructureHint("Back center: dynamo", DYNAMO_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.");
     }
 
     private StructureRequirements getShellRequirements() {
@@ -146,7 +157,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
                             .buildAndChain(getShellRequirements(), machine -> ++machine.casingCount)
                             .withHint(SIDE_HINT))
                     .addElement('D', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_LargeTurbine.class)
-                            .hint(DYNAMO_HINT)
+                            .hint(getCasingType(), DYNAMO_HINT)
                             .build(getDynamoRequirements()))
                     .build();
         }

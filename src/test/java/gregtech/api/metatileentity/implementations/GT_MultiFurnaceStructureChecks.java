@@ -135,10 +135,14 @@ final class GT_MultiFurnaceStructureChecks {
         f.machine.construct(new ItemStack(Items.stick, (tier + 1) % 10 + 1), true);
         f.world.isRemote = false;
         assertEquals(26, hints.hints);
-        assertEquals(8, hints.hintFrames.size());
+        assertEquals(9, hints.hintFrames.size());
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputBusses.size());
         assertEquals(LEVELS[tier], value(f.machine, "mLevel"));
+        String mufflerKey = TestWorld.key(f.muffler[0], f.muffler[1], f.muffler[2]);
+        assertSame(Casings.HEAT_PROOF.getBlock(), hints.hintBlocks.get(mufflerKey));
+        assertEquals(Casings.HEAT_PROOF.getMetadata(), hints.hintMetadata.get(mufflerKey).intValue());
+        assertSame(HintColor.ORANGE, hints.hintFrames.get(mufflerKey));
         for (int[] p : f.bottom) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(HintColor.GREEN, hints.hintFrames.get(key));
@@ -299,11 +303,14 @@ final class GT_MultiFurnaceStructureChecks {
             assertTrue(info.contains("400"));
             assertFalse(info.contains("gt_hatch"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "8 Heating Coils" : "8 Нагревательные катушки"));
-            assertTrue(structure.contains("gt_hatch"));
+            String coilRequirement = language.equals("en_US")
+                    ? "Heating Coils: exactly 8 of the same tier;"
+                    : "Нагревательные катушки: ровно 8 одного уровня;";
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(coilRequirement));
+            assertFalse(structure.contains("gt_hatch"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("10"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.GOLD}) {
-                String marker = color + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hint.contains(marker));
             }

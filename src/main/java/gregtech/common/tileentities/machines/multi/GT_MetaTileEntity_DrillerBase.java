@@ -356,6 +356,24 @@ public abstract class GT_MetaTileEntity_DrillerBase
                 .toolTipFinisher();
     }
 
+    protected final MultiblockTooltipBuilder addCompactDrillerStructure(MultiblockTooltipBuilder tooltip) {
+        ItemStack frames = GT_OreDictUnificator.get(OrePrefixes.frameGt, getFrameMaterial(), 1);
+
+        return tooltip.useCompactStructure()
+                .addInfo("Minimum combined input voltage: %s.", VN[getMinTier()])
+                .beginStructureBlock(3, 7, 3, false)
+                .addController("front center of the bottom layer")
+                .addStructureSection("Components")
+                .addOtherStructurePart(getCasingType(), "3+; central pillar and unused bottom-layer positions")
+                .addOtherStructurePart(frames, "exactly 15; beside the pillar and above it")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance Hatch", "1; bottom layer")
+                .addHatchInfo("Energy Hatches", "1+; bottom layer")
+                .addHatchInfo("Input and Output Buses", "optional; bottom layer (mining pipes)")
+                .addStructureHint("Bottom: casings or hatches/buses", BASE_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; optional hatches/buses are manual.");
+    }
+
     @Override
     public IStructureDefinition<GT_MetaTileEntity_DrillerBase> getStructureDefinition() {
         if (structureDefinition == null) {

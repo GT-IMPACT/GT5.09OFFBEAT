@@ -30,9 +30,9 @@ public class GT_MetaTileEntity_DieselEngine2 extends GT_MetaTileEntity_DieselEng
     protected MultiblockTooltipBuilder createTooltip() {
         return engineTooltip(new MultiblockTooltipBuilder(mName)
                 .addMachineType("Combustion Engine Mk2")
-                .addInfo("Consumes flammable fuel and lubricant; oxygen enables boosted output")
-                .addInfo("Output: 8192 EU/t normally, 24576 EU/t when boosted")
-                .addInfo("Oxygen: 3 L/t; lubricant: 2 L per 80 ticks (3 L when boosted)"));
+                .addInfo("Consumes flammable fuel and lubricant; oxygen enables boosted output.")
+                .addInfo("Output: 8192 EU/t normally, 24576 EU/t when boosted.")
+                .addInfo("Oxygen: 3 L/t; lubricant: 2 L per 80 ticks (3 L when boosted)."));
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {

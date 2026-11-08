@@ -25,6 +25,9 @@ import space.impact.structures.structure.IStructureDefinition;
  */
 public class MultiblockTooltipBuilder {
     private static final Pattern QUANTITY = Pattern.compile("[0-9]+(?:[.,][0-9]+)*(?:[-–xх×][0-9]+(?:[.,][0-9]+)*)*(?:\\+|[xх×])?");
+    private static final Pattern COMPACT_QUANTITY =
+            Pattern.compile("[0-9]+(?:[.,][0-9]+)*(?:[-–xх×/][0-9]+(?:[.,][0-9]+)*)*(?:\\+|[xх×])?");
+    private static final Pattern LARGE_INTEGER = Pattern.compile("(?<![0-9.,])[0-9]{4,}");
     private final List<String> information = new ArrayList<>();
     private final List<String> structure = new ArrayList<>();
     private final List<String> controls = new ArrayList<>();
@@ -35,6 +38,8 @@ public class MultiblockTooltipBuilder {
     private final Map<String, LinkedHashSet<String>> channelDescriptions = new LinkedHashMap<>();
     private final Map<String, String> defaultChannelDescriptions = new LinkedHashMap<>();
     private final LinkedHashSet<String> masterChannelDescriptions = new LinkedHashSet<>();
+    private boolean structureSections;
+    private boolean compactStructure;
     private boolean finished;
 
     /**
@@ -91,14 +96,24 @@ public class MultiblockTooltipBuilder {
             return "Tiered";
         case "minimum":
             return "At least %s";
+        case "exactly":
+            return "Exactly %s";
+        case "optional_maximum":
+            return "Optional, up to %s";
+        case "legend":
+            return "Hologram";
         case "air":
             return "Required air";
         case "hold_shift":
-            return "Hold Shift to display structure requirements";
+            return "Hold %s to display structure requirements";
         case "hold_ctrl":
             return "Hold Ctrl to display machine controls";
         case "projector":
             return "Use the ImpactStructures hologram projector on the controller to show the structure; sneak-use to build.";
+        case "projector_show":
+            return "Use the ImpactStructures projector on the controller to show the structure.";
+        case "projector_build":
+            return "Sneak-use to build.";
         case "pollution":
             return "Produces %s pollution per second";
         case "channels":
@@ -143,15 +158,36 @@ public class MultiblockTooltipBuilder {
         return EnumChatFormatting.GOLD + amount + EnumChatFormatting.WHITE;
     }
 
+    private String formula(String expression) {
+        return EnumChatFormatting.GOLD + text("Formula", expression) + EnumChatFormatting.GRAY;
+    }
+
     private static boolean isWordCharacter(char character) {
         return Character.isLetterOrDigit(character) || character == '_';
     }
 
-    /** Highlight quantities after localization, preserving surrounding text formatting. */
-    private static String quantities(String text, EnumChatFormatting defaultColor) {
+    private static String groupThousands(String amount) {
+        Matcher matcher = LARGE_INTEGER.matcher(amount);
+        StringBuilder result = new StringBuilder(amount.length());
+        int previousEnd = 0;
+        while (matcher.find()) {
+            result.append(amount, previousEnd, matcher.start());
+            String integer = matcher.group();
+            try {
+                result.append(GT_Utility.formatNumbers(Long.parseLong(integer)));
+            } catch (NumberFormatException e) {
+                result.append(integer);
+            }
+            previousEnd = matcher.end();
+        }
+        return result.append(amount, previousEnd, amount.length()).toString();
+    }
+
+    /** Format and highlight quantities after localization, preserving surrounding text formatting. */
+    private String quantities(String text, EnumChatFormatting defaultColor) {
         StringBuilder result = new StringBuilder(text.length());
         String formatting = defaultColor.toString();
-        Matcher matcher = QUANTITY.matcher(text);
+        Matcher matcher = (compactStructure ? COMPACT_QUANTITY : QUANTITY).matcher(text);
         char previous = ' ';
         for (int index = 0; index < text.length();) {
             char character = text.charAt(index);
@@ -170,7 +206,8 @@ public class MultiblockTooltipBuilder {
             if (Character.isDigit(character) && !isWordCharacter(previous)
                     && matcher.region(index, text.length()).lookingAt()
                     && (matcher.end() == text.length() || !isWordCharacter(text.charAt(matcher.end())))) {
-                result.append(EnumChatFormatting.GOLD).append(matcher.group()).append(formatting);
+                String amount = compactStructure ? groupThousands(matcher.group()) : matcher.group();
+                result.append(EnumChatFormatting.GOLD).append(amount).append(formatting);
                 previous = text.charAt(matcher.end() - 1);
                 index = matcher.end();
             } else {
@@ -189,6 +226,17 @@ public class MultiblockTooltipBuilder {
 
     public MultiblockTooltipBuilder addInfo(String info) {
         return line(information, text("Information", info));
+    }
+
+    public MultiblockTooltipBuilder addInfo(String info, Object... arguments) {
+        return line(information, String.format(Locale.ROOT, text("Information", info), arguments));
+    }
+
+    /** Compact layout is opt-in so existing machine and addon tooltips retain their layout. */
+    public MultiblockTooltipBuilder useCompactStructure() {
+        checkOpen();
+        compactStructure = true;
+        return this;
     }
 
     public MultiblockTooltipBuilder addControlInfo(String info) {
@@ -242,7 +290,10 @@ public class MultiblockTooltipBuilder {
     public MultiblockTooltipBuilder beginVariableStructureBlock(int minWidth, int maxWidth, int minHeight,
             int maxHeight, int minDepth, int maxDepth, boolean hollow) {
         line(structure, tr("dimensions", range(minWidth, maxWidth), range(minHeight, maxHeight),
-                range(minDepth, maxDepth)) + (hollow ? " (" + tr("hollow") + ")" : ""));
+                range(minDepth, maxDepth)) + (hollow && !compactStructure ? " (" + tr("hollow") + ")" : ""));
+        if (compactStructure) {
+            return this;
+        }
         return line(structure, EnumChatFormatting.WHITE + tr("structure") + ":");
     }
 
@@ -253,7 +304,22 @@ public class MultiblockTooltipBuilder {
     }
 
     public MultiblockTooltipBuilder addController(String location) {
+        if (compactStructure) {
+            return line(structure, EnumChatFormatting.WHITE + tr("controller") + ": "
+                    + EnumChatFormatting.GRAY + text("Location", location));
+        }
         return part(tr("controller"), text("Location", location));
+    }
+
+    /** Opts into section headings without changing legacy tooltip layouts. */
+    public MultiblockTooltipBuilder addStructureSection(String title) {
+        checkOpen();
+        structureSections = true;
+        return sectionHeading(structure, text("StructureSection", title));
+    }
+
+    private MultiblockTooltipBuilder sectionHeading(List<String> destination, String title) {
+        return line(destination, EnumChatFormatting.YELLOW + title + EnumChatFormatting.RESET);
     }
 
     public MultiblockTooltipBuilder addCasing(String count, String name, boolean tiered) {
@@ -339,6 +405,37 @@ public class MultiblockTooltipBuilder {
         return hatch(text("Hatch", name), minimum, location);
     }
 
+    public MultiblockTooltipBuilder addHatchInfo(String name, String requirement) {
+        part(text("Hatch", name), text("Location", requirement));
+        return line(hints, structure.get(structure.size() - 1));
+    }
+
+    public MultiblockTooltipBuilder addHatchExactly(IHatchElement hatch, int count, String location, HintColor color) {
+        return hatchRequirement(hatch, tr("exactly", count), location, color);
+    }
+
+    public MultiblockTooltipBuilder addOptionalHatch(
+            IHatchElement hatch,
+            int maximum,
+            String location,
+            HintColor color
+    ) {
+        return hatchRequirement(hatch, tr("optional_maximum", maximum), location, color);
+    }
+
+    private MultiblockTooltipBuilder hatchRequirement(
+            IHatchElement hatch,
+            String amount,
+            String location,
+            HintColor color
+    ) {
+        String name = hatch.getDescription();
+        part(name, amount + "; " + text("Location", location));
+        line(hints, structure.get(structure.size() - 1));
+        coloredHint(name, color);
+        return this;
+    }
+
     private MultiblockTooltipBuilder hatch(String name, int minimum, String location, int... dots) {
         return part(name, tr("minimum", minimum) + "; " + text("Location", location), dots);
     }
@@ -356,12 +453,29 @@ public class MultiblockTooltipBuilder {
         return part(quantity(Integer.toString(count)) + " " + text("Part", name), text("Location", location), dots);
     }
 
+    public MultiblockTooltipBuilder addOtherStructurePartExactly(int count, String name, String location) {
+        return part(text("Part", name), tr("exactly", count) + "; " + text("Location", location));
+    }
+
     public MultiblockTooltipBuilder addOtherStructurePart(ICasing casing, String location, int count) {
         return part(quantity(Integer.toString(count)) + " " + casing.getDisplayName(), text("Location", location));
     }
 
     public MultiblockTooltipBuilder addOtherStructurePart(ICasing casing, String location) {
         return part(casing.getDisplayName(), text("Location", location));
+    }
+
+    public MultiblockTooltipBuilder addStructurePartInfo(ICasing casing, String location, Object... arguments) {
+        return part(casing.getDisplayName(), String.format(Locale.ROOT, text("Location", location), arguments));
+    }
+
+    public MultiblockTooltipBuilder addOtherStructurePart(ICasing casing, String location, String expression) {
+        String description = String.format(Locale.ROOT, text("Location", location), formula(expression));
+        return part(casing.getDisplayName(), description);
+    }
+
+    public MultiblockTooltipBuilder addOtherStructurePart(ItemStack stack, String location) {
+        return part(stack.getDisplayName(), text("Location", location));
     }
 
     public MultiblockTooltipBuilder addOtherStructurePart(ItemStack stack, String location, int count) {
@@ -372,6 +486,12 @@ public class MultiblockTooltipBuilder {
         String translatedLocation = text("Location", location);
         line(hints, tr("air") + ": " + translatedLocation);
         return part(tr("air"), translatedLocation);
+    }
+
+    public MultiblockTooltipBuilder addAir(int count, String location) {
+        String requirement = tr("exactly", count) + "; " + text("Location", location);
+        line(hints, tr("air") + ": " + requirement);
+        return part(tr("air"), requirement);
     }
 
     public MultiblockTooltipBuilder addStructureInfo(String info) {
@@ -399,6 +519,13 @@ public class MultiblockTooltipBuilder {
         return this;
     }
 
+    public MultiblockTooltipBuilder addSubChannel(String channel, String description, String expression) {
+        checkOpen();
+        channelDescriptions.computeIfAbsent(Objects.requireNonNull(channel), key -> new LinkedHashSet<>())
+                .add(String.format(Locale.ROOT, text("Channel", description), formula(expression)));
+        return this;
+    }
+
     /** Explicit machine descriptions take precedence over shared channel descriptions. */
     public MultiblockTooltipBuilder addStructureChannels(IStructureDefinition<?> definition) {
         checkOpen();
@@ -420,17 +547,17 @@ public class MultiblockTooltipBuilder {
 
     private void appendChannelSection(List<String> destination) {
         if (channelDescriptions.isEmpty() && masterChannelDescriptions.isEmpty()) return;
-        line(destination, separator(EnumChatFormatting.DARK_GRAY, 30));
-        line(destination, EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + tr("channels")
-                + EnumChatFormatting.RESET);
+        sectionHeading(destination, tr("channels"));
         if (!masterChannelDescriptions.isEmpty()) {
             line(destination, "   " + EnumChatFormatting.AQUA + tr("master_channel_label") + EnumChatFormatting.RESET);
             for (String description : masterChannelDescriptions)
                 line(destination, "      " + EnumChatFormatting.GRAY + description);
         }
         for (Map.Entry<String, LinkedHashSet<String>> channel : channelDescriptions.entrySet()) {
+            String identifier = compactStructure ? ""
+                    : EnumChatFormatting.DARK_GRAY + " (" + channel.getKey() + ")";
             line(destination, "   " + EnumChatFormatting.AQUA + GTStructureChannels.getLabel(channel.getKey())
-                    + EnumChatFormatting.DARK_GRAY + " (" + channel.getKey() + ")" + EnumChatFormatting.RESET);
+                    + identifier + EnumChatFormatting.RESET);
             for (String description : channel.getValue())
                 line(destination, "      " + EnumChatFormatting.GRAY + description);
         }
@@ -539,17 +666,30 @@ public class MultiblockTooltipBuilder {
         if (finished)
             return this;
         normalizeSeparators(information);
-        if (!information.isEmpty() && !isSeparator(information.get(information.size() - 1)))
+        if (!compactStructure && !information.isEmpty() && !isSeparator(information.get(information.size() - 1))) {
             addSeparator();
-        line(information, EnumChatFormatting.GRAY + tr("hold_shift"));
+        }
+        String shiftKey = EnumChatFormatting.YELLOW + "Shift" + EnumChatFormatting.GRAY;
+        line(information, EnumChatFormatting.GRAY + tr("hold_shift", shiftKey));
         if (!controls.isEmpty())
             line(information, EnumChatFormatting.GRAY + tr("hold_ctrl"));
-        line(structure, tr("projector"));
-        line(hints, tr("projector"));
+        if (structureSections && (compactStructure || !coloredHints.isEmpty())) {
+            sectionHeading(structure, tr("legend"));
+            sectionHeading(hints, tr("legend"));
+        }
+        if (compactStructure) {
+            line(structure, "   " + tr("projector_show"));
+            line(structure, "   " + tr("projector_build"));
+            line(hints, "   " + tr("projector_show"));
+            line(hints, "   " + tr("projector_build"));
+        } else {
+            line(structure, "   " + tr("projector"));
+            line(hints, "   " + tr("projector"));
+        }
         for (Map.Entry<HintColor, LinkedHashSet<String>> entry : coloredHints.entrySet()) {
             HintColor color = entry.getKey();
-            String legend = GTStructureUtility.formatHintText(color, "■")
-                    + " - " + String.join(", ", entry.getValue());
+            String legend = "   " + GTStructureUtility.formatHintText(color, "■")
+                    + (compactStructure ? " " : " - ") + String.join(", ", entry.getValue());
             line(hints, legend);
             line(structure, legend);
         }
@@ -577,9 +717,10 @@ public class MultiblockTooltipBuilder {
                 lines.remove(i);
     }
 
-    private static void highlightQuantities(List<String> lines) {
-        for (int i = 0; i < lines.size(); i++)
+    private void highlightQuantities(List<String> lines) {
+        for (int i = 0; i < lines.size(); i++) {
             lines.set(i, quantities(lines.get(i), EnumChatFormatting.GRAY));
+        }
     }
 
     /**

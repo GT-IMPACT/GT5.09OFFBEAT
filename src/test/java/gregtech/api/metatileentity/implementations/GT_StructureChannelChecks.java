@@ -6,6 +6,27 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModMetadata;
 import gregtech.api.util.GTStructureChannels;
 import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_ElectricBlastFurnace;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AirFilter;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_AssemblyLine;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Charcoal_Pit;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Cleanroom;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_ConcreteBackfillerBase;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_FusionComputer;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DistillationTower;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DieselEngine;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_HeatExchanger;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_IndustrialPulverizer;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_ImplosionCompressor;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeChemicalReactor;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeBoiler;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiblockCentrifuge;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiblockElectrolyzer;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_MultiFurnace;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_OilCracker;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_OilDrillBase;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -79,12 +100,37 @@ final class GT_StructureChannelChecks {
                 for (String[] lines : new String[][] { machine.getSecondaryDescription(), machine.getStructureDescription(null) }) {
                     String description = EnumChatFormatting.getTextWithoutFormattingCodes(String.join("\n", lines));
                     for (space.impact.structures.structure.IChannelDefinition channel : machine.getStructureDefinition().getChannelDefinitions()) {
-                        String label = GTStructureChannels.getLabel(channel.getChannel()) + " (" + channel.getChannel() + ")";
+                        boolean compact = machine instanceof GT_MetaTileEntity_ElectricBlastFurnace
+                                || machine instanceof GT_MetaTileEntity_AirFilter
+                                || machine instanceof GT_MetaTileEntity_AssemblyLine
+                                || machine instanceof GT_MetaTileEntity_Charcoal_Pit
+                                || machine instanceof GT_MetaTileEntity_Cleanroom
+                                || machine instanceof GT_MetaTileEntity_ConcreteBackfillerBase
+                                || machine instanceof GT_MetaTileEntity_FusionComputer
+                                || machine instanceof GT_MetaTileEntity_DieselEngine
+                                || machine instanceof GT_MetaTileEntity_DistillationTower
+                                || machine instanceof GT_MetaTileEntity_HeatExchanger
+                                || machine instanceof GT_MetaTileEntity_IndustrialPulverizer
+                                || machine instanceof GT_MetaTileEntity_ImplosionCompressor
+                                || machine instanceof GT_MetaTileEntity_LargeChemicalReactor
+                                || machine instanceof GT_MetaTileEntity_LargeBoiler
+                                || machine instanceof GT_MetaTileEntity_LargeTurbine
+                                || machine instanceof GT_MetaTileEntity_MultiblockCentrifuge
+                                || machine instanceof GT_MetaTileEntity_MultiblockElectrolyzer
+                                || machine instanceof GT_MetaTileEntity_MultiFurnace
+                                || machine instanceof GT_MetaTileEntity_OilCracker
+                                || machine instanceof GT_MetaTileEntity_OilDrillBase
+                                || machine instanceof GT_MetaTileEntity_VacuumFreezer;
+                        String label = GTStructureChannels.getLabel(channel.getChannel());
+                        if (!compact) {
+                            label += " (" + channel.getChannel() + ")";
+                        }
+                        String expectedLabel = label;
                         assertTrue(name + " missing channel section", description.indexOf(header) >= 0);
                         assertTrue(name + " missing " + label, description.indexOf(label) > description.indexOf(header));
                         assertFalse(name + " generic description", description.contains(GTStructureChannels.getDescription(channel.getChannel())));
                         assertEquals(name + " repeated channel", 1, Arrays.stream(lines)
-                                .filter(line -> EnumChatFormatting.getTextWithoutFormattingCodes(line).contains(label)).count());
+                                .filter(line -> EnumChatFormatting.getTextWithoutFormattingCodes(line).contains(expectedLabel)).count());
                     }
                 }
                 checked++;

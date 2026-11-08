@@ -141,13 +141,22 @@ final class GT_HeatExchangerStructureChecks {
         assertEquals(changes, f.world.changes);
         assertSame(hot, field(f.machine, "mInputHotFluidHatch"));
         assertSame(cold, field(f.machine, "mOutputColdFluidHatch"));
-        assertEquals("Combined hatch positions need green frames", f.shell.size(), hints.hintFrames.size());
-        assertTrue(hints.hintFrames.values().stream().allMatch(color -> color == HintColor.GREEN));
+        assertEquals("Shell and dedicated ports have frames", f.shell.size() + 2, hints.hintFrames.size());
         for (int[] p : f.shell) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(Casings.STABLE_TITANIUM.getBlock(), hints.hintBlocks.get(key));
             assertEquals(2, hints.hintMetadata.get(key).intValue());
+            assertSame(HintColor.GREEN, hints.hintFrames.get(key));
         }
+        for (int[] p : new int[][] { f.hot, f.cold }) {
+            String key = TestWorld.key(p[0], p[1], p[2]);
+            assertSame(Casings.STABLE_TITANIUM.getBlock(), hints.hintBlocks.get(key));
+            assertEquals(Casings.STABLE_TITANIUM.getMetadata(), hints.hintMetadata.get(key).intValue());
+        }
+        String hotKey = TestWorld.key(f.hot[0], f.hot[1], f.hot[2]);
+        String coldKey = TestWorld.key(f.cold[0], f.cold[1], f.cold[2]);
+        assertSame(HintColor.BLUE, hints.hintFrames.get(hotKey));
+        assertSame(HintColor.ORANGE, hints.hintFrames.get(coldKey));
         for (int[] p : f.pipes) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(Casings.TITANIUM_PIPE.getBlock(), hints.hintBlocks.get(key));
@@ -312,10 +321,10 @@ final class GT_HeatExchangerStructureChecks {
             assertTrue(info.contains(language.equals("en_US") ? "Large Heat Exchanger" : "Большой теплообменник"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("20"));
-            assertTrue(structure.contains("gt_hatch"));
+            assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.BLUE, EnumChatFormatting.GOLD}) {
-                String marker = color + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hint.contains(marker));
             }

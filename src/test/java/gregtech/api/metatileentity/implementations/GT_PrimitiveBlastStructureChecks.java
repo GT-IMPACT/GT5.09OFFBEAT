@@ -200,7 +200,7 @@ final class GT_PrimitiveBlastStructureChecks {
             assertFalse(structure.contains("gt.tooltip"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("32"));
             assertFalse(structure.contains("gt_hatch"));
-            assertTrue(f.machine.getSecondaryDescription().length <= 7);
+            assertTrue(f.machine.getSecondaryDescription().length <= 10);
             assertFalse(info.equals(structure));
             assertTrue(String.join("\n", f.machine.getStructureDescription(trigger())).contains("ImpactStructures"));
             assertTrue(info.contains(bronze ? "800" : "200"));

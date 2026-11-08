@@ -65,22 +65,25 @@ public class GT_MetaTileEntity_MultiFurnace
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Multi Smelter")
-                .addInfo("Smelts 8 to 256 items at once, depending on the heating coils")
-                .addInfo("Higher coil tiers increase parallel processing or reduce energy consumption")
-                .addPollutionAmount(getPollutionPerTick(null) * 20)
+                .addInfo("Smelts 8 to 256 items at once, depending on the heating coils.")
+                .addInfo("Higher coil tiers increase parallel processing or reduce energy consumption.")
+                .addInfo("Pollution: %s per second before muffler reduction.", getPollutionPerTick(null) * 20)
                 .beginStructureBlock(3, 3, 3, true)
-                .addController("Front center of the bottom layer")
-                .addCasingInfoMin(Casings.HEAT_PROOF, 8, false)
-                .addStructureInfo("8 fixed casings in the top layer; unused hatch positions in the bottom layer also require heat-proof casings")
-                .addRequirements(BOTTOM, "Bottom layer, replacing heat-proof casings", BOTTOM_HINT)
-                .addRequirements(EXHAUST, "Top center", MUFFLER_HINT)
-                .addOtherStructurePart(8, "Heating Coils", "Middle layer, surrounding the empty center")
-                .addAir("Center of the middle layer")
-                .addStructureInfo("All eight heating coils must have the same tier.")
-                .addStructureInfo("Item input and output buses are required; IMPACT combined inputs and multi-amp energy hatches are accepted.")
-                .addSubChannel(GTStructureChannels.COIL, "Coil tier from 1 to 10; existing coils determine the tier when completing a structure")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance, energy and item buses in the bottom layer, and the muffler at the top-center position.")
+                .addController("front center of the bottom layer")
+                .addStructureSection("Components")
+                .addOtherStructurePart(Casings.HEAT_PROOF, "8 fixed in the top ring; fill unused bottom positions")
+                .addOtherStructurePart("Heating Coils", "exactly 8 of the same tier; middle layer")
+                .addAir("center of the middle layer")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; bottom layer")
+                .addHatchInfo("Input and Output Buses", "1+ each; bottom layer")
+                .addHatchInfo("Muffler", "exactly 1; top center, keep exhaust clear")
+                .addStructureHint("Bottom: casings or hatches/buses", BOTTOM_HINT)
+                .addStructureHint("Top center: muffler", MUFFLER_HINT)
+                .addSubChannel(GTStructureChannels.COIL, "1-10; default: stack size; existing coils take priority.")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 
@@ -157,7 +160,7 @@ public class GT_MetaTileEntity_MultiFurnace
                     .addElement('B', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiFurnace.class)
                             .buildAndChain(BOTTOM).withHint(BOTTOM_HINT))
                     .addElement('M', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_MultiFurnace.class)
-                            .hint(MUFFLER_HINT).build(EXHAUST))
+                            .hint(Casings.HEAT_PROOF, MUFFLER_HINT).build(EXHAUST))
                     .addElement('H', GTStructureUtility.ofHeatingCoil(
                             GT_MetaTileEntity_MultiFurnace::checkCoil, GT_MetaTileEntity_MultiFurnace::constructionCoil))
                     .build();

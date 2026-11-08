@@ -141,10 +141,14 @@ final class GT_BlastFurnaceStructureChecks {
         f.machine.construct(new ItemStack(Items.stick, (tier + 1) % 10 + 1), true);
         f.world.isRemote = false;
         assertEquals(35, hints.hints);
-        assertEquals(16, hints.hintFrames.size());
+        assertEquals(17, hints.hintFrames.size());
         assertEquals(changes, f.world.changes);
         assertEquals(outputs, f.machine.mOutputHatches.size());
         assertEquals(HEAT[tier] - 100, heat(f.machine));
+        String mufflerKey = TestWorld.key(f.muffler[0], f.muffler[1], f.muffler[2]);
+        assertSame(Casings.HEAT_PROOF.getBlock(), hints.hintBlocks.get(mufflerKey));
+        assertEquals(Casings.HEAT_PROOF.getMetadata(), hints.hintMetadata.get(mufflerKey).intValue());
+        assertSame(HintColor.RED, hints.hintFrames.get(mufflerKey));
         for (int[] p : f.bottom) {
             assertSame(HintColor.GREEN, hints.hintFrames.get(TestWorld.key(p[0], p[1], p[2])));
         }
@@ -364,14 +368,57 @@ final class GT_BlastFurnaceStructureChecks {
             String hint = String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick)));
             assertTrue(info.contains(language.equals("en_US") ? "Electric Blast Furnace" : "Электрическая доменная печь"));
             assertTrue(info.contains("900"));
-            assertTrue(info.contains("1800"));
+            assertTrue(info.contains("1,800"));
+            if (language.equals("en_US")) {
+                assertTrue(info.contains(EnumChatFormatting.GOLD + "1/4" + EnumChatFormatting.GRAY));
+            }
             assertFalse(info.contains("gt_hatch"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "16 Heating Coils" : "16 Нагревательные катушки"));
-            assertTrue(structure.contains("gt_hatch"));
+            String plainStructure = EnumChatFormatting.getTextWithoutFormattingCodes(structure);
+            String coilRequirement = language.equals("en_US")
+                    ? "Heating Coils: exactly 16 of the same tier;"
+                    : "Нагревательные катушки: ровно 16 одного уровня;";
+            assertTrue(plainStructure.contains(coilRequirement));
+            assertTrue(plainStructure.contains(language.equals("en_US")
+                    ? "Required air: centers of layers 2 and 3" : "Обязательный воздух: центры слоёв 2 и 3"));
+            assertTrue(plainStructure.contains(language.equals("en_US")
+                    ? "Muffler: exactly 1;" : "Глушитель: ровно 1;"));
+            assertTrue(plainStructure.contains(language.equals("en_US")
+                    ? "Output Buses or Hatches: bottom: 1+ bus or hatch; top ring: optional, up to 8 hatches"
+                    : "Выходные шины или люки: снизу: от 1 шины или люка; верхнее кольцо: необязательно, не более 8 люков"));
+            String[] sections = language.equals("en_US")
+                    ? new String[] { "Components", "Hatches and buses", "Hologram", "Structure channels" }
+                    : new String[] { "Компоненты", "Люки и шины", "Голограмма", "Каналы структуры" };
+            int previousSection = -1;
+            for (String section : sections) {
+                int position = plainStructure.indexOf(section);
+                assertTrue("Section order: " + section, position > previousSection);
+                assertEquals("Duplicate section: " + section, position, plainStructure.lastIndexOf(section));
+                previousSection = position;
+            }
+            assertFalse(structure.contains("gt_hatch"));
+            assertFalse(structure.contains("(coil)"));
+            assertTrue(info.contains(EnumChatFormatting.YELLOW + "Shift" + EnumChatFormatting.GRAY));
+            assertEquals("Compact primary tooltip", 8, machine.getPrimaryDescription().length);
+            String[] rows = machine.getSecondaryDescription();
+            assertEquals("Compact structure tooltip", 22, rows.length);
+            int hatchRows = 0;
+            boolean inHatches = false;
+            for (String row : rows) {
+                String plain = EnumChatFormatting.getTextWithoutFormattingCodes(row);
+                assertFalse("No separator lines", plain.matches("-{3,}"));
+                if (plain.equals(sections[1])) {
+                    inHatches = true;
+                } else if (plain.equals(sections[2])) {
+                    inHatches = false;
+                } else if (inHatches && !plain.isEmpty()) {
+                    hatchRows++;
+                }
+            }
+            assertEquals("Hatch section stays separate and has four rows", 4, hatchRows);
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN,
                     EnumChatFormatting.GOLD, EnumChatFormatting.RED}) {
-                String marker = color + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hint.contains(marker));
             }

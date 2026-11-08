@@ -54,18 +54,21 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Multiblock Electrolyzer")
-                .addInfo("Processes all Electrolyzer recipes")
+                .addInfo("Processes all Electrolyzer recipes.")
                 .beginStructureBlock(3, 3, 3, false)
-                .addController("Front center")
-                .addRequirements(SHELL, "Any outer casing position, except the coil", SHELL_HINT)
-                .addOtherStructurePart(Casings.PUMP, "Center of the structure", 1)
-                .addOtherStructurePart(Casings.CUPRONICKEL_COIL,
-                        "Any of the five faces adjacent to the pump, except the controller", 1)
-                .addStructureInfo("At least one cupronickel coil must touch the pump; additional cupronickel coils at these five positions are allowed.")
-                .addStructureInfo("Construction keeps existing coils, or places one in a free position next to the pump.")
-                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the electrolyzer shell.")
+                .addController("front center")
+                .addStructureSection("Components")
+                .addOtherStructurePart(SHELL.getCasing(), "8+; fill unused shell positions")
+                .addOtherStructurePart(Casings.PUMP, "exactly 1; center of the structure")
+                .addOtherStructurePart(Casings.CUPRONICKEL_COIL, "1-5; touching the pump, except toward the controller")
+                .addStructureInfo("Construction keeps existing coils or places one in a free position if needed.")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Input and Output", "1+ bus or hatch each; shell")
+                .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: available hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 

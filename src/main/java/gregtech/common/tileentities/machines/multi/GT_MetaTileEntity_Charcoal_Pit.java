@@ -72,19 +72,22 @@ public class GT_MetaTileEntity_Charcoal_Pit
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Charcoal Pit")
-                .addInfo("Converts sealed log piles into brittle charcoal")
-                .addInfo("No power or hatches required")
-                .addInfo("Burn time depends on the number of logs")
-                .addInfo("Pollution is charged at ignition: 10 per processing tick")
+                .addInfo("Converts logs into brittle charcoal; keep the pile sealed until the burn finishes.")
+                .addInfo("No power or hatches required.")
+                .addInfo("Burn time depends on the number of logs.")
+                .addInfo("Pollution: 10 per burn tick, all released at ignition.")
                 .beginVariableStructureBlock(3, 13, 3, 7, 3, 13, false)
-                .addController("Top center, directly above a log")
-                .addStructureInfo("Blueprint logs: up to 11 x 5 x 11; size includes cover")
-                .addStructureInfo("Bricks below every log column; dirt or grass on sides and top")
-                .addStructureInfo("No gaps; connected irregular piles are also accepted")
-                .addSubChannel(GTStructureChannels.WIDTH, "Log width = 2 x value - 1")
-                .addSubChannel(GTStructureChannels.DEPTH, "Log depth = 2 x value - 1")
-                .addSubChannel(GTStructureChannels.HEIGHT, "Log layers: 1-5")
+                .addController("top center, directly above a log")
+                .addStructureSection("Components")
+                .addOtherStructurePart("Logs", "fill the pile below the controller")
+                .addOtherStructurePart("Bricks", "below every log column")
+                .addOtherStructurePart("Dirt or Grass", "cover the sides and top, except the controller")
+                .addStructureInfo("Connected irregular piles are also accepted.")
+                .addSubChannel(GTStructureChannels.WIDTH, "1-6: %s; default: stack size.", "log width = 2 x value - 1")
+                .addSubChannel(GTStructureChannels.DEPTH, "1-6: %s; default: stack size.", "log depth = 2 x value - 1")
+                .addSubChannel(GTStructureChannels.HEIGHT, "1-5 log layers; default: stack size.")
                 .toolTipFinisher();
     }
 

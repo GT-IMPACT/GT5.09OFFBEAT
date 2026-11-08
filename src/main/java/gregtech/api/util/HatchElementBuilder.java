@@ -37,6 +37,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
     private final Map<IHatchElement, Integer> automatic = new LinkedHashMap<>();
     private int textureIndex = -1;
     private HintColor hintColor;
+    private IStructureElement<T> hintElement;
     private Predicate<IMetaTileEntity> placementPreference;
     private Predicate<IMetaTileEntity> placementFilter = tile -> true;
     private Predicate<IMetaTileEntity> acceptanceFilter = tile -> true;
@@ -214,6 +215,12 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         return this;
     }
 
+    public HatchElementBuilder<T> hint(ICasing casing, HintColor color) {
+        hintColor = Objects.requireNonNull(color);
+        hintElement = Objects.requireNonNull(casing).<T>asElement().withHint(color);
+        return this;
+    }
+
     public IStructureElement<T> buildAndChain(IStructureElement<T> casing) {
         Objects.requireNonNull(casing);
         if (requirements.isEmpty() || textureIndex < 0)
@@ -230,6 +237,7 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
         int texture = textureIndex;
         HintColor color = hintColor;
         Set<IHatchElement> accepted = new LinkedHashSet<>(required.keySet());
+        IStructureElement<T> preview = hintElement;
         Predicate<IMetaTileEntity> preference = placementPreference;
         Predicate<IMetaTileEntity> filter = placementFilter;
         Predicate<IMetaTileEntity> acceptance = acceptanceFilter;
@@ -302,6 +310,9 @@ public final class HatchElementBuilder<T extends GT_MetaTileEntity_MultiBlockBas
 
             @Override
             public boolean spawnHint(T machine, World world, int x, int y, int z, ItemStack trigger) {
+                if (preview != null) {
+                    return preview.spawnHint(machine, world, x, y, z, trigger);
+                }
                 if (color == null)
                     return casing.spawnHint(machine, world, x, y, z, trigger);
                 ImpactStructures.hintParticle(world, x, y, z, color);

@@ -403,6 +403,33 @@ public abstract class GT_MetaTileEntity_FusionComputer
                 .toolTipFinisher();
     }
 
+    protected MultiblockTooltipBuilder compactFusionTooltip() {
+        MultiblockTooltipBuilder tooltip = new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
+                .addMachineType("Fusion Reactor")
+                .addInfo("Fuses fluids into new materials.")
+                .addInfo("Energy input: %s EU/t per Energy Hatch.", getEnergyInputPerHatch())
+                .addInfo("Charge the energy buffer to the recipe's startup requirement.");
+        if (tierOverclock() > 1) {
+            tooltip.addInfo("Lower startup energy allows more overclocks, if power allows.");
+        }
+        return tooltip
+                .beginStructureBlock(15, 3, 15, false)
+                .addController("inner edge of the middle layer, 5 blocks from the center, facing inward")
+                .addStructureSection("Components")
+                .addOtherStructurePart(getCasingType(), "79+; fill unused ring positions")
+                .addOtherStructurePart(getFusionCoilType(), "exactly 32; middle layer of the ring")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Energy Hatches", "1-16; middle-layer diagonals")
+                .addHatchInfo("Input Hatches", "2-16; top and bottom of the ring")
+                .addHatchInfo("Output Hatches", "1-16; straight sides of the middle layer")
+                .addStructureInfo("Required hatches: standard %s or higher; no maintenance.", GT_Values.VN[tier()])
+                .addStructureHint("Middle diagonals: casings or energy hatches", FusionHatch.ENERGY.hintColor)
+                .addStructureHint("Top and bottom: casings or input hatches", FusionHatch.INPUT.hintColor)
+                .addStructureHint("Middle sides: casings or output hatches", FusionHatch.OUTPUT.hintColor)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.");
+    }
+
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) return new ITexture[]{TextureFactory.of(MACHINE_CASING_FUSION_GLASS), getTextureOverlay()};
         if (aActive) return new ITexture[]{Casings.FUSION_GLASS_YELLOW.getTexture()};

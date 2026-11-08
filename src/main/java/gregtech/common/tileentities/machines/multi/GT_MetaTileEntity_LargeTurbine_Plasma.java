@@ -38,7 +38,9 @@ public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_Lar
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return turbineTooltip("Large Plasma Generator")
-                .addInfo("Plasma input; an optional output hatch collects cooled material.")
+                .addHatchInfo("Output Hatches", "optional; around the 2 central air blocks (cooled material)")
+                .addInfo("Generates EU from plasma fuels.")
+                .addInfo("Output and optimal fuel flow depend on the rotor and fuel.")
                 .toolTipFinisher();
     }
 

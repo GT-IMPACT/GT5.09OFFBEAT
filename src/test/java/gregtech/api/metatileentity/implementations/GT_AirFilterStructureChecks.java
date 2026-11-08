@@ -260,13 +260,14 @@ final class GT_AirFilterStructureChecks {
             String structure = String.join("\n", f.machine.getCurrentDescription(true));
             String hints = String.join("\n", f.machine.getStructureDescription(trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Electric Air Filter" : "Электрический воздушный фильтр"));
-            assertTrue(info.contains("10000"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
-            assertTrue(structure.contains(language.equals("en_US") ? "Two full" : "Два полных"));
-            assertTrue(structure.contains("gt_hatch"));
+            assertTrue(info.contains("10,000"));
+            String plainStructure = EnumChatFormatting.getTextWithoutFormattingCodes(structure);
+            assertTrue(plainStructure.contains(language.equals("en_US") ? "3 x 4 x 3" : "3 × 4 × 3"));
+            assertTrue(plainStructure.contains(language.equals("en_US") ? "2 full" : "2 полных"));
+            assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.GOLD}) {
-                String marker = color + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));
             }

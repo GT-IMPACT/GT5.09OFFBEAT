@@ -51,14 +51,19 @@ public class GT_MetaTileEntity_VacuumFreezer
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Vacuum Freezer")
-                .addInfo("Super cools hot ingots and cells")
+                .addInfo("Super cools hot ingots and cells.")
                 .beginStructureBlock(3, 3, 3, true)
-                .addController("Front face, centered")
-                .addRequirements(SHELL, "Any casing position", SHELL_HINT)
-                .addAir("Center of the structure")
-                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the vacuum freezer shell.")
+                .addController("front center")
+                .addStructureSection("Components")
+                .addOtherStructurePart(SHELL.getCasing(), "16+; fill unused shell positions")
+                .addAir("center of the structure")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Input and Output", "1+ bus or hatch each; shell")
+                .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: available hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 

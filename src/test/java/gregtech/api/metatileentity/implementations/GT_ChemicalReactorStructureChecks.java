@@ -268,12 +268,12 @@ final class GT_ChemicalReactorStructureChecks {
             String hint = String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick)));
             assertTrue(info.contains(language.equals("en_US") ? "Large Chemical Reactor" : "Большой химический реактор"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
-            assertTrue(structure.contains(language.equals("en_US") ? "five faces" : "пяти сторон"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("1-5"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("8"));
-            assertTrue(structure.contains("gt_hatch"));
-            assertTrue(hint.contains("gt_hatch"));
+            assertFalse(structure.contains("gt_hatch"));
+            assertFalse(hint.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " - "));
+            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " "));
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
             assertFalse(structure.contains("gt.tooltip."));
         }

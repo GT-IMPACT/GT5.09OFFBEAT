@@ -57,18 +57,22 @@ public class GT_MetaTileEntity_IndustrialPulverizer
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Industrial Pulverizer")
-                .addInfo("Processes Macerator, Ore Washer and Chemical Bath recipes")
-                .addInfo("Does not lose efficiency when overclocked")
+                .addInfo("Processes Macerator, Ore Washer and Chemical Bath recipes.")
+                .addInfo("Does not lose efficiency when overclocked.")
                 .beginStructureBlock(3, 3, 3, false)
-                .addController("Front center")
-                .addRequirements(SHELL, "Any outer casing position, except the pipe", SHELL_HINT)
-                .addOtherStructurePart(Casings.STEEL_GEARBOX, "Center of the structure", 1)
-                .addOtherStructurePart(Casings.STEEL_PIPE, "Any of the five faces adjacent to the gearbox, except the controller", 1)
-                .addStructureInfo("At least one steel pipe casing must touch the gearbox; additional pipes at these five positions are allowed.")
-                .addStructureInfo("Construction keeps existing pipes, or places one in a free position next to the gearbox.")
-                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places missing maintenance, energy, input and output hatches in the pulverizer shell; the central gearbox and pipe stay unchanged.")
+                .addController("front center")
+                .addStructureSection("Components")
+                .addOtherStructurePart(SHELL.getCasing(), "8+; fill unused shell positions")
+                .addOtherStructurePart(Casings.STEEL_GEARBOX, "exactly 1; center of the structure")
+                .addOtherStructurePart(Casings.STEEL_PIPE, "1-5; touching the gearbox, except toward the controller")
+                .addStructureInfo("Construction keeps existing pipes or places one in a free position if needed.")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Input and Output", "1+ bus or hatch each; shell")
+                .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 

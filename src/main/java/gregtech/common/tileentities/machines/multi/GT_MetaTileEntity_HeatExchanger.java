@@ -75,21 +75,25 @@ public class GT_MetaTileEntity_HeatExchanger
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Large Heat Exchanger")
-                .addInfo("Converts heat from lava or hot coolant into steam using distilled water")
-                .addInfo("Sufficient hot fluid produces superheated steam")
-                .addInfo("A programmed circuit lowers the superheated-steam threshold at the cost of efficiency")
-                .addInfo("Running without distilled water causes an explosion")
+                .addInfo("Uses lava or hot coolant and distilled water to produce steam.")
+                .addInfo("With enough lava or hot coolant, produces Superheated Steam.")
+                .addInfo("A circuit reduces the hot fluid needed for Superheated Steam, but also reduces steam output.")
+                .addInfo("Running out of distilled water causes an explosion.")
                 .beginStructureBlock(3, 4, 3, false)
-                .addController("Front center of the bottom layer")
-                .addRequirements(SHELL, "Any outer casing position", SHELL_HINT)
-                .addRequirements(HOT_INPUT, "Bottom center", HOT_HINT)
-                .addRequirements(COLD_OUTPUT, "Top center", COLD_HINT)
-                .addOtherStructurePart(Casings.TITANIUM_PIPE, "Vertical column between the hot input and cold output", 2)
-                .addStructureInfo("The hot input and cold output are separate from the distilled-water and steam hatches.")
-                .addStructureInfo("The hot port accepts fluid input hatches, including IMPACT multi-fluid hatches; the cold port requires a fluid output hatch.")
-                .addStructureInfo("Compatible IMPACT fluid and combined input hatches can supply distilled water.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places the hot-fluid input and cooled-fluid output in their dedicated positions, plus water, steam and maintenance hatches in the shell.")
+                .addController("front center of the bottom layer")
+                .addStructureSection("Components")
+                .addOtherStructurePart(SHELL.getCasing(), "20+; fill unused casing positions")
+                .addOtherStructurePart(Casings.TITANIUM_PIPE, "exactly 2; one above the other in the center")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance Hatch", "1; outer casing")
+                .addHatchInfo("Input Hatches", "1+ in outer casing (distilled water); exactly 1 at bottom center (lava or hot coolant)")
+                .addHatchInfo("Output Hatches", "1+ in outer casing (steam); exactly 1 at top center (cooled fluid)")
+                .addStructureHint("Outer casing: casings or hatches", SHELL_HINT)
+                .addStructureHint("Bottom center: lava or hot coolant input", HOT_HINT)
+                .addStructureHint("Top center: cooled fluid output", COLD_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 
@@ -264,9 +268,9 @@ public class GT_MetaTileEntity_HeatExchanger
                             .buildAndChain(SHELL, machine -> ++machine.casingCount).withHint(SHELL_HINT))
                     .addElement('P', Casings.TITANIUM_PIPE.asElement())
                     .addElement('I', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_HeatExchanger.class)
-                            .hint(HOT_HINT).build(HOT_INPUT))
+                            .hint(Casings.STABLE_TITANIUM, HOT_HINT).build(HOT_INPUT))
                     .addElement('O', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_HeatExchanger.class)
-                            .hint(COLD_HINT).build(COLD_OUTPUT))
+                            .hint(Casings.STABLE_TITANIUM, COLD_HINT).build(COLD_OUTPUT))
                     .build();
         }
         return structureDefinition;

@@ -160,7 +160,11 @@ final class GT_TurbineStructureChecks {
         assertEquals(35, hints.hints);
         assertEquals(changes, f.world.changes);
         assertEquals(1, f.machine.mDynamoHatchesMulti.size());
-        assertEquals("Only the eight side hatch positions have casing frames", 8, hints.hintFrames.size());
+        assertEquals("Side hatch positions and the rear dynamo have casing frames", 9, hints.hintFrames.size());
+        String dynamoKey = TestWorld.key(f.dynamo[0], f.dynamo[1], f.dynamo[2]);
+        assertSame(f.machine.getCasingType().getBlock(), hints.hintBlocks.get(dynamoKey));
+        assertEquals(f.machine.getCasingType().getMetadata(), hints.hintMetadata.get(dynamoKey).intValue());
+        assertSame(HintColor.YELLOW, hints.hintFrames.get(dynamoKey));
         for (int[] p : f.shell) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(f.machine.getCasingType().getBlock(), hints.hintBlocks.get(key));
@@ -287,12 +291,12 @@ final class GT_TurbineStructureChecks {
             assertFalse(info.contains("gt_hatch"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(lang.equals("en_US") ? "3 x 3 x 4" : "3 × 3 × 4"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("24"));
-            assertTrue(structure.contains("gt_hatch"));
-            assertTrue(structure.contains(lang.equals("en_US") ? "Back center" : "По центру сзади"));
-            String marker = EnumChatFormatting.YELLOW + "■" + EnumChatFormatting.RESET + " - ";
+            assertFalse(structure.contains("gt_hatch"));
+            assertTrue(structure.contains(lang.equals("en_US") ? "Back center" : "Сзади по центру"));
+            String marker = EnumChatFormatting.YELLOW + "■" + EnumChatFormatting.RESET + " ";
             assertTrue(structure.contains(marker));
             assertTrue(hint.contains(marker));
-            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " - "));
+            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " "));
             assertEquals("Separate legends for the side positions and rear dynamo", 2,
                     structure.split("■", -1).length - 1);
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));

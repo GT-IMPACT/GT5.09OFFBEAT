@@ -89,20 +89,34 @@ public class GT_MetaTileEntity_AssemblyLine
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Assembly Line")
-                .addInfo("Data stick: controller or Data Access Hatch")
-                .addInfo("Inputs follow slice order; fluids: front before back")
+                .addInfo("Builds complex components using recipes stored on data sticks.")
+                .addInfo("Place a data stick in the controller or a Data Access Hatch.")
+                .addInfo("Item inputs follow section order from the controller to the output.")
+                .addInfo("Fluid inputs follow the same order, with front hatches before back hatches.")
                 .beginVariableStructureBlock(MIN_LENGTH, MAX_LENGTH, 4, 4, 3, 3, false)
-                .addController("Slice 1, front, third layer from bottom")
-                .addRequirements(BOTTOM, "Bottom sides", BOTTOM_HINT)
-                .addRequirements(ENERGY, "Top center", ENERGY_HINT)
-                .addRequirements(INPUTS[0], "Bottom center; each slice except last; slot 1", INPUT_HINT)
-                .addRequirements(OUTPUT, "Last slice, bottom center", OUTPUT_HINT)
-                .addStructureHint("Fluid Input (optional, single-fluid)", BOTTOM_HINT)
-                .addStructureHint("Data Access Hatch (optional, next to controller)", DATA_HINT)
-                .addStructureInfo("Power: 1-8 basic OR 1 multi-amp; no mixing or lasers")
-                .addSubChannel(GTStructureChannels.LENGTH, "Length: channel + 4 (5-16)")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places an input bus for every slice, top energy hatches, maintenance and the end output bus. Optional fluid inputs and data access are installed manually.")
+                .addController("first section, front, layer 3 from the bottom")
+                .addStructureSection("Components")
+                .addOtherStructurePart(Casings.SOLID_STEEL, "fill unused bottom-side and top-center positions")
+                .addOtherStructurePart(Casings.GRATE, "fill unused front and back positions in layer 3")
+                .addOtherStructurePart(Casings.ASSEMBLER, "exactly 1 per section; layer 3 center")
+                .addOtherStructurePart(Casings.ASSEMBLY_LINE, "exactly 1 per section; layer 2 center")
+                .addOtherStructurePart("Reinforced Glass", "exactly 2 per section; layer 2 front and back")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance Hatch", "1; bottom sides")
+                .addHatchInfo("Energy Hatches", "1-8 standard or 1 multi-amp; top center; no mixing or lasers")
+                .addHatchInfo("Input Buses", "exactly 1 per section except the last; bottom center, uses slot 1")
+                .addHatchInfo("Output Bus", "exactly 1; bottom center of the last section")
+                .addHatchInfo("Input Hatches", "optional; bottom sides, single-tank only")
+                .addHatchInfo("Data Access Hatch", "optional, up to 1; next to the controller")
+                .addStructureHint("Bottom sides: casings or hatches", BOTTOM_HINT)
+                .addStructureHint("Top center: casings or energy hatches", ENERGY_HINT)
+                .addStructureHint("Bottom center: input buses", INPUT_HINT)
+                .addStructureHint("Last section: output bus", OUTPUT_HINT)
+                .addStructureHint("Next to controller: grate casing or Data Access Hatch", DATA_HINT)
+                .addSubChannel(GTStructureChannels.LENGTH, "1-12: %s; default: stack size.", "length = value + 4")
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches/buses in free positions; optional hatches are manual.")
                 .toolTipFinisher();
     }
 
@@ -269,7 +283,7 @@ public class GT_MetaTileEntity_AssemblyLine
                             .buildAndChain(ENERGY)
                             .withHint(ENERGY_HINT))
                     .addElement('O', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
-                            .hint(OUTPUT_HINT)
+                            .hint(Casings.SOLID_STEEL, OUTPUT_HINT)
                             .build(OUTPUT))
                     .addElement('D', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
                             .allow(LineHatch.DATA)
@@ -282,7 +296,7 @@ public class GT_MetaTileEntity_AssemblyLine
                             GT_Utility.getBlockFromStack(Ic2Items.reinforcedGlass), Ic2Items.reinforcedGlass.getItemDamage()));
             for (int slice = 0; slice < MAX_LENGTH - 1; slice++) {
                 builder.addElement((char) ('a' + slice), GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_AssemblyLine.class)
-                        .hint(INPUT_HINT)
+                        .hint(Casings.SOLID_STEEL, INPUT_HINT)
                         .build(INPUTS[slice]));
             }
             for (int length = MIN_LENGTH; length <= MAX_LENGTH; length++) {

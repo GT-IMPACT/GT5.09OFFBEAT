@@ -281,13 +281,13 @@ final class GT_DistillationTowerStructureChecks {
             String hints = String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick)));
             assertTrue(info.contains(language.equals("en_US") ? "Distillation Tower" : "Дистилляционная башня"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3-12 x 3" : "3 × 3-12 × 3"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16-79"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("7 x H - 5"));
             assertTrue(structure.contains(language.equals("en_US")
-                    ? "Output buses are optional" : "Выходные шины необязательны"));
-            assertTrue(structure.contains("gt_hatch"));
+                    ? "per upper layer, including the roof" : "на каждом верхнем слое, включая крышу"));
+            assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN, EnumChatFormatting.GOLD}) {
-                String marker = color + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));
             }

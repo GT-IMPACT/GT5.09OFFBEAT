@@ -42,11 +42,16 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
 
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
-        return addDrillerStructure(new MultiblockTooltipBuilder(mName)
+        return addCompactDrillerStructure(new MultiblockTooltipBuilder(mName)
                 .addMachineType("Oil / Gas / Fluid Drilling Rig")
-                .addInfo("Extracts underground fluids from a 4 x 4 chunk vein")
-                .addInfo("Circuits set the minimum yield; controller or Data Access")
-                .addInfo("Mining pipes: controller or optional Input Bus"));
+                .addInfo("Extracts fluids from the local 4 x 4 chunk vein at bedrock or the world's bottom.")
+                .addInfo("Yield depends on input voltage and remaining reserves.")
+                .addInfo("Retracts pipes when yield is at or below the sum of circuit settings.")
+                .addInfo("Circuits: Data Access Hatch, or controller after drilling.")
+                .addInfo("Mining pipes: controller or Input Bus."))
+                .addHatchInfo("Output Hatches", "1+; bottom layer")
+                .addHatchInfo("Data Access Hatches", "optional; bottom layer (circuits)")
+                .toolTipFinisher();
     }
 
 

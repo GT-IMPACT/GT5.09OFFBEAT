@@ -52,14 +52,19 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Large Centrifuge")
-                .addInfo("Processes all Centrifuge recipes")
+                .addInfo("Processes all Centrifuge recipes.")
                 .beginStructureBlock(3, 3, 3, false)
-                .addController("Front center")
-                .addRequirements(SHELL, "Any outer casing position", SHELL_HINT)
-                .addOtherStructurePart(Casings.MOTOR, "Center of the structure", 1)
-                .addStructureInfo("Compatible IMPACT input and energy hatches are also accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Installs available item input and output buses, fluid input and output hatches, maintenance and energy hatches in the centrifuge shell.")
+                .addController("front center")
+                .addStructureSection("Components")
+                .addOtherStructurePart(SHELL.getCasing(), "8+; fill unused shell positions")
+                .addOtherStructurePart(Casings.MOTOR, "exactly 1; center of the structure")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Input and Output", "1+ bus or hatch each; shell")
+                .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: available hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 

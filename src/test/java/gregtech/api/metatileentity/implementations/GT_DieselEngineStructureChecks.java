@@ -171,12 +171,18 @@ final class GT_DieselEngineStructureChecks {
         assertEquals(43, hints.hints);
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputHatches.size() + f.machine.mInputBusHatches.size());
-        assertEquals(7, hints.hintFrames.size());
+        assertEquals(9, hints.hintFrames.size());
         for (int[] p : f.sides) {
             String key = TestWorld.key(p[0], p[1], p[2]);
             assertSame(f.machine.getCasingType().getBlock(), hints.hintBlocks.get(key));
             assertSame(HintColor.GREEN, hints.hintFrames.get(key));
         }
+        assertHint(f.machine.getCasingType(), f.muffler, hints);
+        assertHint(f.machine.getCasingType(), f.dynamo, hints);
+        String mufflerKey = TestWorld.key(f.muffler[0], f.muffler[1], f.muffler[2]);
+        String dynamoKey = TestWorld.key(f.dynamo[0], f.dynamo[1], f.dynamo[2]);
+        assertSame(HintColor.ORANGE, hints.hintFrames.get(mufflerKey));
+        assertSame(HintColor.YELLOW, hints.hintFrames.get(dynamoKey));
         for (int[] p : f.intakes) {
             assertHint(f.machine.getIntakeType(), p, hints);
         }
@@ -342,14 +348,14 @@ final class GT_DieselEngineStructureChecks {
             String structure = String.join("\n", f.machine.getCurrentDescription(true));
             String hints = String.join("\n", f.machine.getStructureDescription(trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Combustion Engine Mk" : "Двигатель внутреннего сгорания Mk"));
-            assertTrue(info.contains(model == 0 ? "6144" : "24576"));
+            assertTrue(info.contains(model == 0 ? "6,144" : "24,576"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 4" : "3 × 3 × 4"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
-            assertTrue(structure.contains("gt_hatch"));
+            assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN,
                     EnumChatFormatting.GOLD, EnumChatFormatting.YELLOW}) {
-                String marker = color + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));
             }

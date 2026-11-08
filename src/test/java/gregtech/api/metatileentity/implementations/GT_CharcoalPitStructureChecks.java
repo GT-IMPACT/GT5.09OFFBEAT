@@ -2,6 +2,7 @@ package gregtech.api.metatileentity.implementations;
 
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.common.GT_Pollution;
@@ -328,9 +329,9 @@ final class GT_CharcoalPitStructureChecks {
             String info = String.join("\n", f.machine.getCurrentDescription(false));
             String structure = String.join("\n", f.machine.getCurrentDescription(true));
             assertTrue(info.contains(language.equals("en_US") ? "Charcoal Pit" : "Углежогная яма"));
-            assertTrue(structure.contains("width"));
-            assertTrue(structure.contains("height"));
-            assertTrue(structure.contains("depth"));
+            assertTrue(structure.contains(GTStructureChannels.getLabel(GTStructureChannels.WIDTH)));
+            assertTrue(structure.contains(GTStructureChannels.getLabel(GTStructureChannels.HEIGHT)));
+            assertTrue(structure.contains(GTStructureChannels.getLabel(GTStructureChannels.DEPTH)));
             assertFalse(structure.contains("gt_hatch"));
             assertTrue("Compact structure tooltip", GT_StructureChannelChecks.materialLineCount(f.machine.getCurrentDescription(true)) <= 13);
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));

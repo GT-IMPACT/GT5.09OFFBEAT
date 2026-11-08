@@ -242,15 +242,18 @@ final class GT_ImplosionStructureChecks {
             GT_MetaTileEntity_TooltipMultiBlockBase.invalidateTooltipCache();
             String info = String.join("\n", machine.getCurrentDescription(false));
             String structure = String.join("\n", machine.getCurrentDescription(true));
+            String hint = String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick)));
             assertTrue(info.contains(language.equals("en_US") ? "Implosion Compressor" : "Имплозивный компрессор"));
-            assertTrue(info.contains("10000"));
+            assertTrue(info.contains("10,000"));
             assertFalse(info.contains("gt_hatch"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains(language.equals("en_US") ? "3 x 3 x 3" : "3 × 3 × 3"));
-            assertFalse(structure.contains(language.equals("en_US") ? "warning signs" : "Знаки взрывоопасности"));
+            String alternativeCasing = language.equals("en_US")
+                    ? "explosion hazard signs" : "знаки взрывоопасности";
+            assertTrue(structure.contains(alternativeCasing));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("16"));
-            assertTrue(structure.contains("gt_hatch"));
-            assertTrue(String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick))).contains("gt_hatch"));
-            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " - "));
+            assertFalse(structure.contains("gt_hatch"));
+            assertFalse(hint.contains("gt_hatch"));
+            assertTrue(structure.contains(EnumChatFormatting.DARK_GREEN + "■" + EnumChatFormatting.RESET + " "));
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
         }
     }

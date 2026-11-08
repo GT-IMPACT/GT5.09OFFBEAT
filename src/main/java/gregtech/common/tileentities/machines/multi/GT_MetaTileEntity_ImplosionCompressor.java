@@ -58,16 +58,21 @@ public class GT_MetaTileEntity_ImplosionCompressor
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType("Implosion Compressor")
-                .addInfo("Compresses materials using explosives")
-                .addPollutionAmount(getPollutionPerTick(null) * 20)
+                .addInfo("Compresses materials using explosives.")
+                .addInfo("Pollution: %s per second before muffler reduction.", getPollutionPerTick(null) * 20)
                 .beginStructureBlock(3, 3, 3, true)
-                .addController("Front center")
-                .addRequirements(SHELL, "Any casing position", SHELL_HINT)
-                .addAir("Center of the structure")
-                .addStructureInfo("Item input and output buses are required; fluid-only hatches do not satisfy these requirements.")
-                .addStructureInfo("IMPACT combined item/fluid inputs and multi-amp energy hatches are accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance, energy, input/output buses and the muffler in the implosion compressor shell.")
+                .addController("front center")
+                .addStructureSection("Components")
+                .addOtherStructurePart(Casings.SOLID_STEEL, "16+; fill unused shell positions; explosion hazard signs also count")
+                .addAir("center of the structure")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Input and Output Buses", "1+ each; shell")
+                .addHatchInfo("Muffler", "1+; shell, keep exhaust clear")
+                .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 

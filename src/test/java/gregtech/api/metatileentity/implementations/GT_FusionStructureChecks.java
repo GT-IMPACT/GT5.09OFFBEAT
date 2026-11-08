@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static gregtech.api.metatileentity.implementations.GT_StructureIntegrationTest.*;
 import static org.junit.Assert.*;
@@ -266,23 +267,27 @@ final class GT_FusionStructureChecks {
             GT_MetaTileEntity_TooltipMultiBlockBase.invalidateTooltipCache();
             String primary = String.join("\n", machine.getCurrentDescription(false));
             String secondary = String.join("\n", machine.getCurrentDescription(true));
+            String hints = String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick)));
+            String plainSecondary = EnumChatFormatting.getTextWithoutFormattingCodes(secondary);
             assertTrue(primary.contains(language.equals("en_US") ? "Fusion Reactor" : "Термоядерный реактор"));
             assertFalse(primary.contains("15 x 3 x 15"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains(language.equals("en_US") ? "15 x 3 x 15" : "15 × 3 × 15"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("79-123"));
-            assertTrue(secondary.contains("gt_hatch"));
-            assertFalse(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("At least 0"));
-            assertTrue(String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick))).contains("gt_hatch"));
+            assertTrue(plainSecondary.contains(language.equals("en_US") ? "15 x 3 x 15" : "15 × 3 × 15"));
+            assertTrue(plainSecondary.contains(language.equals("en_US") ? "79+" : "от 79"));
+            assertFalse(secondary.contains("gt_hatch"));
+            assertFalse(plainSecondary.contains("At least 0"));
+            assertFalse(hints.contains("gt_hatch"));
             EnumChatFormatting[] textColors = {EnumChatFormatting.YELLOW, EnumChatFormatting.BLUE, EnumChatFormatting.GOLD};
-            String[] categories = {"energy", "input_hatch", "output_hatch"};
+            String machineKey = "TileEntity_DESCRIPTION_fusioncomputer.tier."
+                    + String.format(Locale.ROOT, "%02d", machine.tier()) + "_";
             for (int i = 0; i < textColors.length; i++) {
-                String name = StatCollector.translateToLocal("gt.tooltip.hatch." + categories[i]);
-                String legend = textColors[i] + "■" + EnumChatFormatting.RESET + " - " + name;
+                String name = StatCollector.translateToLocal(machineKey + "Hatch_Index_" + i);
+                String legend = textColors[i] + "■" + EnumChatFormatting.RESET + " "
+                        + StatCollector.translateToLocal(machineKey + "Hint_Index_" + i);
                 assertTrue("Hatch names keep ordinary formatting",
                         secondary.contains("   " + EnumChatFormatting.WHITE + name + ":"));
                 assertTrue("Shift tooltip explains hatch colors", secondary.contains(legend));
                 assertTrue("Construction hints explain the same colors",
-                        String.join("\n", machine.getStructureDescription(new ItemStack(Items.stick))).contains(legend));
+                        hints.contains(legend));
             }
         }
     }

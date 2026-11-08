@@ -263,16 +263,17 @@ public class GT_StructureIntegrationTest {
             String secondary = String.join("\n", f.machine.getCurrentDescription(true));
             assertTrue(primary.contains("Vacuum Freezer"));
             assertTrue(primary.contains("Shift"));
-            assertFalse(primary.contains("At least 16"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("At least 16"));
+            assertFalse(primary.contains("16+"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("16+"));
             assertTrue(secondary.contains("Frost Proof Machine Casing"));
-            assertTrue(secondary.contains("Input Bus or Input Hatch"));
+            assertTrue(secondary.contains("Input and Output"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("3 x 3 x 3"));
-            assertTrue(secondary.contains("gt_hatch"));
+            assertFalse(secondary.contains("gt_hatch"));
             assertFalse(secondary.contains("gt.tooltip."));
             assertFalse(secondary.contains("Format error"));
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(String.join("\n", f.machine.getStructureDescription(null))).contains("At least 16"));
-            assertFalse(String.join("\n", f.machine.getStructureDescription(null)).contains("Hold Shift"));
+            String constructionHints = String.join("\n", f.machine.getStructureDescription(null));
+            assertTrue(constructionHints.contains("Maintenance and Energy Hatches"));
+            assertFalse(constructionHints.contains("Hold Shift"));
             String[] copy = f.machine.getPrimaryDescription();
             copy[0] = "mutated";
             assertFalse(f.machine.getPrimaryDescription()[0].equals("mutated"));
@@ -367,9 +368,9 @@ public class GT_StructureIntegrationTest {
             assertTrue(String.join("\n", controls.getCurrentDescription(true, true)).contains("Control page"));
             assertTrue(String.join("\n", f.machine.getPrimaryDescription()).contains("Вакуумный морозильник"));
             secondary = String.join("\n", f.machine.getSecondaryDescription());
-            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("Минимум 16"));
+            assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(secondary).contains("от 16"));
             assertTrue(secondary.contains("Морозостойкий корпус машины"));
-            assertTrue(secondary.contains("Входная шина или входной люк"));
+            assertTrue(secondary.contains("Вход и выход"));
             assertFalse(secondary.contains("gt.tooltip."));
             assertFalse(secondary.contains("Format error"));
             assertEquals("Vacuum Freezer", GT_LanguageManager.LANGMAP.get(

@@ -231,17 +231,19 @@ public abstract class GT_MetaTileEntity_PrimitiveBlastFurnace extends MetaTileEn
 
     protected MultiblockTooltipBuilder createTooltip() {
         MultiblockTooltipBuilder tooltip = new MultiblockTooltipBuilder(mName)
+                .useCompactStructure()
                 .addMachineType(getName())
-                .addInfo("Steelmaking and pyrometallurgy")
-                .addInfo("No power or hatches required");
+                .addInfo("Smelts ores and produces steel using solid fuel.")
+                .addInfo("No power or hatches required.");
         if (getTier() == 4) {
-            tooltip.addInfo("Processes recipes four times faster");
+            tooltip.addInfo("Processes recipes 4 times faster than the Bricked Blast Furnace.");
         }
-        return tooltip.addPollutionAmount(setPollut())
+        return tooltip.addInfo("Pollution: %s per second.", setPollut())
                 .beginStructureBlock(3, 4, 3, true)
-                .addController("Front center of the second layer")
-                .addCasingInfoExactly(getCasingType(), 32, false)
-                .addAir("Central shaft, open at the top; working lava is allowed")
+                .addController("front center of layer 2")
+                .addStructureSection("Components")
+                .addOtherStructurePart(getCasingType(), "exactly 32; walls and solid bottom, except the controller")
+                .addAir("centers of layers 2-4; lava is allowed")
                 .toolTipFinisher();
     }
 

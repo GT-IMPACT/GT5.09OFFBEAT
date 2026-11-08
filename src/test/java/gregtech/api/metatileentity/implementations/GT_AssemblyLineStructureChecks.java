@@ -187,13 +187,15 @@ final class GT_AssemblyLineStructureChecks {
         f.machine.construct(f.trigger(true), true);
         f.world.isRemote = false;
         assertEquals(10 * f.length - 1, hints.hints);
-        assertEquals(3 * f.length + 1, hints.hintFrames.size());
+        assertEquals(4 * f.length + 1, hints.hintFrames.size());
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputBusses.size());
         for (int slice = 0; slice < f.length; slice++) {
             f.assertHint(slice, -2, 0, Casings.SOLID_STEEL, HintColor.LIGHT_BLUE, hints);
             f.assertHint(slice, -2, 2, Casings.SOLID_STEEL, HintColor.LIGHT_BLUE, hints);
             f.assertHint(slice, 1, 1, Casings.SOLID_STEEL, HintColor.YELLOW, hints);
+            HintColor busColor = slice == f.length - 1 ? HintColor.ORANGE : HintColor.BLUE;
+            f.assertHint(slice, -2, 1, Casings.SOLID_STEEL, busColor, hints);
         }
         f.assertHint(1, 0, 0, Casings.GRATE, HintColor.PURPLE, hints);
     }
@@ -353,11 +355,11 @@ final class GT_AssemblyLineStructureChecks {
             String hints = String.join("\n", f.machine.getStructureDescription(f.trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Assembly Line" : "Сборочная линия"));
             assertTrue(structure.contains(language.equals("en_US") ? "no mixing or lasers" : "без смешивания и лазеров"));
-            assertTrue(structure.contains("gt_hatch"));
+            assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (HintColor color : new HintColor[]{HintColor.LIGHT_BLUE, HintColor.YELLOW, HintColor.ORANGE,
                     HintColor.BLUE, HintColor.PURPLE}) {
-                String marker = GTStructureUtility.getHintTextColor(color) + "■" + EnumChatFormatting.RESET + " - ";
+                String marker = GTStructureUtility.getHintTextColor(color) + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));
             }

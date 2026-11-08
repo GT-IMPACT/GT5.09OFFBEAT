@@ -48,7 +48,10 @@ public class GT_MetaTileEntity_FusionComputer2 extends GT_MetaTileEntity_FusionC
 
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
-        return fusionTooltip("It's over 9000!!!", "4096EU/t and 20mio EU Cap per Energy Hatch");
+        return compactFusionTooltip()
+                .addInfo("Maximum energy buffer: %s EU with %s Energy Hatches.", 320006000L, 16)
+                .addInfo("Up to 1 overclock; it doubles power use and processing speed.")
+                .toolTipFinisher();
     }
     
     

@@ -39,8 +39,9 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return turbineTooltip("Large Gas Turbine")
-                .addInfo("Gas fuel input; requires a muffler hatch.")
-                .addPollutionAmount(getPollutionPerTick(null) * 20)
+                .addInfo("Generates EU from gas turbine fuels.")
+                .addInfo("Supply the optimal fuel flow shown by the controller for maximum efficiency.")
+                .addInfo("Pollution: %s per second before muffler reduction.", getPollutionPerTick(null) * 20)
                 .toolTipFinisher();
     }
 

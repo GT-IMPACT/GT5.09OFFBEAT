@@ -37,9 +37,8 @@ public class GT_MetaTileEntity_LargeTurbine_HPSteam extends GT_MetaTileEntity_La
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return turbineTooltip("Large High Pressure Steam Turbine")
-                .addInfo("Superheated steam input; steam output.")
-                .addInfo("Output depends on the rotor and fitting.")
-                .addInfo("Use a screwdriver to adjust the turbine fitting.")
+                .addInfo("Generates EU from Superheated Steam and returns Steam.")
+                .addInfo("Output and optimal steam flow depend on the rotor.")
                 .toolTipFinisher();
     }
 

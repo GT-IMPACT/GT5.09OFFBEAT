@@ -70,26 +70,30 @@ public class GT_MetaTileEntity_DieselEngine
         }
         return engineTooltip(new MultiblockTooltipBuilder(mName)
                 .addMachineType("Combustion Engine Mk1")
-                .addInfo("Consumes flammable fuel and lubricant; oxygen enables boosted output")
-                .addInfo("Output: 2048 EU/t normally, 6144 EU/t when boosted")
-                .addInfo("Oxygen: 2 L/t; lubricant: 1 L per 72 ticks (2 L when boosted)"));
+                .addInfo("Consumes flammable fuel and lubricant; oxygen enables boosted output.")
+                .addInfo("Output: 2048 EU/t normally, 6144 EU/t when boosted.")
+                .addInfo("Oxygen: 2 L/t; lubricant: 1 L per 72 ticks (2 L when boosted)."));
     }
 
     protected MultiblockTooltipBuilder engineTooltip(MultiblockTooltipBuilder tooltip) {
-        return tooltip.addPollutionAmount(20 * getPollutionPerTick(null))
+        return tooltip.useCompactStructure()
+                .addInfo("Pollution: %s per second before muffler reduction.", 20 * getPollutionPerTick(null))
                 .beginStructureBlock(3, 3, 4, false)
-                .addController("Front center")
-                .addRequirements(getShellRequirements(), "Side centers beside either internal block, except the dedicated muffler", SIDE_HINT)
-                .addRequirements(getMufflerRequirements(), "Top center beside the rear internal block", MUFFLER_HINT)
-                .addRequirements(getDynamoRequirements(), "Back center", DYNAMO_HINT)
-                .addOtherStructurePart(getGearboxType(), "Two central positions behind the controller", 2)
-                .addOtherStructurePart(getIntakeType(), "Eight positions surrounding the controller", 8)
-                .addAir("Eight blocks directly in front of the intake ring")
-                .addStructureInfo("The seven marked side positions accept hatches or casings; corners and the rear frame require casings.")
-                .addStructureInfo("Two fluid-capable input hatches and one maintenance hatch are required; item-only buses do not replace fluid inputs.")
-                .addStructureInfo("Additional output hatches, buses and mufflers are accepted at the marked side positions.")
-                .addStructureInfo("Compatible IMPACT multi-fluid and combined inputs and multi-amp dynamo hatches are accepted.")
-                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places two fluid inputs and maintenance in the engine shell, plus the dedicated muffler and rear dynamo.")
+                .addController("front center")
+                .addStructureSection("Components")
+                .addOtherStructurePart(getCasingType(), "16+; fill unused casing positions")
+                .addOtherStructurePart(getGearboxType(), "exactly 2; directly behind the controller")
+                .addOtherStructurePart(getIntakeType(), "exactly 8; around the controller")
+                .addAir("8 blocks directly in front of the blocks around the controller")
+                .addStructureSection("Hatches and buses")
+                .addHatchInfo("Maintenance Hatch", "1; around the gearboxes")
+                .addHatchInfo("Input Hatches", "2+; around the gearboxes")
+                .addHatchInfo("Muffler", "exactly 1; above the rear gearbox, keep exhaust clear")
+                .addHatchInfo("Dynamo Hatch", "exactly 1; center of the back wall")
+                .addStructureHint("Sides: casings or maintenance/fluid input hatches", SIDE_HINT)
+                .addStructureHint("Top rear side: muffler", MUFFLER_HINT)
+                .addStructureHint("Back center: dynamo", DYNAMO_HINT)
+                .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();
     }
 
@@ -295,9 +299,9 @@ public class GT_MetaTileEntity_DieselEngine
                             .allow(HatchElement.Output, EngineHatch.EXTRA_MUFFLER)
                             .buildAndChain(getShellRequirements(), machine -> ++machine.casingCount).withHint(SIDE_HINT))
                     .addElement('M', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_DieselEngine.class)
-                            .hint(MUFFLER_HINT).build(getMufflerRequirements()))
+                            .hint(getCasingType(), MUFFLER_HINT).build(getMufflerRequirements()))
                     .addElement('D', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_DieselEngine.class)
-                            .hint(DYNAMO_HINT).build(getDynamoRequirements()))
+                            .hint(getCasingType(), DYNAMO_HINT).build(getDynamoRequirements()))
                     .build();
         }
         return structureDefinition;

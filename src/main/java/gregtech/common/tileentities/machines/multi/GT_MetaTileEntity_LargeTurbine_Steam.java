@@ -37,9 +37,8 @@ public class GT_MetaTileEntity_LargeTurbine_Steam extends GT_MetaTileEntity_Larg
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return turbineTooltip("Large Steam Turbine")
-                .addInfo("Steam input; distilled water output.")
-                .addInfo("Output depends on the rotor and fitting.")
-                .addInfo("Use a screwdriver to adjust the turbine fitting.")
+                .addInfo("Generates EU from steam; returns 1 L of distilled water per 160 L of steam.")
+                .addInfo("Output and optimal steam flow depend on the rotor.")
                 .toolTipFinisher();
     }
 

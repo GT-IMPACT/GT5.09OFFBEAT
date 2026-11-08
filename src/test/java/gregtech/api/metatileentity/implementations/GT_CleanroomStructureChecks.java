@@ -4,6 +4,7 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.interfaces.ICasing;
+import gregtech.api.util.GTStructureChannels;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.GT_Recipe;
@@ -356,12 +357,12 @@ final class GT_CleanroomStructureChecks {
             String hints = String.join("\n", f.machine.getStructureDescription(f.trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Cleanroom" : "Чистая комната"));
             assertTrue(EnumChatFormatting.getTextWithoutFormattingCodes(structure).contains("27.5%"));
-            assertTrue(structure.contains("width"));
-            assertTrue(structure.contains("depth"));
-            assertTrue(structure.contains("height"));
-            assertTrue(structure.contains("gt_hatch"));
+            assertTrue(structure.contains(GTStructureChannels.getLabel(GTStructureChannels.WIDTH)));
+            assertTrue(structure.contains(GTStructureChannels.getLabel(GTStructureChannels.DEPTH)));
+            assertTrue(structure.contains(GTStructureChannels.getLabel(GTStructureChannels.HEIGHT)));
+            assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            String marker = EnumChatFormatting.BLUE + "■" + EnumChatFormatting.RESET + " - ";
+            String marker = EnumChatFormatting.BLUE + "■" + EnumChatFormatting.RESET + " ";
             assertTrue(structure.contains(marker));
             assertTrue(hints.contains(marker));
             String[] rows = f.machine.getCurrentDescription(true);
@@ -372,7 +373,7 @@ final class GT_CleanroomStructureChecks {
                     channelStart = index;
                 }
             }
-            assertTrue("Keep materials compact before the channel section", channelStart > 0 && channelStart <= 18);
+            assertTrue("Keep sections compact before the channel section", channelStart > 0 && channelStart <= 20);
             assertEquals("Four named channels, each with its description", 9, rows.length - channelStart);
             assertFalse(structure.contains("TileEntity_DESCRIPTION_"));
             assertFalse(structure.contains("gt.tooltip."));
