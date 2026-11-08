@@ -19,6 +19,9 @@ import com.cleanroommc.modularui.widget.sizer.StaticResizer;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.google.common.io.ByteStreams;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.IFMLSidedHandler;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
 import gregtech.api.GregTech_API;
 import gregtech.api.covers.CoverRegistry;
@@ -66,6 +69,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -96,7 +102,7 @@ public class GT_Mui2CoverRoutingTest {
     }
 
     @Test
-    public void transferCoverTickButtonStaysAboveInventoryAndClearOfPopupControls() throws Throwable {
+    public void transferCoversKeepGtnhCompactLayoutAndTickButtonInsets() throws Throwable {
         run("tick_button_layout");
     }
 
@@ -127,9 +133,22 @@ public class GT_Mui2CoverRoutingTest {
                 checkLatePackets(new GT_Cover_Conveyor(20), 0);
                 checkLatePackets(new GT_Cover_Pump(1000), 1);
             } else if ("tick_button_layout".equals(scenario)) {
+                FMLCommonHandler commonHandler = FMLCommonHandler.instance();
+                Field delegateField = FMLCommonHandler.class.getDeclaredField("sidedDelegate");
+                delegateField.setAccessible(true);
+                IFMLSidedHandler previousDelegate = (IFMLSidedHandler) delegateField.get(commonHandler);
                 try (GT_Mui2FluidHatchGuiTest.HeadlessClient ignored = new GT_Mui2FluidHatchGuiTest.HeadlessClient()) {
+                    // Integrated servers build this UI on physical CLIENT too; use actual font widths, not 100.
+                    delegateField.set(commonHandler, Proxy.newProxyInstance(
+                        IFMLSidedHandler.class.getClassLoader(),
+                        new Class<?>[]{IFMLSidedHandler.class},
+                        (proxy, method, args) -> "getSide".equals(method.getName())
+                            ? Side.CLIENT : method.invoke(previousDelegate, args)
+                    ));
                     checkTickButtonLayout(new GT_Cover_Pump(1000), 0);
                     checkTickButtonLayout(new GT_Cover_Conveyor(20), 1);
+                } finally {
+                    delegateField.set(commonHandler, previousDelegate);
                 }
             } else {
                 throw new AssertionError(scenario);
@@ -152,6 +171,11 @@ public class GT_Mui2CoverRoutingTest {
             Area panel = ui.panel.getArea();
             assertTrue(bounds.x >= panel.x && bounds.ex() <= panel.ex());
             assertTrue(bounds.y >= panel.y && bounds.ey() <= panel.ey());
+            assertEquals(0, playerInventoryWidgetCount(ui.panel));
+            assertEquals(4, panel.ex() - bounds.ex());
+            assertEquals(4, panel.ey() - bounds.ey());
+            assertEquals(18, bounds.width);
+            assertEquals(18, bounds.height);
             checkTickButtonClearance(ui.panel, button);
         }
     }
@@ -172,10 +196,6 @@ public class GT_Mui2CoverRoutingTest {
     private static void checkTickButtonClearance(IWidget widget, CoverTickRateButton button) {
         if (widget == button) {
             return;
-        }
-        if (widget instanceof ItemSlot) {
-            assertTrue("Tick button must stay above the player inventory",
-                button.getArea().ey() <= widget.getArea().y);
         }
         if (widget.getChildren().isEmpty()) {
             assertFalse("Tick button overlaps " + widget, button.getArea().intersects(widget.getArea()));
@@ -226,7 +246,7 @@ public class GT_Mui2CoverRoutingTest {
             assertTrue(compatibility.hasCoverGUI());
             assertTrue(name, (coverCase.guiId + ".WEST").equals(fixture.standalone.panel.getName()));
             assertEquals(name, 36, fixture.standalone.container.inventorySlots.size());
-            assertEquals(name, 36, playerInventoryWidgetCount(fixture.standalone.panel));
+            assertEquals(name, 0, playerInventoryWidgetCount(fixture.standalone.panel));
 
             Panel popup = fixture.popup();
             assertTrue(name, (coverCase.guiId + ".WEST").equals(popup.panel.getName()));

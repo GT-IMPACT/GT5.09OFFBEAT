@@ -20,7 +20,6 @@ public class CoverTickRateButton extends ButtonWidget<CoverTickRateButton> {
         overlay(GTGuiTextures.OVERLAY_BUTTON_HOURGLASS);
         syncHandler(new InteractionSyncHandler().setOnMousePressed(this::onClick));
         tooltipBuilder(this::buildTooltip);
-        size(20);
 
         IntSyncValue tickRate = new IntSyncValue(cover::getTickRateAddition, cover::setTickRateAddition);
         tickRate.allowC2S(false);
