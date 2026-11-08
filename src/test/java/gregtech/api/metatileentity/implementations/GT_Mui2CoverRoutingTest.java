@@ -13,6 +13,9 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.PanelSyncHandler;
 import com.cleanroommc.modularui.value.sync.ValueSyncHandler;
 import com.cleanroommc.modularui.widget.WidgetTree;
+import com.cleanroommc.modularui.widget.sizer.Area;
+import com.cleanroommc.modularui.widget.sizer.ResizeNode;
+import com.cleanroommc.modularui.widget.sizer.StaticResizer;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.google.common.io.ByteStreams;
@@ -49,6 +52,7 @@ import gregtech.common.covers.NativeCoverBehavior;
 import gregtech.common.covers.modes.BlockMode;
 import gregtech.common.covers.modes.MachineProcessingCondition;
 import gregtech.common.covers.modes.TransferMode;
+import gregtech.common.modularui2.widget.CoverTickRateButton;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_PortableTank;
 import io.netty.buffer.ByteBuf;
@@ -91,6 +95,11 @@ public class GT_Mui2CoverRoutingTest {
         run("late_packets");
     }
 
+    @Test
+    public void transferCoverTickButtonStaysAboveInventoryAndClearOfPopupControls() throws Throwable {
+        run("tick_button_layout");
+    }
+
     private void run(String scenario) throws Throwable {
         try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
             runtime.run(getClass(), scenario, "");
@@ -117,11 +126,69 @@ public class GT_Mui2CoverRoutingTest {
             } else if ("late_packets".equals(scenario)) {
                 checkLatePackets(new GT_Cover_Conveyor(20), 0);
                 checkLatePackets(new GT_Cover_Pump(1000), 1);
+            } else if ("tick_button_layout".equals(scenario)) {
+                try (GT_Mui2FluidHatchGuiTest.HeadlessClient ignored = new GT_Mui2FluidHatchGuiTest.HeadlessClient()) {
+                    checkTickButtonLayout(new GT_Cover_Pump(1000), 0);
+                    checkTickButtonLayout(new GT_Cover_Conveyor(20), 1);
+                }
             } else {
                 throw new AssertionError(scenario);
             }
         } finally {
             thread.setName(previousName);
+        }
+    }
+
+    private static void checkTickButtonLayout(GT_CoverBehavior behavior, int metadata) throws Exception {
+        Fixture fixture = new Fixture(behavior, metadata);
+        for (Panel ui : new Panel[]{fixture.standalone, fixture.popup()}) {
+            GT_Mui2InputBusTest.prepareLayout(ui.panel, ui.sync);
+            GT_Mui2FluidHatchGuiTest.freezeTranslationCache(ui.panel);
+            initializeResizers(ui.panel, new LayoutViewport());
+            WidgetTree.resizeInternal(ui.panel.resizer(), false);
+            CoverTickRateButton button = findTickButton(ui.panel);
+            assertNotNull(button);
+            Area bounds = button.getArea();
+            Area panel = ui.panel.getArea();
+            assertTrue(bounds.x >= panel.x && bounds.ex() <= panel.ex());
+            assertTrue(bounds.y >= panel.y && bounds.ey() <= panel.ey());
+            checkTickButtonClearance(ui.panel, button);
+        }
+    }
+
+    private static CoverTickRateButton findTickButton(IWidget widget) {
+        if (widget instanceof CoverTickRateButton) {
+            return (CoverTickRateButton) widget;
+        }
+        for (IWidget child : widget.getChildren()) {
+            CoverTickRateButton button = findTickButton(child);
+            if (button != null) {
+                return button;
+            }
+        }
+        return null;
+    }
+
+    private static void checkTickButtonClearance(IWidget widget, CoverTickRateButton button) {
+        if (widget == button) {
+            return;
+        }
+        if (widget instanceof ItemSlot) {
+            assertTrue("Tick button must stay above the player inventory",
+                button.getArea().ey() <= widget.getArea().y);
+        }
+        if (widget.getChildren().isEmpty()) {
+            assertFalse("Tick button overlaps " + widget, button.getArea().intersects(widget.getArea()));
+        }
+        for (IWidget child : widget.getChildren()) {
+            checkTickButtonClearance(child, button);
+        }
+    }
+
+    private static void initializeResizers(IWidget widget, ResizeNode parent) {
+        widget.resizer().initialize(parent, parent);
+        for (IWidget child : widget.getChildren()) {
+            initializeResizers(child, widget.resizer());
         }
     }
 
@@ -413,12 +480,12 @@ public class GT_Mui2CoverRoutingTest {
 
     private static final class Panel {
 
+        private final ModularSyncManager sync = new ModularSyncManager(false);
         private final PanelSyncManager handlers;
         private final ModularPanel panel;
         private final ModularContainer container;
 
         private Panel(Fixture fixture, boolean popup) {
-            ModularSyncManager sync = new ModularSyncManager(false);
             handlers = new PanelSyncManager(sync, true);
             UISettings settings = new UISettings(RecipeViewerSettings.DUMMY);
             CoverGuiData data = fixture.data(popup);
@@ -443,6 +510,26 @@ public class GT_Mui2CoverRoutingTest {
                 data
             );
             assertTrue(handlers.isInitialised());
+        }
+    }
+
+    private static final class LayoutViewport extends StaticResizer {
+
+        private final Area area = new Area(0, 0, 600, 600);
+
+        @Override
+        public Area getArea() {
+            return area;
+        }
+
+        @Override
+        public String getDebugDisplayName() {
+            return "Cover GUI viewport";
+        }
+
+        @Override
+        public String toString() {
+            return getDebugDisplayName();
         }
     }
 }

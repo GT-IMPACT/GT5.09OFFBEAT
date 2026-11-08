@@ -93,7 +93,7 @@ public abstract class CoverBaseGui<T extends Cover> {
         addUIWidgets(syncManager, widgets, data);
         mainColumn.child(widgets);
         if (cover.getMinimumTickRate() > 0 && cover.allowsTickRateAddition()) {
-            panel.child(new CoverTickRateButton(cover, syncManager).right(4).bottom(4));
+            panel.child(new CoverTickRateButton(cover, syncManager).relative(widgets).right(0).bottom(0));
         }
         if (!data.isPopUp() && doesBindPlayerInventory()) {
             mainColumn.child(SlotGroupWidget.playerInventory(false).marginTop(4));
