@@ -952,6 +952,7 @@ gt.tooltip.optional_maximum=Optional, up to %s
 gt.tooltip.legend=Hologram
 gt.tooltip.air=Required air
 gt.tooltip.hold_shift=Hold %s to display structure requirements
+gt.tooltip.hold_ctrl=Hold %s to display machine controls
 gt.tooltip.projector=Use the ImpactStructures hologram projector on the controller to show the structure; sneak-use to build.
 gt.tooltip.projector_show=Use the ImpactStructures projector on the controller to show the structure.
 gt.tooltip.projector_build=Sneak-use to build.

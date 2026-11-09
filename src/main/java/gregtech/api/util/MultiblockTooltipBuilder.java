@@ -107,7 +107,7 @@ public class MultiblockTooltipBuilder {
         case "hold_shift":
             return "Hold %s to display structure requirements";
         case "hold_ctrl":
-            return "Hold Ctrl to display machine controls";
+            return "Hold %s to display machine controls";
         case "projector":
             return "Use the ImpactStructures hologram projector on the controller to show the structure; sneak-use to build.";
         case "projector_show":
@@ -671,8 +671,10 @@ public class MultiblockTooltipBuilder {
         }
         String shiftKey = EnumChatFormatting.YELLOW + "Shift" + EnumChatFormatting.GRAY;
         line(information, EnumChatFormatting.GRAY + tr("hold_shift", shiftKey));
-        if (!controls.isEmpty())
-            line(information, EnumChatFormatting.GRAY + tr("hold_ctrl"));
+        if (!controls.isEmpty()) {
+            String ctrlKey = EnumChatFormatting.YELLOW + "Ctrl" + EnumChatFormatting.GRAY;
+            line(information, EnumChatFormatting.GRAY + tr("hold_ctrl", ctrlKey));
+        }
         if (structureSections && (compactStructure || !coloredHints.isEmpty())) {
             sectionHeading(structure, tr("legend"));
             sectionHeading(hints, tr("legend"));

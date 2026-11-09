@@ -651,6 +651,7 @@ gt.tooltip.optional_maximum=Необязательно, не более %s
 gt.tooltip.legend=Голограмма
 gt.tooltip.air=Обязательный воздух
 gt.tooltip.hold_shift=Удерживайте %s для просмотра требований структуры
+gt.tooltip.hold_ctrl=Удерживайте %s для просмотра управления машиной
 gt.tooltip.projector=Используйте голографический проектор ImpactStructures на контроллере для показа схемы; используйте с приседанием для строительства.
 gt.tooltip.projector_show=Используйте проектор ImpactStructures на контроллере для показа структуры.
 gt.tooltip.projector_build=Используйте с приседанием для строительства.
