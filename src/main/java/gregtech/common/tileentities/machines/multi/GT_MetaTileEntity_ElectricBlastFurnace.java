@@ -47,7 +47,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
     private static final String STRUCTURE_PIECE = "main";
     private static final HintColor BOTTOM_HINT = HintColor.GREEN;
     private static final HintColor RECOVERY_HINT = HintColor.ORANGE;
-    private static final HintColor MUFFLER_HINT = HintColor.RED;
+    private static final HintColor MUFFLER_HINT = HintColor.PURPLE;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, BlastHatch.BOTTOM_OUTPUT)
             .build();

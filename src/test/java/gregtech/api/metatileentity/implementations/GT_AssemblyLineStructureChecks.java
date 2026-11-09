@@ -191,10 +191,10 @@ final class GT_AssemblyLineStructureChecks {
         assertEquals(changes, f.world.changes);
         assertEquals(inputs, f.machine.mInputBusses.size());
         for (int slice = 0; slice < f.length; slice++) {
-            f.assertHint(slice, -2, 0, Casings.SOLID_STEEL, HintColor.LIGHT_BLUE, hints);
-            f.assertHint(slice, -2, 2, Casings.SOLID_STEEL, HintColor.LIGHT_BLUE, hints);
+            f.assertHint(slice, -2, 0, Casings.SOLID_STEEL, HintColor.GREEN, hints);
+            f.assertHint(slice, -2, 2, Casings.SOLID_STEEL, HintColor.GREEN, hints);
             f.assertHint(slice, 1, 1, Casings.SOLID_STEEL, HintColor.YELLOW, hints);
-            HintColor busColor = slice == f.length - 1 ? HintColor.ORANGE : HintColor.BLUE;
+            HintColor busColor = slice == f.length - 1 ? HintColor.RED : HintColor.LIGHT_BLUE;
             f.assertHint(slice, -2, 1, Casings.SOLID_STEEL, busColor, hints);
         }
         f.assertHint(1, 0, 0, Casings.GRATE, HintColor.PURPLE, hints);
@@ -357,8 +357,8 @@ final class GT_AssemblyLineStructureChecks {
             assertTrue(structure.contains(language.equals("en_US") ? "no mixing or lasers" : "без смешивания и лазеров"));
             assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
-            for (HintColor color : new HintColor[]{HintColor.LIGHT_BLUE, HintColor.YELLOW, HintColor.ORANGE,
-                    HintColor.BLUE, HintColor.PURPLE}) {
+            for (HintColor color : new HintColor[]{HintColor.GREEN, HintColor.YELLOW, HintColor.RED,
+                    HintColor.LIGHT_BLUE, HintColor.PURPLE}) {
                 String marker = GTStructureUtility.getHintTextColor(color) + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hints.contains(marker));

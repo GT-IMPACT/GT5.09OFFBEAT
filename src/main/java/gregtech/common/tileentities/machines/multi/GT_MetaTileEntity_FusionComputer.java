@@ -203,7 +203,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
     private enum FusionHatch {
         ENERGY(HatchElement.Energy, GT_MetaTileEntity_Hatch_Energy.class, "energy", 1, HintColor.YELLOW),
         INPUT(HatchElement.Input, GT_MetaTileEntity_Hatch_Input.class, "input_hatch", 2, HintColor.BLUE),
-        OUTPUT(HatchElement.Output, GT_MetaTileEntity_Hatch_Output.class, "output_hatch", 1, HintColor.ORANGE);
+        OUTPUT(HatchElement.Output, GT_MetaTileEntity_Hatch_Output.class, "output_hatch", 1, HintColor.RED);
 
         final HatchElement category;
         final Class<? extends GT_MetaTileEntity_Hatch> type;

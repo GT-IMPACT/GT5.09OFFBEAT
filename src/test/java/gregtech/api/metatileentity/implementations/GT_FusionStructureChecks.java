@@ -175,7 +175,7 @@ final class GT_FusionStructureChecks {
             assertSame("Combined hints keep the actual block texture", descriptor.getBlock(), hints.hintBlocks.get(key));
             assertEquals(descriptor.getMetadata(), hints.hintMetadata.get(key).intValue());
             if (p.kind == 'E' || p.kind == 'I' || p.kind == 'O') {
-                HintColor color = p.kind == 'E' ? HintColor.YELLOW : p.kind == 'I' ? HintColor.BLUE : HintColor.ORANGE;
+                HintColor color = p.kind == 'E' ? HintColor.YELLOW : p.kind == 'I' ? HintColor.BLUE : HintColor.RED;
                 assertSame(color, hints.hintFrames.get(key));
             } else {
                 assertFalse("Ordinary casings and coils need no frame", hints.hintFrames.containsKey(key));
@@ -276,7 +276,7 @@ final class GT_FusionStructureChecks {
             assertFalse(secondary.contains("gt_hatch"));
             assertFalse(plainSecondary.contains("At least 0"));
             assertFalse(hints.contains("gt_hatch"));
-            EnumChatFormatting[] textColors = {EnumChatFormatting.YELLOW, EnumChatFormatting.BLUE, EnumChatFormatting.GOLD};
+            EnumChatFormatting[] textColors = {EnumChatFormatting.YELLOW, EnumChatFormatting.BLUE, EnumChatFormatting.RED};
             String machineKey = "TileEntity_DESCRIPTION_fusioncomputer.tier."
                     + String.format(Locale.ROOT, "%02d", machine.tier()) + "_";
             for (int i = 0; i < textColors.length; i++) {

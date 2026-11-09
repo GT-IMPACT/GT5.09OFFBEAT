@@ -44,10 +44,10 @@ public class GT_MetaTileEntity_AssemblyLine
         implements ISurvivalConstructable {
     private static final int MIN_LENGTH = 5;
     private static final int MAX_LENGTH = 16;
-    private static final HintColor BOTTOM_HINT = HintColor.LIGHT_BLUE;
+    private static final HintColor BOTTOM_HINT = HintColor.GREEN;
     private static final HintColor ENERGY_HINT = HintColor.YELLOW;
-    private static final HintColor INPUT_HINT = HintColor.BLUE;
-    private static final HintColor OUTPUT_HINT = HintColor.ORANGE;
+    private static final HintColor INPUT_HINT = HintColor.LIGHT_BLUE;
+    private static final HintColor OUTPUT_HINT = HintColor.RED;
     private static final HintColor DATA_HINT = HintColor.PURPLE;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
             .atLeast(HatchElement.Maintenance)

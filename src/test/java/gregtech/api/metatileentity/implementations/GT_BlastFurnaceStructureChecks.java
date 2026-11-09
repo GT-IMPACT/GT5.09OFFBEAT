@@ -148,7 +148,7 @@ final class GT_BlastFurnaceStructureChecks {
         String mufflerKey = TestWorld.key(f.muffler[0], f.muffler[1], f.muffler[2]);
         assertSame(Casings.HEAT_PROOF.getBlock(), hints.hintBlocks.get(mufflerKey));
         assertEquals(Casings.HEAT_PROOF.getMetadata(), hints.hintMetadata.get(mufflerKey).intValue());
-        assertSame(HintColor.RED, hints.hintFrames.get(mufflerKey));
+        assertSame(HintColor.PURPLE, hints.hintFrames.get(mufflerKey));
         for (int[] p : f.bottom) {
             assertSame(HintColor.GREEN, hints.hintFrames.get(TestWorld.key(p[0], p[1], p[2])));
         }
@@ -417,7 +417,7 @@ final class GT_BlastFurnaceStructureChecks {
             }
             assertEquals("Hatch section stays separate and has four rows", 4, hatchRows);
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN,
-                    EnumChatFormatting.GOLD, EnumChatFormatting.RED}) {
+                    EnumChatFormatting.GOLD, EnumChatFormatting.DARK_PURPLE}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " ";
                 assertTrue(structure.contains(marker));
                 assertTrue(hint.contains(marker));
