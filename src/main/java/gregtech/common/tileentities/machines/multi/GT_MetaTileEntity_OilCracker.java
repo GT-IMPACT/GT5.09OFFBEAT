@@ -74,7 +74,7 @@ public class GT_MetaTileEntity_OilCracker extends
         return new MultiblockTooltipBuilder(mName)
                 .useCompactStructure()
                 .addMachineType("Oil Cracking Unit")
-                .addInfo("Breaks down heavy oils into lighter products.")
+                .addInfo("Breaks down fluids into lighter products.")
                 .beginStructureBlock(5, 3, 3, true)
                 .addController("front center")
                 .addStructureSection("Components")

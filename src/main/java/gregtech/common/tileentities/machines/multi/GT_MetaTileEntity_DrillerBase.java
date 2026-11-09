@@ -360,7 +360,7 @@ public abstract class GT_MetaTileEntity_DrillerBase
         ItemStack frames = GT_OreDictUnificator.get(OrePrefixes.frameGt, getFrameMaterial(), 1);
 
         return tooltip.useCompactStructure()
-                .addInfo("Minimum combined input voltage: %s.", VN[getMinTier()])
+                .addInfo("Required operating voltage: %s.", VN[getMinTier()])
                 .beginStructureBlock(3, 7, 3, false)
                 .addController("front center of the bottom layer")
                 .addStructureSection("Components")

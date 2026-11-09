@@ -106,7 +106,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 .addStructureSection("Hatches and buses")
                 .addHatchInfo("Maintenance Hatch", "1; bottom sides")
                 .addHatchInfo("Energy Hatches", "1-8 standard or 1 multi-amp; top center; no mixing or lasers")
-                .addHatchInfo("Input Buses", "exactly 1 per section except the last; bottom center, uses slot 1")
+                .addHatchInfo("Input Buses", "exactly 1 per section except the last; bottom center (ULV recommended)")
                 .addHatchInfo("Output Bus", "exactly 1; bottom center of the last section")
                 .addHatchInfo("Input Hatches", "optional; bottom sides, single-tank only")
                 .addHatchInfo("Data Access Hatch", "optional, up to 1; next to the controller")

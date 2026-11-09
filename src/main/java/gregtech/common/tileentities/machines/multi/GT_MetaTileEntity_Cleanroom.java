@@ -92,7 +92,7 @@ public class GT_MetaTileEntity_Cleanroom
                 .addOtherStructurePart(Casings.FILTER, "exactly %s; roof interior, except the controller", "(width - 2) x (depth - 2) - 1")
                 .addStructurePartInfo(Casings.CLEANROOM_GLASS, "optional, up to %s%% of the plascrete count; walls and floor outside the frame", GT_Values.cleanroomGlass)
                 .addOtherStructurePart("Reinforced Doors", "optional, up to 2; walls, above the floor and below the roof")
-                .addOtherStructurePart("Machine Hulls", "optional, up to 20; walls or floor outside the frame")
+                .addOtherStructurePart("Hulls, Diodes or Laser Reflectors", "optional, up to 20 total; walls or floor outside the frame")
                 .addStructureSection("Hatches and buses")
                 .addHatchInfo("Maintenance and Energy Hatches", "exactly 1 each; walls or floor outside the frame")
                 .addStructureHint("Walls and floor: plascrete or hatches", HATCH_HINT)

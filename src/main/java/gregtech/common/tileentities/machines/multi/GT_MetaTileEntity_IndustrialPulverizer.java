@@ -59,7 +59,7 @@ public class GT_MetaTileEntity_IndustrialPulverizer
         return new MultiblockTooltipBuilder(mName)
                 .useCompactStructure()
                 .addMachineType("Industrial Pulverizer")
-                .addInfo("Processes Macerator, Ore Washer and Chemical Bath recipes.")
+                .addInfo("Processes ores using its own recipes.")
                 .addInfo("Does not lose efficiency when overclocked.")
                 .beginStructureBlock(3, 3, 3, false)
                 .addController("front center")

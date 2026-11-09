@@ -102,8 +102,9 @@ public class GT_MetaTileEntity_DistillationTower
                 .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
                 .addHatchInfo("Input Hatch", "1+; bottom layer")
                 .addHatchInfo("Output Hatches", "1+ per upper layer, including the roof; bottom outputs do not count")
-                .addStructureHint("Bottom: casings or input/maintenance/energy hatches", BOTTOM_HINT)
-                .addStructureHint("Upper layers: casings or output/maintenance/energy hatches", OUTPUT_HINT)
+                .addHatchInfo("Output Buses", "optional; shell on any layer; item outputs")
+                .addStructureHint("Bottom: casings, input/maintenance/energy hatches or output buses", BOTTOM_HINT)
+                .addStructureHint("Upper layers: casings, output/maintenance/energy hatches or output buses", OUTPUT_HINT)
                 .addSubChannel(GTStructureChannels.HEIGHT, "1-10: %s; default: stack size.", "total height = value + 2")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();

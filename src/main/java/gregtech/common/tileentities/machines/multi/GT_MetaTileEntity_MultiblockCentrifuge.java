@@ -55,6 +55,7 @@ public class GT_MetaTileEntity_MultiblockCentrifuge
                 .useCompactStructure()
                 .addMachineType("Large Centrifuge")
                 .addInfo("Processes all Centrifuge recipes.")
+                .addInfo("Accepts fluids instead of fluid cells.")
                 .beginStructureBlock(3, 3, 3, false)
                 .addController("front center")
                 .addStructureSection("Components")

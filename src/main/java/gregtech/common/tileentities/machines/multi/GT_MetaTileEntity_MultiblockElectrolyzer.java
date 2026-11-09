@@ -57,6 +57,7 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer
                 .useCompactStructure()
                 .addMachineType("Multiblock Electrolyzer")
                 .addInfo("Processes all Electrolyzer recipes.")
+                .addInfo("Accepts fluids instead of fluid cells.")
                 .beginStructureBlock(3, 3, 3, false)
                 .addController("front center")
                 .addStructureSection("Components")
