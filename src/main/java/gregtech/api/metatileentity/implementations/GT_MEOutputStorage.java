@@ -132,7 +132,9 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
         voidCell = stack != null && stack.getItem() instanceof ItemVoidStorageCell;
         updatePartition(stack);
         updateReadableCell();
-        updateNetwork(oldCell, stack);
+        if (cacheMode) {
+            updateNetwork(oldCell, stack);
+        }
         dirty.run();
     }
 
@@ -528,7 +530,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public List<IMEInventoryHandler> getCellArray(StorageChannel requested) {
-        updateCell();
         AENetworkProxy grid = proxy.get();
         return cacheMode && requested == channel && readableCell != null && grid != null && grid.isActive()
                 ? Collections.<IMEInventoryHandler>singletonList(readableCell)

@@ -129,6 +129,18 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
         super.onFirstTick(aBaseMetaTileEntity);
         if (GregTech_API.mAE2) {
             readyProxy();
+            if (aBaseMetaTileEntity.isServerSide()) {
+                storage.updateCell();
+            }
+        }
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        super.setInventorySlotContents(slot, stack);
+        IGregTechTileEntity base = getBaseMetaTileEntity();
+        if (slot == 0 && GregTech_API.mAE2 && base != null && base.isServerSide()) {
+            storage.updateCell();
         }
     }
 

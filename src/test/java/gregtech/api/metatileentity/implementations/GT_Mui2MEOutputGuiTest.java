@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity.implementations;
 
+import appeng.api.config.AccessRestriction;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.IMEInventoryHandler;
@@ -384,7 +385,7 @@ public class GT_Mui2MEOutputGuiTest {
             return (ICellInventoryHandler<T>) Proxy.newProxyInstance(
                 getClass().getClassLoader(),
                 new Class<?>[]{ICellInventoryHandler.class},
-                (proxy, method, arguments) -> null
+                (proxy, method, arguments) -> method.getName().equals("getAccess") ? AccessRestriction.READ_WRITE : null
             );
         }
     }

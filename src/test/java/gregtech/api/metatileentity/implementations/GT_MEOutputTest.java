@@ -358,7 +358,14 @@ public class GT_MEOutputTest {
         storage.tick(2);
         assertFalse(storage.canAccept(defaultCapacity + 1));
 
+        storage.setCacheMode(true);
+        fixture.network.active = true;
         fixture.stack = new ItemStack(Items.diamond);
+        assertTrue("A grid query must not discover an unprocessed slot change", storage.getCellArray(channel).isEmpty());
+        fixture.network.active = false;
+        storage.tick(3);
+        fixture.network.active = true;
+        assertEquals(1, storage.getCellArray(channel).size());
         fixture.stack.setTagCompound(new NBTTagCompound());
         fixture.stack.getTagCompound().setString("cellContents", "preserved");
         assertTrue(storage.isValidCell(fixture.stack));
@@ -368,9 +375,6 @@ public class GT_MEOutputTest {
         assertTrue("Non-workbench cells have no GTNH partition filter", storage.canStore(fixture.newStack(1)));
         fixture.filtered = false;
         assertTrue(storage.canStore(fixture.newStack(1)));
-        storage.setCacheMode(true);
-        fixture.network.active = true;
-        assertEquals(1, storage.getCellArray(channel).size());
         IMEInventoryHandler<T> readable = storage.getCellArray(channel).get(0);
         assertEquals(AccessRestriction.READ, readable.getAccess());
         T input = fixture.newStack(100);
