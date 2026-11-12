@@ -619,11 +619,19 @@ public class BaseMetaTileEntity
                             byte tData = (byte) ((mFacing & 7) | (mActive ? 8 : 0) | (mRedstone ? 16 : 0) | (mLockUpgrade ? 32 : 0)| (mWorks ? 64 : 0));
                             if (tData != oTextureData) sendBlockEvent((byte) 0, oTextureData = tData);
 
-                            tData = mMetaTileEntity.getUpdateData();
-                            if (tData != oUpdateData) sendBlockEvent((byte) 1, oUpdateData = tData);
-                            if(mMetaTileEntity instanceof GT_MetaTileEntity_Hatch) {
-                                tData = ((GT_MetaTileEntity_Hatch) mMetaTileEntity).getTexturePage();
-                                if (tData != oTexturePage) sendBlockEvent((byte) 1, (byte)((oTexturePage = tData)|0x80));//set last bit as a flag for page
+                            byte textureIndex = mMetaTileEntity.getUpdateData();
+                            boolean textureIndexChanged = textureIndex != oUpdateData;
+                            if (textureIndexChanged) {
+                                oUpdateData = textureIndex;
+                                sendBlockEvent((byte) 1, textureIndex);
+                            }
+                            if (mMetaTileEntity instanceof GT_MetaTileEntity_Hatch) {
+                                byte texturePage = ((GT_MetaTileEntity_Hatch) mMetaTileEntity).getTexturePage();
+                                // Applying a new index resets the client's texture page to zero.
+                                if (textureIndexChanged || texturePage != oTexturePage) {
+                                    oTexturePage = texturePage;
+                                    sendBlockEvent((byte) 1, (byte) (texturePage | 0x80));
+                                }
                             }
                             if (mColor != oColor) sendBlockEvent((byte) 2, oColor = mColor);
                             tData = (byte) (((mSidedRedstone[0] > 0) ? 1 : 0) | ((mSidedRedstone[1] > 0) ? 2 : 0) | ((mSidedRedstone[2] > 0) ? 4 : 0) | ((mSidedRedstone[3] > 0) ? 8 : 0) | ((mSidedRedstone[4] > 0) ? 16 : 0) | ((mSidedRedstone[5] > 0) ? 32 : 0));
