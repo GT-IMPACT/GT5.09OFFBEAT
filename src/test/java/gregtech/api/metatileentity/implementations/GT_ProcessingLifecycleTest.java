@@ -3,6 +3,8 @@ package gregtech.api.metatileentity.implementations;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Cleanroom;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_HeatExchanger;
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -48,6 +50,11 @@ public class GT_ProcessingLifecycleTest {
     @Test
     public void stoppingWhileWaitingDisablesRestartAndRetainsSavedProducts() throws Throwable {
         runtime.run(getClass(), "stopWaiting", "");
+    }
+
+    @Test
+    public void placementEnablesOnlySupportedProtectionWithoutOverwritingSavedModes() throws Throwable {
+        runtime.run(getClass(), "placementProtection", "");
     }
 
     public static void runScenario(String scenario, String ignored) throws Throwable {
@@ -139,6 +146,34 @@ public class GT_ProcessingLifecycleTest {
         assertEquals(75, s.output.mFluid.amount);
         assertFalse(s.fixture.tile.isAllowedToWork());
         assertEquals(0, s.machine.mMaxProgresstime);
+    }
+
+    private static void placementProtection() {
+        TestFreezer freezer = new TestFreezer();
+        Fixture fixture = new Fixture(freezer, 1);
+        freezer.initDefaultModes(null);
+        assertEquals(ProcessingLogic.PROTECT_ITEMS | ProcessingLogic.PROTECT_FLUIDS, freezer.getProcessingModes());
+
+        NBTTagCompound itemTag = new NBTTagCompound();
+        itemTag.setTag("GT.CraftingComponents", new NBTTagCompound());
+        GT_MetaTileEntity_HeatExchanger exchanger = new GT_MetaTileEntity_HeatExchanger("test");
+        fixture.attach(exchanger);
+        exchanger.loadNBTData(itemTag);
+        exchanger.initDefaultModes(itemTag);
+        assertEquals(ProcessingLogic.PROTECT_FLUIDS, exchanger.getProcessingModes());
+
+        GT_MetaTileEntity_Cleanroom cleanroom = new GT_MetaTileEntity_Cleanroom("test");
+        cleanroom.initDefaultModes(null);
+        assertEquals(0, cleanroom.getProcessingModes());
+
+        NBTTagCompound saved = new NBTTagCompound();
+        freezer.setProcessingModes(0);
+        freezer.saveNBTData(saved);
+        TestFreezer restored = new TestFreezer();
+        fixture.attach(restored);
+        restored.loadNBTData(saved);
+        restored.initDefaultModes(saved);
+        assertEquals(0, restored.getProcessingModes());
     }
 
     private static final class TestFreezer extends GT_MetaTileEntity_VacuumFreezer {

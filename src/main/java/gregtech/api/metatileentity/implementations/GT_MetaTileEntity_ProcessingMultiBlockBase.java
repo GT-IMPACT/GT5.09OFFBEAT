@@ -272,6 +272,14 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
         return ProcessingLogic.ALL_MODES;
     }
 
+    @Override
+    public void initDefaultModes(NBTTagCompound tag) {
+        if (tag == null || !tag.getCompoundTag("processing").hasKey("modes")) {
+            processingModes = getSupportedProcessingModes()
+                    & (ProcessingLogic.PROTECT_ITEMS | ProcessingLogic.PROTECT_FLUIDS);
+        }
+    }
+
     /** Override for display-only maps with their own registered NEI handler. */
     public GT_Recipe_Map getRecipeMapForNEI() {
         GT_Recipe_Map map = getRecipeMap();
