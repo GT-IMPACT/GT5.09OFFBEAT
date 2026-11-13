@@ -13,7 +13,10 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item;
@@ -21,9 +24,12 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,6 +40,7 @@ import appeng.api.config.AccessRestriction;
 import appeng.core.AEConfig;
 import appeng.core.AppEng;
 import com.google.common.collect.HashBiMap;
+import com.mojang.authlib.GameProfile;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Upgrades;
@@ -98,6 +105,11 @@ public class GT_Mui2MEOutputLogicTest {
     @Test
     public void copiedSettingsAndReloadsPreserveItemAndFluidBuffers() throws Throwable {
         run("settings");
+    }
+
+    @Test
+    public void dataStickClicksCopyAndApplyOutputSettings() throws Throwable {
+        run("dataStickClicks");
     }
 
     @Test
@@ -169,6 +181,8 @@ public class GT_Mui2MEOutputLogicTest {
             checkPriority(StorageChannel.FLUIDS, IAEFluidStack.class);
         } else if ("settings".equals(scenario)) {
             checkSettings();
+        } else if ("dataStickClicks".equals(scenario)) {
+            checkDataStickClicks();
         } else if ("tools".equals(scenario)) {
             checkTools();
         } else if ("processing".equals(scenario)) {
@@ -334,6 +348,81 @@ public class GT_Mui2MEOutputLogicTest {
         assertTrue(restoredHatch.getMEOutputStorage().getCheckMode());
         assertEquals(42, restoredHatch.getMEOutputStorage().getPriority());
         assertTrue(restoredHatch.useMui2());
+    }
+
+    private static void checkDataStickClicks() throws Exception {
+        ItemList.Tool_DataStick.set(new ItemStack(Items.paper));
+        DataStickPlayer player = dataStickPlayer();
+        ItemStack stick = ItemList.Tool_DataStick.get(1);
+        player.inventory.setInventorySlotContents(0, stick);
+
+        Bus sourceBus = new Bus();
+        sourceBus.getMEOutputStorage().setCacheMode(true);
+        sourceBus.getMEOutputStorage().setCheckMode(true);
+        sourceBus.getMEOutputStorage().setPriority(17);
+        Bus targetBus = new Bus();
+        assertFalse(targetBus.onRightclick(targetBus.getBaseMetaTileEntity(), player));
+        assertEquals("GT5U.hatch.outputme.settings.invalid", player.messageKey);
+        sourceBus.onLeftclick(sourceBus.getBaseMetaTileEntity(), player);
+        assertEquals("GT5U.hatch.outputme.settings.saved", player.messageKey);
+        assertTrue(targetBus.onRightclick(targetBus.getBaseMetaTileEntity(), player));
+        assertEquals("GT5U.hatch.outputme.settings.loaded", player.messageKey);
+        assertTrue(targetBus.getMEOutputStorage().isCacheMode());
+        assertTrue(targetBus.getMEOutputStorage().getCheckMode());
+        assertEquals(17, targetBus.getMEOutputStorage().getPriority());
+
+        Hatch targetHatch = new Hatch();
+        assertFalse(targetHatch.onRightclick(targetHatch.getBaseMetaTileEntity(), player));
+        assertEquals("GT5U.hatch.outputme.settings.invalid", player.messageKey);
+        Hatch sourceHatch = new Hatch();
+        sourceHatch.getMEOutputStorage().setCacheMode(true);
+        sourceHatch.getMEOutputStorage().setCheckMode(true);
+        sourceHatch.getMEOutputStorage().setPriority(29);
+        sourceHatch.onLeftclick(sourceHatch.getBaseMetaTileEntity(), player);
+        assertEquals("GT5U.hatch.outputme.settings.saved", player.messageKey);
+        assertTrue(targetHatch.onRightclick(targetHatch.getBaseMetaTileEntity(), player));
+        assertEquals("GT5U.hatch.outputme.settings.loaded", player.messageKey);
+        assertTrue(targetHatch.getMEOutputStorage().isCacheMode());
+        assertTrue(targetHatch.getMEOutputStorage().getCheckMode());
+        assertEquals(29, targetHatch.getMEOutputStorage().getPriority());
+
+        GT_MetaTileEntity_Hatch_OutputBus source = new GT_MetaTileEntity_Hatch_OutputBus("source", 1, "", null);
+        GT_MetaTileEntity_Hatch_OutputBus target = new GT_MetaTileEntity_Hatch_OutputBus("target", 1, "", null);
+        assertFalse(target.onRightclick(null, player));
+        assertEquals("GT5U.machines.output_bus.invalid", player.messageKey);
+        source.setLockedItem(new ItemStack(Items.gold_ingot));
+        source.onLeftclick(null, player);
+        assertEquals("GT5U.machines.output_bus.saved", player.messageKey);
+        assertTrue(target.onRightclick(null, player));
+        assertEquals("GT5U.machines.output_bus.loaded", player.messageKey);
+        assertTrue(target.isFilteredToItem(new ItemStack(Items.gold_ingot)));
+        assertFalse(target.isFilteredToItem(new ItemStack(Items.iron_ingot)));
+    }
+
+    private static DataStickPlayer dataStickPlayer() throws Exception {
+        // Initialize the player inventory without creating a server or a network connection.
+        Class<?> factoryClass = Class.forName("sun.reflect.ReflectionFactory");
+        Object factory = factoryClass.getMethod("getReflectionFactory").invoke(null);
+        Constructor<?> constructor = (Constructor<?>) factoryClass
+                .getMethod("newConstructorForSerialization", Class.class, Constructor.class)
+                .invoke(factory, DataStickPlayer.class, EntityPlayer.class.getConstructor(World.class, GameProfile.class));
+        constructor.setAccessible(true);
+        return (DataStickPlayer) constructor.newInstance(new GT_StructureIntegrationTest.TestWorld(),
+                new GameProfile(UUID.randomUUID(), "DataStickPlayer"));
+    }
+
+    private static final class DataStickPlayer extends EntityPlayerMP {
+
+        private String messageKey;
+
+        private DataStickPlayer() {
+            super(null, null, null, null);
+        }
+
+        @Override
+        public void addChatMessage(IChatComponent message) {
+            messageKey = ((ChatComponentTranslation) message).getKey();
+        }
     }
 
     private static void checkTools() {
