@@ -235,7 +235,7 @@ public class GT_Mui2MEOutputLogicTest {
         assertTrue("A non-workbench cell has no partition filter", fixture.storage.canStore(fixture.newStack(1)));
         fixture.filtered = false;
         assertTrue(fixture.storage.canStore(fixture.newStack(1000)));
-        fixture.cellStack = null;
+        fixture.setCellStack(null);
         fixture.storage.setCheckMode(true);
         assertFalse(fixture.storage.shouldCheck());
         assertEquals(1600, fixture.storage.getCapacity());
@@ -262,7 +262,7 @@ public class GT_Mui2MEOutputLogicTest {
         fixture.storage.save(saved);
         fixture.network.active = false;
         fixture.storage.load(saved);
-        fixture.storage.updateCell();
+        fixture.storage.initializeCell();
         fixture.network.active = true;
         assertTrue(fixture.storage.isCacheMode());
         assertTrue(fixture.storage.getCheckMode());
@@ -502,7 +502,7 @@ public class GT_Mui2MEOutputLogicTest {
         selected.setItemDamage(3);
         itemCell.partition = new IAEStack<?>[] { nativeItem(selected), nativeFluid(fluid("ignored", 1)) };
         itemCell.upgrades.setInventorySlotContents(0, new ItemStack(new Upgrade(Upgrades.FUZZY)));
-        items.cellStack = new ItemStack(itemCell);
+        items.setCellStack(new ItemStack(itemCell));
         assertTrue(items.storage.isFiltered());
         assertTrue(items.storage.canStore(nativeItem(selected.copy())));
         ItemStack wrongMeta = selected.copy();
@@ -513,31 +513,31 @@ public class GT_Mui2MEOutputLogicTest {
         assertFalse(items.storage.canStore(nativeItem(wrongNbt)));
         assertFalse(items.storage.canStore(nativeItem(new ItemStack(Items.iron_ingot))));
         itemCell.upgrades.setInventorySlotContents(1, new ItemStack(new Upgrade(Upgrades.INVERTER)));
-        items.cellStack = new ItemStack(itemCell);
+        items.setCellStack(new ItemStack(itemCell));
         assertFalse(items.storage.canStore(nativeItem(selected)));
         assertTrue(items.storage.canStore(nativeItem(wrongMeta)));
         assertTrue(items.storage.canStore(nativeItem(wrongNbt)));
         itemCell.partition = new IAEStack<?>[0];
-        items.cellStack = new ItemStack(itemCell);
+        items.setCellStack(new ItemStack(itemCell));
         assertFalse(items.storage.isFiltered());
         assertTrue("Empty partitions remain unfiltered with Inverter", items.storage.canStore(nativeItem(selected)));
         itemCell.partition = new IAEStack<?>[] { nativeFluid(fluid("ignored", 1)) };
-        items.cellStack = new ItemStack(itemCell);
+        items.setCellStack(new ItemStack(itemCell));
         assertFalse("Wrong-channel partition entries are ignored", items.storage.isFiltered());
 
         CellFixture<IAEFluidStack> fluids = new CellFixture<>(StorageChannel.FLUIDS, IAEFluidStack.class);
         PartitionCell fluidCell = new PartitionCell();
         fluidCell.partition = new IAEStack<?>[] { nativeFluid(fluid("selected", 1)) };
-        fluids.cellStack = new ItemStack(fluidCell);
+        fluids.setCellStack(new ItemStack(fluidCell));
         assertTrue(fluids.storage.isFiltered());
         assertTrue(fluids.storage.canStore(nativeFluid(fluid("selected", 1))));
         assertFalse(fluids.storage.canStore(nativeFluid(fluid("other", 1))));
         assertFalse(fluids.storage.canStore(nativeFluid(new FluidStack(FluidRegistry.LAVA, 1))));
         fluidCell.upgrades.setInventorySlotContents(0, new ItemStack(new Upgrade(Upgrades.INVERTER)));
-        fluids.cellStack = new ItemStack(fluidCell);
+        fluids.setCellStack(new ItemStack(fluidCell));
         assertFalse(fluids.storage.canStore(nativeFluid(fluid("selected", 1))));
         assertTrue(fluids.storage.canStore(nativeFluid(fluid("other", 1))));
-        fluids.cellStack = null;
+        fluids.setCellStack(null);
         assertFalse(fluids.storage.isFiltered());
         assertTrue(fluids.storage.canStore(nativeFluid(fluid("selected", 1))));
     }
@@ -554,7 +554,7 @@ public class GT_Mui2MEOutputLogicTest {
         CellFixture<IAEItemStack> storage = new CellFixture<>(StorageChannel.ITEMS, IAEItemStack.class);
         PartitionCell cell = new PartitionCell();
         cell.partition = new IAEStack<?>[] { nativeItem(item("selected", 1)) };
-        storage.cellStack = new ItemStack(cell);
+        storage.setCellStack(new ItemStack(cell));
         GT_ProcessingTestSupport.setField(classified, "storage", storage.storage);
         assertEquals(OutputBusType.MEFiltered, classified.getBusType());
         assertTrue(classified.isLocked());
@@ -611,7 +611,7 @@ public class GT_Mui2MEOutputLogicTest {
         CellFixture<IAEFluidStack> storage = new CellFixture<>(StorageChannel.FLUIDS, IAEFluidStack.class);
         PartitionCell cell = new PartitionCell();
         cell.partition = new IAEStack<?>[] { nativeFluid(fluid("selected", 1)) };
-        storage.cellStack = new ItemStack(cell);
+        storage.setCellStack(new ItemStack(cell));
         GT_ProcessingTestSupport.setField(classified, "storage", storage.storage);
         assertEquals(OutputHatchType.MEFiltered, classified.getHatchType());
         storage.storage.setCacheMode(true);
@@ -817,7 +817,7 @@ public class GT_Mui2MEOutputLogicTest {
     private static void checkVoidCells() throws Exception {
         ItemVoidStorageCell voidCell = voidCell();
         CellFixture<IAEItemStack> items = new CellFixture<>(StorageChannel.ITEMS, IAEItemStack.class);
-        items.cellStack = new ItemStack(voidCell);
+        items.setCellStack(new ItemStack(voidCell));
         assertTrue(items.storage.isVoidCell());
         assertEquals(Long.MAX_VALUE, items.storage.getCapacity());
         Bus bus = new Bus();
@@ -828,13 +828,13 @@ public class GT_Mui2MEOutputLogicTest {
         assertEquals(0, requestedItems.stackSize);
         assertEquals("Inserting a void cell preserves previous output", 3, bus.getMEOutputAmount());
         assertEquals(Long.MAX_VALUE - 3, bus.getProcessingCapacity(new ItemStack(Items.iron_ingot)));
-        items.cellStack = null;
+        items.setCellStack(null);
         assertFalse(items.storage.isVoidCell());
         bus.storeAll(new ItemStack(Items.iron_ingot, 2));
         assertEquals(5, bus.getMEOutputAmount());
 
         CellFixture<IAEFluidStack> fluids = new CellFixture<>(StorageChannel.FLUIDS, IAEFluidStack.class);
-        fluids.cellStack = new ItemStack(voidCell);
+        fluids.setCellStack(new ItemStack(voidCell));
         assertTrue(fluids.storage.isVoidCell());
         assertEquals(Long.MAX_VALUE, fluids.storage.getCapacity());
         Hatch hatch = new Hatch();
@@ -847,7 +847,7 @@ public class GT_Mui2MEOutputLogicTest {
         assertEquals(Integer.MAX_VALUE, requestedFluid.amount);
         assertEquals(7, hatch.getMEOutputAmount());
         assertEquals(Long.MAX_VALUE - 7, hatch.getProcessingCapacity(new FluidStack(FluidRegistry.WATER, 1)));
-        fluids.cellStack = null;
+        fluids.setCellStack(null);
         hatch.fill(new FluidStack(FluidRegistry.WATER, 2), true);
         assertEquals(9, hatch.getMEOutputAmount());
     }
@@ -1431,6 +1431,12 @@ public class GT_Mui2MEOutputLogicTest {
                     return handler;
                 }
             };
+            storage.initializeCell();
+        }
+
+        void setCellStack(ItemStack stack) {
+            cellStack = stack;
+            storage.onCellChanged();
         }
 
         @SuppressWarnings("unchecked")

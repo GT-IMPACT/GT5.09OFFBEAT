@@ -1,5 +1,8 @@
 package gregtech.api.metatileentity.implementations;
 
+import static appeng.util.item.AEFluidStackType.FLUID_STACK_TYPE;
+import static appeng.util.item.AEItemStackType.ITEM_STACK_TYPE;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +24,7 @@ import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.Upgrades;
 import appeng.api.implementations.items.IUpgradeModule;
+import appeng.api.implementations.items.IStorageCell;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.ICellInventoryHandler;
@@ -118,24 +122,46 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public boolean isValidCell(ItemStack stack) {
-        return stack != null && stack.stackSize == 1 && loadCell(stack) instanceof ICellInventoryHandler;
+        if (stack == null || stack.stackSize != 1) {
+            return false;
+        }
+        if (stack.getItem() instanceof ItemVoidStorageCell) {
+            return matchesChannel(((ItemVoidStorageCell) stack.getItem()).getStackType());
+        }
+        if (stack.getItem() instanceof IStorageCell) {
+            IStorageCell candidate = (IStorageCell) stack.getItem();
+            return matchesChannel(candidate.getStackType()) && candidate.isStorageCell(stack);
+        }
+        return false;
     }
 
-    public void updateCell() {
+    private boolean matchesChannel(IAEStackType<?> type) {
+        return type == (channel == StorageChannel.ITEMS ? ITEM_STACK_TYPE : FLUID_STACK_TYPE);
+    }
+
+    public void onCellChanged() {
         ItemStack stack = cellStack.get();
         if (stack == previousCell) {
             return;
         }
         ItemStack oldCell = previousCell;
-        previousCell = stack;
-        cell = stack == null ? null : loadCell(stack);
-        voidCell = stack != null && stack.getItem() instanceof ItemVoidStorageCell;
-        updatePartition(stack);
-        updateReadableCell();
+        initializeCell();
         if (cacheMode) {
             updateNetwork(oldCell, stack);
         }
         dirty.run();
+    }
+
+    public void initializeCell() {
+        ItemStack stack = cellStack.get();
+        if (stack != previousCell) {
+            IMEInventoryHandler<T> loaded = stack == null ? null : loadCell(stack);
+            previousCell = stack;
+            cell = loaded;
+            voidCell = stack != null && stack.getItem() instanceof ItemVoidStorageCell;
+            updatePartition(stack);
+            updateReadableCell();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -176,7 +202,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public long getCapacity() {
-        updateCell();
         if (voidCell) {
             return Long.MAX_VALUE;
         }
@@ -190,7 +215,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public List<T> getCellContents() {
-        updateCell();
         List<T> contents = new ArrayList<>();
         if (cell != null) {
             IItemList<T> available = cell.getAvailableItems(
@@ -207,7 +231,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
      * The legacy scanner API accepts translated strings instead of GTNH's encoded translation arguments.
      */
     public String[] getInfoData(List<T> cached, String langBaseKey, Function<T, String> nameGetter) {
-        updateCell();
         List<String> info = new ArrayList<>();
         AENetworkProxy grid = proxy.get();
         info.add(grid != null && grid.isActive()
@@ -343,7 +366,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public boolean isVoidCell() {
-        updateCell();
         return voidCell;
     }
 
@@ -362,7 +384,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
 
     public void tick(long tick) {
         currentTick = tick;
-        updateCell();
         if (tick % 20 == 0) {
             AENetworkProxy grid = proxy.get();
             boolean active = grid != null && grid.isActive();
@@ -401,7 +422,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
         if (cacheMode == enabled) {
             return;
         }
-        updateCell();
         if (!enabled && cell != null) {
             IItemList<T> contents = cell.getAvailableItems(
                     (IItemList<T>) cell.getStackType().createPrimitiveList(), IterationCounter.fetchNewId());
@@ -430,7 +450,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public boolean shouldCheck() {
-        updateCell();
         return checkMode && cacheMode && cell != null;
     }
 
@@ -441,7 +460,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     public void setPriority(int value) {
         if (priority != value) {
             priority = value;
-            updateCell();
             updateReadableCell();
             updateNetwork(null, null);
             dirty.run();
@@ -453,7 +471,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public boolean canStore(T stack, long reservedSameType) {
-        updateCell();
         if (shouldCheck()) {
             long buffered = bufferedAmount.applyAsLong(stack);
             long pending = Math.max(0, reservedSameType);
@@ -469,12 +486,10 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public boolean isFiltered() {
-        updateCell();
         return !partition.isEmpty();
     }
 
     public boolean isAllowed(T stack) {
-        updateCell();
         if (partition.isEmpty()) {
             return true;
         }
@@ -502,7 +517,6 @@ public class GT_MEOutputStorage<T extends IAEStack<T>> implements ISaveProvider 
     }
 
     public T insert(T stack, IMEInventory<T> network) throws GridAccessException {
-        updateCell();
         AENetworkProxy grid = proxy.get();
         long before = stack.getStackSize();
         T remaining = Platform.poweredInsert(grid.getEnergy(), cacheMode && cell != null ? cell : network,

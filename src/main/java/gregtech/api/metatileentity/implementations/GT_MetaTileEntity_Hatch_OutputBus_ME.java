@@ -128,10 +128,10 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
     public void onFirstTick(IGregTechTileEntity aBaseMetaTileEntity) {
         super.onFirstTick(aBaseMetaTileEntity);
         if (GregTech_API.mAE2) {
-            readyProxy();
             if (aBaseMetaTileEntity.isServerSide()) {
-                storage.updateCell();
+                storage.initializeCell();
             }
+            readyProxy();
         }
     }
 
@@ -140,7 +140,7 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
         super.setInventorySlotContents(slot, stack);
         IGregTechTileEntity base = getBaseMetaTileEntity();
         if (slot == 0 && GregTech_API.mAE2 && base != null && base.isServerSide()) {
-            storage.updateCell();
+            storage.onCellChanged();
         }
     }
 

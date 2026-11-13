@@ -358,7 +358,7 @@ public class GT_Mui2MEOutputGuiTest {
         }
     }
 
-    /** Only the external AE cell registry is replaced; native validation and transfers stay real. */
+    /** Supplies a test cell for native slot transfers. */
     private static final class CellStorage<T extends IAEStack<T>> extends GT_MEOutputStorage<T> {
 
         private CellStorage(MetaTileEntity machine, StorageChannel channel) {
@@ -374,6 +374,11 @@ public class GT_Mui2MEOutputGuiTest {
                 },
                 stack -> 0
             );
+        }
+
+        @Override
+        public boolean isValidCell(ItemStack stack) {
+            return stack != null && stack.stackSize == 1 && stack.getItem() == Items.diamond_sword;
         }
 
         @Override

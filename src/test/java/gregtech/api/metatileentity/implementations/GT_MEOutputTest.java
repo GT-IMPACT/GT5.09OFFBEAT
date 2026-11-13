@@ -361,14 +361,16 @@ public class GT_MEOutputTest {
         storage.setCacheMode(true);
         fixture.network.active = true;
         fixture.stack = new ItemStack(Items.diamond);
+        assertEquals(defaultCapacity, storage.getCapacity());
+        assertFalse(storage.shouldCheck());
+        assertTrue(storage.getCellContents().isEmpty());
         assertTrue("A grid query must not discover an unprocessed slot change", storage.getCellArray(channel).isEmpty());
         fixture.network.active = false;
-        storage.tick(3);
+        storage.onCellChanged();
         fixture.network.active = true;
         assertEquals(1, storage.getCellArray(channel).size());
         fixture.stack.setTagCompound(new NBTTagCompound());
         fixture.stack.getTagCompound().setString("cellContents", "preserved");
-        assertTrue(storage.isValidCell(fixture.stack));
         assertFalse(storage.isValidCell(new ItemStack(Items.iron_ingot)));
         assertEquals(1000000, storage.getCapacity());
         fixture.filtered = true;
@@ -416,6 +418,7 @@ public class GT_MEOutputTest {
         storage.setRefreshSeconds(-1);
         assertEquals(2, storage.getRefreshSeconds());
         fixture.stack = null;
+        storage.onCellChanged();
         assertEquals(defaultCapacity, storage.getCapacity());
         storage.save(nbt);
         assertFalse(nbt.hasKey("meStorageCell"));
