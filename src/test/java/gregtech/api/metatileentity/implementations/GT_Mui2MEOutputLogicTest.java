@@ -108,7 +108,7 @@ public class GT_Mui2MEOutputLogicTest {
     }
 
     @Test
-    public void dataStickClicksCopyAndApplyOutputSettings() throws Throwable {
+    public void dataStickClicksCopyOnlyStandardOutputBusSettings() throws Throwable {
         run("dataStickClicks");
     }
 
@@ -356,35 +356,27 @@ public class GT_Mui2MEOutputLogicTest {
         ItemStack stick = ItemList.Tool_DataStick.get(1);
         player.inventory.setInventorySlotContents(0, stick);
 
-        Bus sourceBus = new Bus();
-        sourceBus.getMEOutputStorage().setCacheMode(true);
-        sourceBus.getMEOutputStorage().setCheckMode(true);
-        sourceBus.getMEOutputStorage().setPriority(17);
-        Bus targetBus = new Bus();
-        assertFalse(targetBus.onRightclick(targetBus.getBaseMetaTileEntity(), player));
-        assertEquals("GT5U.hatch.outputme.settings.invalid", player.messageKey);
-        sourceBus.onLeftclick(sourceBus.getBaseMetaTileEntity(), player);
-        assertEquals("GT5U.hatch.outputme.settings.saved", player.messageKey);
-        assertTrue(targetBus.onRightclick(targetBus.getBaseMetaTileEntity(), player));
-        assertEquals("GT5U.hatch.outputme.settings.loaded", player.messageKey);
-        assertTrue(targetBus.getMEOutputStorage().isCacheMode());
-        assertTrue(targetBus.getMEOutputStorage().getCheckMode());
-        assertEquals(17, targetBus.getMEOutputStorage().getPriority());
+        Bus bus = new Bus();
+        Hatch hatch = new Hatch();
+        bus.onLeftclick(bus.getBaseMetaTileEntity(), player);
+        hatch.onLeftclick(hatch.getBaseMetaTileEntity(), player);
+        assertNull(stick.getTagCompound());
+        assertNull(player.messageKey);
 
-        Hatch targetHatch = new Hatch();
-        assertFalse(targetHatch.onRightclick(targetHatch.getBaseMetaTileEntity(), player));
-        assertEquals("GT5U.hatch.outputme.settings.invalid", player.messageKey);
-        Hatch sourceHatch = new Hatch();
-        sourceHatch.getMEOutputStorage().setCacheMode(true);
-        sourceHatch.getMEOutputStorage().setCheckMode(true);
-        sourceHatch.getMEOutputStorage().setPriority(29);
-        sourceHatch.onLeftclick(sourceHatch.getBaseMetaTileEntity(), player);
-        assertEquals("GT5U.hatch.outputme.settings.saved", player.messageKey);
-        assertTrue(targetHatch.onRightclick(targetHatch.getBaseMetaTileEntity(), player));
-        assertEquals("GT5U.hatch.outputme.settings.loaded", player.messageKey);
-        assertTrue(targetHatch.getMEOutputStorage().isCacheMode());
-        assertTrue(targetHatch.getMEOutputStorage().getCheckMode());
-        assertEquals(29, targetHatch.getMEOutputStorage().getPriority());
+        NBTTagCompound busSettings = bus.getCopiedData(player);
+        busSettings.setInteger("myPriority", 17);
+        stick.setTagCompound(busSettings);
+        assertTrue(bus.onRightclick(bus.getBaseMetaTileEntity(), player));
+        assertTrue(bus.network.guiOpened);
+        assertEquals(0, bus.getMEOutputStorage().getPriority());
+
+        NBTTagCompound hatchSettings = hatch.getCopiedData(player);
+        hatchSettings.setInteger("myPriority", 29);
+        stick.setTagCompound(hatchSettings);
+        assertTrue(hatch.onRightclick(hatch.getBaseMetaTileEntity(), player));
+        assertTrue(hatch.network.guiOpened);
+        assertEquals(0, hatch.getMEOutputStorage().getPriority());
+        assertNull(player.messageKey);
 
         GT_MetaTileEntity_Hatch_OutputBus source = new GT_MetaTileEntity_Hatch_OutputBus("source", 1, "", null);
         GT_MetaTileEntity_Hatch_OutputBus target = new GT_MetaTileEntity_Hatch_OutputBus("target", 1, "", null);
@@ -1282,6 +1274,7 @@ public class GT_Mui2MEOutputLogicTest {
 
         int events;
         boolean active;
+        boolean guiOpened;
         byte facing = (byte) ForgeDirection.NORTH.ordinal();
         byte colorization = -1;
         AEColor color = AEColor.Transparent;
@@ -1347,6 +1340,9 @@ public class GT_Mui2MEOutputLogicTest {
                                 return output;
                             case "isServerSide":
                                 return true;
+                            case "openGUI":
+                                guiOpened = true;
+                                return defaultValue(method.getReturnType());
                             case "getFrontFacing":
                                 return facing;
                             case "getColorization":

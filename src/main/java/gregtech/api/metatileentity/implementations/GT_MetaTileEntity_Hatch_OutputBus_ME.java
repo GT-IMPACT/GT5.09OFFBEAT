@@ -312,32 +312,10 @@ public class GT_MetaTileEntity_Hatch_OutputBus_ME extends GT_MetaTileEntity_Hatc
 
     @Override
     public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-        if (aPlayer instanceof EntityPlayerMP) {
-            ItemStack dataStick = aPlayer.inventory.getCurrentItem();
-            if (ItemList.Tool_DataStick.isStackEqual(dataStick, false, true)) {
-                boolean pasted = pasteCopiedData(aPlayer, dataStick.stackTagCompound);
-                aPlayer.addChatMessage(new ChatComponentTranslation(
-                        "GT5U.hatch.outputme.settings." + (pasted ? "loaded" : "invalid")));
-                return pasted;
-            }
-        }
         if (aBaseMetaTileEntity.isServerSide()) {
             aBaseMetaTileEntity.openGUI(aPlayer);
         }
         return true;
-    }
-
-    @Override
-    public void onLeftclick(IGregTechTileEntity base, EntityPlayer player) {
-        if (!(player instanceof EntityPlayerMP)) {
-            return;
-        }
-        ItemStack dataStick = player.inventory.getCurrentItem();
-        if (ItemList.Tool_DataStick.isStackEqual(dataStick, false, true)) {
-            dataStick.stackTagCompound = getCopiedData(player);
-            dataStick.setStackDisplayName("ME Output Bus Configuration");
-            player.addChatMessage(new ChatComponentTranslation("GT5U.hatch.outputme.settings.saved"));
-        }
     }
 
     @Override
