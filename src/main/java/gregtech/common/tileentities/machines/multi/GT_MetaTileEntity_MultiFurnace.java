@@ -42,6 +42,8 @@ public class GT_MetaTileEntity_MultiFurnace
     private static final HintColor MUFFLER_HINT = HintColor.ORANGE;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, FurnaceHatch.INPUT_BUS, FurnaceHatch.OUTPUT_BUS)
+            .atMost(HatchElement.Maintenance, 1)
+            .atMost(HatchElement.Energy, 4)
             .build();
     private static final StructureRequirements EXHAUST = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
             .atLeast(FurnaceHatch.MUFFLER).build();
@@ -77,7 +79,8 @@ public class GT_MetaTileEntity_MultiFurnace
                 .addOtherStructurePart("Heating Coils", "exactly 8 of the same tier; middle layer")
                 .addAir("center of the middle layer")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; bottom layer")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; bottom layer")
+                .addHatchInfo("Energy Hatches", "1-4; bottom layer")
                 .addHatchInfo("Input and Output Buses", "1+ each; bottom layer")
                 .addHatchInfo("Muffler", "exactly 1; top center, keep exhaust clear")
                 .addStructureHint("Bottom: casings or hatches/buses", BOTTOM_HINT)

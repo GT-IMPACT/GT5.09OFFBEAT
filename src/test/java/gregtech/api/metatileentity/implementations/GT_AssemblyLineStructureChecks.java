@@ -95,29 +95,25 @@ final class GT_AssemblyLineStructureChecks {
         f.put(0, -2, 0, Casings.SOLID_STEEL);
         assertFalse("Maintenance is required", f.recheck());
         f.hatch(0, -2, 0, 'M');
+        f.hatch(1, -2, 0, 'M');
+        assertFalse("Only one maintenance hatch", f.recheck());
+        f.put(1, -2, 0, Casings.SOLID_STEEL);
         f.put(0, 1, 1, Casings.SOLID_STEEL);
         assertFalse("Power is required", f.recheck());
         f.hatch(0, 1, 1, 'A');
         assertTrue("One multi-amp energy hatch", f.recheck());
         f.hatch(1, 1, 1, 'E');
-        assertFalse("No mixed power types", f.recheck());
-        f.hatch(1, 1, 1, 'A');
-        assertFalse("Only one multi-amp hatch", f.recheck());
-        f.put(1, 1, 1, Casings.SOLID_STEEL);
-        f.hatch(0, 1, 1, 'L');
-        assertFalse("Lasers are forbidden", f.recheck());
-        f.hatch(0, 1, 1, 'E');
-        if (f.length == 16) {
-            for (int i = 1; i < 8; i++) {
-                f.hatch(i, 1, 1, 'E');
-            }
-            assertTrue("Eight basic hatches", f.recheck());
-            f.hatch(8, 1, 1, 'E');
-            assertFalse("Not nine basic hatches", f.recheck());
-            for (int i = 1; i <= 8; i++) {
-                f.put(i, 1, 1, Casings.SOLID_STEEL);
-            }
+        f.hatch(2, 1, 1, 'L');
+        f.hatch(3, 1, 1, 'A');
+        assertTrue("Four mixed energy hatches", f.recheck());
+        f.hatch(4, 1, 1, 'E');
+        assertFalse("The limit counts all five energy hatches", f.recheck());
+        for (int slice = 1; slice <= 4; slice++) {
+            f.put(slice, 1, 1, Casings.SOLID_STEEL);
         }
+        f.hatch(0, 1, 1, 'L');
+        assertTrue("One laser energy hatch", f.recheck());
+        f.hatch(0, 1, 1, 'E');
         for (int slice = 0; slice < f.length; slice++) {
             f.put(slice, -2, 1, Casings.SOLID_STEEL);
             assertFalse("Every dedicated bus is mandatory", f.recheck());
@@ -223,10 +219,12 @@ final class GT_AssemblyLineStructureChecks {
         }
         assertTrue(f.machine.mMachine);
         assertEquals(10 * length - 1, source.consumed);
-        for (int i = 0; i < 4; i++) {
-            assertEquals("Forbidden or optional hatch is not auto-selected", 1, source.stacks.get(i).stackSize);
+        assertEquals("Laser hatch is auto-selected for energy", 0, source.stacks.get(0).stackSize);
+        for (int i = 1; i < 4; i++) {
+            assertEquals("Optional hatch is not auto-selected", 1, source.stacks.get(i).stackSize);
         }
         assertEquals(1, f.machine.mEnergyHatchesMulti.size());
+        assertTrue(f.machine.mEnergyHatchesMulti.get(0) instanceof GTMTE_LaserEnergy_In);
         assertEquals(length - 1, f.machine.mInputBusses.size());
         assertEquals(-1, f.build(true, 100, source));
         assertEquals(10 * length - 1, source.consumed);
@@ -354,7 +352,8 @@ final class GT_AssemblyLineStructureChecks {
             String structure = String.join("\n", f.machine.getCurrentDescription(true));
             String hints = String.join("\n", f.machine.getStructureDescription(f.trigger(false)));
             assertTrue(info.contains(language.equals("en_US") ? "Assembly Line" : "Сборочная линия"));
-            assertTrue(structure.contains(language.equals("en_US") ? "no mixing or lasers" : "без смешивания и лазеров"));
+            String energy = EnumChatFormatting.getTextWithoutFormattingCodes(structure);
+            assertTrue(energy.contains(language.equals("en_US") ? "1-4 of any type" : "1-4 любого типа"));
             assertFalse(structure.contains("gt_hatch"));
             assertFalse(info.contains("gt_hatch"));
             for (HintColor color : new HintColor[]{HintColor.GREEN, HintColor.YELLOW, HintColor.RED,

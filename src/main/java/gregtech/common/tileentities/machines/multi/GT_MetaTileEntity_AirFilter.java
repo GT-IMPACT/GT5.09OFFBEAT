@@ -57,6 +57,8 @@ public class GT_MetaTileEntity_AirFilter
     private static final StructureRequirements BOTTOM = StructureRequirements
             .builder(Casings.AIR_FILTER_TURBINE, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, FilterHatch.INPUT_BUS, FilterHatch.OUTPUT_BUS)
+            .atMost(HatchElement.Maintenance, 1)
+            .atMost(HatchElement.Energy, 4)
             .build();
     private static final StructureRequirements MUFFLERS = StructureRequirements
             .builder(Casings.AIR_FILTER_TURBINE, 0)
@@ -102,8 +104,8 @@ public class GT_MetaTileEntity_AirFilter
                 .addAir("2 full 3 x 3 layers above the roof")
                 .addAir("1 block outside each side of the 2 middle layers, including vents")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; bottom layer")
-                .addHatchInfo("Energy Hatches", "1+; bottom layer")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; bottom layer")
+                .addHatchInfo("Energy Hatches", "1-4; bottom layer")
                 .addHatchInfo("Input and Output Buses", "1+ each; bottom layer")
                 .addHatchInfo("Mufflers", "1-8; side centers of the 2 middle layers")
                 .addStructureHint("Bottom: casings or hatches/buses", BOTTOM_HINT)

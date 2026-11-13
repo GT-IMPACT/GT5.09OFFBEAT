@@ -33,7 +33,10 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer
     private static final String STRUCTURE_PIECE = "main";
     private static final HintColor SHELL_HINT = HintColor.GREEN;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.STABLE_TITANIUM, 8)
-            .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output).build();
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, HatchElement.Output)
+            .atMost(HatchElement.Maintenance, 1)
+            .atMost(HatchElement.Energy, 4)
+            .build();
     private static IStructureDefinition<GT_MetaTileEntity_MultiblockElectrolyzer> structureDefinition;
     private int casingCount;
     private int coilCount;
@@ -66,7 +69,8 @@ public class GT_MetaTileEntity_MultiblockElectrolyzer
                 .addOtherStructurePart(Casings.CUPRONICKEL_COIL, "1-5; touching the pump, except toward the controller")
                 .addStructureInfo("Construction keeps existing coils or places one in a free position if needed.")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; shell")
+                .addHatchInfo("Energy Hatches", "1-4; shell")
                 .addHatchInfo("Input and Output", "1+ bus or hatch each; shell")
                 .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: available hatches in free positions; existing casings are kept.")

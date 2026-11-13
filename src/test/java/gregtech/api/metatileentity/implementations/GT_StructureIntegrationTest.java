@@ -272,7 +272,8 @@ public class GT_StructureIntegrationTest {
             assertFalse(secondary.contains("gt.tooltip."));
             assertFalse(secondary.contains("Format error"));
             String constructionHints = String.join("\n", f.machine.getStructureDescription(null));
-            assertTrue(constructionHints.contains("Maintenance and Energy Hatches"));
+            assertTrue(constructionHints.contains("Maintenance Hatch"));
+            assertTrue(constructionHints.contains("Energy Hatches"));
             assertFalse(constructionHints.contains("Hold Shift"));
             String[] copy = f.machine.getPrimaryDescription();
             copy[0] = "mutated";
@@ -755,9 +756,9 @@ public class GT_StructureIntegrationTest {
                 f.putHatch(i, i);
             }
             for (int i = 4; i < 9; i++)
-                f.putHatch(i, 1);
+                f.putHatch(i, 3);
             assertTrue("16 casings", f.machine.recheck());
-            f.putHatch(9, 1);
+            f.putHatch(9, 3);
             assertFalse("15 casings", f.machine.recheck());
             f.putCasing(9);
             int[] center = f.position(0, 0, 1);

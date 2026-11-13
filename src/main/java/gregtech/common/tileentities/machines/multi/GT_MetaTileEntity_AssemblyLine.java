@@ -1,6 +1,5 @@
 package gregtech.common.tileentities.machines.multi;
 
-import com.impact.mods.gregtech.tileentities.hatches.lasers.GTMTE_LaserEnergy_In;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Casings;
 import gregtech.api.logic.ProcessingLogic;
@@ -51,9 +50,11 @@ public class GT_MetaTileEntity_AssemblyLine
     private static final HintColor DATA_HINT = HintColor.PURPLE;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
             .atLeast(HatchElement.Maintenance)
+            .atMost(HatchElement.Maintenance, 1)
             .build();
     private static final StructureRequirements ENERGY = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
-            .atLeast(LineHatch.ENERGY)
+            .atLeast(HatchElement.Energy)
+            .atMost(HatchElement.Energy, 4)
             .build();
     private static final StructureRequirements OUTPUT = StructureRequirements.builder(Casings.SOLID_STEEL, 0)
             .atLeast(LineHatch.OUTPUT_BUS)
@@ -104,8 +105,8 @@ public class GT_MetaTileEntity_AssemblyLine
                 .addOtherStructurePart(Casings.ASSEMBLY_LINE, "exactly 1 per section; layer 2 center")
                 .addOtherStructurePart("Reinforced Glass", "exactly 2 per section; layer 2 front and back")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; bottom sides")
-                .addHatchInfo("Energy Hatches", "1-8 standard or 1 multi-amp; top center; no mixing or lasers")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; bottom sides")
+                .addHatchInfo("Energy Hatches", "1-4 of any type; top center")
                 .addHatchInfo("Input Buses", "exactly 1 per section except the last; bottom center (ULV recommended)")
                 .addHatchInfo("Output Bus", "exactly 1; bottom center of the last section")
                 .addHatchInfo("Input Hatches", "optional; bottom sides, single-tank only")
@@ -212,8 +213,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 return false;
             }
         }
-        return mEnergyHatchesMulti.isEmpty() ? mEnergyHatches.size() <= 8
-                : mEnergyHatchesMulti.size() == 1 && mEnergyHatches.isEmpty();
+        return true;
     }
 
     private int findLength() {
@@ -355,7 +355,6 @@ public class GT_MetaTileEntity_AssemblyLine
     }
 
     private enum LineHatch implements IHatchElement {
-        ENERGY,
         OUTPUT_BUS,
         FLUID_INPUT,
         DATA;
@@ -363,8 +362,6 @@ public class GT_MetaTileEntity_AssemblyLine
         @Override
         public boolean matches(IMetaTileEntity tile) {
             switch (this) {
-                case ENERGY:
-                    return HatchElement.Energy.matches(tile) && !(tile instanceof GTMTE_LaserEnergy_In);
                 case OUTPUT_BUS:
                     return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
                 case FLUID_INPUT:
@@ -379,8 +376,6 @@ public class GT_MetaTileEntity_AssemblyLine
         @Override
         public int count(GT_MetaTileEntity_MultiBlockBase machine) {
             switch (this) {
-                case ENERGY:
-                    return HatchElement.Energy.count(machine);
                 case OUTPUT_BUS:
                     return machine.mOutputBusses.size();
                 case FLUID_INPUT:
@@ -395,8 +390,6 @@ public class GT_MetaTileEntity_AssemblyLine
         @Override
         public boolean add(GT_MetaTileEntity_MultiBlockBase machine, IGregTechTileEntity tile, int texture) {
             switch (this) {
-                case ENERGY:
-                    return machine.addEnergyInputToMachineList(tile, texture);
                 case OUTPUT_BUS:
                     return machine.addOutputToMachineList(tile, texture);
                 case FLUID_INPUT:
@@ -411,8 +404,6 @@ public class GT_MetaTileEntity_AssemblyLine
         @Override
         public String getDescription() {
             switch (this) {
-                case ENERGY:
-                    return HatchElement.Energy.getDescription();
                 case OUTPUT_BUS:
                     return StatCollector.translateToLocal("gt.tooltip.hatch.output_bus");
                 case FLUID_INPUT:

@@ -89,6 +89,19 @@ final class GT_ImplosionStructureChecks {
             f.putHatch(kind, kind);
             assertTrue(f.recheck());
         }
+        f.putHatch(5, 0);
+        assertFalse("Only one maintenance hatch", f.recheck());
+        f.putHatch(5, 4);
+        assertFalse("Only one muffler", f.recheck());
+        f.putHatch(5, 6);
+        f.putHatch(6, 1);
+        f.putHatch(7, 6);
+        assertTrue("Four mixed energy hatches", f.recheck());
+        f.putHatch(8, 1);
+        assertFalse("Five energy hatches exceed the limit", f.recheck());
+        for (int index = 5; index <= 8; index++) {
+            f.putCasing(index, mode);
+        }
         for (int input : new int[]{7, 9}) {
             f.putHatch(2, input);
             assertFalse("Fluid-only inputs do not satisfy the item input requirement", f.recheck());

@@ -401,7 +401,7 @@ final class GT_BlastFurnaceStructureChecks {
             assertTrue(info.contains(EnumChatFormatting.YELLOW + "Shift" + EnumChatFormatting.GRAY));
             assertEquals("Compact primary tooltip", 8, machine.getPrimaryDescription().length);
             String[] rows = machine.getSecondaryDescription();
-            assertEquals("Compact structure tooltip", 22, rows.length);
+            assertEquals("Compact structure tooltip", 23, rows.length);
             int hatchRows = 0;
             boolean inHatches = false;
             for (String row : rows) {
@@ -415,7 +415,7 @@ final class GT_BlastFurnaceStructureChecks {
                     hatchRows++;
                 }
             }
-            assertEquals("Hatch section stays separate and has four rows", 4, hatchRows);
+            assertEquals("Hatch section stays separate and has five rows", 5, hatchRows);
             for (EnumChatFormatting color : new EnumChatFormatting[]{EnumChatFormatting.DARK_GREEN,
                     EnumChatFormatting.GOLD, EnumChatFormatting.DARK_PURPLE}) {
                 String marker = color + "■" + EnumChatFormatting.RESET + " ";

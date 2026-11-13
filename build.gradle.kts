@@ -73,7 +73,7 @@ dependencies {
     runtimeOnlyNonPublishable(modUtils.deobfuscate("curse.maven:journeymap-32274:4500659"))
 
     testImplementation("junit:junit:4.13.2")
-    // Exercise Assembly Line's exclusion of IMPACT laser energy hatches.
+    // Exercise IMPACT laser energy hatches in the Assembly Line structure tests.
     testRuntimeOnly("space.impact:impact-core:1.1.0.25-1-gb6211b5.dirty:dev") {
         isTransitive = false
     }

@@ -79,13 +79,13 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
                 .addOtherStructurePart(getCasingType(), "24+; fill unused casing positions")
                 .addAir("2 blocks between the controller and dynamo")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; around the 2 central air blocks")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; around the 2 central air blocks")
                 .addHatchInfo("Input Hatches", "1+; around the 2 central air blocks");
         if (requiresOutputHatch()) {
             tooltip.addHatchInfo("Output Hatches", "1+; around the 2 central air blocks");
         }
         if (getPollutionPerTick(null) > 0) {
-            tooltip.addHatchInfo("Muffler", "1; around the 2 central air blocks, keep exhaust clear");
+            tooltip.addHatchInfo("Muffler", "exactly 1; around the 2 central air blocks, keep exhaust clear");
         }
         return tooltip
                 .addHatchInfo("Dynamo Hatch", "exactly 1; center of the back wall")
@@ -97,12 +97,13 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
     private StructureRequirements getShellRequirements() {
         if (shell == null) {
             StructureRequirements.Builder builder = StructureRequirements.builder(getCasingType(), 24)
-                    .atLeast(HatchElement.Maintenance, TurbineHatch.INPUT);
+                    .atLeast(HatchElement.Maintenance, TurbineHatch.INPUT)
+                    .atMost(HatchElement.Maintenance, 1);
             if (requiresOutputHatch()) {
                 builder.atLeast(TurbineHatch.OUTPUT);
             }
             if (getPollutionPerTick(null) > 0) {
-                builder.atLeast(TurbineHatch.MUFFLER);
+                builder.atLeast(TurbineHatch.MUFFLER).atMost(TurbineHatch.MUFFLER, 1);
             }
             shell = builder.build();
         }

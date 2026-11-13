@@ -43,7 +43,10 @@ public class GT_MetaTileEntity_OilCracker extends
     private static final HintColor REAGENT_HINT = HintColor.PURPLE;
     private static final HintColor OUTPUT_HINT = HintColor.ORANGE;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 18)
-            .atLeast(HatchElement.Maintenance, HatchElement.Energy).build();
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy)
+            .atMost(HatchElement.Maintenance, 1)
+            .atMost(HatchElement.Energy, 4)
+            .build();
     private static final StructureRequirements INPUT = port(CrackerHatch.HYDROCARBON);
     private static final StructureRequirements REAGENT = port(CrackerHatch.REAGENT);
     private static final StructureRequirements OUTPUT = port(CrackerHatch.PRODUCT);
@@ -82,8 +85,8 @@ public class GT_MetaTileEntity_OilCracker extends
                 .addOtherStructurePart(Casings.CUPRONICKEL_COIL, "exactly 16; 8 on each side of the controller")
                 .addAir("3 blocks through the center, from left to right")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; outer casing")
-                .addHatchInfo("Energy Hatches", "1+; outer casing")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; outer casing")
+                .addHatchInfo("Energy Hatches", "1-4; outer casing")
                 .addHatchInfo("Input Hatches", "1+ in the left or right wall; 1+ in the central outer casing")
                 .addHatchInfo("Output Hatch", "1+; outer wall opposite the side input")
                 .addStructureInfo("Middle input: steam, hydrogen, radon, fluorine, or zinc/nickel/niobium/silver plasma.")

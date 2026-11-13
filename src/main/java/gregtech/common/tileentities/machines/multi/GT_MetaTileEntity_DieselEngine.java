@@ -86,7 +86,7 @@ public class GT_MetaTileEntity_DieselEngine
                 .addOtherStructurePart(getIntakeType(), "exactly 8; around the controller")
                 .addAir("8 blocks directly in front of the blocks around the controller")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; around the gearboxes")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; around the gearboxes")
                 .addHatchInfo("Input Hatches", "2+; around the gearboxes")
                 .addHatchInfo("Muffler", "exactly 1; above the rear gearbox, keep exhaust clear")
                 .addHatchInfo("Dynamo Hatch", "exactly 1; center of the back wall")
@@ -157,7 +157,10 @@ public class GT_MetaTileEntity_DieselEngine
     private StructureRequirements getShellRequirements() {
         if (shell == null) {
             shell = StructureRequirements.builder(getCasingType(), 16)
-                    .atLeast(HatchElement.Maintenance).atLeast(EngineHatch.INPUT, 2).build();
+                    .atLeast(HatchElement.Maintenance)
+                    .atLeast(EngineHatch.INPUT, 2)
+                    .atMost(HatchElement.Maintenance, 1)
+                    .build();
         }
         return shell;
     }

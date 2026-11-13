@@ -18,11 +18,13 @@ public final class StructureRequirements {
     private final ICasing casing;
     private final int minimumCasings;
     private final Map<IHatchElement, Integer> hatches;
+    private final Map<IHatchElement, Integer> maximumHatches;
 
     private StructureRequirements(Builder builder) {
         casing = builder.casing;
         minimumCasings = builder.minimumCasings;
         hatches = Collections.unmodifiableMap(new LinkedHashMap<>(builder.hatches));
+        maximumHatches = Collections.unmodifiableMap(new LinkedHashMap<>(builder.maximumHatches));
     }
 
     public static Builder builder(ICasing casing, int minimumCasings) {
@@ -42,14 +44,17 @@ public final class StructureRequirements {
     }
 
     public boolean isSatisfied(GT_MetaTileEntity_MultiBlockBase machine, int casingCount) {
-        return casingCount >= minimumCasings && hatches.entrySet().stream()
-                .allMatch(entry -> entry.getKey().count(machine) >= entry.getValue());
+        return casingCount >= minimumCasings
+                && hatches.entrySet().stream().allMatch(entry -> entry.getKey().count(machine) >= entry.getValue())
+                && maximumHatches.entrySet().stream()
+                        .allMatch(entry -> entry.getKey().count(machine) <= entry.getValue());
     }
 
     public static final class Builder {
         private final ICasing casing;
         private final int minimumCasings;
         private final Map<IHatchElement, Integer> hatches = new LinkedHashMap<>();
+        private final Map<IHatchElement, Integer> maximumHatches = new LinkedHashMap<>();
 
         private Builder(ICasing casing, int minimumCasings) {
             this.casing = Objects.requireNonNull(casing);
@@ -68,6 +73,15 @@ public final class StructureRequirements {
 
         public Builder atLeast(IHatchElement... hatches) {
             for (IHatchElement hatch : hatches) atLeast(hatch, 1);
+            return this;
+        }
+
+        /** Caps the machine-wide count during validation, independently of automatic placement. */
+        public Builder atMost(IHatchElement hatch, int count) {
+            if (count < 0) {
+                throw new IllegalArgumentException("Negative hatch maximum");
+            }
+            maximumHatches.merge(Objects.requireNonNull(hatch), count, Math::min);
             return this;
         }
 

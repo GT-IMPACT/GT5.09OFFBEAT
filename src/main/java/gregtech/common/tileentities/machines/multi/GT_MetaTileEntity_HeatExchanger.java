@@ -50,7 +50,9 @@ public class GT_MetaTileEntity_HeatExchanger
     private static final HintColor HOT_HINT = HintColor.BLUE;
     private static final HintColor COLD_HINT = HintColor.ORANGE;
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.STABLE_TITANIUM, 20)
-            .atLeast(HatchElement.Maintenance, ExchangerHatch.WATER, ExchangerHatch.STEAM).build();
+            .atLeast(HatchElement.Maintenance, ExchangerHatch.WATER, ExchangerHatch.STEAM)
+            .atMost(HatchElement.Maintenance, 1)
+            .build();
     private static final StructureRequirements HOT_INPUT = StructureRequirements.builder(Casings.STABLE_TITANIUM, 0)
             .atLeast(ExchangerHatch.HOT).build();
     private static final StructureRequirements COLD_OUTPUT = StructureRequirements.builder(Casings.STABLE_TITANIUM, 0)
@@ -87,7 +89,7 @@ public class GT_MetaTileEntity_HeatExchanger
                 .addOtherStructurePart(SHELL.getCasing(), "20+; fill unused casing positions")
                 .addOtherStructurePart(Casings.TITANIUM_PIPE, "exactly 2; one above the other in the center")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; outer casing")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; outer casing")
                 .addHatchInfo("Input Hatches", "1+ in outer casing (distilled water); exactly 1 at bottom center (lava or hot coolant)")
                 .addHatchInfo("Output Hatches", "1+ in outer casing (steam); exactly 1 at top center (cooled fluid)")
                 .addStructureHint("Outer casing: casings or hatches", SHELL_HINT)

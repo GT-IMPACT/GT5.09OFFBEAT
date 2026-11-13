@@ -50,6 +50,8 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
     private static final HintColor MUFFLER_HINT = HintColor.PURPLE;
     private static final StructureRequirements BOTTOM = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, HatchElement.Input, BlastHatch.BOTTOM_OUTPUT)
+            .atMost(HatchElement.Maintenance, 1)
+            .atMost(HatchElement.Energy, 4)
             .build();
     private static final StructureRequirements TOP = StructureRequirements.builder(Casings.HEAT_PROOF, 0).build();
     private static final StructureRequirements EXHAUST = StructureRequirements.builder(Casings.HEAT_PROOF, 0)
@@ -91,7 +93,8 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 .addOtherStructurePart("Heating Coils", "exactly 16 of the same tier; layers 2 and 3")
                 .addAir("centers of layers 2 and 3")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; bottom layer")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; bottom layer")
+                .addHatchInfo("Energy Hatches", "1-4; bottom layer")
                 .addHatchInfo("Input Buses or Hatches", "1+; bottom layer")
                 .addHatchInfo("Output Buses or Hatches", "bottom: 1+ bus or hatch; top ring: optional, up to 8 hatches")
                 .addHatchInfo("Muffler", "exactly 1; top center, keep exhaust clear")

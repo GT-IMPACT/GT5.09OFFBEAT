@@ -115,7 +115,13 @@ final class GT_TurbineStructureChecks {
             f.putHatch(f.sides.get(2), 'O');
         }
         for (int i = f.requiredKinds().length; i < 8; i++) {
-            f.putHatch(f.sides.get(i), i % 2 == 0 ? 'E' : 'U');
+            if (model == 2 && i % 2 != 0) {
+                f.putHatch(f.sides.get(i), 'U');
+                assertFalse("Gas turbines require exactly one muffler", f.recheck());
+                f.putCasing(f.sides.get(i));
+            } else {
+                f.putHatch(f.sides.get(i), i % 2 == 0 ? 'E' : 'U');
+            }
         }
         assertTrue("24 fixed casings; legacy optional hatches still accepted", f.recheck());
         int[] fixed = f.fixed.get(0);

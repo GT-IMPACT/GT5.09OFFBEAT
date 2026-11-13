@@ -337,6 +337,8 @@ public abstract class GT_MetaTileEntity_DrillerBase
         if (baseRequirements == null) {
             baseRequirements = createBaseRequirements()
                     .atLeast(HatchElement.Maintenance, new DrillerEnergy(getMinTier()))
+                    .atMost(HatchElement.Maintenance, 1)
+                    .atMost(HatchElement.Energy, 4)
                     .build();
         }
         return baseRequirements;
@@ -367,8 +369,8 @@ public abstract class GT_MetaTileEntity_DrillerBase
                 .addOtherStructurePart(getCasingType(), "3+; central pillar and unused bottom-layer positions")
                 .addOtherStructurePart(frames, "exactly 15; beside the pillar and above it")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; bottom layer")
-                .addHatchInfo("Energy Hatches", "1+; bottom layer")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; bottom layer")
+                .addHatchInfo("Energy Hatches", "1-4; bottom layer")
                 .addHatchInfo("Input and Output Buses", "optional; bottom layer (mining pipes)")
                 .addStructureHint("Bottom: casings or hatches/buses", BASE_HINT)
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; optional hatches/buses are manual.");

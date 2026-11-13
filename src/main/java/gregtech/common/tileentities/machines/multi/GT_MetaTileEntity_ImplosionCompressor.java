@@ -39,6 +39,9 @@ public class GT_MetaTileEntity_ImplosionCompressor
     private static final StructureRequirements SHELL = StructureRequirements.builder(Casings.SOLID_STEEL, 16)
             .atLeast(HatchElement.Maintenance, HatchElement.Energy, ImplosionHatch.INPUT_BUS, ImplosionHatch.OUTPUT_BUS,
                     ImplosionHatch.MUFFLER)
+            .atMost(HatchElement.Maintenance, 1)
+            .atMost(HatchElement.Energy, 4)
+            .atMost(ImplosionHatch.MUFFLER, 1)
             .build();
     private static IStructureDefinition<GT_MetaTileEntity_ImplosionCompressor> structureDefinition;
     private int casingCount;
@@ -68,9 +71,10 @@ public class GT_MetaTileEntity_ImplosionCompressor
                 .addOtherStructurePart(Casings.SOLID_STEEL, "16+; fill unused shell positions; explosion hazard signs also count")
                 .addAir("center of the structure")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; shell")
+                .addHatchInfo("Energy Hatches", "1-4; shell")
                 .addHatchInfo("Input and Output Buses", "1+ each; shell")
-                .addHatchInfo("Muffler", "1+; shell, keep exhaust clear")
+                .addHatchInfo("Muffler", "exactly 1; shell, keep exhaust clear")
                 .addStructureHint("Shell: casings or hatches/buses", SHELL_HINT)
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
                 .toolTipFinisher();

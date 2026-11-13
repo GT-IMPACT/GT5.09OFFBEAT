@@ -40,7 +40,10 @@ public class GT_MetaTileEntity_DistillationTower
     private static final HintColor BOTTOM_HINT = HintColor.GREEN;
     private static final HintColor OUTPUT_HINT = HintColor.ORANGE;
     private static final StructureRequirements COMMON = StructureRequirements.builder(Casings.CLEAN_STAINLESS_STEEL, 0)
-            .atLeast(HatchElement.Maintenance, HatchElement.Energy).build();
+            .atLeast(HatchElement.Maintenance, HatchElement.Energy)
+            .atMost(HatchElement.Maintenance, 1)
+            .atMost(HatchElement.Energy, 4)
+            .build();
     private static final StructureRequirements BOTTOM_PORTS = StructureRequirements
             .builder(Casings.CLEAN_STAINLESS_STEEL, 0).atLeast(TowerHatch.FLUID_INPUT).build();
     private static final StructureRequirements BOTTOM = withCommonRequirements(BOTTOM_PORTS);
@@ -99,7 +102,8 @@ public class GT_MetaTileEntity_DistillationTower
                 .addOtherStructurePart(COMMON.getCasing(), "minimum %s; H = total height; fill unused shell positions", "7 x H - 5")
                 .addAir("centers of intermediate layers; bottom and roof are filled")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance and Energy Hatches", "1+ each; shell")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; shell")
+                .addHatchInfo("Energy Hatches", "1-4; shell")
                 .addHatchInfo("Input Hatch", "1+; bottom layer")
                 .addHatchInfo("Output Hatches", "1+ per upper layer, including the roof; bottom outputs do not count")
                 .addHatchInfo("Output Buses", "optional; shell on any layer; item outputs")
@@ -165,7 +169,7 @@ public class GT_MetaTileEntity_DistillationTower
         // layer's hatch lists.
         boolean valid = checkPiece(piece(Math.max(MIN_HEIGHT, height)), 1, Math.max(MIN_HEIGHT, height) - 1, 0);
         if (!valid || !roofFound || height < MIN_HEIGHT || !SHELLS[height].isSatisfied(this, casingCount)
-                || !BOTTOM.isSatisfied(this, 0)) {
+                || !COMMON.isSatisfied(this, 0) || !BOTTOM_PORTS.isSatisfied(this, 0)) {
             return false;
         }
         for (int y = 1; y < height; y++) {

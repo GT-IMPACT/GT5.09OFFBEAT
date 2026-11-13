@@ -78,10 +78,10 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 .addOtherStructurePart(getFireboxType(), "3+; fill unused positions in the bottom layer")
                 .addOtherStructurePart(getPipeType(), "exactly 3; center column above the bottom layer, below the roof")
                 .addStructureSection("Hatches and buses")
-                .addHatchInfo("Maintenance Hatch", "1; bottom layer")
+                .addHatchInfo("Maintenance Hatch", "exactly 1; bottom layer")
                 .addHatchInfo("Input Hatches or Buses", "2+ total, including 1+ hatch for water; bottom layer")
                 .addHatchInfo("Output Hatches", "1+; upper 4 layers (steam)")
-                .addHatchInfo("Muffler", "1; bottom layer, keep exhaust clear")
+                .addHatchInfo("Muffler", "exactly 1; bottom layer, keep exhaust clear")
                 .addStructureHint("Bottom: fireboxes or hatches/buses", FIREBOX_HINT)
                 .addStructureHint("Upper layers: casings or output hatches", OUTPUT_HINT)
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; existing casings are kept.")
@@ -101,6 +101,8 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                     .atLeast(BoilerHatch.WATER)
                     .atLeast(BoilerHatch.INPUT, 2)
                     .atLeast(BoilerHatch.MUFFLER)
+                    .atMost(HatchElement.Maintenance, 1)
+                    .atMost(BoilerHatch.MUFFLER, 1)
                     .build();
         }
         return fireboxes;
