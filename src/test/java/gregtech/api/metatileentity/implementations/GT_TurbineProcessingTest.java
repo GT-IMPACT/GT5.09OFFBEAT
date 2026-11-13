@@ -181,6 +181,8 @@ public class GT_TurbineProcessingTest {
     }
 
     private static void controls(String model) throws Exception {
+        boolean hasFluidProtection = !model.equals("Gas");
+        int supportedModes = hasFluidProtection ? ProcessingLogic.PROTECT_FLUIDS : 0;
         GT_Recipe.GT_Recipe_Map neiMap = model.equals("Gas") ? GT_Recipe.GT_Recipe_Map.sTurbineFuels
                 : model.equals("Plasma") ? GT_Recipe.GT_Recipe_Map.sPlasmaFuels : null;
         boolean hasNei = neiMap != null;
@@ -214,7 +216,7 @@ public class GT_TurbineProcessingTest {
                     GT_MetaTileEntity_LargeTurbine restored = (GT_MetaTileEntity_LargeTurbine) restoredTile
                             .getMetaTileEntity();
                     assertEquals(enabled, restoredTile.isAllowedToWork());
-                    assertEquals(modes & ProcessingLogic.PROTECT_FLUIDS, restored.getProcessingModes());
+                    assertEquals(modes & supportedModes, restored.getProcessingModes());
                     assertEquals(1600, restored.optFlow);
                     assertEquals(10000, restored.baseEff);
                     assertFalse(restored.checkguislot);
@@ -224,6 +226,8 @@ public class GT_TurbineProcessingTest {
                     assertNull(restored.getRecipeMap());
                     assertEquals(hasNei,
                             ProcessingGuiControls.isControlVisible(restored, GT_Container_ProcessingMachine.NEI_SLOT));
+                    assertEquals(hasFluidProtection, ProcessingGuiControls.isControlVisible(restored,
+                            GT_Container_ProcessingMachine.VOIDING_SLOT));
                     GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(world);
                     GT_Container_ProcessingMachine gui = new GT_Container_ProcessingMachine(player.inventory,
                             restoredTile) {
@@ -236,7 +240,7 @@ public class GT_TurbineProcessingTest {
                     assertEquals(43, gui.inventorySlots.size());
                     assertEquals(1, gui.getSlotCount());
                     assertTrue(gui.isControlVisible(GT_Container_ProcessingMachine.POWER_SLOT));
-                    assertTrue(gui.isControlVisible(GT_Container_ProcessingMachine.VOIDING_SLOT));
+                    assertEquals(hasFluidProtection, gui.isControlVisible(GT_Container_ProcessingMachine.VOIDING_SLOT));
                     assertEquals(hasNei, gui.isControlVisible(GT_Container_ProcessingMachine.NEI_SLOT));
                     assertEquals(hasNei, gui.getSlot(GT_Container_ProcessingMachine.NEI_SLOT).xDisplayPosition >= 0);
                     for (int slot : new int[] { 1, 2, 3 }) {
@@ -244,11 +248,10 @@ public class GT_TurbineProcessingTest {
                         assertTrue("Hidden controls must not leave an interactive slot inside the GUI",
                                 gui.getSlot(slot).xDisplayPosition < 0);
                         gui.slotClick(slot, 0, 0, player);
-                        assertEquals(modes & ProcessingLogic.PROTECT_FLUIDS, restored.getProcessingModes());
+                        assertEquals(modes & supportedModes, restored.getProcessingModes());
                     }
                     gui.slotClick(GT_Container_ProcessingMachine.VOIDING_SLOT, 0, 0, player);
-                    assertEquals((modes ^ ProcessingLogic.PROTECT_FLUIDS) & ProcessingLogic.PROTECT_FLUIDS,
-                            restored.getProcessingModes());
+                    assertEquals((modes ^ supportedModes) & supportedModes, restored.getProcessingModes());
                     assertEquals(hasNei ? 11 : 20,
                             gui.getSlot(GT_Container_ProcessingMachine.POWER_SLOT).xDisplayPosition);
                     int visibleControls = 0;
@@ -257,8 +260,7 @@ public class GT_TurbineProcessingTest {
                             visibleControls++;
                         }
                     }
-                    assertEquals("Power, fluid protection and optional NEI have active slots",
-                            hasNei ? 3 : 2, visibleControls);
+                    assertEquals(1 + (hasFluidProtection ? 1 : 0) + (hasNei ? 1 : 0), visibleControls);
                 }
             }
         } finally {

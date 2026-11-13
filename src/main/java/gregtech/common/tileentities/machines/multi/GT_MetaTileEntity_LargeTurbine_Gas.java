@@ -51,6 +51,11 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     }
 
     @Override
+    public int getSupportedProcessingModes() {
+        return 0;
+    }
+
+    @Override
     public int getFuelValue(FluidStack fluid) {
         return TurbineProcessingLogic.findFuelValue(GT_Recipe_Map.sTurbineFuels, fluid);
     }
