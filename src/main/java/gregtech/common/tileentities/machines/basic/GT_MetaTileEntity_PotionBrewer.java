@@ -67,15 +67,25 @@ public class GT_MetaTileEntity_PotionBrewer
     }
 
     public int checkRecipe() {
-        int tCheck = super.checkRecipe();
-        if (tCheck != DID_NOT_FIND_RECIPE) {
+        int tCheck = super.checkRecipe(true);
+        if (tCheck != FOUND_AND_SUCCESSFULLY_USED_RECIPE) {
             return tCheck;
         }
-        calculateOverclockedNess(4,128);
-        //In case recipe is too OP for that machine
-        if (mMaxProgresstime == Integer.MAX_VALUE - 1 && mEUt == Integer.MAX_VALUE - 1)
-            return FOUND_RECIPE_BUT_DID_NOT_MEET_REQUIREMENTS;
-        return 0;
+        if (this.mLastRecipe != null) {
+            long tVoltage = gregtech.api.enums.GT_Values.V[this.mTier];
+            if (this.mLastRecipe.mEUt > (tVoltage * 85 / 100)) {
+                this.mEUt = this.mLastRecipe.mEUt;
+                this.mMaxProgresstime = this.mLastRecipe.mDuration;
+
+                return FOUND_AND_SUCCESSFULLY_USED_RECIPE;
+            }
+            calculateOverclockedNess(this.mLastRecipe.mEUt, this.mLastRecipe.mDuration);            
+            //In case recipe is too OP for that machine
+            if (this.mMaxProgresstime == Integer.MAX_VALUE - 1 && this.mEUt == Integer.MAX_VALUE - 1) {
+                return FOUND_RECIPE_BUT_DID_NOT_MEET_REQUIREMENTS;
+            }
+        }
+        return FOUND_AND_SUCCESSFULLY_USED_RECIPE;
     }
 
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
