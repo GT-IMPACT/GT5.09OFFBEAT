@@ -173,6 +173,7 @@ public class BaseMetaTileEntity
             aNBT.setBoolean("mActive", mActive);
             aNBT.setBoolean("mRedstone", mRedstone);
             aNBT.setBoolean("mWorks", !mWorks);
+            aNBT.setBoolean("mWasShutdown", mWasShutdown);
             aNBT.setBoolean("mInputDisabled", mInputDisabled);
             aNBT.setBoolean("mOutputDisabled", mOutputDisabled);
             aNBT.setTag("GT.CraftingComponents", mRecipeStuff);
@@ -243,6 +244,7 @@ public class BaseMetaTileEntity
             mActive = aNBT.getBoolean("mActive");
             mRedstone = aNBT.getBoolean("mRedstone");
             mWorks = !aNBT.getBoolean("mWorks");
+            mWasShutdown = aNBT.getBoolean("mWasShutdown");
             mInputDisabled = aNBT.getBoolean("mInputDisabled");
             mOutputDisabled = aNBT.getBoolean("mOutputDisabled");
             mOtherUpgrades = (byte) (aNBT.getByte("mOtherUpgrades") + aNBT.getByte("mBatteries") + aNBT.getByte("mLiBatteries"));
@@ -1058,6 +1060,17 @@ public class BaseMetaTileEntity
     @Override
     public boolean isAllowedToWork() {
         return mWorks;
+    }
+
+    @Override
+    public boolean wasShutdownByCriticalFailure() {
+        return mWasShutdown;
+    }
+
+    @Override
+    public void setCriticalShutdown() {
+        mWasShutdown = true;
+        markDirty();
     }
 
     @Override

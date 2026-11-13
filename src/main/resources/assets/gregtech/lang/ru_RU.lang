@@ -1707,6 +1707,7 @@ gt.ui.singleblock.charger=Слот аккумулятора
 gt.ui.singleblock.special=Специальный предмет рецепта
 gt.ui.singleblock.recipes=Показать рецепты
 gt.ui.singleblock.stalled=Машине не хватает энергии
+gt.ui.cover.work.safe_mode=Безопасный режим
 gt.ui.singleblock.auto_items=Автоматически выводить предметы
 gt.ui.singleblock.auto_fluids=Автоматически выводить жидкости
 gt.ui.singleblock.swap_fluids=Shift + клик: поменять местами входную и выходную жидкости

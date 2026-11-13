@@ -2008,6 +2008,7 @@ gt.ui.singleblock.charger=Battery slot
 gt.ui.singleblock.special=Special recipe item
 gt.ui.singleblock.recipes=Show recipes
 gt.ui.singleblock.stalled=The machine needs more energy
+gt.ui.cover.work.safe_mode=Safe Mode
 gt.ui.singleblock.auto_items=Automatically output items
 gt.ui.singleblock.auto_fluids=Automatically output fluids
 gt.ui.singleblock.swap_fluids=Shift-click to swap input and output fluids

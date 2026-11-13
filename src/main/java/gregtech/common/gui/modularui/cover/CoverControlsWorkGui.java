@@ -3,8 +3,10 @@ package gregtech.common.gui.modularui.cover;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import gregtech.api.modularui2.CoverGuiData;
@@ -50,6 +52,18 @@ public class CoverControlsWorkGui extends CoverBaseGui<CoverControlsWork> {
                 IKey.lang(mode.getTranslationKey()).asWidget()
             );
         }
+        BooleanSyncValue safeMode = new BooleanSyncValue(cover::isSafeMode, enabled -> {
+            if (cover.isValid()) {
+                cover.setSafeMode(enabled);
+            }
+        }).allowC2S();
+        choices.row(
+            new ToggleButton().value(safeMode)
+                .overlay(true, GTGuiTextures.OVERLAY_BUTTON_CHECKMARK)
+                .overlay(false, GTGuiTextures.OVERLAY_BUTTON_CROSS)
+                .size(16),
+            IKey.lang("gt.ui.cover.work.safe_mode").asWidget()
+        );
         column.child(choices);
     }
 

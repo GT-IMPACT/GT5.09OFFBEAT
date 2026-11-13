@@ -299,7 +299,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                         if (mMaxProgresstime > 0 && doRandomMaintenanceDamage()) {
                             if (onRunningTick(mInventory[1])) {
                                 if (!polluteEnvironment(getPollutionPerTick(mInventory[1]))) {
-                                    stopMachine();
+                                    stopMachineOnCriticalFailure();
                                 }
                                 
                                 if (GT_Mod.gregtechproxy.enableMultiBlocksTickBounds && mMaxProgresstime > 0 && mMaxProgresstime < GT_Mod.gregtechproxy.mMultiBlocksMaxProgressTimeBound) {
@@ -405,7 +405,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         }
         if (mEUt < 0) {
             if (!drainEnergyInput(((long) -mEUt * 10000) / Math.max(1000, mEfficiency))) {
-                stopMachine();
+                stopMachineOnCriticalFailure();
                 return false;
             }
         }
@@ -447,6 +447,14 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
      */
     public abstract boolean explodesOnComponentBreak(ItemStack aStack);
     
+    protected final void stopMachineOnCriticalFailure() {
+        stopMachine();
+        IGregTechTileEntity tile = getBaseMetaTileEntity();
+        if (tile != null) {
+            tile.setCriticalShutdown();
+        }
+    }
+
     public void stopMachine() {
         mOutputItems = null;
         mEUt = 0;

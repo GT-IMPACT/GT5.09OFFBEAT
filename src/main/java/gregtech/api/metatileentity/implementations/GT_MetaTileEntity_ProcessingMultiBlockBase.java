@@ -557,8 +557,7 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
             }
         } catch (ArithmeticException ignored) {
         }
-        stopMachine();
-        processingResult = CheckRecipeResult.INSUFFICIENT_POWER;
+        stopProcessing(CheckRecipeResult.INSUFFICIENT_POWER);
         return false;
     }
 
@@ -693,7 +692,11 @@ public abstract class GT_MetaTileEntity_ProcessingMultiBlockBase<T extends GT_Me
     }
 
     protected void stopProcessing(CheckRecipeResult reason) {
-        stopMachine();
+        if (reason == CheckRecipeResult.INSUFFICIENT_POWER) {
+            stopMachineOnCriticalFailure();
+        } else {
+            stopMachine();
+        }
         processingResult = reason;
     }
 

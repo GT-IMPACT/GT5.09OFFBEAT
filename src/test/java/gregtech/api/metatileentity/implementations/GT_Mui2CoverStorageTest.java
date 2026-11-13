@@ -2,6 +2,7 @@ package gregtech.api.metatileentity.implementations;
 
 import com.google.common.io.ByteStreams;
 import gregtech.api.GregTech_API;
+import gregtech.api.covers.CoverContext;
 import gregtech.api.covers.CoverFactory;
 import gregtech.api.covers.CoverRegistry;
 import gregtech.api.metatileentity.CoverableTileEntity;
@@ -20,6 +21,7 @@ import gregtech.common.covers.CoverPump;
 import gregtech.common.covers.CoverShutter;
 import gregtech.common.covers.GT_Cover_ControlsWork;
 import gregtech.common.covers.conditions.RedstoneCondition;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreezer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,6 +61,11 @@ public class GT_Mui2CoverStorageTest {
         run("remapping");
     }
 
+    @Test
+    public void machineControllerSafeModeLatchesAfterPowerLoss() throws Throwable {
+        run("safeMode");
+    }
+
     private void run(String scenario) throws Throwable {
         try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
             runtime.run(getClass(), scenario, "");
@@ -80,6 +87,8 @@ public class GT_Mui2CoverStorageTest {
 
         if ("remapping".equals(scenario)) {
             checkRemapping(first);
+        } else if ("safeMode".equals(scenario)) {
+            checkSafeMode(world, controllerId);
         } else if ("native".equals(scenario)) {
             int[] ids = new int[6];
             int[] data = new int[6];
@@ -129,6 +138,46 @@ public class GT_Mui2CoverStorageTest {
             assertSame(RedstoneCondition.ENABLE_WITH_REDSTONE, cover.getRedstoneCondition());
         } else {
             throw new AssertionError(scenario);
+        }
+    }
+
+    private static void checkSafeMode(GT_ProcessingTestSupport.ProcessingWorld world, int controllerId) {
+        GT_MetaTileEntity_VacuumFreezer machine = new GT_MetaTileEntity_VacuumFreezer("safe_mode_test");
+        GT_StructureIntegrationTest.TestTile tile = new GT_StructureIntegrationTest.TestTile(
+            world, machine, ForgeDirection.NORTH);
+        CoverControlsWork cover = new CoverControlsWork(new CoverContext(controllerId, ForgeDirection.NORTH, tile));
+        CoverTile restored = new CoverTile(world);
+        for (RedstoneCondition condition : new RedstoneCondition[] {
+            RedstoneCondition.ENABLE_WITH_REDSTONE, RedstoneCondition.DISABLE_WITH_REDSTONE
+        }) {
+            cover.setRedstoneCondition(condition);
+            cover.setSafeMode(true);
+            byte signal = (byte) (condition == RedstoneCondition.ENABLE_WITH_REDSTONE ? 15 : 0);
+            cover.doCoverThings(signal, 0);
+            assertTrue(tile.isAllowedToWork());
+
+            machine.lEUt = -32;
+            assertFalse(machine.onRunningTick(null));
+            cover.doCoverThings(signal, 1);
+            assertFalse(tile.isAllowedToWork());
+            assertSame(RedstoneCondition.DISABLE, cover.getRedstoneCondition());
+            assertFalse(cover.isSafeMode());
+            cover.doCoverThings(signal, 2);
+            assertFalse(tile.isAllowedToWork());
+
+            cover.setRedstoneCondition(condition);
+            cover.setSafeMode(true);
+            cover.doCoverThings(signal, 3);
+            assertTrue(tile.isAllowedToWork());
+            assertFalse(tile.wasShutdownByCriticalFailure());
+
+            restored.setCoverIDAtSide((byte) ForgeDirection.NORTH.ordinal(), controllerId);
+            CoverControlsWork saved = (CoverControlsWork) restored.getCoverAtSide(ForgeDirection.NORTH);
+            saved.setLegacyData(cover.getLegacyData());
+            restored.load(restored.save(), new int[6], new int[6]);
+            CoverControlsWork loaded = (CoverControlsWork) restored.getCoverAtSide(ForgeDirection.NORTH);
+            assertSame(condition, loaded.getRedstoneCondition());
+            assertTrue(loaded.isSafeMode());
         }
     }
 

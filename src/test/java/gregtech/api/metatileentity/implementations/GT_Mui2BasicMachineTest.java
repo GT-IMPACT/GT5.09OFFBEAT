@@ -287,6 +287,8 @@ public class GT_Mui2BasicMachineTest {
                     case "disableWorking":
                         allowed[0] = false;
                         return null;
+                    case "isAllowedToWork":
+                        return allowed[0];
                     case "setWorkDataValue":
                         workData[0] = (Byte) arguments[0];
                         return null;
