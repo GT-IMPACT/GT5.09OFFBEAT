@@ -46,11 +46,10 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                 .addMachineType("Oil / Gas / Fluid Drilling Rig")
                 .addInfo("Extracts fluids from the local 4 x 4 chunk vein at bedrock or the world's bottom.")
                 .addInfo("Yield depends on input voltage and remaining reserves.")
-                .addInfo("Retracts pipes when yield is at or below the sum of circuit settings.")
-                .addInfo("Circuits: Data Access Hatch, or controller after drilling.")
+                .addInfo("Retracts pipes when yield is at or below the configured threshold.")
+                .addInfo("Set the threshold with a Programmed Circuit in the controller after drilling.")
                 .addInfo("Mining pipes: controller or Input Bus."))
                 .addHatchInfo("Output Hatches", "1+; bottom layer")
-                .addHatchInfo("Data Access Hatches", "optional; bottom layer (circuits)")
                 .toolTipFinisher();
     }
 
