@@ -127,6 +127,8 @@ public class GT_Mui2FluidHatchGuiTest {
                     checkLayout(new Fixture(false, tier));
                     checkLayout(new Fixture(true, tier));
                 }
+                checkMultiInputLayout(4, 4, 64_000);
+                checkMultiInputLayout(9, 5, 128_000);
             } else if ("inventory".equals(scenario)) {
                 checkInventory(new Fixture(false, 1));
                 checkInventory(new Fixture(true, 1));
@@ -215,6 +217,58 @@ public class GT_Mui2FluidHatchGuiTest {
         }
         fixture.player.setPosition(100, 64, 100);
         assertFalse(fixture.container.canInteractWith(fixture.player));
+    }
+
+    private static void checkMultiInputLayout(int slotCount, int tier, int capacity) throws Exception {
+        GTMTE_Multi_Hatch_Input hatch = new GTMTE_Multi_Hatch_Input(
+            "mui2_multi_input", slotCount, tier, new String[0], null, capacity
+        );
+        GT_ProcessingTestSupport.ProcessingWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
+        GT_StructureIntegrationTest.TestTile tile =
+            new GT_StructureIntegrationTest.TestTile(world, hatch, ForgeDirection.NORTH);
+        world.putTile(4, 64, 7, tile);
+        GT_StructureIntegrationTest.TestPlayer player = new GT_StructureIntegrationTest.TestPlayer(world);
+        PosGuiData data = new PosGuiData(player, 4, 64, 7);
+        ModularSyncManager sync = new ModularSyncManager(false);
+        PanelSyncManager handlers = new PanelSyncManager(sync, true);
+        UISettings settings = new UISettings(RecipeViewerSettings.DUMMY);
+        ModularPanel panel = MetaTileEntityGuiHandler.INSTANCE.createPanel(data, handlers, settings);
+        WidgetTree.collectSyncValues(handlers, panel);
+        ModularContainer container = new NativeContainer();
+        container.construct(player, sync, settings, panel.getName(), data);
+        player.openContainer = container;
+        GT_Mui2InputBusTest.prepareLayout(panel, sync);
+        freezeTranslationCache(panel);
+        initializeResizers(panel, new Viewport());
+        WidgetTree.resizeInternal(panel.resizer(), false);
+
+        List<FluidSlot> slots = new ArrayList<>();
+        collectFluidSlots(panel, slots);
+        assertEquals(slotCount, slots.size());
+        int side = slotCount == 4 ? 2 : 3;
+        Area first = slots.get(0).getArea();
+        for (int i = 0; i < slotCount; i++) {
+            FluidSlot slot = slots.get(i);
+            Area area = slot.getArea();
+            assertEquals(first.x + i % side * first.width, area.x);
+            assertEquals(first.y + i / side * first.height, area.y);
+            assertTrue(slot.resizer().isXCalculated() && slot.resizer().isYCalculated());
+            FluidSlotSyncHandler handler = slot.getSyncHandler();
+            assertTrue(handler.canFillSlot() && handler.canDrainSlot());
+            assertEquals(capacity, handler.getFluidTank().getCapacity());
+            FluidStack fluid = new FluidStack(FluidRegistry.WATER, i + 1);
+            hatch.setFluid(fluid, i);
+            assertSame(fluid, handler.getFluidTank().getFluid());
+        }
+    }
+
+    private static void collectFluidSlots(IWidget widget, List<FluidSlot> slots) {
+        if (widget instanceof FluidSlot) {
+            slots.add((FluidSlot) widget);
+        }
+        for (IWidget child : widget.getChildren()) {
+            collectFluidSlots(child, slots);
+        }
     }
 
     private static void checkInventory(Fixture fixture) {

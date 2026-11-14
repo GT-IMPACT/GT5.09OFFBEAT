@@ -1,11 +1,17 @@
 package gregtech.api.metatileentity.implementations;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.utils.fluid.FluidStackTank;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.gui.modularui.hatch.MTEHatchMultiInputGui;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -15,6 +21,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
 
     private final FluidStack[] mStoredFluid;
+    private final FluidStackTank[] fluidTanks;
     public final int mCapacityPer;
 
     public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, int capacityPer) {
@@ -24,18 +31,60 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
         });
         this.mStoredFluid = new FluidStack[aSlot];
         mCapacityPer = capacityPer;
+        fluidTanks = new FluidStackTank[aSlot];
     }
 
     public GTMTE_Multi_Hatch_Input(int aID, int aSlot, String aName, String aNameRegional, int aTier, String[] aDescription, int capacityPer) {
         super(aID, aSlot, aName, aNameRegional, aTier, aDescription);
         this.mStoredFluid = new FluidStack[aSlot];
         mCapacityPer = capacityPer;
+        fluidTanks = new FluidStackTank[aSlot];
     }
 
     public GTMTE_Multi_Hatch_Input(String aName, int aSlot, int aTier, String[] aDescription, ITexture[][][] aTextures, int capacityPer) {
         super(aName, aSlot, aTier, aDescription, aTextures);
         this.mStoredFluid = new FluidStack[aSlot];
         mCapacityPer = capacityPer;
+        fluidTanks = createFluidTanks();
+    }
+
+    private FluidStackTank[] createFluidTanks() {
+        FluidStackTank[] tanks = new FluidStackTank[mStoredFluid.length];
+        for (int i = 0; i < tanks.length; i++) {
+            int index = i;
+            // Topping up or partially draining a tank mutates its stack without invoking the setter.
+            tanks[i] = new FluidStackTank(
+                () -> mStoredFluid[index],
+                fluid -> mStoredFluid[index] = fluid,
+                mCapacityPer
+            ) {
+                @Override
+                public int fill(FluidStack resource, boolean doFill) {
+                    int filled = super.fill(resource, doFill);
+                    if (doFill && filled > 0) {
+                        markDirtyFromGui();
+                    }
+                    return filled;
+                }
+
+                @Override
+                public FluidStack drain(int maxDrain, boolean doDrain) {
+                    FluidStack drained = super.drain(maxDrain, doDrain);
+                    if (doDrain && drained != null) {
+                        markDirtyFromGui();
+                    }
+                    return drained;
+                }
+            };
+        }
+        return tanks;
+    }
+
+    private void markDirtyFromGui() {
+        IGregTechTileEntity tile = getBaseMetaTileEntity();
+        if (tile != null && tile.isServerSide()) {
+            markStorageDirty();
+        }
     }
 
     @Override
@@ -73,8 +122,8 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
     }
 
     @Override
-    public boolean useMui2() {
-        return false;
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new MTEHatchMultiInputGui(this).build(data, syncManager, settings);
     }
 
     @Override
@@ -89,6 +138,10 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
 
     public FluidStack[] getStoredFluid() {
         return mStoredFluid;
+    }
+
+    public FluidStackTank[] getFluidTanks() {
+        return fluidTanks;
     }
 
     @Override

@@ -123,7 +123,11 @@ final class GT_FusionStructureChecks {
             f.putCasing(p);
             assertFalse("Missing category " + p.kind, f.recheck());
             f.putHatch(p, hatch(p.kind, f.machine.tier() - 1));
-            assertFalse("Insufficient tier for " + p.kind, f.recheck());
+            if (p.kind == 'E') {
+                assertFalse("Energy hatches require the reactor tier", f.recheck());
+            } else {
+                assertTrue("Fluid hatches can be below the reactor tier", f.recheck());
+            }
             f.putHatch(p, hatch(p.kind, f.machine.tier() + 1));
             assertTrue("Higher tiers remain accepted", f.recheck());
         }
@@ -135,12 +139,13 @@ final class GT_FusionStructureChecks {
         f.putHatch(input, new GTMTE_Multi_Hatch_Input(
             "multi-input",
             4,
-            f.machine.tier(),
+            f.machine.tier() - 1,
             new String[0],
             null,
             32000
         ));
         assertFalse("A multi-fluid hatch cannot replace a mandatory standard fusion input", f.recheck());
+        assertEquals(2, f.machine.mInputHatches.size());
         f.putHatch(input, hatch('I', f.machine.tier()));
         Position coil = f.positions('K').get(0);
         int[] cp = f.coords(coil);
@@ -197,7 +202,7 @@ final class GT_FusionStructureChecks {
         Reactor f = new Reactor(model, ForgeDirection.NORTH);
         int baseId = 32100 + model * 10;
         for (int i = 0; i < 3; i++) {
-            GregTech_API.METATILEENTITIES[baseId + i] = hatch("EIO".charAt(i), f.machine.tier());
+            GregTech_API.METATILEENTITIES[baseId + i] = hatch("EIO".charAt(i), i == 0 ? f.machine.tier() : 1);
         }
         GregTech_API.METATILEENTITIES[baseId + 3] = hatch('E', f.machine.tier() - 1);
         GregTech_API.METATILEENTITIES[baseId + 4] = new GT_MetaTileEntity_Hatch_InputBus("test", f.machine.tier(), "test", null);
@@ -218,7 +223,7 @@ final class GT_FusionStructureChecks {
         }
         assertTrue("Survival completes model " + model, f.machine.mMachine);
         assertEquals(159, source.consumed);
-        assertEquals("Under-tier item not consumed", 1, source.stacks.get(0).stackSize);
+        assertEquals("Under-tier Energy Hatch not consumed", 1, source.stacks.get(0).stackSize);
         assertEquals("Optional bus cannot satisfy the required fluid input", 1, source.stacks.get(4).stackSize);
         assertEquals(1, f.machine.mEnergyHatches.size());
         assertEquals(2, f.machine.mInputHatches.size());
@@ -273,6 +278,9 @@ final class GT_FusionStructureChecks {
             assertFalse(primary.contains("15 x 3 x 15"));
             assertTrue(plainSecondary.contains(language.equals("en_US") ? "15 x 3 x 15" : "15 × 3 × 15"));
             assertTrue(plainSecondary.contains(language.equals("en_US") ? "79+" : "от 79"));
+            assertTrue(plainSecondary.contains(language.equals("en_US")
+                ? "Input and Output Hatches: any tier."
+                : "Входные и выходные люки: любого тира."));
             assertFalse(secondary.contains("gt_hatch"));
             assertFalse(plainSecondary.contains("At least 0"));
             assertFalse(hints.contains("gt_hatch"));

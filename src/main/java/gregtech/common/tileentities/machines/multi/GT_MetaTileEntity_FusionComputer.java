@@ -223,18 +223,20 @@ public abstract class GT_MetaTileEntity_FusionComputer
 
     private StructureRequirements requirements(FusionHatch kind) {
         return requirements.computeIfAbsent(kind, key -> {
+            boolean requiresReactorTier = key == FusionHatch.ENERGY;
             int minimumTier = tier();
             IHatchElement hatch = new IHatchElement() {
                 @Override
                 public boolean matches(IMetaTileEntity tile) {
                     // Retain optional buses and IMPACT hatches accepted by the legacy structure.
-                    return key.category.matches(tile) && (!key.type.isInstance(tile)
+                    return key.category.matches(tile) && (!requiresReactorTier || !key.type.isInstance(tile)
                             || ((GT_MetaTileEntity_Hatch) tile).mTier >= minimumTier);
                 }
 
                 @Override
                 public boolean matchesForPlacement(IMetaTileEntity tile) {
-                    return key.type.isInstance(tile) && ((GT_MetaTileEntity_Hatch) tile).mTier >= minimumTier;
+                    return key.type.isInstance(tile)
+                            && (!requiresReactorTier || ((GT_MetaTileEntity_Hatch) tile).mTier >= minimumTier);
                 }
 
                 @Override
@@ -397,7 +399,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
                         FusionHatch.INPUT.hintColor)
                 .addRequirements(requirements(FusionHatch.OUTPUT), "16 cardinal positions in the middle layer",
                         FusionHatch.OUTPUT.hintColor)
-                .addStructureInfo("Required hatches must be " + GT_Values.VN[tier()] + " or better.")
+                .addStructureInfo("Energy Hatches must be %s or higher. Input and Output Hatches can be any tier.", GT_Values.VN[tier()])
                 .addStructureInfo("Buses and special IMPACT hatches do not replace the required standard hatches; no maintenance is needed.")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places reactor-tier energy injectors and fluid injectors/extractors at their dedicated ring positions.")
                 .toolTipFinisher();
@@ -423,7 +425,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
                 .addHatchInfo("Energy Hatches", "1-16; middle-layer diagonals")
                 .addHatchInfo("Input Hatches", "2-16; top and bottom of the ring")
                 .addHatchInfo("Output Hatches", "1-16; straight sides of the middle layer")
-                .addStructureInfo("Required hatches: standard %s or higher; no maintenance.", GT_Values.VN[tier()])
+                .addStructureInfo("Energy Hatches: %s or higher. Input and Output Hatches: any tier. No maintenance.", GT_Values.VN[tier()])
                 .addStructureHint("Middle diagonals: casings or energy hatches", FusionHatch.ENERGY.hintColor)
                 .addStructureHint("Top and bottom: casings or input hatches", FusionHatch.INPUT.hintColor)
                 .addStructureHint("Middle sides: casings or output hatches", FusionHatch.OUTPUT.hintColor)

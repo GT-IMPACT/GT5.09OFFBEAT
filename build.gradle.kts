@@ -92,9 +92,11 @@ dependencies {
 tasks.test {
     // Forge test classes retain isolated Minecraft class loaders until their worker exits.
     maxHeapSize = "1g"
-    maxParallelForks = 1
     forkEvery = 1
     jvmArgs("-XX:+ExitOnOutOfMemoryError")
+
+    // Limit the number of concurrent 1 GiB heaps, even on hosts with many cores.
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceIn(1, 4)
 
     // Forge 1.7.10 tests require the Java 8 URLClassLoader.
     javaLauncher.set(javaToolchains.launcherFor {

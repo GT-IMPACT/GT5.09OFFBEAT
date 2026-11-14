@@ -126,7 +126,8 @@ public class GT_Mui2FoundationTest {
         assertThrows(IllegalStateException.class, () -> factory.getGuiHolder(data));
         assertTrue(new GT_MetaTileEntity_Hatch_InputBus("native", 1, "", null).useMui2());
         assertTrue(new GT_MetaTileEntity_Hatch_Input("native_fluid", 1, "", null).useMui2());
-        assertFalse(new GTMTE_Multi_Hatch_Input("legacy_multi", 4, 1, new String[0], null, 8000).useMui2());
+        assertTrue(new GTMTE_Multi_Hatch_Input("native_quadruple", 4, 4, new String[0], null, 64_000).useMui2());
+        assertTrue(new GTMTE_Multi_Hatch_Input("native_nonuple", 9, 5, new String[0], null, 128_000).useMui2());
     }
 
     private static void checkPackets(GT_StructureIntegrationTest.TestPlayer player) {
