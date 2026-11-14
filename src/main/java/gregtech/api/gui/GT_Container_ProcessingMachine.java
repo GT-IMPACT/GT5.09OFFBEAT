@@ -194,6 +194,10 @@ public class GT_Container_ProcessingMachine extends GT_Container_MultiMachine {
         return voidingIndex(modes);
     }
 
+    public String getVoidingTooltipKey() {
+        return ProcessingGuiControls.voidingTooltipKey(machine(), modes);
+    }
+
     private static int voidingIndex(int modes) {
         int protection = modes & (PROTECT_ITEMS | PROTECT_FLUIDS);
         for (int index = 0; index < VOIDING_PROTECTION.length; index++) {

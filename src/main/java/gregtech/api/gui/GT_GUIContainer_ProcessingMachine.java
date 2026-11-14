@@ -70,7 +70,6 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
     private static final UITexture RECIPE_MAP = overlay("machine_mode_default");
     private static final UITexture NEI = overlay("nei");
     private static final UITexture[] POWER = { overlay("power_switch_off"), overlay("power_switch_on") };
-    private static final String[] VOIDING_NAMES = { "none", "items", "fluids", "all" };
     private static final String[] MODE_NAMES = { "separate", "batch", "lock" };
     private static final int[] MODE_FLAGS = { ProcessingLogic.SEPARATE_INPUTS, ProcessingLogic.BATCH,
             ProcessingLogic.LOCK_RECIPE };
@@ -143,7 +142,7 @@ public class GT_GUIContainer_ProcessingMachine extends GT_GUIContainer_MultiMach
                     && y < slot.yDisplayPosition + 16) {
                 if (index == 0) {
                     tooltip.add(text("voiding"));
-                    tooltip.add(text("voiding." + VOIDING_NAMES[container.getVoidingModeIndex()]));
+                    tooltip.add(text(container.getVoidingTooltipKey()));
                     tooltip.add(text("recipe_map_switch"));
                 } else if (index < POWER_SLOT) {
                     tooltip.add(text("mode." + MODE_NAMES[index - 1]) + ": "

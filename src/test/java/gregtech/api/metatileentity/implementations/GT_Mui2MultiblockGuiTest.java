@@ -30,6 +30,7 @@ import gregtech.api.modularui2.GTGuis;
 import gregtech.api.modularui2.MetaTileEntityGuiHandler;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
+import gregtech.common.gui.modularui.multiblock.ProcessingGuiControls;
 import gregtech.common.gui.modularui.multiblock.ProcessingGuiState;
 import gregtech.common.modularui2.widget.CoverTabButton;
 import gregtech.common.modularui2.widget.GhostCircuitSlotWidget;
@@ -344,12 +345,8 @@ public class GT_Mui2MultiblockGuiTest {
         assertSame(pending, machine.mOutputItems[0]);
         assertNull(fixture.handlers.findSyncHandlerNullable("processingControl_" + NEI_SLOT, 0));
 
-        machine.supportedModes = PROTECT_FLUIDS;
-        machine.setProcessingModes(0);
-        fixture.press(VOIDING_SLOT, 0, false);
-        assertEquals(PROTECT_FLUIDS, machine.getProcessingModes());
-        fixture.press(VOIDING_SLOT, 1, true);
-        assertEquals(0, machine.getProcessingModes());
+        checkSingleOutputVoiding(fixture, machine, PROTECT_ITEMS, "items");
+        checkSingleOutputVoiding(fixture, machine, PROTECT_FLUIDS, "fluids");
         for (int control : new int[]{SEPARATION_SLOT, BATCH_SLOT, LOCK_SLOT}) {
             fixture.press(control, 0, false);
             assertEquals(0, machine.getProcessingModes());
@@ -361,6 +358,22 @@ public class GT_Mui2MultiblockGuiTest {
         machine.setActiveRecipeMap(machine.maps.get(0));
         fixture.press(RECIPE_MAP_SLOT, 0, false);
         assertEquals(0, machine.getActiveRecipeMapIndex());
+    }
+
+    private static void checkSingleOutputVoiding(Fixture fixture, TestMachine machine, int protection, String output)
+        throws Exception {
+        machine.supportedModes = protection;
+        machine.setProcessingModes(0);
+        for (int button = 0; button <= 1; button++) {
+            fixture.press(VOIDING_SLOT, button, false);
+            assertEquals(protection, machine.getProcessingModes());
+            assertEquals("voiding.protect_" + output,
+                ProcessingGuiControls.voidingTooltipKey(machine, machine.getProcessingModes()));
+            fixture.press(VOIDING_SLOT, button, true);
+            assertEquals(0, machine.getProcessingModes());
+            assertEquals("voiding.void_" + output,
+                ProcessingGuiControls.voidingTooltipKey(machine, machine.getProcessingModes()));
+        }
     }
 
     private static void checkState() throws Exception {

@@ -80,7 +80,6 @@ public class ProcessingMachineDisplay extends Widget<ProcessingMachineDisplay> i
     private static final UITexture RECIPE_MAP = overlay("machine_mode_default");
     private static final UITexture NEI = overlay("nei");
     private static final UITexture[] POWER = { overlay("power_switch_off"), overlay("power_switch_on") };
-    private static final String[] VOIDING_NAMES = { "none", "items", "fluids", "all" };
     private static final String[] MODE_NAMES = { "separate", "batch", "lock" };
     private static final int[] MODE_FLAGS = { ProcessingLogic.SEPARATE_INPUTS, ProcessingLogic.BATCH,
             ProcessingLogic.LOCK_RECIPE };
@@ -200,7 +199,7 @@ public class ProcessingMachineDisplay extends Widget<ProcessingMachineDisplay> i
         }
         if (index == 0) {
             tooltip.add(text("voiding"));
-            tooltip.add(text("voiding." + VOIDING_NAMES[ProcessingGuiControls.voidingIndex(state.modes)]));
+            tooltip.add(text(ProcessingGuiControls.voidingTooltipKey(machine, state.modes)));
             tooltip.add(text("recipe_map_switch"));
         } else if (index < POWER_SLOT) {
             tooltip.add(text("mode." + MODE_NAMES[index - 1]) + ": "

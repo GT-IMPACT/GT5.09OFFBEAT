@@ -30,6 +30,7 @@ public final class ProcessingGuiControls {
     private static final int[] VOIDING_PROTECTION = {
         PROTECT_ITEMS | PROTECT_FLUIDS, PROTECT_FLUIDS, PROTECT_ITEMS, 0
     };
+    private static final String[] VOIDING_NAMES = { "none", "items", "fluids", "all" };
 
     private ProcessingGuiControls() {
     }
@@ -91,6 +92,17 @@ public final class ProcessingGuiControls {
         throw new IllegalArgumentException("Invalid output protection: " + protection);
     }
 
+    public static String voidingTooltipKey(GT_MetaTileEntity_ProcessingMultiBlockBase<?> machine, int modes) {
+        int supportedProtection = machine.getSupportedProcessingModes() & (PROTECT_ITEMS | PROTECT_FLUIDS);
+        if (supportedProtection == PROTECT_ITEMS) {
+            return (modes & PROTECT_ITEMS) != 0 ? "voiding.protect_items" : "voiding.void_items";
+        }
+        if (supportedProtection == PROTECT_FLUIDS) {
+            return (modes & PROTECT_FLUIDS) != 0 ? "voiding.protect_fluids" : "voiding.void_fluids";
+        }
+        return "voiding." + VOIDING_NAMES[voidingIndex(modes)];
+    }
+
     public static boolean click(GT_MetaTileEntity_ProcessingMultiBlockBase<?> machine, int index, int mouseButton) {
         if (machine == null || (mouseButton != 0 && mouseButton != 1)) {
             return false;
@@ -103,8 +115,9 @@ public final class ProcessingGuiControls {
         int modes = machine.getProcessingModes();
         switch (index) {
             case VOIDING_SLOT:
-                if ((machine.getSupportedProcessingModes() & (PROTECT_ITEMS | PROTECT_FLUIDS)) == PROTECT_FLUIDS) {
-                    machine.setProcessingModes(modes ^ PROTECT_FLUIDS);
+                int supportedProtection = machine.getSupportedProcessingModes() & (PROTECT_ITEMS | PROTECT_FLUIDS);
+                if (supportedProtection == PROTECT_ITEMS || supportedProtection == PROTECT_FLUIDS) {
+                    machine.setProcessingModes(modes ^ supportedProtection);
                     break;
                 }
                 int current = voidingIndex(modes);
