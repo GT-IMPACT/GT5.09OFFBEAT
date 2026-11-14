@@ -33,15 +33,12 @@ public class GT_MetaTileEntity_ConcreteBackfiller2 extends GT_MetaTileEntity_Con
 
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
-        return addCompactDrillerStructure(new MultiblockTooltipBuilder(mName)
+        return addBackfillerStructure(new MultiblockTooltipBuilder(mName)
                 .addMachineType("Advanced Concrete Backfiller")
                 .addInfo("Fills underground air pockets with concrete as the mining pipe rises.")
                 .addInfo("Consumes 144 L of concrete per block.")
-                .addInfo("Radius: twice the sum of circuit settings; default 64, maximum 128 blocks.")
-                .addInfo("Circuits: controller or Data Access Hatch.")
+                .addInfo("Radius: twice the controller circuit setting; default 64 blocks.")
                 .addInfo("Mining pipes: controller or optional Input Bus."))
-                .addHatchInfo("Input Hatches", "1+; bottom layer (concrete)")
-                .addHatchInfo("Data Access Hatches", "optional; bottom layer (radius circuits)")
                 .toolTipFinisher();
     }
 

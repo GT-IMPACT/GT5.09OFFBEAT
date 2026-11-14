@@ -23,14 +23,19 @@ public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTi
 
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
-        return addCompactDrillerStructure(new MultiblockTooltipBuilder(mName)
+        return addBackfillerStructure(new MultiblockTooltipBuilder(mName)
                 .addMachineType("Concrete Backfiller")
                 .addInfo("Fills underground air pockets with concrete as the mining pipe rises.")
                 .addInfo("Consumes 144 L of concrete per block.")
                 .addInfo("Range: 16 blocks in each horizontal direction.")
                 .addInfo("Mining pipes: controller or optional Input Bus."))
-                .addHatchInfo("Input Hatches", "1+; bottom layer (concrete)")
                 .toolTipFinisher();
+    }
+
+    protected final MultiblockTooltipBuilder addBackfillerStructure(MultiblockTooltipBuilder tooltip) {
+        return addCompactDrillerStructure(tooltip)
+                .addHatchInfo("Input and Output Buses", "optional, up to 5 total; bottom layer (mining pipes)")
+                .addHatchInfo("Input Hatches", "1+; bottom layer (concrete)");
     }
 
     @Override

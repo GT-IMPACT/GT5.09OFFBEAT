@@ -112,6 +112,8 @@ final class GT_DrillerStructureChecks {
             case 'A': return new GT_MetaTileEntity_Hatch_EnergyMulti("test", tier, 4, "test", null);
             case 'I': return new GT_MetaTileEntity_Hatch_Input("test", 1, "test", null);
             case 'O': return new GT_MetaTileEntity_Hatch_Output("test", 1, "test", null);
+            case 'N':
+                return new GT_MetaTileEntity_Hatch_InputBus("test", 1, "test", null);
             case 'B': return new GT_MetaTileEntity_Hatch_OutputBus("test", 1, "test", null);
             case 'Q': return new GTMTE_Multi_Hatch_Input("test", 4, 1, new String[]{"test"}, null, 1000);
             case 'X': return new GTMTE_BusHatch_Input("test", 1, new String[]{"test"}, null, 1000);
@@ -150,20 +152,19 @@ final class GT_DrillerStructureChecks {
             f.putHatch(f.base.get(2), 'B', 1);
             assertFalse("An item bus cannot supply concrete", f.recheck());
             f.putHatch(f.base.get(2), 'I', 1);
+        } else {
+            for (char kind : new char[]{'N', 'B'}) {
+                f.putHatch(f.base.get(5), kind, 1);
+                assertFalse("Oil drills require exactly one bus of each type", f.recheck());
+            }
+            f.casing(f.base.get(5));
         }
         f.putHatch(f.base.get(7), 'D', 1);
-        assertTrue(f.recheck());
-        assertTrue(f.recheck());
-        assertEquals(1, f.machine.mDataAccessHatches.size());
-        NBTTagCompound hatchTag = new NBTTagCompound();
-        f.machine.mDataAccessHatches.get(0).saveNBTData(hatchTag);
-        assertEquals(f.machine.getCasingType().getTextureId(),
-                (hatchTag.getByte("mMachineBlock") & 127) + 128 * hatchTag.getByte("mTexturePage"));
+        assertFalse("Drillers and backfillers reject Data Access Hatches", f.recheck());
         f.casing(f.base.get(7));
         assertTrue(f.recheck());
-        assertTrue(f.machine.mDataAccessHatches.isEmpty());
         int[] column = f.fixed.get(0);
-        f.putHatch(column, 'D', 1);
+        f.putHatch(column, 'O', 1);
         assertFalse("Hatches are restricted to the base", f.recheck());
         f.casing(column);
         int[] frame = f.framePositions.get(0);
@@ -208,6 +209,7 @@ final class GT_DrillerStructureChecks {
         Rig f = new Rig(model, facing);
         Source source = new Source(new ItemStack(hatchItem, 1, 32520), new ItemStack(hatchItem, 1, 32520 + TIERS[model]),
                 new ItemStack(hatchItem, 1, 32000), new ItemStack(hatchItem, 1, 32003),
+                new ItemStack(hatchItem, 1, 32002),
                 new ItemStack(hatchItem, 1, 32530), new ItemStack(hatchItem, 1, 32533),
                 stack(f.machine.getCasingType(), 11), new ItemStack(frameItem, 15, MATERIAL_INDEX[model]));
         for (int i = 0; i < 35 && !f.machine.mMachine; i++) {
@@ -223,6 +225,10 @@ final class GT_DrillerStructureChecks {
         assertEquals("Low-tier hatch not selected", 1, source.stacks.get(0).stackSize);
         assertEquals(1, f.machine.mMaintenanceHatches.size());
         assertEquals(1, f.machine.mEnergyHatches.size());
+        if (model < 3) {
+            assertEquals(1, f.machine.mInputBusses.size());
+            assertEquals(1, f.machine.mOutputBusses.size());
+        }
         assertEquals(-1, f.build(true, 100, source));
         assertEquals(26, source.consumed);
         for (GT_MetaTileEntity_Hatch_Energy hatch : f.machine.mEnergyHatches) {
@@ -313,7 +319,6 @@ final class GT_DrillerStructureChecks {
         f.machine.construct(trigger(false), false);
         f.required();
         f.putHatch(f.base.get(1), 'A', 4);
-        f.putHatch(f.base.get(7), 'D', 1);
         assertTrue(f.recheck());
         Method energy = GT_MetaTileEntity_DrillerBase.class.getDeclaredMethod("isEnergyEnough");
         energy.setAccessible(true);
@@ -321,17 +326,14 @@ final class GT_DrillerStructureChecks {
         f.machine.mEnergyHatchesMulti.get(0).setEUVar(10000000);
         assertTrue("Multi-amp hatches contribute stored energy", (boolean) energy.invoke(f.machine));
         ItemList.Circuit_Integrated.set(new ItemStack(Items.comparator));
-        GT_MetaTileEntity_Hatch_DataAccess data = f.machine.mDataAccessHatches.get(0);
-        data.mInventory[0] = new ItemStack(Items.comparator, 1, 7);
-        data.mInventory[1] = new ItemStack(Items.comparator, 1, 9);
+        f.machine.setInventorySlotContents(1, new ItemStack(Items.comparator, 1, 16));
         assertEquals(16, f.machine.getTotalConfigValue());
         assertTrue(f.recheck());
-        assertEquals("Circuits are not duplicated by rechecking", 16, f.machine.getTotalConfigValue());
+        assertEquals(16, f.machine.getTotalConfigValue());
         Method radius = GT_MetaTileEntity_ConcreteBackfiller2.class.getDeclaredMethod("getRadius");
         radius.setAccessible(true);
         assertEquals(32, radius.invoke(f.machine));
-        f.casing(f.base.get(7));
-        assertTrue(f.recheck());
+        f.machine.setInventorySlotContents(1, null);
         assertEquals(64, radius.invoke(f.machine));
     }
 
@@ -391,7 +393,7 @@ final class GT_DrillerStructureChecks {
         }
 
         char[] requiredKinds() {
-            return model < 3 ? new char[]{'M', 'E', 'O'} : new char[]{'M', 'E', 'I'};
+            return model < 3 ? new char[]{'M', 'E', 'O', 'N', 'B'} : new char[]{'M', 'E', 'I'};
         }
 
         void required() {

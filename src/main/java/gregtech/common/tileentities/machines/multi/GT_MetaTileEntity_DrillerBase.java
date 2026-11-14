@@ -38,7 +38,6 @@ import space.impact.structures.structure.IStructureDefinition;
 import space.impact.structures.structure.ISurvivalBuildEnvironment;
 import space.impact.structures.structure.StructureDefinition;
 
-import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 
 import static gregtech.api.enums.GT_Values.VN;
@@ -329,7 +328,6 @@ public abstract class GT_MetaTileEntity_DrillerBase
     @Override
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         updateCoordinates();
-        mDataAccessHatches.clear();
         return checkPiece(STRUCTURE_PIECE, 1, 6, 0) && getBaseRequirements().isSatisfied(this, 0);
     }
 
@@ -353,7 +351,7 @@ public abstract class GT_MetaTileEntity_DrillerBase
                 .addOtherStructurePart(GT_OreDictUnificator.get(OrePrefixes.frameGt, getFrameMaterial(), 1),
                         "Beside the pillar and above it", 15)
                 .addRequirements(getBaseRequirements(), "Base only", BASE_HINT)
-                .addStructureHint("Input Bus / Data Access (optional, base)", BASE_HINT)
+                .addStructureHint("Bottom: casings or hatches/buses", BASE_HINT)
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places maintenance and sufficiently tiered energy hatches in the drill base, plus the service hatches required by this drill variant.")
                 .toolTipFinisher();
     }
@@ -371,7 +369,6 @@ public abstract class GT_MetaTileEntity_DrillerBase
                 .addStructureSection("Hatches and buses")
                 .addHatchInfo("Maintenance Hatch", "exactly 1; bottom layer")
                 .addHatchInfo("Energy Hatches", "1-4; bottom layer")
-                .addHatchInfo("Input and Output Buses", "optional; bottom layer (mining pipes)")
                 .addStructureHint("Bottom: casings or hatches/buses", BASE_HINT)
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "1: required hatches in free positions; optional hatches/buses are manual.");
     }
@@ -393,7 +390,7 @@ public abstract class GT_MetaTileEntity_DrillerBase
                     .addElement('C', getCasingType().asElement())
                     .addElement('F', GTStructureUtility.ofFrame(getFrameMaterial()))
                     .addElement('H', GTStructureUtility.buildHatchAdder(GT_MetaTileEntity_DrillerBase.class)
-                            .allow(HatchElement.Input, HatchElement.Output, DrillerHatch.DATA)
+                            .allow(HatchElement.Input, HatchElement.Output)
                             .buildAndChain(getBaseRequirements()).withHint(BASE_HINT))
                     .build();
         }
@@ -482,58 +479,12 @@ public abstract class GT_MetaTileEntity_DrillerBase
 
     protected abstract int getMinTier();
 
-    public int getTotalConfigValue(){
-        int config = 0;
-        ArrayList<ItemStack> tCircuitList = getDataItems(1);
-        for (ItemStack tCircuit : tCircuitList)
-            config += tCircuit.getItemDamage();
-        return config;
-    }
-
-    public ArrayList<GT_MetaTileEntity_Hatch_DataAccess> mDataAccessHatches = new ArrayList<GT_MetaTileEntity_Hatch_DataAccess>();
-
-    /**
-     * @param state using bitmask, 1 for IntegratedCircuit, 2 for DataStick, 4 for DataOrb
-     */
-    private boolean isCorrectDataItem(ItemStack aStack, int state){
-        if ((state & 1) != 0 && ItemList.Circuit_Integrated.isStackEqual(aStack, true, true)) return true;
-        if ((state & 2) != 0 && ItemList.Tool_DataStick.isStackEqual(aStack, false, true)) return true;
-        if ((state & 4) != 0 && ItemList.Tool_DataOrb.isStackEqual(aStack, false, true)) return true;
-        return false;
-    }
-
-    /**
-     * @param state using bitmask, 1 for IntegratedCircuit, 2 for DataStick, 4 for DataOrb
-     */
-    public ArrayList<ItemStack> getDataItems(int state) {
-        ArrayList<ItemStack> rList = new ArrayList<ItemStack>();
-        if (GT_Utility.isStackValid(mInventory[1]) && isCorrectDataItem(mInventory[1], state)) {
-            rList.add(mInventory[1]);
+    public int getTotalConfigValue() {
+        ItemStack circuit = mInventory[1];
+        if (GT_Utility.isStackValid(circuit) && ItemList.Circuit_Integrated.isStackEqual(circuit, true, true)) {
+            return circuit.getItemDamage();
         }
-        for (GT_MetaTileEntity_Hatch_DataAccess tHatch : mDataAccessHatches) {
-            if (isValidMetaTileEntity(tHatch)) {
-                for (int i = 0; i < tHatch.getBaseMetaTileEntity().getSizeInventory(); i++) {
-                    if (tHatch.getBaseMetaTileEntity().getStackInSlot(i) != null
-                            && isCorrectDataItem(tHatch.getBaseMetaTileEntity().getStackInSlot(i), state))
-                        rList.add(tHatch.getBaseMetaTileEntity().getStackInSlot(i));
-                }
-            }
-        }
-        return rList;
-    }
-
-    public boolean addDataAccessToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
-        IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_DataAccess) {
-            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
-            if (!mDataAccessHatches.contains(aMetaTileEntity)) {
-                mDataAccessHatches.add((GT_MetaTileEntity_Hatch_DataAccess) aMetaTileEntity);
-            }
-            return true;
-        }
-        return false;
+        return 0;
     }
 
     /** Combined nominal voltage determines the tier; hatch amperage only supplies throughput. */
@@ -576,8 +527,7 @@ public abstract class GT_MetaTileEntity_DrillerBase
     protected enum DrillerHatch implements IHatchElement {
         FLUID_INPUT,
         FLUID_OUTPUT,
-        ITEM_OUTPUT,
-        DATA;
+        ITEM_OUTPUT;
 
         @Override
         public boolean matches(IMetaTileEntity tile) {
@@ -588,8 +538,6 @@ public abstract class GT_MetaTileEntity_DrillerBase
                     return tile instanceof GT_MetaTileEntity_Hatch_Output;
                 case ITEM_OUTPUT:
                     return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
-                case DATA:
-                    return tile instanceof GT_MetaTileEntity_Hatch_DataAccess;
                 default:
                     throw new AssertionError(this);
             }
@@ -604,8 +552,6 @@ public abstract class GT_MetaTileEntity_DrillerBase
                     return machine.mOutputHatches.size();
                 case ITEM_OUTPUT:
                     return machine.mOutputBusses.size();
-                case DATA:
-                    return ((GT_MetaTileEntity_DrillerBase) machine).mDataAccessHatches.size();
                 default:
                     throw new AssertionError(this);
             }
@@ -619,8 +565,6 @@ public abstract class GT_MetaTileEntity_DrillerBase
                 case FLUID_OUTPUT:
                 case ITEM_OUTPUT:
                     return machine.addOutputToMachineList(tile, texture);
-                case DATA:
-                    return ((GT_MetaTileEntity_DrillerBase) machine).addDataAccessToMachineList(tile, texture);
                 default:
                     throw new AssertionError(this);
             }
@@ -635,8 +579,6 @@ public abstract class GT_MetaTileEntity_DrillerBase
                     return StatCollector.translateToLocal("gt.tooltip.hatch.output_hatch");
                 case ITEM_OUTPUT:
                     return StatCollector.translateToLocal("gt.tooltip.hatch.output_bus");
-                case DATA:
-                    return StatCollector.translateToLocal("gt.tooltip.hatch.data_access");
                 default:
                     throw new AssertionError(this);
             }
