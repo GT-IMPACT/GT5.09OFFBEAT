@@ -15,6 +15,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_LargeTurbine {
 
+    private static final int MAX_OUTPUT_HATCHES = 2;
+
     public GT_MetaTileEntity_LargeTurbine_Plasma(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
@@ -38,10 +40,16 @@ public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_Lar
     @Override
     protected MultiblockTooltipBuilder createTooltip() {
         return turbineTooltip("Large Plasma Generator")
-                .addHatchInfo("Output Hatches", "optional; around the 2 central air blocks (cooled material)")
+                .addHatchInfo("Output Hatches",
+                        "optional, up to " + MAX_OUTPUT_HATCHES + "; around the 2 central air blocks (cooled material)")
                 .addInfo("Generates EU from plasma fuels.")
                 .addInfo("Output and optimal fuel flow depend on the rotor and fuel.")
                 .toolTipFinisher();
+    }
+
+    @Override
+    protected int getMaxOutputHatches() {
+        return MAX_OUTPUT_HATCHES;
     }
 
     @Override

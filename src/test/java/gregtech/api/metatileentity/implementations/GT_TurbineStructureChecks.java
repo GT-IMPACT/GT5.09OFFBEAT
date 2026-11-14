@@ -114,6 +114,13 @@ final class GT_TurbineStructureChecks {
             assertFalse("An output bus does not collect steam or water", f.recheck());
             f.putHatch(f.sides.get(2), 'O');
         }
+        if (model == 3) {
+            f.putHatch(f.sides.get(2), 'O');
+            f.putHatch(f.sides.get(3), 'O');
+            assertTrue("Plasma generator accepts two output hatches", f.recheck());
+            f.putHatch(f.sides.get(4), 'O');
+            assertFalse("Plasma generator rejects a third output hatch", f.recheck());
+        }
         for (int i = f.requiredKinds().length; i < 8; i++) {
             if (model == 2 && i % 2 != 0) {
                 f.putHatch(f.sides.get(i), 'U');

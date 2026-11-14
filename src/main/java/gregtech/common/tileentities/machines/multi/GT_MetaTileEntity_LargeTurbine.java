@@ -67,6 +67,10 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
         return false;
     }
 
+    protected int getMaxOutputHatches() {
+        return Integer.MAX_VALUE;
+    }
+
     protected MultiblockTooltipBuilder turbineTooltip(String machineType) {
         MultiblockTooltipBuilder tooltip = new MultiblockTooltipBuilder(mName)
                 .useCompactStructure()
@@ -98,7 +102,8 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends
         if (shell == null) {
             StructureRequirements.Builder builder = StructureRequirements.builder(getCasingType(), 24)
                     .atLeast(HatchElement.Maintenance, TurbineHatch.INPUT)
-                    .atMost(HatchElement.Maintenance, 1);
+                    .atMost(HatchElement.Maintenance, 1)
+                    .atMost(TurbineHatch.OUTPUT, getMaxOutputHatches());
             if (requiresOutputHatch()) {
                 builder.atLeast(TurbineHatch.OUTPUT);
             }
