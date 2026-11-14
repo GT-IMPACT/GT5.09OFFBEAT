@@ -153,10 +153,15 @@ final class GT_DrillerStructureChecks {
             assertFalse("An item bus cannot supply concrete", f.recheck());
             f.putHatch(f.base.get(2), 'I', 1);
         } else {
+            f.putHatch(f.base.get(5), 'N', 1);
+            f.putHatch(f.base.get(6), 'B', 1);
+            assertTrue("Oil drills accept one optional bus of each type", f.recheck());
             for (char kind : new char[]{'N', 'B'}) {
-                f.putHatch(f.base.get(5), kind, 1);
-                assertFalse("Oil drills require exactly one bus of each type", f.recheck());
+                f.putHatch(f.base.get(4), kind, 1);
+                assertFalse("Oil drills reject a second bus of the same type", f.recheck());
             }
+            f.casing(f.base.get(4));
+            f.casing(f.base.get(6));
             f.casing(f.base.get(5));
         }
         f.putHatch(f.base.get(7), 'D', 1);
@@ -226,8 +231,8 @@ final class GT_DrillerStructureChecks {
         assertEquals(1, f.machine.mMaintenanceHatches.size());
         assertEquals(1, f.machine.mEnergyHatches.size());
         if (model < 3) {
-            assertEquals(1, f.machine.mInputBusses.size());
-            assertEquals(1, f.machine.mOutputBusses.size());
+            assertTrue("Auto-build skips the optional input bus", f.machine.mInputBusses.isEmpty());
+            assertTrue("Auto-build skips the optional output bus", f.machine.mOutputBusses.isEmpty());
         }
         assertEquals(-1, f.build(true, 100, source));
         assertEquals(26, source.consumed);
@@ -393,7 +398,7 @@ final class GT_DrillerStructureChecks {
         }
 
         char[] requiredKinds() {
-            return model < 3 ? new char[]{'M', 'E', 'O', 'N', 'B'} : new char[]{'M', 'E', 'I'};
+            return model < 3 ? new char[]{'M', 'E', 'O'} : new char[]{'M', 'E', 'I'};
         }
 
         void required() {

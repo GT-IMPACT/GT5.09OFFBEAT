@@ -50,8 +50,8 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                 .addInfo("Retracts pipes when yield is at or below the configured threshold.")
                 .addInfo("Set the threshold with a Programmed Circuit in the controller after drilling.")
                 .addInfo("Mining pipes: controller or Input Bus."))
-                .addHatchInfo("Input Bus", "exactly 1; bottom layer (supplies mining pipes)")
-                .addHatchInfo("Output Bus", "exactly 1; bottom layer (returns mining pipes)")
+                .addHatchInfo("Input Bus", "optional, up to 1; bottom layer (supplies mining pipes)")
+                .addHatchInfo("Output Bus", "optional, up to 1; bottom layer (returns mining pipes)")
                 .addHatchInfo("Output Hatches", "1+; bottom layer")
                 .toolTipFinisher();
     }
@@ -67,7 +67,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     @Override
     protected StructureRequirements.Builder createBaseRequirements() {
         return StructureRequirements.builder(getCasingType(), 0)
-                .atLeast(DrillerHatch.FLUID_OUTPUT, HatchElement.InputBus, HatchElement.OutputBus)
+                .atLeast(DrillerHatch.FLUID_OUTPUT)
                 .atMost(HatchElement.InputBus, 1)
                 .atMost(HatchElement.OutputBus, 1);
     }
