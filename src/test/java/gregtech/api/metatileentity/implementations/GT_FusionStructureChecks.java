@@ -137,16 +137,14 @@ final class GT_FusionStructureChecks {
         f.putHatch(input, new GT_MetaTileEntity_Hatch_InputBus("test", f.machine.tier(), "test", null));
         assertFalse("An item bus cannot supply a fusion fluid input", f.recheck());
         f.putHatch(input, new GTMTE_Multi_Hatch_Input(
-            "multi-input",
-            4,
-            f.machine.tier() - 1,
-            new String[0],
-            null,
-            32000
+            "quadruple-input", 4, 4, new String[0], null, 64_000
         ));
-        assertFalse("A multi-fluid hatch cannot replace a mandatory standard fusion input", f.recheck());
+        assertTrue("A Quadruple Input Hatch can replace a regular fluid input", f.recheck());
+        f.putHatch(f.positions('I').get(1), new GTMTE_Multi_Hatch_Input(
+            "nonuple-input", 9, 5, new String[0], null, 128_000
+        ));
+        assertTrue("A reactor can form with Quadruple and Nonuple as its only fluid inputs", f.recheck());
         assertEquals(2, f.machine.mInputHatches.size());
-        f.putHatch(input, hatch('I', f.machine.tier()));
         Position coil = f.positions('K').get(0);
         int[] cp = f.coords(coil);
         f.world.setBlock(cp[0], cp[1], cp[2], Blocks.stone, 0, 0);
@@ -201,14 +199,19 @@ final class GT_FusionStructureChecks {
     private static void checkSurvival(int model, Item item, HintProxy hints) {
         Reactor f = new Reactor(model, ForgeDirection.NORTH);
         int baseId = 32100 + model * 10;
-        for (int i = 0; i < 3; i++) {
-            GregTech_API.METATILEENTITIES[baseId + i] = hatch("EIO".charAt(i), i == 0 ? f.machine.tier() : 1);
-        }
+        GregTech_API.METATILEENTITIES[baseId] = hatch('E', f.machine.tier());
+        GregTech_API.METATILEENTITIES[baseId + 1] = new GTMTE_Multi_Hatch_Input(
+            "quadruple-input", 4, 4, new String[0], null, 64_000
+        );
+        GregTech_API.METATILEENTITIES[baseId + 2] = hatch('O', 1);
         GregTech_API.METATILEENTITIES[baseId + 3] = hatch('E', f.machine.tier() - 1);
         GregTech_API.METATILEENTITIES[baseId + 4] = new GT_MetaTileEntity_Hatch_InputBus("test", f.machine.tier(), "test", null);
+        GregTech_API.METATILEENTITIES[baseId + 5] = new GTMTE_Multi_Hatch_Input(
+            "nonuple-input", 9, 5, new String[0], null, 128_000
+        );
         Source source = new Source(new ItemStack(item, 1, baseId + 3), new ItemStack(item, 1, baseId),
-                new ItemStack(item, 2, baseId + 1), new ItemStack(item, 1, baseId + 2),
-                new ItemStack(item, 1, baseId + 4),
+                new ItemStack(item, 1, baseId + 1), new ItemStack(item, 1, baseId + 2),
+                new ItemStack(item, 1, baseId + 4), new ItemStack(item, 1, baseId + 5),
                 new ItemStack(f.machine.getCasing(), 200, f.machine.getCasingMeta()),
                 new ItemStack(f.machine.getFusionCoil(), 32, f.machine.getFusionCoilMeta()));
         ItemStack trigger = new ItemStack(Items.stick);

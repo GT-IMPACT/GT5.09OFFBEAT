@@ -13,7 +13,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingInputs;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.implementations.GTMTE_Multi_Hatch_Input;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.recipe.check.CheckRecipeResult;
@@ -241,18 +240,11 @@ public abstract class GT_MetaTileEntity_FusionComputer
 
                 @Override
                 public int count(GT_MetaTileEntity_MultiBlockBase machine) {
-                    // Optional legacy variants do not replace the mandatory standard hatches.
                     switch (key) {
                         case ENERGY:
                             return machine.mEnergyHatches.size();
                         case INPUT:
-                            int standardInputs = 0;
-                            for (GT_MetaTileEntity_Hatch_Input input : machine.mInputHatches) {
-                                if (!(input instanceof GTMTE_Multi_Hatch_Input)) {
-                                    standardInputs++;
-                                }
-                            }
-                            return standardInputs;
+                            return machine.mInputHatches.size();
                         case OUTPUT:
                             return machine.mOutputHatches.size();
                         default:
@@ -400,7 +392,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
                 .addRequirements(requirements(FusionHatch.OUTPUT), "16 cardinal positions in the middle layer",
                         FusionHatch.OUTPUT.hintColor)
                 .addStructureInfo("Energy Hatches must be %s or higher. Input and Output Hatches can be any tier.", GT_Values.VN[tier()])
-                .addStructureInfo("Buses and special IMPACT hatches do not replace the required standard hatches; no maintenance is needed.")
+                .addStructureInfo("No maintenance is needed.")
                 .addSubChannel(GTStructureUtility.HATCH_CHANNEL, "Places reactor-tier energy injectors and fluid injectors/extractors at their dedicated ring positions.")
                 .toolTipFinisher();
     }
