@@ -29,3 +29,8 @@ Upstream credits include Jimbno / UU-Tex and GTNH texture contributors.
 
 GTFluidSlot reuses this fork's existing GT_FluidDisplayStackRenderer for its
 amount label, retaining the original precision, font scale and positioning.
+
+Redstone Sniffer by FrostyFire1 is adapted from GT5-Unofficial PR #4025
+(https://github.com/GTNewHorizons/GT5-Unofficial/pull/4025) under the same license.
+The item texture gt.Item_Redstone_Sniffer.png is copied from merge revision
+7a3d8bc6ae94110614e431ede3f83fa810bb2df5.

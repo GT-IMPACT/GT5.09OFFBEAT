@@ -747,7 +747,8 @@ public enum ItemList implements IItemContainer {
     Machine_LV_WireAssembler, Machine_MV_WireAssembler, Machine_HV_WireAssembler, Machine_EV_WireAssembler, Machine_IV_WireAssembler, Machine_LuV_WireAssembler, Machine_ZPM_WireAssembler, Machine_UV_WireAssembler, Machine_UHV_WireAssembler, Machine_UEV_WireAssembler, Machine_UIV_WireAssembler, Machine_UMV_WireAssembler, Machine_UXV_WireAssembler, Machine_OPV_WireAssembler,
     
     AdsorptionFilter, AdsorptionFilterCasing, AdsorptionFilterDirty, Machine_Multi_AirFilter, Casing_AirFilter, Casing_AirFilter_Vent, Casing_HSLA, Casing_CokeOvenBrick,
-    VOLUMETRIC_FLASK;
+    VOLUMETRIC_FLASK,
+    Item_Redstone_Sniffer;
     
     
     public static final ItemList[]

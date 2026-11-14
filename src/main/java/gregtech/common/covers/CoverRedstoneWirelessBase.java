@@ -17,12 +17,18 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /** GTNH wireless channels and private-channel flag, retaining all four local transmitter/receiver behaviors. */
 public class CoverRedstoneWirelessBase extends CoverLegacyData {
 
     public static final int MAX_CHANNEL = 65535;
     public static final int CHANNEL_MASK = 0x0000FFFF;
     public static final int CHECKBOX_MASK = 0x00010000;
+
+    private static final Set<CoverRedstoneWirelessBase> loadedWirelessCovers = new LinkedHashSet<>();
 
     private int frequency;
     private boolean privateChannel;
@@ -48,6 +54,14 @@ public class CoverRedstoneWirelessBase extends CoverLegacyData {
 
     public boolean isPrivateChannel() {
         return privateChannel;
+    }
+
+    public static Set<CoverRedstoneWirelessBase> getLoadedWirelessCovers() {
+        return Collections.unmodifiableSet(loadedWirelessCovers);
+    }
+
+    public static void clearLoadedWirelessCovers() {
+        loadedWirelessCovers.clear();
     }
 
     public void setPrivateChannel(boolean privateChannel) {
@@ -131,7 +145,7 @@ public class CoverRedstoneWirelessBase extends CoverLegacyData {
         return signal == null ? 0 : signal;
     }
 
-    private boolean isTransmitter() {
+    public boolean isTransmitter() {
         return role == WirelessRole.TRANSMITTER_EXTERNAL || role == WirelessRole.TRANSMITTER_INTERNAL;
     }
 
@@ -140,6 +154,9 @@ public class CoverRedstoneWirelessBase extends CoverLegacyData {
         ICoverable tile = getTile();
         if (tile == null) {
             return;
+        }
+        if (tile.isServerSide()) {
+            loadedWirelessCovers.add(this);
         }
         if (role == WirelessRole.TRANSMITTER_EXTERNAL) {
             GregTech_API.sWirelessRedstone.put(getMapFrequency(), inputRedstone);
@@ -176,8 +193,26 @@ public class CoverRedstoneWirelessBase extends CoverLegacyData {
 
     @Override
     public void onCoverRemoval() {
+        unregisterWirelessCover();
         if (isTransmitter()) {
             GregTech_API.sWirelessRedstone.remove(getMapFrequency());
+        }
+    }
+
+    @Override
+    public void onCoverUnload() {
+        unregisterWirelessCover();
+    }
+
+    @Override
+    public void onBaseTEDestroyed() {
+        unregisterWirelessCover();
+    }
+
+    private void unregisterWirelessCover() {
+        ICoverable tile = getTile();
+        if (tile != null && tile.isServerSide()) {
+            loadedWirelessCovers.remove(this);
         }
     }
 

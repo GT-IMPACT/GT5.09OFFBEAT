@@ -22,6 +22,16 @@ public class GT_CraftingRecipeLoader implements Runnable {
     private final static String aTextMachineAlpha = "machine.alpha";
 
     public void run() {
+        GT_ModHandler.addCraftingRecipe(ItemList.Item_Redstone_Sniffer.get(1L), 0, new Object[] {
+            "RM ",
+            "SES",
+            "dPw",
+            'R', ItemList.Sensor_EV,
+            'M', ItemList.Cover_Screen,
+            'S', OrePrefixes.screw.get(Materials.Titanium),
+            'E', ItemList.Emitter_EV,
+            'P', OrePrefixes.plate.get(Materials.Titanium)
+        });
         GT_Log.out.println("GT_Mod: Adding nerfed Vanilla Recipes.");
         GT_ModHandler.addCraftingRecipe(new ItemStack(Items.bucket, 1), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.DELETE_ALL_OTHER_SHAPED_RECIPES, new Object[]{"XhX", " X ", 'X', OrePrefixes.plate.get(Materials.Iron)});
         if (!GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.recipereplacements, "Iron.Bucket", true)) {

@@ -1928,3 +1928,17 @@ GT5U.gui.text.repair_info=ПКМ по люку изолентой исправл
 GT5U.gui.text.autorepair_info=Расходует 4 изоленты, 2 капсулы смазки,\n4 стальных винта и 2 продвинутые электросхемы\nза каждый авторемонт.
 GT5U.gui.text.volumetric_flask.capacity=Ёмкость
 GT5U.gui.text.volumetric_flask.max_capacity=Max Capacity of %s
+
+gt.Item_Redstone_Sniffer.name=Редстоун-сниффер
+gt.Item_Redstone_Sniffer.tooltip_main=Что это за частоты?!
+gt.item.redstone_sniffer.frequency=Частота
+gt.item.redstone_sniffer.frequency_filter=Частота:
+gt.item.redstone_sniffer.private=Закрытый
+gt.item.redstone_sniffer.type=Тип
+gt.item.redstone_sniffer.transmitter=Передатчик
+gt.item.redstone_sniffer.receiver=Приёмник
+gt.item.redstone_sniffer.dimension=Измерение
+gt.item.redstone_sniffer.action=Действие
+gt.item.redstone_sniffer.locate=Найти
+gt.item.redstone_sniffer.highlight_message=Подсвечен кавер на координатах %s, %s, %s
+gt.item.redstone_sniffer.wrong_dim_message=Кавер находится в другом измерении!
