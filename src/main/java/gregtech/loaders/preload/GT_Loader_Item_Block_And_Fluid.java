@@ -20,6 +20,7 @@ import gregtech.common.items.*;
 import gregtech.common.items.ItemRedstoneSniffer;
 import gregtech.common.items.armor.ElectricModularArmor1;
 import gregtech.common.items.armor.ModularArmor_Item;
+import gregtech.common.tools.ItemNetworkAnalyzer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -81,6 +82,7 @@ public class GT_Loader_Item_Block_And_Fluid
 
         ItemList.VOLUMETRIC_FLASK.set(new GT_VolumetricFlask("Volumetric_Flask", "Volumetric flask", 1000));
         ItemList.Item_Redstone_Sniffer.set(new ItemRedstoneSniffer());
+        ItemList.NetworkAnalyzer.set(new ItemNetworkAnalyzer());
         Item tItem = (Item) GT_Utility.callConstructor("gregtech.common.items.GT_SensorCard_Item", 0, null, false, new Object[]{"sensorcard", "GregTech Sensor Card"});
         ItemList.NC_SensorCard.set(tItem == null ? new GT_Generic_Item("sensorcard", "GregTech Sensor Card", "Nuclear Control not installed", false) : tItem);
         

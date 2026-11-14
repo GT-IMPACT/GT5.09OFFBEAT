@@ -24,6 +24,7 @@ import gregtech.api.util.GT_PlayedSound;
 import gregtech.api.util.GT_Utility;
 import gregtech.client.renderer.waila.TTRenderGTProgressBar;
 import gregtech.common.render.*;
+import gregtech.common.networkanalyzer.events.WorldOverlayRenderer;
 import ic2.api.tile.IWrenchable;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import net.minecraft.block.Block;
@@ -319,6 +320,7 @@ public class GT_Client extends GT_Proxy implements Runnable {
 
     public void onLoad() {
         super.onLoad();
+        WorldOverlayRenderer.init();
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager())
                 .registerReloadListener(manager -> GT_MetaTileEntity_TooltipMultiBlockBase.invalidateTooltipCache());
         new GT_Renderer_Block();

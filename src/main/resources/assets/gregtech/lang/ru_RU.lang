@@ -1942,3 +1942,25 @@ gt.item.redstone_sniffer.action=Действие
 gt.item.redstone_sniffer.locate=Найти
 gt.item.redstone_sniffer.highlight_message=Подсвечен кавер на координатах %s, %s, %s
 gt.item.redstone_sniffer.wrong_dim_message=Кавер находится в другом измерении!
+
+# Network Analyzer
+gt.NetworkAnalyzer.name=Анализатор электросети
+gt.NetworkAnalyzer.bound=§aОтображается сеть в точке %s %s %s
+gt.NetworkAnalyzer.target_lost=§cБлок не найден. Привязка анализатора сброшена
+gt.NetworkAnalyzer.set=Выбран режим §e%s
+gt.NetworkAnalyzer.mode=Режим: §e%s
+gt.NetworkAnalyzer.mode.topology=Топология
+gt.NetworkAnalyzer.mode.critical=Опасные участки
+gt.NetworkAnalyzer.mode.active=Активные участки
+gt.NetworkAnalyzer.mode.amperage=Сила тока
+gt.NetworkAnalyzer.mode.voltage=Напряжение
+gt.NetworkAnalyzer.amperage.short=%s А / %s А
+gt.NetworkAnalyzer.amperage.input=↑%s А / %s А
+gt.NetworkAnalyzer.amperage.output=↓%s А / %s А
+gt.NetworkAnalyzer.amperage.full=↑%s А ↓%s А / %s А
+gt.NetworkAnalyzer.loss.short=Потери %s%%
+gt.NetworkAnalyzer.loss.full=Потери %s%% (%s В)
+gt.NetworkAnalyzer.voltage.burn=§cСгорит
+gt.NetworkAnalyzer.voltage.burn.full=§cКабель сгорит: %s В / %s В
+gt.NetworkAnalyzer.voltage.explosion=§cВзорвётся
+gt.NetworkAnalyzer.voltage.explosion.full=§cМашина взорвётся: %s В / %s В

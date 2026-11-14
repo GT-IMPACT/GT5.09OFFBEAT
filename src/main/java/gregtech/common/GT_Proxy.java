@@ -21,6 +21,7 @@ import gregtech.api.objects.*;
 import gregtech.api.util.*;
 import gregtech.common.covers.CoverRedstoneWirelessBase;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.networkanalyzer.events.NetworkAnalyzerPlayerTracker;
 import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
 import ic2.api.reactor.IReactor;
@@ -556,6 +557,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public void onLoad() {
+        NetworkAnalyzerPlayerTracker.init();
         GT_Log.out.println("GT_Mod: Beginning Load-Phase.");
         GT_Log.ore.println("GT_Mod: Beginning Load-Phase.");
         GT_OreDictUnificator.registerOre("cropTea", GT_ModHandler.getModItem("ganyssurface", "teaLeaves", 1L, 0));
@@ -719,6 +721,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public void onServerStopping() {
+        NetworkAnalyzerPlayerTracker.clear();
         File tSaveDirectory = getSaveDirectory();
         GregTech_API.sWirelessRedstone.clear();
         CoverRedstoneWirelessBase.clearLoadedWirelessCovers();

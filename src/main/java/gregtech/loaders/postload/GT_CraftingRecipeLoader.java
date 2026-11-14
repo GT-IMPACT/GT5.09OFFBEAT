@@ -14,6 +14,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class GT_CraftingRecipeLoader implements Runnable {
     private final static String aTextIron1 = "X X";
@@ -22,6 +23,25 @@ public class GT_CraftingRecipeLoader implements Runnable {
     private final static String aTextMachineAlpha = "machine.alpha";
 
     public void run() {
+        // Keep the reference recipe's copper and annealed copper alternatives local to fine wire.
+        for (String wireName : new String[] { "wireFineCopper", "wireFineAnnealedCopper" }) {
+            for (ItemStack wire : OreDictionary.getOres(wireName)) {
+                OreDictionary.registerOre("wireFineAnyCopper", wire);
+            }
+        }
+        GT_ModHandler.addCraftingRecipe(ItemList.NetworkAnalyzer.get(1L), GT_ModHandler.RecipeBits.BUFFERED,
+            new Object[] {
+                "SGE",
+                "WPW",
+                "DCD",
+                'S', ItemList.Sensor_LV,
+                'G', "paneGlassColorless",
+                'E', ItemList.Emitter_LV,
+                'W', "wireFineAnyCopper",
+                'P', OrePrefixes.plate.get(Materials.Steel),
+                'D', ItemList.Circuit_Parts_Diode,
+                'C', OrePrefixes.circuit.get(Materials.Basic)
+            });
         GT_ModHandler.addCraftingRecipe(ItemList.Item_Redstone_Sniffer.get(1L), 0, new Object[] {
             "RM ",
             "SES",

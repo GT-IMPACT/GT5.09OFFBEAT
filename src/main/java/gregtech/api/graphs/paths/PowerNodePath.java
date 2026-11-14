@@ -15,6 +15,10 @@ public class PowerNodePath extends NodePath {
     int mMaxVoltage;
     int mTick = 0;
     boolean mCountUp = true;
+    private int amperageTick = -1;
+    private int previousAmperageTick = -1;
+    private long tickAmperage;
+    private long previousTickAmperage;
 
 
     public PowerNodePath(MetaPipeEntity[] aCables) {
@@ -23,6 +27,22 @@ public class PowerNodePath extends NodePath {
 
     public int getLoss() {
         return mLoss;
+    }
+
+    public int getMaxAmperage() {
+        return mMaxAmps;
+    }
+
+    public int getMaxVoltage() {
+        return mMaxVoltage;
+    }
+
+    public long getAmperage() {
+        int lastTick = MinecraftServer.getServer().getTickCounter() - 1;
+        if (amperageTick == lastTick) {
+            return tickAmperage;
+        }
+        return previousAmperageTick == lastTick ? previousTickAmperage : 0;
     }
 
     public void applyVoltage(int aVoltage, boolean aCountUp) {
@@ -49,6 +69,16 @@ public class PowerNodePath extends NodePath {
     }
 
     public void addAmps(int aAmps) {
+        if (aAmps > 0) {
+            int tick = MinecraftServer.getServer().getTickCounter();
+            if (amperageTick != tick) {
+                previousAmperageTick = amperageTick;
+                previousTickAmperage = tickAmperage;
+                amperageTick = tick;
+                tickAmperage = 0;
+            }
+            tickAmperage += aAmps;
+        }
         this.mAmps += aAmps;
         if (this.mAmps > mMaxAmps * 40) {
             for (MetaPipeEntity tCable : mPipes) {
