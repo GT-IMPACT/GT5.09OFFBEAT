@@ -100,11 +100,15 @@ public abstract class GT_MetaBase_Item extends GT_Generic_Item implements ISpeci
         ArrayList<IItemBehaviour<GT_MetaBase_Item>> tList = mItemBehaviors.get((short) getDamage(aStack));
         try { if (tList != null) for (IItemBehaviour<GT_MetaBase_Item> tBehavior : tList)
             if (tBehavior.onLeftClickEntity(this, aStack, aPlayer, aEntity)) {
-                if (aStack.stackSize <= 0) aPlayer.destroyCurrentEquippedItem();
+                if (aStack.stackSize <= 0 && aPlayer.getCurrentEquippedItem() == aStack) {
+                    aPlayer.destroyCurrentEquippedItem();
+                }
                 return true;
             }
             if (aStack.stackSize <= 0) {
-                aPlayer.destroyCurrentEquippedItem();
+                if (aPlayer.getCurrentEquippedItem() == aStack) {
+                    aPlayer.destroyCurrentEquippedItem();
+                }
                 return false;
             }
         } catch (Throwable e) {
@@ -122,13 +126,15 @@ public abstract class GT_MetaBase_Item extends GT_Generic_Item implements ISpeci
             if (tList != null) {
                 for (IItemBehaviour<GT_MetaBase_Item> tBehavior : tList) {
                     if (tBehavior.itemInteractionForEntity(this, aStack, aPlayer, aEntity)) {
-                        if (aStack.stackSize <= 0) {
+                        if (aStack.stackSize <= 0 && aPlayer.getCurrentEquippedItem() == aStack) {
                             aPlayer.destroyCurrentEquippedItem();
                         }
                         return true;
                     }
                     if (aStack.stackSize <= 0) {
-                        aPlayer.destroyCurrentEquippedItem();
+                        if (aPlayer.getCurrentEquippedItem() == aStack) {
+                            aPlayer.destroyCurrentEquippedItem();
+                        }
                         return false;
                     }
                 }
@@ -146,11 +152,15 @@ public abstract class GT_MetaBase_Item extends GT_Generic_Item implements ISpeci
         ArrayList<IItemBehaviour<GT_MetaBase_Item>> tList = mItemBehaviors.get((short) getDamage(aStack));
         try { if (tList != null) for (IItemBehaviour<GT_MetaBase_Item> tBehavior : tList)
             if (tBehavior.onItemUse(this, aStack, aPlayer, aWorld, aX, aY, aZ, aSide, hitX, hitY, hitZ)) {
-                if (aStack.stackSize <= 0) aPlayer.destroyCurrentEquippedItem();
+                if (aStack.stackSize <= 0 && aPlayer.getCurrentEquippedItem() == aStack) {
+                    aPlayer.destroyCurrentEquippedItem();
+                }
                 return true;
             }
             if (aStack.stackSize <= 0) {
-                aPlayer.destroyCurrentEquippedItem();
+                if (aPlayer.getCurrentEquippedItem() == aStack) {
+                    aPlayer.destroyCurrentEquippedItem();
+                }
                 return false;
             }
         } catch (Throwable e) {
@@ -166,11 +176,15 @@ public abstract class GT_MetaBase_Item extends GT_Generic_Item implements ISpeci
         ArrayList<IItemBehaviour<GT_MetaBase_Item>> tList = mItemBehaviors.get((short) getDamage(aStack));
         try { if (tList != null) for (IItemBehaviour<GT_MetaBase_Item> tBehavior : tList)
             if (tBehavior.onItemUseFirst(this, aStack, aPlayer, aWorld, aX, aY, aZ, aSide, hitX, hitY, hitZ)) {
-                if (aStack.stackSize <= 0) aPlayer.destroyCurrentEquippedItem();
+                if (aStack.stackSize <= 0 && aPlayer.getCurrentEquippedItem() == aStack) {
+                    aPlayer.destroyCurrentEquippedItem();
+                }
                 return true;
             }
             if (aStack.stackSize <= 0) {
-                aPlayer.destroyCurrentEquippedItem();
+                if (aPlayer.getCurrentEquippedItem() == aStack) {
+                    aPlayer.destroyCurrentEquippedItem();
+                }
                 return false;
             }
         } catch (Throwable e) {

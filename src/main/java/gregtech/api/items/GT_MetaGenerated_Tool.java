@@ -289,7 +289,9 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
                 }
             }
         }
-        if (aStack.stackSize <= 0) aPlayer.destroyCurrentEquippedItem();
+        if (aStack.stackSize <= 0 && aPlayer.getCurrentEquippedItem() == aStack) {
+            aPlayer.destroyCurrentEquippedItem();
+        }
         return true;
     }
 

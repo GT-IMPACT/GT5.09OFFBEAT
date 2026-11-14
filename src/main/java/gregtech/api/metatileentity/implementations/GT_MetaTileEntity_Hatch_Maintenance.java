@@ -1,5 +1,12 @@
 package gregtech.api.metatileentity.implementations;
 
+import gregtech.api.enums.ToolboxSlot;
+import gregtech.common.items.ItemGTToolbox;
+import gregtech.common.items.toolbox.ToolboxDelegateInventory;
+import gregtech.common.items.toolbox.ToolboxItemStackHandler;
+import gregtech.common.items.toolbox.ToolboxUtil;
+import net.minecraft.inventory.IInventory;
+
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -156,7 +163,9 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
             return true;
         }
         ItemStack stack = aPlayer.getCurrentEquippedItem();
-        if (stack != null && GT_OreDictUnificator.isItemStackInstanceOf(stack, "craftingDuctTape")) {
+        if (stack != null && stack.getItem() instanceof ItemGTToolbox) {
+            applyToolbox(stack, aPlayer);
+        } else if (stack != null && GT_OreDictUnificator.isItemStackInstanceOf(stack, "craftingDuctTape")) {
             applyDuctTape();
             if (--stack.stackSize == 0) {
                 aPlayer.inventory.mainInventory[aPlayer.inventory.currentItem] = null;
@@ -247,6 +256,14 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
     }
 
     public void onToolClick(ItemStack aStack, EntityLivingBase aPlayer) {
+        if (aStack != null && aStack.getItem() instanceof ItemGTToolbox && aPlayer instanceof EntityPlayer) {
+            applyToolbox(aStack, (EntityPlayer) aPlayer);
+            return;
+        }
+        onToolClick(aStack, aPlayer, null);
+    }
+
+    private void onToolClick(ItemStack aStack, EntityLivingBase aPlayer, IInventory solderInventory) {
         if (aStack == null || aPlayer == null) {
             return;
         }
@@ -271,7 +288,7 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
             && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer)) {
             mCrowbar = true;
         }
-        if (!mSolderingTool && GT_ModHandler.useSolderingIron(aStack, aPlayer)) {
+        if (!mSolderingTool && GT_ModHandler.useSolderingIron(aStack, aPlayer, solderInventory)) {
             mSolderingTool = true;
         }
         if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "craftingDuctTape")) {
@@ -285,6 +302,15 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
             } catch (Exception ignored) {
             }
         }
+    }
+
+    private void applyToolbox(ItemStack toolbox, EntityPlayer player) {
+        ToolboxItemStackHandler handler = new ToolboxItemStackHandler(toolbox);
+        ToolboxDelegateInventory inventory = new ToolboxDelegateInventory(handler, ToolboxSlot.GENERIC_SLOTS);
+        for (ToolboxSlot slot : ToolboxSlot.TOOL_SLOTS) {
+            onToolClick(handler.getStackInSlot(slot.getSlotID()), player, inventory);
+        }
+        ToolboxUtil.saveToolbox(toolbox, handler);
     }
 
     private void applyDuctTape() {

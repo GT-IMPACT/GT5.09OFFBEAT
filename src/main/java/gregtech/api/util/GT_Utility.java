@@ -1595,6 +1595,11 @@ public class GT_Utility {
         if (aStack == null) {
             return false;
         }
+        if (aStack.getItem() instanceof gregtech.common.items.ItemGTToolbox) {
+            return gregtech.common.items.toolbox.ToolboxUtil.getSelectedTool(aStack)
+                .map(tool -> isStackInList(new GT_ItemStack(tool), aList))
+                .orElse(false);
+        }
         return isStackInList(new GT_ItemStack(aStack), aList);
     }
 

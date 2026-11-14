@@ -749,7 +749,8 @@ public enum ItemList implements IItemContainer {
     AdsorptionFilter, AdsorptionFilterCasing, AdsorptionFilterDirty, Machine_Multi_AirFilter, Casing_AirFilter, Casing_AirFilter_Vent, Casing_HSLA, Casing_CokeOvenBrick,
     VOLUMETRIC_FLASK,
     Item_Redstone_Sniffer,
-    NetworkAnalyzer;
+    NetworkAnalyzer,
+    ToolBox;
     
     
     public static final ItemList[]

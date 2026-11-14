@@ -19,6 +19,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.MessageToMessageCodec;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -39,7 +40,7 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
                 new GT_Packet_TileEntity(), new GT_Packet_Sound(), new GT_Packet_Block_Event(), new GT_Packet_Ores(),
                 new GT_Packet_Pollution(), new MessageSetFlaskCapacity(), new GT_Packet_TileEntityCover(), new GT_Packet_TileEntityCoverGUI(),
                 new GT_Packet_Block_Event_Four_Int(), new GT_Packet_OutputHatch(), new GT_Packet_ProcessingOutputs(),
-                new GT_Packet_CoverData(), new GTPacketNetworkAnalyzer(),
+                new GT_Packet_CoverData(), new GTPacketNetworkAnalyzer(), new GT_Packet_ToolboxEvent(),
         };
     }
 
@@ -52,6 +53,14 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
             throws Exception {
         ByteArrayDataInput aData = ByteStreams.newDataInput(aPacket.payload().array());
         int packetId = aData.readUnsignedByte();
+        if (packetId == GT_Packet_ToolboxEvent.PACKET_ID) {
+            if (aPacket.payload().readableBytes() == 3
+                && aPacket.getTarget() == Side.SERVER && aPacket.handler() instanceof NetHandlerPlayServer) {
+                GT_Packet_ToolboxEvent selection = (GT_Packet_ToolboxEvent) mSubChannels[packetId].decode(aData);
+                selection.queueSelection(((NetHandlerPlayServer) aPacket.handler()).playerEntity);
+            }
+            return;
+        }
         if (packetId == GTPacketNetworkAnalyzer.PACKET_ID && aPacket.getTarget() != Side.CLIENT) {
             return;
         }

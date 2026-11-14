@@ -24,6 +24,11 @@ import gregtech.api.util.GT_PlayedSound;
 import gregtech.api.util.GT_Utility;
 import gregtech.client.renderer.waila.TTRenderGTProgressBar;
 import gregtech.common.render.*;
+import gregtech.common.items.ItemGTToolbox;
+import gregtech.common.render.items.ToolboxRenderer;
+import com.gtnewhorizon.gtnhlib.event.PickBlockEvent;
+import gregtech.api.enums.ItemList;
+import net.minecraftforge.client.MinecraftForgeClient;
 import gregtech.common.networkanalyzer.events.WorldOverlayRenderer;
 import ic2.api.tile.IWrenchable;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
@@ -325,9 +330,20 @@ public class GT_Client extends GT_Proxy implements Runnable {
                 .registerReloadListener(manager -> GT_MetaTileEntity_TooltipMultiBlockBase.invalidateTooltipCache());
         new GT_Renderer_Block();
         new GT_MetaGenerated_Item_Renderer();
-        new GT_MetaGenerated_Tool_Renderer();
+        GT_MetaGenerated_Tool_Renderer toolRenderer = new GT_MetaGenerated_Tool_Renderer();
+        MinecraftForgeClient.registerItemRenderer(ItemList.ToolBox.getItem(), new ToolboxRenderer(toolRenderer));
         new GT_FlaskRenderer();
         new GT_FluidDisplayStackRenderer();
+    }
+
+    @SubscribeEvent
+    public void onToolboxPickBlock(PickBlockEvent event) {
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        ItemStack held = player == null ? null : player.getCurrentEquippedItem();
+        if (held != null && held.getItem() instanceof ItemGTToolbox
+            && ((ItemGTToolbox) held.getItem()).onPickBlock(held, player)) {
+            event.setCanceled(true);
+        }
     }
 
     @Optional.Method(modid = "Waila")
@@ -396,6 +412,11 @@ public class GT_Client extends GT_Proxy implements Runnable {
 
     @SubscribeEvent
     public void onDrawBlockHighlight(DrawBlockHighlightEvent aEvent) {
+        if (aEvent.currentItem != null && aEvent.currentItem.getItem() instanceof ItemGTToolbox
+            && ((ItemGTToolbox) aEvent.currentItem.getItem()).shouldDrawHighlightGrid(aEvent)) {
+            drawGrid(aEvent, false);
+            return;
+        }
         Block aBlock = aEvent.player.worldObj.getBlock(aEvent.target.blockX, aEvent.target.blockY,
                 aEvent.target.blockZ);
         int aMeta = aEvent.player.worldObj.getBlockMetadata(aEvent.target.blockX, aEvent.target.blockY,

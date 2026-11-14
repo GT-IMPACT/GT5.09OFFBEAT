@@ -138,6 +138,19 @@ public class GT_MachineRecipeLoader implements Runnable {
 
     @Override
     public void run() {
+        RA.addAssemblerRecipe(
+            new ItemStack[] {
+                GT_OreDictUnificator.get(OrePrefixes.itemCasing, Materials.Steel, 10),
+                GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Iron, 2),
+                new ItemStack(Blocks.chest),
+                new ItemStack(Items.dye, 4, Dyes.dyeRed.mIndex),
+                new ItemStack(Items.dye, 1, Dyes.dyeOrange.mIndex)
+            },
+            Materials.Plastic.getMolten(576),
+            ItemList.ToolBox.get(1L),
+            600,
+            30
+        );
         GT_Log.out.println("GT_Mod: Adding non-OreDict Machine Recipes.");
 
         try {

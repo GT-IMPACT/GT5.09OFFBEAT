@@ -6,6 +6,11 @@ import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.IDamagableItem;
+import gregtech.api.enums.ToolboxSlot;
+import gregtech.common.items.ItemGTToolbox;
+import gregtech.common.items.toolbox.ToolboxDelegateInventory;
+import gregtech.common.items.toolbox.ToolboxUtil;
+import net.minecraft.inventory.IInventory;
 import gregtech.api.interfaces.IItemContainer;
 import gregtech.api.interfaces.internal.IGT_CraftingRecipe;
 import gregtech.api.objects.GT_HashSet;
@@ -1620,13 +1625,28 @@ public class GT_ModHandler {
      * Uses a Soldering Iron
      */
     public static boolean useSolderingIron(ItemStack aStack, EntityLivingBase aPlayer) {
+        if (aStack != null && aStack.getItem() instanceof ItemGTToolbox) {
+            ToolboxDelegateInventory inventory = new ToolboxDelegateInventory(aStack);
+            ItemStack tool = inventory.getHandler().getStackInSlot(ToolboxSlot.SOLDERING_IRON.getSlotID());
+            if (!ToolboxUtil.isToolOfType(aStack, ToolboxSlot.SOLDERING_IRON)) {
+                return false;
+            }
+            boolean used = useSolderingIron(tool, aPlayer, inventory);
+            ToolboxUtil.saveToolbox(aStack, inventory.getHandler());
+            return used;
+        }
+        return useSolderingIron(aStack, aPlayer, null);
+    }
+
+    public static boolean useSolderingIron(ItemStack aStack, EntityLivingBase aPlayer, IInventory solderInventory) {
         if (aPlayer == null || aStack == null) return false;
         if (GT_Utility.isStackInList(aStack, GregTech_API.sSolderingToolList)) {
             if (aPlayer instanceof EntityPlayer) {
                 EntityPlayer tPlayer = (EntityPlayer) aPlayer;
                 if (tPlayer.capabilities.isCreativeMode) return true;
                 if (isElectricItem(aStack) && ic2.api.item.ElectricItem.manager.getCharge(aStack) > 1000.0d) {
-                    if (consumeSolderingMaterial(tPlayer)) {
+                    if ((solderInventory != null && consumeSolderingMaterial(solderInventory))
+                        || consumeSolderingMaterial(tPlayer)) {
                     	if (canUseElectricItem(aStack, 10000)) {
                             return GT_ModHandler.useElectricItem(aStack, 10000, (EntityPlayer) aPlayer);
                         }
@@ -1660,6 +1680,18 @@ public class GT_ModHandler {
             }
         }
     	return false;
+    }
+
+    private static boolean consumeSolderingMaterial(IInventory inventory) {
+        for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+            ItemStack material = inventory.getStackInSlot(slot);
+            if (material != null && material.stackSize > 0
+                && GT_Utility.isStackInList(material, GregTech_API.sSolderingMetalList)) {
+                inventory.decrStackSize(slot, 1);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

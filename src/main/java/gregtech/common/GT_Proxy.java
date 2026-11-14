@@ -17,10 +17,12 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaGenerated_Item;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.net.GT_Packet_Pollution;
+import gregtech.api.net.GT_Packet_ToolboxEvent;
 import gregtech.api.objects.*;
 import gregtech.api.util.*;
 import gregtech.common.covers.CoverRedstoneWirelessBase;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.items.ItemGTToolbox;
 import gregtech.common.networkanalyzer.events.NetworkAnalyzerPlayerTracker;
 import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
@@ -721,6 +723,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public void onServerStopping() {
+        GT_Packet_ToolboxEvent.clearSelections();
         NetworkAnalyzerPlayerTracker.clear();
         File tSaveDirectory = getSaveDirectory();
         GregTech_API.sWirelessRedstone.clear();
@@ -823,6 +826,8 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                     ((GT_MetaGenerated_Tool) aStack.getItem()).onHarvestBlockEvent(aEvent.drops, aStack,
                             aEvent.harvester, aEvent.block, aEvent.x, aEvent.y,
                             aEvent.z, (byte) aEvent.blockMetadata, aEvent.fortuneLevel, aEvent.isSilkTouching, aEvent);
+                } else if (aStack.getItem() instanceof ItemGTToolbox) {
+                    ((ItemGTToolbox) aStack.getItem()).onBlockHarvestingEvent(aStack, aEvent);
                 }
                 if (EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, aStack) > 2) {
                     try {
@@ -1315,6 +1320,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
     @SubscribeEvent
     public void onPlayerTickEventServer(TickEvent.PlayerTickEvent aEvent) {
+        if (aEvent.phase == TickEvent.Phase.END && aEvent.player instanceof EntityPlayerMP) {
+            GT_Packet_ToolboxEvent.applySelection((EntityPlayerMP) aEvent.player);
+        }
         if ((aEvent.side.isServer()) && (aEvent.phase == TickEvent.Phase.END) && (!aEvent.player.isDead)) {
             if ((aEvent.player.ticksExisted % 200 == 0) && (aEvent.player.capabilities.allowEdit)
                     && (!aEvent.player.capabilities.isCreativeMode)

@@ -1,0 +1,174 @@
+package gregtech.api.enums;
+
+import static gregtech.api.enums.GT_Values.MOD_ID;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+
+import com.cleanroommc.modularui.drawable.UITexture;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+
+import gregtech.api.GregTech_API;
+import gregtech.api.items.GT_MetaGenerated_Tool;
+import gregtech.api.modularui2.GTGuiTextures;
+import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.util.GT_OreDictUnificator;
+import ic2.api.item.IElectricItem;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.Collection;
+import gregtech.api.util.GT_Utility;
+import gregtech.common.items.ItemGTToolbox;
+
+/**
+ * Defines the various slots in the toolbox. Used both to enforce inventory restrictions as well assist with drawing
+ * GUIs.
+ */
+public enum ToolboxSlot {
+
+    // These enum names are used to drive i18n, so you'll need to change the relevant keys in the language files if you
+    // add or rename any enums here. Example key: GT5U.gui.text.toolbox.slot_title.wrench
+    WRENCH(0, isItemInToolSet(GregTech_API.sWrenchList), GTGuiTextures.OVERLAY_TOOLBOX_WRENCH),
+    WIRE_CUTTER(1, isItemInToolSet(GregTech_API.sWireCutterList), GTGuiTextures.OVERLAY_TOOLBOX_WIRE_CUTTER),
+    SCREWDRIVER(2, isItemInToolSet(GregTech_API.sScrewdriverList), GTGuiTextures.OVERLAY_TOOLBOX_SCREWDRIVER),
+    SOFT_MALLET(3, isItemInToolSet(GregTech_API.sSoftHammerList), GTGuiTextures.OVERLAY_TOOLBOX_SOFT_MALLET),
+
+    GENERIC_SLOT0(4),
+    GENERIC_SLOT1(5),
+    GENERIC_SLOT2(6),
+
+    // Charges any item in the toolbox.
+    BATTERY(7, ToolboxSlot::isBattery, GTGuiTextures.OVERLAY_TOOLBOX_BATTERY),
+    HARD_HAMMER(8, stack -> stack.getItem() instanceof GT_MetaGenerated_Tool
+        && (GT_Utility.isStackInList(stack, GregTech_API.sHardHammerList)
+            || GT_OreDictUnificator.isItemStackInstanceOf(stack, "craftingToolJackHammer")),
+        GTGuiTextures.OVERLAY_TOOLBOX_HARD_HAMMER),
+    CROWBAR(9, isItemInToolSet(GregTech_API.sCrowbarList), GTGuiTextures.OVERLAY_TOOLBOX_CROWBAR),
+    SOLDERING_IRON(10, isItemInToolSet(GregTech_API.sSolderingToolList), GTGuiTextures.OVERLAY_TOOLBOX_SOLDERING_IRON),
+
+    GENERIC_SLOT3(11),
+    GENERIC_SLOT4(12),
+    GENERIC_SLOT5(13),
+
+    // merge conflict defeater comment
+    ;
+
+    public static final ImmutableList<ToolboxSlot> GENERIC_SLOTS = ImmutableList
+        .of(GENERIC_SLOT0, GENERIC_SLOT1, GENERIC_SLOT2, GENERIC_SLOT3, GENERIC_SLOT4, GENERIC_SLOT5);
+    public static final ImmutableList<ToolboxSlot> TOOL_SLOTS = ImmutableList
+        .of(WRENCH, WIRE_CUTTER, SCREWDRIVER, SOFT_MALLET, HARD_HAMMER, CROWBAR, SOLDERING_IRON);
+    public static final int ROW_WIDTH = 7;
+
+    private static final ImmutableMap<Integer, ToolboxSlot> LOOKUP = Maps
+        .uniqueIndex(Arrays.asList(values()), ToolboxSlot::getSlotID);
+
+    private final Predicate<ItemStack> itemStackTest;
+    private final int slot;
+    private final boolean isGeneric;
+    private final UITexture overlay;
+
+    /** Used to register the overlay textures as icons for rendering during the "tool recently broken" animation. */
+    private IIcon icon = null;
+
+    ToolboxSlot(final int slot) {
+        this(slot, x -> true, true, null);
+    }
+
+    ToolboxSlot(final int slot, final Predicate<ItemStack> itemStackTest, final UITexture overlay) {
+        this(slot, itemStackTest, false, overlay);
+    }
+
+    ToolboxSlot(final int slot, final Predicate<ItemStack> itemStackTest, boolean isGeneric, UITexture overlay) {
+        if (slot < 0) {
+            throw new RuntimeException("Invalid slot " + slot + ". Must be greater than or equal to zero.");
+        }
+        this.slot = slot;
+        this.itemStackTest = itemStackTest;
+        this.isGeneric = isGeneric;
+        this.overlay = overlay;
+    }
+
+    public boolean test(final ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+
+        if (stack.getItem() instanceof ItemGTToolbox) {
+            return false;
+        }
+
+        return itemStackTest.test(stack);
+    }
+
+    public int getSlotID() {
+        return slot;
+    }
+
+    public Optional<UITexture> getOverlay() {
+        return Optional.ofNullable(overlay);
+    }
+
+    public void registerIcon(final IIconRegister iconRegister) {
+        icon = iconRegister.registerIcon(MOD_ID + ":toolbox/" + name().toLowerCase(java.util.Locale.ROOT));
+    }
+
+    public Optional<IIcon> getIcon() {
+        return Optional.ofNullable(icon);
+    }
+
+    public int getRow() {
+        // Using integer division on purpose here.
+        return slot / ROW_WIDTH;
+    }
+
+    public int getColumn() {
+        return slot % ROW_WIDTH;
+    }
+
+    public boolean isGeneric() {
+        return isGeneric;
+    }
+
+    public boolean isTool() {
+        // Makes the Optional maps a little easier to read.
+        return !isGeneric && this != BATTERY;
+    }
+
+    public static Optional<ToolboxSlot> getBySlot(int slot) {
+        return Optional.ofNullable(LOOKUP.get(slot));
+    }
+
+    public static boolean slotIsTool(int slot) {
+        return getBySlot(slot).map(ToolboxSlot::isTool)
+            .orElse(false);
+    }
+
+    private static boolean isBattery(ItemStack stack) {
+        if (!(stack.getItem() instanceof IElectricItem)) {
+            return false;
+        }
+        for (int id : OreDictionary.getOreIDs(stack)) {
+            if (OrePrefixes.getOrePrefix(OreDictionary.getOreName(id)) == OrePrefixes.battery) {
+                return true;
+            }
+        }
+        return ((IElectricItem) stack.getItem()).canProvideEnergy(stack);
+    }
+
+    private static Predicate<ItemStack> isItemInToolSet(Collection<GT_ItemStack> toolSet) {
+        return (ItemStack itemStack) -> {
+            if (!(itemStack.getItem() instanceof GT_MetaGenerated_Tool)) {
+                return false;
+            }
+
+            return GT_Utility.isStackInList(itemStack, toolSet);
+        };
+    }
+}
