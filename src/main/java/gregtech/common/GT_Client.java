@@ -5,6 +5,7 @@
 
 package gregtech.common;
 
+import appeng.tile.misc.TileInterface;
 import codechicken.lib.vec.Rotation;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Loader;
@@ -14,6 +15,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.ToolboxSlot;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.ITurnable;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
@@ -25,6 +27,7 @@ import gregtech.api.util.GT_Utility;
 import gregtech.client.renderer.waila.TTRenderGTProgressBar;
 import gregtech.common.render.*;
 import gregtech.common.items.ItemGTToolbox;
+import gregtech.common.items.toolbox.ToolboxUtil;
 import gregtech.common.render.items.ToolboxRenderer;
 import com.gtnewhorizon.gtnhlib.event.PickBlockEvent;
 import gregtech.api.enums.ItemList;
@@ -44,6 +47,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.input.Keyboard;
@@ -160,6 +164,20 @@ public class GT_Client extends GT_Proxy implements Runnable {
                 }
             } else if (tTile instanceof BaseMetaPipeEntity)
                 tConnections = ((BaseMetaPipeEntity) tTile).mConnections;
+        } else if (showCoverConnections && aEvent.currentItem != null
+            && aEvent.currentItem.getItem() instanceof ItemGTToolbox) {
+            if (tTile instanceof IWrenchable) {
+                tConnections = (byte) ForgeDirection.getOrientation(((IWrenchable) tTile).getFacing()).flag;
+            } else {
+                World world = aEvent.player.worldObj;
+                Block block = world.getBlock(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
+                if (ROTATABLE_VANILLA_BLOCKS.contains(block)) {
+                    int meta = world.getBlockMetadata(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
+                    tConnections = (byte) ForgeDirection.getOrientation(meta).flag;
+                } else if (tTile instanceof TileInterface) {
+                    tConnections = (byte) ((TileInterface) tTile).getUp().getOpposite().flag;
+                }
+            }
         }
 
         if (tConnections > 0) {
@@ -339,7 +357,7 @@ public class GT_Client extends GT_Proxy implements Runnable {
     @SubscribeEvent
     public void onToolboxPickBlock(PickBlockEvent event) {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        ItemStack held = player == null ? null : player.getCurrentEquippedItem();
+        ItemStack held = player == null || player.isDead ? null : player.getCurrentEquippedItem();
         if (held != null && held.getItem() instanceof ItemGTToolbox
             && ((ItemGTToolbox) held.getItem()).onPickBlock(held, player)) {
             event.setCanceled(true);
@@ -414,7 +432,7 @@ public class GT_Client extends GT_Proxy implements Runnable {
     public void onDrawBlockHighlight(DrawBlockHighlightEvent aEvent) {
         if (aEvent.currentItem != null && aEvent.currentItem.getItem() instanceof ItemGTToolbox
             && ((ItemGTToolbox) aEvent.currentItem.getItem()).shouldDrawHighlightGrid(aEvent)) {
-            drawGrid(aEvent, false);
+            drawGrid(aEvent, true);
             return;
         }
         Block aBlock = aEvent.player.worldObj.getBlock(aEvent.target.blockX, aEvent.target.blockY,
@@ -645,8 +663,15 @@ public class GT_Client extends GT_Proxy implements Runnable {
             ItemStack tCurrentItem = player.getCurrentEquippedItem();
             if (tCurrentItem == null)
                 return 0;
-            int[] ids = OreDictionary.getOreIDs(tCurrentItem);
             int hide = 0;
+            if (tCurrentItem.getItem() instanceof ItemGTToolbox) {
+                hide = 0x2;
+                if (ToolboxUtil.isToolOfType(tCurrentItem, ToolboxSlot.SOLDERING_IRON)) {
+                    hide |= 0x1;
+                }
+                return hide;
+            }
+            int[] ids = OreDictionary.getOreIDs(tCurrentItem);
             for (int i : ids) {
                 if (OreDictionary.getOreName(i).equals("craftingToolSolderingIron")) {
                     hide |= 0x1;

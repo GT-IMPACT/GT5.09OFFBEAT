@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.world.World;
 
 import org.junit.Test;
@@ -30,6 +31,7 @@ import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.network.ModularNetwork;
 import com.cleanroommc.modularui.network.NetworkHandler;
 import com.cleanroommc.modularui.network.packets.OpenGuiPacket;
+import com.cleanroommc.modularui.network.packets.PacketSyncHandler;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -44,8 +46,10 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.asm.transformers.ModAPITransformer;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.discovery.asm.ASMModParser;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
+import gregtech.GT_Mod;
 import gregtech.api.enums.ToolboxSlot;
 import gregtech.api.modularui2.GTGuis;
 import gregtech.api.net.GT_Packet_ToolboxEvent;
@@ -70,6 +74,20 @@ public class GT_Mui2ToolboxTest {
         }
     }
 
+    @Test
+    public void vanillaClosePersistsToolboxContents() throws Throwable {
+        try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
+            runtime.run(getClass(), "vanillaClose", "");
+        }
+    }
+
+    @Test
+    public void logoutPersistsOpenToolboxContentsBeforePlayerSave() throws Throwable {
+        try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
+            runtime.run(getClass(), "logout", "");
+        }
+    }
+
     public static void runScenario(String scenario, String unused) throws Exception {
         Launch.blackboard.put("fml.deobfuscatedEnvironment", true);
         Launch.classLoader.registerTransformer("cpw.mods.fml.common.asm.transformers.EventSubscriptionTransformer");
@@ -88,8 +106,8 @@ public class GT_Mui2ToolboxTest {
         }
 
         GTGuis.init();
-        if (scenario.equals("rightClick")) {
-            checkRightClick();
+        if (!scenario.equals("open")) {
+            checkRightClick(scenario);
             return;
         }
 
@@ -106,7 +124,7 @@ public class GT_Mui2ToolboxTest {
         settings.defaultCanInteractWith(GuiFactories.playerInventory(), data);
         ModularPanel panel = GuiFactories.playerInventory().createPanel(data, handlers, settings);
         WidgetTree.collectSyncValues(handlers, panel);
-        ModularContainer container = new ModularContainer();
+        ModularContainer container = settings.createContainer();
         container.construct(player, sync, settings, panel.getName(), data);
         player.openContainer = container;
 
@@ -132,8 +150,9 @@ public class GT_Mui2ToolboxTest {
         assertFalse(ToolboxUtil.getItemInside(toolbox, ToolboxSlot.GENERIC_SLOT0).isPresent());
     }
 
-    private static void checkRightClick() throws Exception {
+    private static void checkRightClick(String scenario) throws Exception {
         NetworkHandler.CHANNEL.registerMessage((message, context) -> null, OpenGuiPacket.class, 0, Side.CLIENT);
+        NetworkHandler.CHANNEL.registerMessage((message, context) -> null, PacketSyncHandler.class, 1, Side.CLIENT);
         World world = new GT_ProcessingTestSupport.ProcessingWorld();
         ToolboxPlayer player = createServerPlayer(world);
         try (Connection connection = new Connection(player)) {
@@ -154,12 +173,28 @@ public class GT_Mui2ToolboxTest {
             assertTrue(ItemGTToolbox.isInventoryOpen(replacement));
             assertFalse(ItemGTToolbox.isInventoryOpen(held));
 
-            ModularSlot slot = findSlot(container, ToolboxSlot.GENERIC_SLOT0.getSlotID(), false);
-            slot.putStack(new ItemStack(Items.stick, 8));
+            player.inventory.setInventorySlotContents(9, new ItemStack(Items.stick, 8));
+            ModularSlot source = findSlot(container, 9, true);
+            container.transferStackInSlot(player, source.slotNumber);
+            assertNull(player.inventory.getStackInSlot(9));
+            assertEquals(8, findSlot(container, ToolboxSlot.GENERIC_SLOT0.getSlotID(), false).getStack().stackSize);
             assertFalse(ToolboxUtil.getItemInside(replacement, ToolboxSlot.GENERIC_SLOT0).isPresent());
-            ModularNetwork.SERVER.closeContainer(0, true, player, false);
+            if (scenario.equals("vanillaClose")) {
+                player.playerNetServerHandler.processCloseWindow(new C0DPacketCloseWindow(container.windowId));
+            } else if (scenario.equals("logout")) {
+                GT_Mod.gregtechproxy.onToolboxPlayerLogout(new PlayerLoggedOutEvent(player));
+            } else {
+                ModularNetwork.SERVER.closeContainer(0, true, player, false);
+            }
             assertEquals(8, ToolboxUtil.getItemInside(replacement, ToolboxSlot.GENERIC_SLOT0).get().stackSize);
             assertFalse(ItemGTToolbox.isInventoryOpen(replacement));
+
+            if (scenario.equals("vanillaClose")) {
+                // A subsequent ModularUI close must not replay an already committed inventory.
+                ToolboxUtil.saveItemInside(replacement, null, ToolboxSlot.GENERIC_SLOT0);
+                ModularNetwork.SERVER.closeContainer(0, true, player, false);
+                assertFalse(ToolboxUtil.getItemInside(replacement, ToolboxSlot.GENERIC_SLOT0).isPresent());
+            }
         }
     }
 

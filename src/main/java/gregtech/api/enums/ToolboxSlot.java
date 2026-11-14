@@ -20,8 +20,6 @@ import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.modularui2.GTGuiTextures;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_OreDictUnificator;
-import ic2.api.item.IElectricItem;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Collection;
 import gregtech.api.util.GT_Utility;
@@ -45,7 +43,7 @@ public enum ToolboxSlot {
     GENERIC_SLOT2(6),
 
     // Charges any item in the toolbox.
-    BATTERY(7, ToolboxSlot::isBattery, GTGuiTextures.OVERLAY_TOOLBOX_BATTERY),
+    BATTERY(7, OrePrefixes.battery::containsUnCached, GTGuiTextures.OVERLAY_TOOLBOX_BATTERY),
     HARD_HAMMER(8, stack -> stack.getItem() instanceof GT_MetaGenerated_Tool
         && (GT_Utility.isStackInList(stack, GregTech_API.sHardHammerList)
             || GT_OreDictUnificator.isItemStackInstanceOf(stack, "craftingToolJackHammer")),
@@ -148,18 +146,6 @@ public enum ToolboxSlot {
     public static boolean slotIsTool(int slot) {
         return getBySlot(slot).map(ToolboxSlot::isTool)
             .orElse(false);
-    }
-
-    private static boolean isBattery(ItemStack stack) {
-        if (!(stack.getItem() instanceof IElectricItem)) {
-            return false;
-        }
-        for (int id : OreDictionary.getOreIDs(stack)) {
-            if (OrePrefixes.getOrePrefix(OreDictionary.getOreName(id)) == OrePrefixes.battery) {
-                return true;
-            }
-        }
-        return ((IElectricItem) stack.getItem()).canProvideEnergy(stack);
     }
 
     private static Predicate<ItemStack> isItemInToolSet(Collection<GT_ItemStack> toolSet) {

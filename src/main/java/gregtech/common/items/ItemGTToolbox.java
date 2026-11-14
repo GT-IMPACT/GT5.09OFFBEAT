@@ -1,19 +1,15 @@
 package gregtech.common.items;
 
-import static gregtech.api.util.GT_Utility.formatNumbers;
+import static com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil.formatNumber;
 import static gregtech.api.enums.GT_Values.V;
 import static gregtech.api.enums.GT_Values.MOD_ID;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,6 +25,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.event.world.BlockEvent;
+
+import org.lwjgl.input.Keyboard;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
@@ -54,7 +52,7 @@ import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.modularui2.ToolboxSelectGuiFactory;
 import gregtech.api.net.GT_Packet_ToolboxEvent;
 import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_Utility;
+import gregtech.common.gui.modularui.item.ToolboxContainer;
 import gregtech.common.gui.modularui.item.ToolboxInventoryGui;
 import gregtech.common.items.toolbox.ToolboxElectricManager;
 import gregtech.common.items.toolbox.ToolboxItemStackHandler;
@@ -89,7 +87,9 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
     }
 
     public static void playSound(EntityPlayer player, String sound, float pitch) {
-        player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, MOD_ID + ":items.Toolbox" + sound, 1, pitch);
+        float volume = sound.equals("Open") ? 2.0F : 1.0F;
+        player.worldObj.playSoundEffect(
+            player.posX, player.posY, player.posZ, MOD_ID + ":items.Toolbox" + sound, volume, pitch);
     }
 
     private static final int CHARGE_TICK = 20;
@@ -208,55 +208,9 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
     public ItemStack onItemRightClick(final ItemStack toolbox, final World world, final EntityPlayer player) {
         if (player instanceof EntityPlayerMP && canOpenInventoryGui(toolbox, world)) {
             GuiFactories.playerInventory().openFromMainHand(player);
-        } else {
-            useSelectedTool(toolbox, tool -> {
-                ItemStack result = tool.getItem().onItemRightClick(tool, world, player);
-                if (result == null) {
-                    tool.stackSize = 0;
-                } else if (result != tool) {
-                    GT_Utility.setStack(tool, result);
-                }
-                return true;
-            });
         }
 
         return super.onItemRightClick(toolbox, world, player);
-    }
-
-    @Override
-    public boolean onItemUse(
-        ItemStack toolbox,
-        EntityPlayer player,
-        World world,
-        int x,
-        int y,
-        int z,
-        int side,
-        float hitX,
-        float hitY,
-        float hitZ
-    ) {
-        return useSelectedTool(toolbox, tool ->
-            tool.getItem().onItemUse(tool, player, world, x, y, z, side, hitX, hitY, hitZ));
-    }
-
-    @Override
-    public boolean onLeftClickEntity(ItemStack toolbox, EntityPlayer player, Entity target) {
-        return useSelectedTool(toolbox, tool -> tool.getItem().onLeftClickEntity(tool, player, target));
-    }
-
-    @Override
-    public boolean itemInteractionForEntity(ItemStack toolbox, EntityPlayer player, EntityLivingBase target) {
-        return useSelectedTool(toolbox, tool -> tool.getItem().itemInteractionForEntity(tool, player, target));
-    }
-
-    private boolean useSelectedTool(ItemStack toolbox, Predicate<ItemStack> action) {
-        return ToolboxUtil.getSelectedToolType(toolbox).map(slot -> {
-            ItemStack tool = ToolboxUtil.getItemInside(toolbox, slot).get();
-            boolean used = action.test(tool);
-            ToolboxUtil.saveItemInside(toolbox, tool, slot);
-            return used;
-        }).orElse(false);
     }
 
     @Override
@@ -294,87 +248,66 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
     @Override
     public void addInformation(final ItemStack toolbox, final EntityPlayer player, final List tooltipList,
         final boolean f3mode) {
-        final Optional<ToolboxSlot> selectedToolType = ToolboxUtil.getSelectedToolType(toolbox);
+        GameSettings settings = Minecraft.getMinecraft().gameSettings;
+        String use = getTooltipKeyName(settings.keyBindUseItem.getKeyCode());
+        String pickBlock = getTooltipKeyName(settings.keyBindPickBlock.getKeyCode());
+        String sneak = getTooltipKeyName(settings.keyBindSneak.getKeyCode());
+        Optional<ItemStack> selectedTool = ToolboxUtil.getSelectedTool(toolbox);
 
-        final GameSettings settings = Minecraft.getMinecraft().gameSettings;
-
-        // noinspection SimplifyOptionalCallChains
-        if (!selectedToolType.isPresent()) {
-            tooltipList.add(
-                StatCollector.translateToLocalFormatted(
-                    "GT5U.item.toolbox.tooltip.open_toolbox",
-                    I18n.format(settings.keyBindUseItem.getKeyDescription())));
-        }
-
-        tooltipList.add(
-            StatCollector.translateToLocalFormatted(
-                "GT5U.item.toolbox.tooltip.select_tool",
-                I18n.format(settings.keyBindPickBlock.getKeyDescription())));
-
-        double charge = 0d;
-        double maxCharge = 0d;
-        int voltageTier = -1;
-
-        if (selectedToolType.isPresent()) {
-            // noinspection OptionalGetWithoutIsPresent
-            final ItemStack tool = ToolboxUtil.getSelectedTool(toolbox).get();
-            final long maxDamage = GT_MetaGenerated_Tool.getToolMaxDamage(tool);
-
-            if (tool.getItem() instanceof GT_MetaGenerated_Tool) {
-                GT_MetaGenerated_Tool toolItem = (GT_MetaGenerated_Tool) tool.getItem();
-                final Long[] electricStats = toolItem.getElectricStats(tool);
-                if (electricStats != null) {
-                    charge += toolItem.getRealCharge(tool);
-                    maxCharge += Math.abs(electricStats[0]);
-                    voltageTier = (int) Math.max(0, Math.min(electricStats[2], V.length - 1));
-                }
-            }
-
+        if (selectedTool.isPresent()) {
             tooltipList.add(
                 StatCollector.translateToLocalFormatted(
                     "GT5U.item.toolbox.tooltip.deselect_tool",
-                    I18n.format(settings.keyBindPickBlock.getKeyDescription())));
-
-            tooltipList.add(
-                EnumChatFormatting.WHITE +
-                    StatCollector.translateToLocalFormatted(
-                        "GT5U.item.toolbox.tooltip.tool_durability",
-                        EnumChatFormatting.GREEN + formatNumbers(
-                            maxDamage - GT_MetaGenerated_Tool.getToolDamage(tool)),
-                        EnumChatFormatting.WHITE + formatNumbers(maxDamage)) + EnumChatFormatting.GRAY);
+                    sneak,
+                    pickBlock));
         }
+        tooltipList.add(StatCollector.translateToLocalFormatted("GT5U.item.toolbox.tooltip.open_toolbox", use));
+        tooltipList.add(StatCollector.translateToLocalFormatted("GT5U.item.toolbox.tooltip.select_tool", pickBlock));
+        tooltipList.add(StatCollector.translateToLocalFormatted("GT5U.item.toolbox.tooltip.radial_menu", sneak, pickBlock));
+        tooltipList.add(StatCollector.translateToLocalFormatted("GT5U.item.toolbox.tooltip.repair", use));
 
-        final Optional<ItemStack> battery = ToolboxUtil.getBattery(toolbox);
-        if (battery.isPresent()) {
-            final ItemStack batteryStack = battery.get();
-            final Optional<IElectricItemManager> manager = getElectricManager(batteryStack);
-            if (manager.isPresent()) {
-                final IElectricItem batteryItem = Objects.requireNonNull((IElectricItem) batteryStack.getItem());
-                voltageTier = Math.max(0, Math.min(batteryItem.getTier(batteryStack), V.length - 1));
-                charge += manager.get().getCharge(batteryStack);
-                maxCharge += batteryItem.getMaxCharge(batteryStack);
+        selectedTool.ifPresent(tool -> {
+            long maxDamage = GT_MetaGenerated_Tool.getToolMaxDamage(tool);
+            tooltipList.add(StatCollector.translateToLocalFormatted(
+                "GT5U.item.toolbox.tooltip.tool_durability",
+                formatNumber(maxDamage - GT_MetaGenerated_Tool.getToolDamage(tool)),
+                formatNumber(maxDamage)));
+
+            GT_MetaGenerated_Tool toolItem = (GT_MetaGenerated_Tool) tool.getItem();
+            Long[] electricStats = toolItem.getElectricStats(tool);
+            if (electricStats != null) {
+                tooltipList.add(EnumChatFormatting.AQUA + StatCollector.translateToLocalFormatted(
+                    "GT5U.item.toolbox.tooltip.tool_charge",
+                    formatNumber(toolItem.getRealCharge(tool)),
+                    formatNumber(Math.abs(electricStats[0]))));
             }
+        });
+
+        ToolboxUtil.withBatteryAndManager(toolbox, (battery, manager) -> {
+            IElectricItem batteryItem = (IElectricItem) battery.getItem();
+            tooltipList.add(EnumChatFormatting.AQUA + StatCollector.translateToLocalFormatted(
+                "GT5U.item.toolbox.tooltip.battery_charge",
+                formatNumber(manager.getCharge(battery)),
+                formatNumber(batteryItem.getMaxCharge(battery))));
+        });
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static String getTooltipKeyName(int keyCode) {
+        switch (keyCode) {
+            case -100:
+                return StatCollector.translateToLocal("GT5U.item.toolbox.key.left_mouse");
+            case -99:
+                return StatCollector.translateToLocal("GT5U.item.toolbox.key.right_mouse");
+            case -98:
+                return StatCollector.translateToLocal("GT5U.item.toolbox.key.middle_mouse");
+            case Keyboard.KEY_LSHIFT:
+                return StatCollector.translateToLocal("GT5U.item.toolbox.key.left_shift");
+            case Keyboard.KEY_NONE:
+                return StatCollector.translateToLocal("GT5U.item.toolbox.key.unbound");
+            default:
+                return GameSettings.getKeyDisplayString(keyCode);
         }
-
-        if (voltageTier > -1) {
-            tooltipList.add(
-                EnumChatFormatting.AQUA + StatCollector.translateToLocalFormatted(
-                    "GT5U.item.toolbox.tooltip.charge",
-                    formatNumbers((long) charge),
-                    formatNumbers((long) maxCharge),
-                    formatNumbers(V[voltageTier])));
-        }
-
-
-        tooltipList.addAll(
-            Arrays.asList(
-                StatCollector.translateToLocalFormatted(
-                    "GT5U.item.toolbox.byline.format",
-                    StatCollector.translateToLocal(
-                        "GT5U.item.toolbox.byline." + selectedToolType.map(
-                            slot -> slot.name()
-                                .toLowerCase())
-                            .orElse("closed"))).split("\\\\n")));
     }
 
     @Override
@@ -382,6 +315,8 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
         final UISettings settings) {
         int slot = data.getSlotIndex();
         ToolboxItemStackHandler stackHandler = new ToolboxItemStackHandler(data.getUsedItemStack());
+        ToolboxContainer container = new ToolboxContainer(data, stackHandler);
+        settings.customContainer(() -> container);
         syncManager.addOpenListener(player -> {
             if (player.worldObj.isRemote) {
                 GT_Values.NW.sendToServer(GT_Packet_ToolboxEvent.inventoryOpened(slot));
@@ -392,19 +327,7 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
                 ItemStack held = data.getUsedItemStack();
                 return held != null && held.getItem() == this;
             });
-            syncManager.addCloseListener(player -> {
-                ItemStack toolbox = data.getUsedItemStack();
-                if (toolbox == null || toolbox.getItem() != this) {
-                    return;
-                }
-                ToolboxUtil.saveToolbox(toolbox, stackHandler, tag -> {
-                    tag.removeTag(TOOLBOX_OPEN_KEY);
-                    tag.removeTag(BROKEN_TOOL_ANIMATION_END_KEY);
-                    tag.removeTag(RECENTLY_BROKEN_SLOT_KEY);
-                });
-                data.setUsedItemStack(toolbox);
-                playSound(player, "Close", 1.0F);
-            });
+            syncManager.addCloseListener(player -> container.saveContents());
         }
         return new ToolboxInventoryGui(syncManager, data, stackHandler).build();
     }

@@ -3,6 +3,7 @@ package gregtech.common;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -21,6 +22,7 @@ import gregtech.api.net.GT_Packet_ToolboxEvent;
 import gregtech.api.objects.*;
 import gregtech.api.util.*;
 import gregtech.common.covers.CoverRedstoneWirelessBase;
+import gregtech.common.gui.modularui.item.ToolboxContainer;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import gregtech.common.items.ItemGTToolbox;
 import gregtech.common.networkanalyzer.events.NetworkAnalyzerPlayerTracker;
@@ -1315,6 +1317,13 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
             }
 
             GT_Pollution.onWorldTick(aEvent);
+        }
+    }
+
+    @SubscribeEvent
+    public void onToolboxPlayerLogout(PlayerLoggedOutEvent event) {
+        if (event.player.openContainer instanceof ToolboxContainer) {
+            ((ToolboxContainer) event.player.openContainer).saveContents();
         }
     }
 

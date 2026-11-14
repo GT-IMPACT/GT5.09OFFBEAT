@@ -97,7 +97,7 @@ public class ToolboxInventoryGui {
         for (final ToolboxSlot slot : ToolboxSlot.values()) {
 
             final ItemSlot widget = new CustomItemSlot(() -> itemHandler, slot).slot(
-                new ToolboxInventorySlot(itemHandler, slot.getSlotID())
+                new ModularSlot(itemHandler, slot.getSlotID())
                     .slotGroup(slot.isGeneric() ? genericGroup : toolGroup))
                 .addTooltipLine(getTooltip(slot));
 
@@ -133,29 +133,6 @@ public class ToolboxInventoryGui {
                 StatCollector.translateToLocal("GT5U.gui.text.toolbox.slot_title." + key),
                 StatCollector.translateToLocal("GT5U.gui.text.toolbox.tooltip." + key))
             .replace("\\n", "\n");
-    }
-
-    private static class ToolboxInventorySlot extends ModularSlot {
-
-        private final int index;
-
-        ToolboxInventorySlot(IItemHandler handler, int index) {
-            super(handler, index);
-            this.index = index;
-        }
-
-        // SlotItemHandler temporarily clears occupied slots during these queries.
-        // The toolbox persists every actual mutation, so check the limits directly.
-        @Override
-        public boolean isItemValid(@Nullable ItemStack stack) {
-            return isCanPut() && stack != null && stack.stackSize > 0 && getFilter().test(stack)
-                && getItemHandler().isItemValid(index, stack);
-        }
-
-        @Override
-        public int getItemStackLimit(ItemStack stack) {
-            return Math.min(getSlotStackLimit(), stack.getMaxStackSize());
-        }
     }
 
     private static class CustomItemSlot extends ItemSlot {

@@ -106,7 +106,7 @@ public final class GT_Packet_ToolboxEvent extends GT_Packet {
             toolbox.setTagCompound(tag);
         }
         tag.setBoolean(ItemGTToolbox.TOOLBOX_OPEN_KEY, true);
-        ItemGTToolbox.playSound(player, "Open", 2.0F);
+        ItemGTToolbox.playSound(player, "Open", 1.0F);
     }
 
     private void select(EntityPlayerMP player) {

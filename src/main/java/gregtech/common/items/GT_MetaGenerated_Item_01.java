@@ -437,6 +437,27 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Battery_RE_HV_Sodium.set(addItem(tLastID = 539, "Large Sodium Battery", "Reusable"));
         setElectricStats(32000 + tLastID, 800000L, GT_Values.V[3], 3L, -3L, true);
 
+        for (ItemList battery : new ItemList[] {
+            ItemList.Battery_SU_LV_SulfuricAcid,
+            ItemList.Battery_SU_LV_Mercury,
+            ItemList.Battery_SU_MV_SulfuricAcid,
+            ItemList.Battery_SU_MV_Mercury,
+            ItemList.Battery_SU_HV_SulfuricAcid,
+            ItemList.Battery_SU_HV_Mercury,
+            ItemList.Battery_RE_ULV_Tantalum,
+            ItemList.Battery_RE_LV_Cadmium,
+            ItemList.Battery_RE_LV_Lithium,
+            ItemList.Battery_RE_LV_Sodium,
+            ItemList.Battery_RE_MV_Cadmium,
+            ItemList.Battery_RE_MV_Lithium,
+            ItemList.Battery_RE_MV_Sodium,
+            ItemList.Battery_RE_HV_Cadmium,
+            ItemList.Battery_RE_HV_Lithium,
+            ItemList.Battery_RE_HV_Sodium
+        }) {
+            OrePrefixes.battery.add(battery.get(1L));
+        }
+
         GT_ModHandler.addExtractionRecipe(ItemList.Battery_SU_LV_SulfuricAcid.get(1L), ItemList.Battery_Hull_LV.get(1L));
         GT_ModHandler.addExtractionRecipe(ItemList.Battery_SU_LV_Mercury.get(1L), ItemList.Battery_Hull_LV.get(1L));
         GT_ModHandler.addExtractionRecipe(ItemList.Battery_SU_MV_SulfuricAcid.get(1L), ItemList.Battery_Hull_MV.get(1L));

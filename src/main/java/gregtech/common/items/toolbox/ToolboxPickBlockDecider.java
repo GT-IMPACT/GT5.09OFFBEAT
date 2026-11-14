@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -24,7 +27,6 @@ import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Fluid;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Item;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import net.minecraft.client.Minecraft;
 import gregtech.common.items.toolbox.pickblock.CoverableAction;
 import gregtech.common.items.toolbox.pickblock.EnderIOAction;
 import gregtech.common.items.toolbox.pickblock.IDeciderAction;
@@ -123,14 +125,7 @@ public class ToolboxPickBlockDecider {
 
                         for (IDeciderAction action : CLASS_ACTIONS) {
                             if (action.isValid(chosen)) {
-                                return action.apply(
-                                    chosen,
-                                    ForgeDirection.getOrientation(GT_Utility.determineWrenchingSide(
-                                        (byte) position.sideHit,
-                                        (float) (position.hitVec.xCoord - position.blockX),
-                                        (float) (position.hitVec.yCoord - position.blockY),
-                                        (float) (position.hitVec.zCoord - position.blockZ)
-                                    )));
+                                return action.apply(chosen, getTargetSide(position));
                             }
                         }
                     }
@@ -141,9 +136,31 @@ public class ToolboxPickBlockDecider {
         return ImmutableList.of();
     }
 
+    private static ForgeDirection getTargetSide(MovingObjectPosition position) {
+        float x = (float) (position.hitVec.xCoord - position.blockX);
+        float y = (float) (position.hitVec.yCoord - position.blockY);
+        float z = (float) (position.hitVec.zCoord - position.blockZ);
+
+        // The existing wrench helper uses > 0.75. GTNH includes the boundary in the outer cell.
+        return ForgeDirection.getOrientation(GT_Utility.determineWrenchingSide(
+            (byte) position.sideHit,
+            x == 0.75F ? Math.nextUp(x) : x,
+            y == 0.75F ? Math.nextUp(y) : y,
+            z == 0.75F ? Math.nextUp(z) : z));
+    }
+
     /** @see #getSuggestedTool(EntityPlayer, MovingObjectPosition) */
     public static List<ToolboxSlot> getSuggestedTool(final EntityPlayer player) {
-        return getSuggestedTool(player, Minecraft.getMinecraft().objectMouseOver);
+        double reach = player instanceof EntityPlayerMP
+            ? ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance()
+            : Minecraft.getMinecraft().playerController.getBlockReachDistance();
+        Vec3 position = Vec3.createVectorHelper(
+            player.posX,
+            player.posY + (player.getEyeHeight() - player.getDefaultEyeHeight()),
+            player.posZ);
+        Vec3 look = player.getLook(0);
+        Vec3 end = position.addVector(look.xCoord * reach, look.yCoord * reach, look.zCoord * reach);
+        return getSuggestedTool(player, player.worldObj.rayTraceBlocks(position, end));
     }
 
     /** @see #getSuggestedTool(EntityPlayer, MovingObjectPosition) */
