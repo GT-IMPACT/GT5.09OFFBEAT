@@ -75,8 +75,7 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
     IDamagableItem, IToolCrowbar, IToolWrench, ITool, IScrewdriver, IAEWrench {
 
     public static final String CONTENTS_KEY = "gt5u.toolbox:Contents";
-    private static final java.util.Set<ItemStack> openInventories =
-        java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+    public static final String TOOLBOX_OPEN_KEY = "gt5u.toolbox:ToolboxOpen";
     public static final String CURRENT_TOOL_KEY = "gt5u.toolbox:SelectedSlot";
     public static final String RECENTLY_BROKEN_SLOT_KEY = "gt5u.toolbox:RecentlyBroken";
     public static final String BROKEN_TOOL_ANIMATION_END_KEY = "gt5u.toolbox:BrokenToolAnimationEnd";
@@ -86,7 +85,7 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
      * The open inventory owns the toolbox contents while its container is active.
      */
     public static boolean isInventoryOpen(ItemStack toolbox) {
-        return openInventories.contains(toolbox);
+        return toolbox.hasTagCompound() && toolbox.getTagCompound().getBoolean(TOOLBOX_OPEN_KEY);
     }
 
     public static void playSound(EntityPlayer player, String sound, float pitch) {
@@ -381,26 +380,29 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
     @Override
     public ModularPanel buildUI(final PlayerInventoryGuiData data, final PanelSyncManager syncManager,
         final UISettings settings) {
-        ItemStack toolbox = data.getUsedItemStack();
-        boolean server = !syncManager.isClient();
-        ToolboxItemStackHandler stackHandler = new ToolboxItemStackHandler(toolbox) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                if (server && data.getUsedItemStack() == toolbox) {
-                    ToolboxUtil.saveToolbox(toolbox, this);
-                }
+        int slot = data.getSlotIndex();
+        ToolboxItemStackHandler stackHandler = new ToolboxItemStackHandler(data.getUsedItemStack());
+        syncManager.addOpenListener(player -> {
+            if (player.worldObj.isRemote) {
+                GT_Values.NW.sendToServer(GT_Packet_ToolboxEvent.inventoryOpened(slot));
             }
-        };
-        if (server) {
-            settings.canInteractWith(player -> data.getUsedItemStack() == toolbox);
-            openInventories.add(toolbox);
-            ToolboxUtil.saveToolbox(toolbox, stackHandler, tag -> {
-                tag.removeTag(BROKEN_TOOL_ANIMATION_END_KEY);
-                tag.removeTag(RECENTLY_BROKEN_SLOT_KEY);
+        });
+        if (!syncManager.isClient()) {
+            settings.canInteractWith(player -> {
+                ItemStack held = data.getUsedItemStack();
+                return held != null && held.getItem() == this;
             });
-            playSound(data.getPlayer(), "Open", 1.0F);
             syncManager.addCloseListener(player -> {
-                openInventories.remove(toolbox);
+                ItemStack toolbox = data.getUsedItemStack();
+                if (toolbox == null || toolbox.getItem() != this) {
+                    return;
+                }
+                ToolboxUtil.saveToolbox(toolbox, stackHandler, tag -> {
+                    tag.removeTag(TOOLBOX_OPEN_KEY);
+                    tag.removeTag(BROKEN_TOOL_ANIMATION_END_KEY);
+                    tag.removeTag(RECENTLY_BROKEN_SLOT_KEY);
+                });
+                data.setUsedItemStack(toolbox);
                 playSound(player, "Close", 1.0F);
             });
         }

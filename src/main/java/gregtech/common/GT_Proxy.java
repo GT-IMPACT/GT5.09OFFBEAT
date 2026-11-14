@@ -723,7 +723,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public void onServerStopping() {
-        GT_Packet_ToolboxEvent.clearSelections();
+        GT_Packet_ToolboxEvent.clearEvents();
         NetworkAnalyzerPlayerTracker.clear();
         File tSaveDirectory = getSaveDirectory();
         GregTech_API.sWirelessRedstone.clear();
@@ -1321,7 +1321,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     @SubscribeEvent
     public void onPlayerTickEventServer(TickEvent.PlayerTickEvent aEvent) {
         if (aEvent.phase == TickEvent.Phase.END && aEvent.player instanceof EntityPlayerMP) {
-            GT_Packet_ToolboxEvent.applySelection((EntityPlayerMP) aEvent.player);
+            GT_Packet_ToolboxEvent.applyEvent((EntityPlayerMP) aEvent.player);
         }
         if ((aEvent.side.isServer()) && (aEvent.phase == TickEvent.Phase.END) && (!aEvent.player.isDead)) {
             if ((aEvent.player.ticksExisted % 200 == 0) && (aEvent.player.capabilities.allowEdit)

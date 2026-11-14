@@ -56,8 +56,8 @@ public class GT_Network extends MessageToMessageCodec<FMLProxyPacket, GT_Packet>
         if (packetId == GT_Packet_ToolboxEvent.PACKET_ID) {
             if (aPacket.payload().readableBytes() == 3
                 && aPacket.getTarget() == Side.SERVER && aPacket.handler() instanceof NetHandlerPlayServer) {
-                GT_Packet_ToolboxEvent selection = (GT_Packet_ToolboxEvent) mSubChannels[packetId].decode(aData);
-                selection.queueSelection(((NetHandlerPlayServer) aPacket.handler()).playerEntity);
+                GT_Packet_ToolboxEvent event = (GT_Packet_ToolboxEvent) mSubChannels[packetId].decode(aData);
+                event.queueEvent(((NetHandlerPlayServer) aPacket.handler()).playerEntity);
             }
             return;
         }

@@ -7,13 +7,19 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.world.World;
 
 import org.junit.Test;
 
@@ -21,6 +27,9 @@ import com.cleanroommc.modularui.api.RecipeViewerSettings;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
+import com.cleanroommc.modularui.network.ModularNetwork;
+import com.cleanroommc.modularui.network.NetworkHandler;
+import com.cleanroommc.modularui.network.packets.OpenGuiPacket;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -28,18 +37,22 @@ import com.cleanroommc.modularui.value.sync.ModularSyncManager;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widget.WidgetTree;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.asm.transformers.ModAPITransformer;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.discovery.asm.ASMModParser;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
 import gregtech.api.enums.ToolboxSlot;
 import gregtech.api.modularui2.GTGuis;
+import gregtech.api.net.GT_Packet_ToolboxEvent;
 import gregtech.common.items.ItemGTToolbox;
 import gregtech.common.items.toolbox.ToolboxItemStackHandler;
 import gregtech.common.items.toolbox.ToolboxUtil;
+import io.netty.channel.embedded.EmbeddedChannel;
 
 public class GT_Mui2ToolboxTest {
 
@@ -47,6 +60,13 @@ public class GT_Mui2ToolboxTest {
     public void inventoryLocksHeldToolboxAndPersistsOnlyRealChanges() throws Throwable {
         try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
             runtime.run(getClass(), "open", "");
+        }
+    }
+
+    @Test
+    public void rightClickOpensInventoryAfterPlacementHandlerCopiesHeldStack() throws Throwable {
+        try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
+            runtime.run(getClass(), "rightClick", "");
         }
     }
 
@@ -68,6 +88,11 @@ public class GT_Mui2ToolboxTest {
         }
 
         GTGuis.init();
+        if (scenario.equals("rightClick")) {
+            checkRightClick();
+            return;
+        }
+
         EntityPlayer player = new GT_StructureIntegrationTest.TestPlayer(new GT_ProcessingTestSupport.ProcessingWorld());
         ItemStack toolbox = new ItemStack(new ItemGTToolbox("test_toolbox", "Test Toolbox", ""));
         int hotbarSlot = 3;
@@ -90,7 +115,7 @@ public class GT_Mui2ToolboxTest {
         ModularSlot held = findSlot(container, hotbarSlot, true);
         ItemStack sticks = new ItemStack(Items.stick, 8);
         assertEquals(50, container.inventorySlots.size());
-        assertTrue(ItemGTToolbox.isInventoryOpen(toolbox));
+        assertFalse(ItemGTToolbox.isInventoryOpen(toolbox));
         assertFalse(wrench.isItemValid(sticks));
         assertFalse(general.isItemValid(toolbox));
         assertFalse(held.canTakeStack(player));
@@ -101,10 +126,74 @@ public class GT_Mui2ToolboxTest {
         assertTrue(general.isItemValid(sticks));
         assertEquals(64, general.getItemStackLimit(sticks));
         assertSame(sticks, general.getStack());
-        assertEquals(8, ToolboxUtil.getItemInside(toolbox, ToolboxSlot.GENERIC_SLOT0).get().stackSize);
+        assertFalse(ToolboxUtil.getItemInside(toolbox, ToolboxSlot.GENERIC_SLOT0).isPresent());
         assertEquals(8, general.decrStackSize(8).stackSize);
         assertNull(general.getStack());
         assertFalse(ToolboxUtil.getItemInside(toolbox, ToolboxSlot.GENERIC_SLOT0).isPresent());
+    }
+
+    private static void checkRightClick() throws Exception {
+        NetworkHandler.CHANNEL.registerMessage((message, context) -> null, OpenGuiPacket.class, 0, Side.CLIENT);
+        World world = new GT_ProcessingTestSupport.ProcessingWorld();
+        ToolboxPlayer player = createServerPlayer(world);
+        try (Connection connection = new Connection(player)) {
+            ItemGTToolbox item = new ItemGTToolbox("test_toolbox", "Test Toolbox", "");
+            ItemStack held = new ItemStack(item);
+            player.inventory.setInventorySlotContents(0, held);
+            held.useItemRightClick(world, player);
+            assertTrue(player.openContainer instanceof ModularContainer);
+            ModularContainer container = (ModularContainer) player.openContainer;
+
+            ItemStack replacement = held.copy();
+            player.inventory.setInventorySlotContents(0, replacement);
+            GT_Packet_ToolboxEvent.inventoryOpened(0).queueEvent(player);
+            GT_Packet_ToolboxEvent.applyEvent(player);
+
+            assertSame(container, player.openContainer);
+            assertTrue(container.canInteractWith(player));
+            assertTrue(ItemGTToolbox.isInventoryOpen(replacement));
+            assertFalse(ItemGTToolbox.isInventoryOpen(held));
+
+            ModularSlot slot = findSlot(container, ToolboxSlot.GENERIC_SLOT0.getSlotID(), false);
+            slot.putStack(new ItemStack(Items.stick, 8));
+            assertFalse(ToolboxUtil.getItemInside(replacement, ToolboxSlot.GENERIC_SLOT0).isPresent());
+            ModularNetwork.SERVER.closeContainer(0, true, player, false);
+            assertEquals(8, ToolboxUtil.getItemInside(replacement, ToolboxSlot.GENERIC_SLOT0).get().stackSize);
+            assertFalse(ItemGTToolbox.isInventoryOpen(replacement));
+        }
+    }
+
+    private static ToolboxPlayer createServerPlayer(World world) throws Exception {
+        Class<?> factoryClass = Class.forName("sun.reflect.ReflectionFactory");
+        Object factory = factoryClass.getMethod("getReflectionFactory").invoke(null);
+        Constructor<?> constructor = (Constructor<?>) factoryClass
+            .getMethod("newConstructorForSerialization", Class.class, Constructor.class)
+            .invoke(factory, ToolboxPlayer.class, EntityPlayer.class.getConstructor(World.class, GameProfile.class));
+        constructor.setAccessible(true);
+        return (ToolboxPlayer) constructor.newInstance(world, new GameProfile(UUID.randomUUID(), "ToolboxPlayer"));
+    }
+
+    private static final class ToolboxPlayer extends EntityPlayerMP {
+
+        private ToolboxPlayer() {
+            super(null, null, null, null);
+        }
+    }
+
+    private static final class Connection implements AutoCloseable {
+
+        private final EmbeddedChannel channel;
+
+        private Connection(EntityPlayerMP player) {
+            NetworkManager network = new NetworkManager(false);
+            channel = new EmbeddedChannel(network);
+            new NetHandlerPlayServer(null, network, player);
+        }
+
+        @Override
+        public void close() {
+            channel.finish();
+        }
     }
 
     private static ModularSlot findSlot(ModularContainer container, int index, boolean playerSlot) {

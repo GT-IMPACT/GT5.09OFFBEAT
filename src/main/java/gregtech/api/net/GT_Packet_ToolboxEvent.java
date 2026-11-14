@@ -1,6 +1,9 @@
 package gregtech.api.net;
 
 import com.google.common.io.ByteArrayDataInput;
+import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
+import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
+import com.cleanroommc.modularui.screen.ModularContainer;
 import gregtech.api.enums.ToolboxSlot;
 import gregtech.common.items.ItemGTToolbox;
 import gregtech.common.items.toolbox.ToolboxUtil;
@@ -16,7 +19,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class GT_Packet_ToolboxEvent extends GT_Packet {
 
     public static final byte PACKET_ID = 13;
-    private static final Map<EntityPlayerMP, GT_Packet_ToolboxEvent> selections = new ConcurrentHashMap<>();
+    private static final int UI_OPEN = -2;
+    private static final Map<EntityPlayerMP, GT_Packet_ToolboxEvent> requests = new ConcurrentHashMap<>();
 
     private final int inventorySlot;
     private final int selection;
@@ -31,6 +35,10 @@ public final class GT_Packet_ToolboxEvent extends GT_Packet {
         super(false);
         this.inventorySlot = inventorySlot;
         this.selection = selection;
+    }
+
+    public static GT_Packet_ToolboxEvent inventoryOpened(int inventorySlot) {
+        return new GT_Packet_ToolboxEvent(inventorySlot, UI_OPEN);
     }
 
     @Override
@@ -50,25 +58,55 @@ public final class GT_Packet_ToolboxEvent extends GT_Packet {
 
     @Override
     public void process(IBlockAccess world) {
-        // Selection is applied on the player's server tick.
+        // Toolbox events are applied on the player's server tick.
     }
 
-    public void queueSelection(EntityPlayerMP player) {
+    public void queueEvent(EntityPlayerMP player) {
         if (inventorySlot >= 0 && inventorySlot < 9
-            && (selection == ItemGTToolbox.NO_TOOL_SELECTED || ToolboxSlot.slotIsTool(selection))) {
-            selections.put(player, this);
+            && (selection == UI_OPEN || selection == ItemGTToolbox.NO_TOOL_SELECTED || ToolboxSlot.slotIsTool(selection))) {
+            requests.put(player, this);
         }
     }
 
-    public static void applySelection(EntityPlayerMP player) {
-        GT_Packet_ToolboxEvent request = selections.remove(player);
+    public static void applyEvent(EntityPlayerMP player) {
+        GT_Packet_ToolboxEvent request = requests.remove(player);
         if (request != null) {
-            request.select(player);
+            if (request.selection == UI_OPEN) {
+                request.markInventoryOpen(player);
+            } else {
+                request.select(player);
+            }
         }
     }
 
-    public static void clearSelections() {
-        selections.clear();
+    public static void clearEvents() {
+        requests.clear();
+    }
+
+    private void markInventoryOpen(EntityPlayerMP player) {
+        if (player.isDead || !(player.openContainer instanceof ModularContainer)) {
+            return;
+        }
+        ModularContainer container = (ModularContainer) player.openContainer;
+        if (!(container.getGuiData() instanceof PlayerInventoryGuiData)) {
+            return;
+        }
+        PlayerInventoryGuiData data = (PlayerInventoryGuiData) container.getGuiData();
+        if (data.getPlayer() != player || data.getInventoryType() != InventoryTypes.PLAYER
+            || data.getSlotIndex() != inventorySlot || !container.getSyncManager().isOpen()) {
+            return;
+        }
+        ItemStack toolbox = data.getUsedItemStack();
+        if (toolbox == null || !(toolbox.getItem() instanceof ItemGTToolbox) || ItemGTToolbox.isInventoryOpen(toolbox)) {
+            return;
+        }
+        NBTTagCompound tag = toolbox.getTagCompound();
+        if (tag == null) {
+            tag = new NBTTagCompound();
+            toolbox.setTagCompound(tag);
+        }
+        tag.setBoolean(ItemGTToolbox.TOOLBOX_OPEN_KEY, true);
+        ItemGTToolbox.playSound(player, "Open", 2.0F);
     }
 
     private void select(EntityPlayerMP player) {
