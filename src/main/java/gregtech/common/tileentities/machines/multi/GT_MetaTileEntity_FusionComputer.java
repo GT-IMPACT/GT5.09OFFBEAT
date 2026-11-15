@@ -201,7 +201,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
 
     private enum FusionHatch {
         ENERGY(HatchElement.Energy, GT_MetaTileEntity_Hatch_Energy.class, "energy", 1, HintColor.YELLOW),
-        INPUT(HatchElement.Input, GT_MetaTileEntity_Hatch_Input.class, "input_hatch", 2, HintColor.BLUE),
+        INPUT(HatchElement.Input, GT_MetaTileEntity_Hatch_Input.class, "input_hatch", 1, HintColor.BLUE),
         OUTPUT(HatchElement.Output, GT_MetaTileEntity_Hatch_Output.class, "output_hatch", 1, HintColor.RED);
 
         final HatchElement category;
@@ -415,7 +415,7 @@ public abstract class GT_MetaTileEntity_FusionComputer
                 .addOtherStructurePart(getFusionCoilType(), "exactly 32; middle layer of the ring")
                 .addStructureSection("Hatches and buses")
                 .addHatchInfo("Energy Hatches", "1-16; middle-layer diagonals")
-                .addHatchInfo("Input Hatches", "2-16; top and bottom of the ring")
+                .addHatchInfo("Input Hatches", "1-16; top and bottom of the ring")
                 .addHatchInfo("Output Hatches", "1-16; straight sides of the middle layer")
                 .addStructureInfo("Energy Hatches: %s or higher. Input and Output Hatches: any tier. No maintenance.", GT_Values.VN[tier()])
                 .addStructureHint("Middle diagonals: casings or energy hatches", FusionHatch.ENERGY.hintColor)

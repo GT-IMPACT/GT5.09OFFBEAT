@@ -105,9 +105,11 @@ final class GT_FusionStructureChecks {
         Position output = f.positions('O').get(0);
         f.putHatch(energy, hatch('E', f.machine.tier()));
         f.putHatch(input, hatch('I', f.machine.tier()));
-        f.putHatch(f.positions('I').get(1), hatch('I', f.machine.tier()));
         f.putHatch(output, hatch('O', f.machine.tier()));
-        assertTrue("Legacy valid reactor", f.recheck());
+        assertTrue("One Input Hatch is sufficient", f.recheck());
+        assertEquals(1, f.machine.mInputHatches.size());
+        f.putHatch(f.positions('I').get(1), hatch('I', f.machine.tier()));
+        assertTrue("A second Input Hatch remains accepted", f.recheck());
         f.putHatch(f.positions('I').get(2), new GT_MetaTileEntity_Hatch_InputBus("test", 1, "test", null));
         f.putHatch(f.positions('O').get(1), new GT_MetaTileEntity_Hatch_OutputBus("test", 1, "test", null));
         f.putHatch(f.positions('E').get(1), new GT_MetaTileEntity_Hatch_EnergyMulti("test", 1, 4, "test", null));
@@ -119,6 +121,7 @@ final class GT_FusionStructureChecks {
         assertEquals(1, f.machine.mEnergyHatches.size());
         assertEquals(2, f.machine.mInputHatches.size());
         assertEquals(1, f.machine.mOutputHatches.size());
+        f.putCasing(f.positions('I').get(1));
         for (Position p : new Position[]{energy, input, output}) {
             f.putCasing(p);
             assertFalse("Missing category " + p.kind, f.recheck());
@@ -139,7 +142,8 @@ final class GT_FusionStructureChecks {
         f.putHatch(input, new GTMTE_Multi_Hatch_Input(
             "quadruple-input", 4, 4, new String[0], null, 64_000
         ));
-        assertTrue("A Quadruple Input Hatch can replace a regular fluid input", f.recheck());
+        assertTrue("One Quadruple Input Hatch is sufficient", f.recheck());
+        assertEquals(1, f.machine.mInputHatches.size());
         f.putHatch(f.positions('I').get(1), new GTMTE_Multi_Hatch_Input(
             "nonuple-input", 9, 5, new String[0], null, 128_000
         ));
@@ -192,8 +196,11 @@ final class GT_FusionStructureChecks {
         f.machine.mUpdate = 100;
         f.machine.onPostTick(f.machine.getBaseMetaTileEntity(), 1);
         f.machine.onPostTick(f.machine.getBaseMetaTileEntity(), 2);
-        assertFalse("Repeated load checks must not count a single fluid input twice", f.machine.mMachine);
+        assertTrue("A single Nonuple Input Hatch remains valid after repeated load checks", f.machine.mMachine);
         assertEquals(1, f.machine.mInputHatches.size());
+        f.putCasing(f.positions('I').get(1));
+        assertFalse("At least one Input Hatch is required", f.recheck());
+        assertEquals(0, f.machine.mInputHatches.size());
     }
 
     private static void checkSurvival(int model, Item item, HintProxy hints) {
@@ -228,8 +235,9 @@ final class GT_FusionStructureChecks {
         assertEquals(159, source.consumed);
         assertEquals("Under-tier Energy Hatch not consumed", 1, source.stacks.get(0).stackSize);
         assertEquals("Optional bus cannot satisfy the required fluid input", 1, source.stacks.get(4).stackSize);
+        assertEquals("The second Input Hatch is optional and is not consumed", 1, source.stacks.get(5).stackSize);
         assertEquals(1, f.machine.mEnergyHatches.size());
-        assertEquals(2, f.machine.mInputHatches.size());
+        assertEquals(1, f.machine.mInputHatches.size());
         assertEquals(1, f.machine.mOutputHatches.size());
         assertEquals(-1, f.build(trigger, 7, source));
         assertEquals(159, source.consumed);
@@ -281,6 +289,9 @@ final class GT_FusionStructureChecks {
             assertFalse(primary.contains("15 x 3 x 15"));
             assertTrue(plainSecondary.contains(language.equals("en_US") ? "15 x 3 x 15" : "15 × 3 × 15"));
             assertTrue(plainSecondary.contains(language.equals("en_US") ? "79+" : "от 79"));
+            assertTrue(plainSecondary.contains(language.equals("en_US")
+                ? "1-16; top and bottom of the ring"
+                : "1-16; верх и низ кольца"));
             assertTrue(plainSecondary.contains(language.equals("en_US")
                 ? "Input and Output Hatches: any tier."
                 : "Входные и выходные люки: любого тира."));
