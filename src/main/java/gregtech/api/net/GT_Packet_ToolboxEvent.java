@@ -14,7 +14,6 @@ import net.minecraft.world.IBlockAccess;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 public final class GT_Packet_ToolboxEvent extends GT_Packet {
 
@@ -106,7 +105,6 @@ public final class GT_Packet_ToolboxEvent extends GT_Packet {
             toolbox.setTagCompound(tag);
         }
         tag.setBoolean(ItemGTToolbox.TOOLBOX_OPEN_KEY, true);
-        ItemGTToolbox.playSound(player, "Open", 1.0F);
     }
 
     private void select(EntityPlayerMP player) {
@@ -127,7 +125,6 @@ public final class GT_Packet_ToolboxEvent extends GT_Packet {
         if (selection == ItemGTToolbox.NO_TOOL_SELECTED) {
             if (tag.hasKey(ItemGTToolbox.CURRENT_TOOL_KEY)) {
                 tag.removeTag(ItemGTToolbox.CURRENT_TOOL_KEY);
-                ItemGTToolbox.playSound(player, "Close", 1);
             }
         } else {
             ToolboxSlot slot = ToolboxSlot.getBySlot(selection).get();
@@ -135,7 +132,6 @@ public final class GT_Packet_ToolboxEvent extends GT_Packet {
                 && (!tag.hasKey(ItemGTToolbox.CURRENT_TOOL_KEY)
                     || tag.getInteger(ItemGTToolbox.CURRENT_TOOL_KEY) != selection)) {
                 tag.setInteger(ItemGTToolbox.CURRENT_TOOL_KEY, selection);
-                ItemGTToolbox.playSound(player, "Draw", ThreadLocalRandom.current().nextFloat() * 0.3F + 0.7F);
             }
         }
     }

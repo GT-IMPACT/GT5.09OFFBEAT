@@ -154,7 +154,17 @@ public enum ToolboxSlot {
                 return false;
             }
 
-            return GT_Utility.isStackInList(itemStack, toolSet);
+            if (GT_Utility.isStackInList(itemStack, toolSet)) {
+                return true;
+            }
+
+            GT_MetaGenerated_Tool tool = (GT_MetaGenerated_Tool) itemStack.getItem();
+            if (tool.getElectricStats(itemStack) == null) {
+                return false;
+            }
+            // Discharged tools use a different metadata value from the registered tool.
+            return GT_Utility.isStackInList(
+                new GT_ItemStack(tool, itemStack.stackSize, tool.getChargedMetaData(itemStack)), toolSet);
         };
     }
 }

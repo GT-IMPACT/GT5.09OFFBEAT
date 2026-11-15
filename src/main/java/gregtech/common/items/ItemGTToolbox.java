@@ -86,12 +86,6 @@ public class ItemGTToolbox extends GT_Generic_Item implements IGuiHolder<PlayerI
         return toolbox.hasTagCompound() && toolbox.getTagCompound().getBoolean(TOOLBOX_OPEN_KEY);
     }
 
-    public static void playSound(EntityPlayer player, String sound, float pitch) {
-        float volume = sound.equals("Open") ? 2.0F : 1.0F;
-        player.worldObj.playSoundEffect(
-            player.posX, player.posY, player.posZ, MOD_ID + ":items.Toolbox" + sound, volume, pitch);
-    }
-
     private static final int CHARGE_TICK = 20;
     private static final long BROKEN_TOOL_ANIMATION_LENGTH = 60;
     private static final long GUI_OPEN_DELAY = 5;

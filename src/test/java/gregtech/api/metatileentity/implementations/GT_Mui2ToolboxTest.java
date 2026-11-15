@@ -21,6 +21,7 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.junit.Test;
 
@@ -50,12 +51,20 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
 import gregtech.GT_Mod;
+import gregtech.api.GregTech_API;
+import gregtech.api.enchants.Enchantment_Radioactivity;
+import gregtech.api.enums.ItemList;
+import gregtech.api.enums.Materials;
 import gregtech.api.enums.ToolboxSlot;
+import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.modularui2.GTGuis;
 import gregtech.api.net.GT_Packet_ToolboxEvent;
+import gregtech.api.util.GT_Config;
 import gregtech.common.items.ItemGTToolbox;
 import gregtech.common.items.toolbox.ToolboxItemStackHandler;
 import gregtech.common.items.toolbox.ToolboxUtil;
+import gregtech.common.tools.GT_Tool_Screwdriver_LV;
+import gregtech.common.tools.GT_Tool_Wrench_LV;
 import io.netty.channel.embedded.EmbeddedChannel;
 
 public class GT_Mui2ToolboxTest {
@@ -88,6 +97,13 @@ public class GT_Mui2ToolboxTest {
         }
     }
 
+    @Test
+    public void toolboxesUseChargedElectricToolsForMaintenance() throws Throwable {
+        try (GT_ProcessingTestSupport.GameRuntime runtime = new GT_ProcessingTestSupport.GameRuntime()) {
+            runtime.run(getClass(), "electricMaintenance", "");
+        }
+    }
+
     public static void runScenario(String scenario, String unused) throws Exception {
         Launch.blackboard.put("fml.deobfuscatedEnvironment", true);
         Launch.classLoader.registerTransformer("cpw.mods.fml.common.asm.transformers.EventSubscriptionTransformer");
@@ -96,8 +112,13 @@ public class GT_Mui2ToolboxTest {
 
         Launch.classLoader.registerTransformer(ModAPITransformer.class.getName());
         ASMDataTable optionalApis = new ASMDataTable();
-        try (InputStream bytes = Launch.classLoader.getResourceAsStream("gregtech/common/items/ItemGTToolbox.class")) {
-            new ASMModParser(bytes).sendToTable(optionalApis, null);
+        for (String resource : new String[] {
+            "gregtech/common/items/ItemGTToolbox.class",
+            "gregtech/api/items/GT_MetaGenerated_Tool.class"
+        }) {
+            try (InputStream bytes = Launch.classLoader.getResourceAsStream(resource)) {
+                new ASMModParser(bytes).sendToTable(optionalApis, null);
+            }
         }
         for (Object transformer : Launch.classLoader.getTransformers()) {
             if (transformer instanceof ModAPITransformer) {
@@ -106,6 +127,10 @@ public class GT_Mui2ToolboxTest {
         }
 
         GTGuis.init();
+        if (scenario.equals("electricMaintenance")) {
+            checkElectricMaintenance();
+            return;
+        }
         if (!scenario.equals("open")) {
             checkRightClick(scenario);
             return;
@@ -196,6 +221,48 @@ public class GT_Mui2ToolboxTest {
                 assertFalse(ToolboxUtil.getItemInside(replacement, ToolboxSlot.GENERIC_SLOT0).isPresent());
             }
         }
+    }
+
+    private static void checkElectricMaintenance() {
+        GT_Config.sConfigFileIDs = GregTech_API.sMachineFile.mConfig;
+        new Enchantment_Radioactivity();
+        GT_MetaGenerated_Tool tools = new GT_MetaGenerated_Tool("test_maintenance_tools") {
+        };
+        GregTech_API.registerWrench(tools.addTool(120, "LV wrench", "", new GT_Tool_Wrench_LV()));
+        GregTech_API.registerScrewdriver(tools.addTool(150, "LV screwdriver", "", new GT_Tool_Screwdriver_LV()));
+        ItemList.Tool_NoteBook.set(Items.book);
+
+        GT_ProcessingTestSupport.ProcessingWorld world = new GT_ProcessingTestSupport.ProcessingWorld();
+        EntityPlayer player = new GT_StructureIntegrationTest.TestPlayer(world);
+        ItemStack toolbox = new ItemStack(new ItemGTToolbox("test_toolbox", "Test Toolbox", ""));
+        player.inventory.setInventorySlotContents(0, toolbox);
+
+        long[] electricStats = { 100_000, 32, 1, -1 };
+        ItemStack wrench = tools.getToolWithStats(120, 1, Materials.Steel, Materials.StainlessSteel, electricStats);
+        ItemStack screwdriver = tools.getToolWithStats(150, 1, Materials.Steel, Materials.StainlessSteel, electricStats);
+        tools.setCharge(wrench, 0);
+        tools.setCharge(screwdriver, 0);
+        assertTrue(ToolboxSlot.WRENCH.test(wrench));
+        assertTrue(ToolboxSlot.SCREWDRIVER.test(screwdriver));
+        assertFalse(ToolboxSlot.WRENCH.test(screwdriver));
+        tools.setCharge(wrench, 1_000);
+        tools.setCharge(screwdriver, 1_000);
+
+        ToolboxItemStackHandler contents = new ToolboxItemStackHandler(toolbox);
+        contents.setStackInSlot(ToolboxSlot.WRENCH.getSlotID(), wrench);
+        contents.setStackInSlot(ToolboxSlot.SCREWDRIVER.getSlotID(), screwdriver);
+        ToolboxUtil.saveToolbox(toolbox, contents, tag ->
+            tag.setInteger(ItemGTToolbox.CURRENT_TOOL_KEY, ToolboxSlot.WRENCH.getSlotID()));
+
+        GT_MetaTileEntity_Hatch_Maintenance hatch = new GT_MetaTileEntity_Hatch_Maintenance(
+            "test_maintenance", 1, "", null, false);
+        GT_StructureIntegrationTest.TestTile tile =
+            new GT_StructureIntegrationTest.TestTile(world, hatch, ForgeDirection.NORTH);
+        assertTrue(tile.onRightclick(player, (byte) ForgeDirection.NORTH.ordinal(), 0.5F, 0.5F, 0.5F));
+        assertTrue(hatch.mWrench);
+        assertTrue(hatch.mScrewdriver);
+        assertEquals(900, tools.getRealCharge(ToolboxUtil.getItemInside(toolbox, ToolboxSlot.WRENCH).get()));
+        assertEquals(900, tools.getRealCharge(ToolboxUtil.getItemInside(toolbox, ToolboxSlot.SCREWDRIVER).get()));
     }
 
     private static ToolboxPlayer createServerPlayer(World world) throws Exception {

@@ -311,10 +311,6 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
             onToolClick(handler.getStackInSlot(slot.getSlotID()), player, inventory);
         }
         ToolboxUtil.saveToolbox(toolbox, handler);
-        if (!player.worldObj.isRemote) {
-            player.worldObj.playSoundEffect(
-                player.posX, player.posY, player.posZ, "gregtech:maintenance.MaintenanceToolbox", 1.0F, 1.0F);
-        }
     }
 
     private void applyDuctTape() {

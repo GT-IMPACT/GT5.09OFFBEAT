@@ -49,6 +49,5 @@ public final class ToolboxContainer extends ModularContainer {
         });
         data.setUsedItemStack(toolbox);
         saved = true;
-        ItemGTToolbox.playSound(player, "Close", 1.0F);
     }
 }

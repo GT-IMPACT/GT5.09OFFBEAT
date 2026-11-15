@@ -28,6 +28,7 @@ import gregtech.api.interfaces.tileentity.IEnergyConnected;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Maintenance;
 import gregtech.api.net.GT_Packet_TileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.GT_StdRenderedTexture;
@@ -38,6 +39,7 @@ import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Client;
 import gregtech.common.GT_Pollution;
+import gregtech.common.items.ItemGTToolbox;
 import gregtech.common.tileentities.boilers.GT_MetaTileEntity_Boiler;
 import ic2.api.Direction;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -1469,6 +1471,12 @@ public class BaseMetaTileEntity
             if (!privateAccess() || aPlayer.getDisplayName().equalsIgnoreCase(getOwnerName())) {
                 ItemStack tCurrentItem = aPlayer.inventory.getCurrentItem();
                 if (tCurrentItem != null) {
+                    if (tCurrentItem.getItem() instanceof ItemGTToolbox
+                        && mMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Maintenance
+                        && mMetaTileEntity.onRightclick(this, aPlayer, aSide, aX, aY, aZ)) {
+                        return true;
+                    }
+
                     if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
                         tCurrentItem.func_150996_a(Items.bucket);
                         setColorization((byte) (getColorization() >= 16 ? -2 : -1));
