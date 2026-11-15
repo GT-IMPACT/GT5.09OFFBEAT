@@ -6,9 +6,9 @@ import com.cleanroommc.modularui.value.sync.FluidSlotSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widgets.layout.Grid;
-import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import gregtech.api.metatileentity.implementations.GTMTE_Multi_Hatch_Input;
 import gregtech.common.gui.modularui.hatch.base.MTEHatchBaseGui;
+import gregtech.common.modularui2.widget.GTFluidSlot;
 
 public class MTEHatchMultiInputGui extends MTEHatchBaseGui<GTMTE_Multi_Hatch_Input> {
 
@@ -28,7 +28,7 @@ public class MTEHatchMultiInputGui extends MTEHatchBaseGui<GTMTE_Multi_Hatch_Inp
                     if (index >= fluidTanks.length) {
                         return null;
                     }
-                    return new FluidSlot().syncHandler(new FluidSlotSyncHandler(fluidTanks[index]));
+                    return new GTFluidSlot().syncHandler(new FluidSlotSyncHandler(fluidTanks[index]));
                 })
                 .center());
     }
