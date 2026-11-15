@@ -367,6 +367,7 @@ public class Textures {
         OVERLAY_TOP_CLEANROOM_GLOW,
 
         OVERLAY_INPUT_HATCH_2x2,
+        OVERLAY_INPUT_HATCH_3x3,
         
         ;
 

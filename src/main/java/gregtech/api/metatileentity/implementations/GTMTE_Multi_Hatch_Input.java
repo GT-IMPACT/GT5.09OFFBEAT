@@ -146,12 +146,15 @@ public class GTMTE_Multi_Hatch_Input extends GT_MetaTileEntity_Hatch_Input {
 
     @Override
     public ITexture[] getTexturesActive(ITexture aBaseTexture) {
-        return new ITexture[] { aBaseTexture, TextureFactory.of(Textures.BlockIcons.OVERLAY_INPUT_HATCH_2x2) };
+        return getTexturesInactive(aBaseTexture);
     }
 
     @Override
     public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
-        return new ITexture[] { aBaseTexture, TextureFactory.of(Textures.BlockIcons.OVERLAY_INPUT_HATCH_2x2) };
+        Textures.BlockIcons overlay = getMaxType() == 9
+            ? Textures.BlockIcons.OVERLAY_INPUT_HATCH_3x3
+            : Textures.BlockIcons.OVERLAY_INPUT_HATCH_2x2;
+        return new ITexture[] { aBaseTexture, TextureFactory.of(overlay) };
     }
 
     public int getMaxType() {
