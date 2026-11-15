@@ -24,8 +24,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -88,15 +86,7 @@ public class GT_NEI_3DPrinter extends TemplateRecipeHandler {
                 tResults.add(GT_OreDictUnificator.get(tPrefix, tPrefixMaterial.mMaterial.mMaterial, 1L));
             }
         }
-        FluidStack tFluid = GT_Utility.getFluidForFilledItem(aResult, true);
-        if (tFluid != null) {
-            tResults.add(GT_Utility.getFluidDisplayStack(tFluid, false));
-            for (FluidContainerRegistry.FluidContainerData tData : FluidContainerRegistry.getRegisteredFluidContainerData()) {
-                if (tData.fluid.isFluidEqual(tFluid)) {
-                    tResults.add(GT_Utility.copy(tData.filledContainer));
-                }
-            }
-        }
+        GT_NEI_DefaultHandler.addFluidStacks(aResult, tResults);
         for (GT_Recipe tRecipe : this.mRecipeMap.mRecipeList) {
             if (!tRecipe.mHidden) {
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
@@ -129,15 +119,7 @@ public class GT_NEI_3DPrinter extends TemplateRecipeHandler {
                 tInputs.add(GT_OreDictUnificator.get(tPrefix, tPrefixMaterial.mMaterial.mMaterial, 1L));
             }
         }
-        FluidStack tFluid = GT_Utility.getFluidForFilledItem(aInput, true);
-        if (tFluid != null) {
-            tInputs.add(GT_Utility.getFluidDisplayStack(tFluid, false));
-            for (FluidContainerRegistry.FluidContainerData tData : FluidContainerRegistry.getRegisteredFluidContainerData()) {
-                if (tData.fluid.isFluidEqual(tFluid)) {
-                    tInputs.add(GT_Utility.copy(tData.filledContainer));
-                }
-            }
-        }
+        GT_NEI_DefaultHandler.addFluidStacks(aInput, tInputs);
         for (GT_Recipe tRecipe : this.mRecipeMap.mRecipeList) {
             if (!tRecipe.mHidden) {
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
