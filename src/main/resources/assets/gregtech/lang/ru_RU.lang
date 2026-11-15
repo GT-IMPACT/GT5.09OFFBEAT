@@ -1945,6 +1945,9 @@ gt.item.redstone_sniffer.wrong_dim_message=Кавер находится в др
 
 # Network Analyzer
 gt.NetworkAnalyzer.name=Анализатор электросети
+gt.NetworkAnalyzer.tooltip.description=Показывает характеристики электрической сети
+gt.NetworkAnalyzer.tooltip.inspect=ПКМ по участку сети для отображения информации
+gt.NetworkAnalyzer.tooltip.switch_mode=Shift + ПКМ в воздухе для смены режима работы
 gt.NetworkAnalyzer.bound=§aОтображается сеть в точке %s %s %s
 gt.NetworkAnalyzer.target_lost=§cБлок не найден. Привязка анализатора сброшена
 gt.NetworkAnalyzer.set=Выбран режим §e%s

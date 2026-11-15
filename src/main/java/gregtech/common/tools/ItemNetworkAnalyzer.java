@@ -63,6 +63,10 @@ public class ItemNetworkAnalyzer extends GT_Tool_Item {
 
     @Override
     protected void addAdditionalToolTips(List list, ItemStack stack, EntityPlayer player) {
+        list.add(StatCollector.translateToLocal("gt.NetworkAnalyzer.tooltip.description"));
+        list.add(StatCollector.translateToLocal("gt.NetworkAnalyzer.tooltip.inspect"));
+        list.add(StatCollector.translateToLocal("gt.NetworkAnalyzer.tooltip.switch_mode"));
+
         String mode = StatCollector.translateToLocal(modeKey(getMode(stack)));
         list.add(StatCollector.translateToLocalFormatted("gt.NetworkAnalyzer.mode", mode));
     }

@@ -2244,6 +2244,9 @@ gt.item.redstone_sniffer.wrong_dim_message=Cannot highlight because you're not i
 
 # Network Analyzer
 gt.NetworkAnalyzer.name=Network Analyzer
+gt.NetworkAnalyzer.tooltip.description=Shows electrical network characteristics
+gt.NetworkAnalyzer.tooltip.inspect=Right-click a network component to display information
+gt.NetworkAnalyzer.tooltip.switch_mode=Shift + right-click in the air to switch modes
 gt.NetworkAnalyzer.bound=§aVisualising network at %s %s %s
 gt.NetworkAnalyzer.target_lost=§cNetwork Analyzer target block not found, binding cleared
 gt.NetworkAnalyzer.set=Mode changed to §e%s
