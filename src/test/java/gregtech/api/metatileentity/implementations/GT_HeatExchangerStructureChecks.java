@@ -304,6 +304,24 @@ final class GT_HeatExchangerStructureChecks {
         assertFalse("Unrelated fluid is not a heat source", circuit.machine.checkRecipe(null));
         assertEquals("Rejected input must not mutate the previous cycle", 137,
             field(circuit.machine, "superheated_threshold"));
+
+        for (int capacity : new int[] { 4, 9 }) {
+            Exchanger f = new Exchanger(ForgeDirection.NORTH);
+            f.machine.construct(new ItemStack(Items.stick), false);
+            f.requiredHatches();
+            GTMTE_Multi_Hatch_Input multi = new GTMTE_Multi_Hatch_Input(
+                "test", capacity, 4, new String[0], null, 64_000
+            );
+            f.world.putTile(f.hot[0], f.hot[1], f.hot[2], new TestTile(f.world, multi, ForgeDirection.NORTH));
+            assertTrue(f.recheck());
+            FluidStack extra = new FluidStack(FluidRegistry.WATER, 500);
+            FluidStack hotLava = new FluidStack(FluidRegistry.LAVA, 1000);
+            multi.setFluid(extra, 0);
+            multi.setFluid(hotLava, capacity - 1);
+            assertTrue("Hot fluid can be in the last tank", f.machine.checkRecipe(null));
+            assertEquals(0, hotLava.amount);
+            assertEquals(500, extra.amount);
+        }
     }
 
     private static void checkTooltip() throws Exception {

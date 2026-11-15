@@ -33,18 +33,24 @@ public final class HeatExchangeProcessingLogic extends ProcessingLogic {
 
     @Override
     public Result process(Request request) {
-        if (request.inputs.isEmpty() || request.inputs.get(0).fluids.length == 0) {
+        ProcessingInputs source = null;
+        for (ProcessingInputs input : request.inputs) {
+            if (input.fluids.length == 0) {
+                continue;
+            }
+            FluidStack fluid = input.fluids[0];
+            if (fluid.amount > 0 && (GT_ModHandler.isLava(fluid)
+                    || fluid.isFluidEqual(FluidRegistry.getFluidStack("ic2hotcoolant", 1)))) {
+                source = input;
+                break;
+            }
+        }
+        if (source == null) {
             return Result.failure(CheckRecipeResult.NO_RECIPE);
         }
-        ProcessingInputs inputs = request.inputs.get(0).copy();
+        ProcessingInputs inputs = source.copy();
         FluidStack hot = inputs.fluids[0];
-        if (hot.amount <= 0) {
-            return Result.failure(CheckRecipeResult.NO_RECIPE);
-        }
         boolean lava = GT_ModHandler.isLava(hot);
-        if (!lava && !hot.isFluidEqual(FluidRegistry.getFluidStack("ic2hotcoolant", 1))) {
-            return Result.failure(CheckRecipeResult.NO_RECIPE);
-        }
         int configuration = circuit.getAsInt();
         int reduction = configuration >= 1 && configuration <= GT_IntegratedCircuit_Item.MAX_CONFIG
             ? configuration - 1 : 0;

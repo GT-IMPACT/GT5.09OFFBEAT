@@ -84,6 +84,8 @@ final class GT_AssemblyLineStructureChecks {
                 };
             case 'Q':
                 return new GTMTE_Multi_Hatch_Input("test", 4, 1, new String[]{"test"}, null, 1000);
+            case 'N':
+                return new GTMTE_Multi_Hatch_Input("test", 9, 1, new String[]{"test"}, null, 1000);
             case 'X':
                 return new GTMTE_BusHatch_Input("test", 1, new String[]{"test"}, null, 1000);
             default:
@@ -139,7 +141,7 @@ final class GT_AssemblyLineStructureChecks {
         f.hatch(1, -2, 0, 'I');
         assertFalse("Item buses cannot change input order by occupying bottom sides", f.recheck());
         f.hatch(1, -2, 0, 'Q');
-        assertFalse("Multi-fluid hatch is incompatible with ordered single-fluid recipes", f.recheck());
+        assertTrue("Quadruple can occupy an Input Hatch position", f.recheck());
         f.hatch(1, -2, 0, 'X');
         assertFalse("Combined inputs do not participate in data-stick recipes", f.recheck());
         f.hatch(1, -2, 0, 'F');
@@ -268,26 +270,37 @@ final class GT_AssemblyLineStructureChecks {
         Line f = new Line(facing, 5);
         f.machine.construct(f.trigger(false), false);
         f.requiredHatches();
-        f.hatch(0, -2, 2, 'F');
-        f.hatch(1, -2, 0, 'F');
+        GTMTE_Multi_Hatch_Input quadruple = (GTMTE_Multi_Hatch_Input) f.hatch(0, -2, 2, 'Q');
+        GTMTE_Multi_Hatch_Input nonuple = (GTMTE_Multi_Hatch_Input) f.hatch(1, -2, 0, 'N');
         f.hatch(1, -2, 2, 'F');
         f.hatch(2, -2, 0, 'F');
         assertTrue(f.recheck());
         Item[] ingredients = {Items.apple, Items.carrot, Items.diamond, Items.iron_ingot};
         NBTTagCompound tag = recipe();
+        FluidStack[] supplied = new FluidStack[4];
+        FluidStack extraLava = new FluidStack(FluidRegistry.LAVA, 1000);
+        FluidStack extraWater = new FluidStack(FluidRegistry.WATER, 1000);
+        quadruple.setFluid(extraLava, 0);
+        nonuple.setFluid(extraWater, 0);
         for (int i = 0; i < 4; i++) {
             f.machine.mInputBusses.get(i).mInventory[0] = new ItemStack(ingredients[i], 8);
             tag.setTag("" + i, new ItemStack(ingredients[i], i + 1).writeToNBT(new NBTTagCompound()));
-            f.machine.mInputHatches.get(i).mFluid = new FluidStack(i % 2 == 0 ? FluidRegistry.WATER : FluidRegistry.LAVA, 1000);
+            supplied[i] = new FluidStack(i % 2 == 0 ? FluidRegistry.WATER : FluidRegistry.LAVA, 1000);
             tag.setTag("f" + i, new FluidStack(i % 2 == 0 ? FluidRegistry.WATER : FluidRegistry.LAVA, (i + 1) * 100)
                     .writeToNBT(new NBTTagCompound()));
         }
+        quadruple.setFluid(supplied[0], 3);
+        nonuple.setFluid(supplied[1], 8);
+        f.machine.mInputHatches.get(2).mFluid = supplied[2];
+        f.machine.mInputHatches.get(3).mFluid = supplied[3];
         f.machine.mInventory[1] = stick(tag);
         assertTrue("Ordered recipe works in all four orientations", f.machine.checkRecipe(null));
         for (int i = 0; i < 4; i++) {
             assertEquals(7 - i, f.machine.mInputBusses.get(i).mInventory[0].stackSize);
-            assertEquals(1000 - (i + 1) * 100, f.machine.mInputHatches.get(i).mFluid.amount);
+            assertEquals(1000 - (i + 1) * 100, supplied[i].amount);
         }
+        assertEquals(1000, extraLava.amount);
+        assertEquals(1000, extraWater.amount);
         assertEquals(-8, f.machine.mEUt);
         assertEquals(40, f.machine.mMaxProgresstime);
         assertSame(Items.emerald, f.machine.mOutputItems[0].getItem());

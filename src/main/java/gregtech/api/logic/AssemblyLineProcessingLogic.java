@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.function.Supplier;
@@ -16,12 +17,20 @@ import java.util.function.Supplier;
 /** Data-stick recipes retain their ordered bus/hatch addressing. */
 public final class AssemblyLineProcessingLogic extends ProcessingLogic {
     private final Supplier<List<ItemStack>> itemPorts;
-    private final Supplier<List<FluidStack>> fluidPorts;
+    private final Iterable<FluidStack[]> fluidPorts;
     private final Supplier<List<ItemStack>> dataSticks;
     private NBTTagCompound lockedRecipe;
 
     public AssemblyLineProcessingLogic(Supplier<List<ItemStack>> itemPorts, Supplier<List<FluidStack>> fluidPorts,
             Supplier<List<ItemStack>> dataSticks) {
+        this(itemPorts, dataSticks, () -> fluidPorts.get().stream().map(fluid -> new FluidStack[] { fluid }).iterator());
+    }
+
+    public AssemblyLineProcessingLogic(
+        Supplier<List<ItemStack>> itemPorts,
+        Supplier<List<ItemStack>> dataSticks,
+        Iterable<FluidStack[]> fluidPorts
+    ) {
         this.itemPorts = itemPorts;
         this.fluidPorts = fluidPorts;
         this.dataSticks = dataSticks;
@@ -57,13 +66,26 @@ public final class AssemblyLineProcessingLogic extends ProcessingLogic {
             clearRecipeLock();
         }
         List<ItemStack> items = new ArrayList<>(itemPorts.get());
-        List<FluidStack> fluids = new ArrayList<>(fluidPorts.get());
+        List<FluidStack[]> ports = new ArrayList<>();
+        List<FluidStack> fluids = new ArrayList<>();
+        for (FluidStack[] port : fluidPorts) {
+            FluidStack[] snapshot = port.clone();
+            ports.add(snapshot);
+            fluids.addAll(Arrays.asList(snapshot));
+        }
         List<ItemStack> sticks = new ArrayList<>(dataSticks.get());
         ItemStack[] beforeSticks = ProcessingInputs.copyItems(sticks.toArray(new ItemStack[0]));
         ProcessingInputs source = new ProcessingInputs(items, fluids, () -> sameReferences(items, itemPorts.get())
-                && sameReferences(fluids, fluidPorts.get()) && unchangedData(sticks, beforeSticks));
+                && sameFluidPorts(ports) && unchangedData(sticks, beforeSticks));
         int[] itemIndices = indices(items);
-        int[] fluidIndices = indices(fluids);
+        int[] tankIndices = indices(fluids);
+        int[][] fluidIndices = new int[ports.size()][];
+        int offset = 0;
+        for (int port = 0; port < ports.size(); port++) {
+            int end = offset + ports.get(port).length;
+            fluidIndices[port] = Arrays.copyOfRange(tankIndices, offset, end);
+            offset = end;
+        }
         CheckRecipeResult failure = lockedRecipe == null ? CheckRecipeResult.NO_RECIPE
                 : CheckRecipeResult.RECIPE_LOCK_INVALID;
         try {
@@ -94,8 +116,14 @@ public final class AssemblyLineProcessingLogic extends ProcessingLogic {
         return Result.failure(failure);
     }
 
-    private Result prepare(NBTTagCompound recipe, ProcessingInputs source, int[] items, int[] fluids, Request request,
-            long power) {
+    private Result prepare(
+        NBTTagCompound recipe,
+        ProcessingInputs source,
+        int[] items,
+        int[][] fluids,
+        Request request,
+        long power
+    ) {
         int eut = recipe.getInteger("eu");
         int duration = recipe.getInteger("time");
         ItemStack output = GT_Utility.loadItem(recipe, "output");
@@ -147,7 +175,7 @@ public final class AssemblyLineProcessingLogic extends ProcessingLogic {
                 new FluidStack[0]);
     }
 
-    private static boolean consume(NBTTagCompound recipe, ProcessingInputs inputs, int[] items, int[] fluids) {
+    private static boolean consume(NBTTagCompound recipe, ProcessingInputs inputs, int[] items, int[][] fluids) {
         for (int port = 0; port < 15; port++) {
             int alternatives = recipe.getInteger("a" + port);
             if (!recipe.hasKey(Integer.toString(port)) && alternatives == 0) {
@@ -179,16 +207,47 @@ public final class AssemblyLineProcessingLogic extends ProcessingLogic {
                 continue;
             }
             FluidStack required = GT_Utility.loadFluid(recipe, "f" + port);
-            if (required == null || required.amount < 0 || port >= fluids.length || fluids[port] < 0) {
+            if (required == null || required.amount < 0 || port >= fluids.length) {
                 return false;
             }
-            FluidStack supplied = inputs.fluids[fluids[port]];
-            if (!GT_Utility.areFluidsEqual(supplied, required, true) || supplied.amount < required.amount) {
+            if (!consumeFluidPort(required, inputs, fluids[port])) {
                 return false;
             }
-            supplied.amount -= required.amount;
         }
         return true;
+    }
+
+    private static boolean consumeFluidPort(FluidStack required, ProcessingInputs inputs, int[] tanks) {
+        for (int index : tanks) {
+            if (index < 0) {
+                continue;
+            }
+            FluidStack supplied = inputs.fluids[index];
+            if (GT_Utility.areFluidsEqual(supplied, required, true) && supplied.amount >= required.amount) {
+                supplied.amount -= required.amount;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean sameFluidPorts(List<FluidStack[]> before) {
+        int index = 0;
+        for (FluidStack[] current : fluidPorts) {
+            if (index >= before.size()) {
+                return false;
+            }
+            FluidStack[] previous = before.get(index++);
+            if (previous.length != current.length) {
+                return false;
+            }
+            for (int tank = 0; tank < current.length; tank++) {
+                if (previous[tank] != current[tank]) {
+                    return false;
+                }
+            }
+        }
+        return index == before.size();
     }
 
     private static boolean matches(ItemStack required, ItemStack supplied) {

@@ -20,6 +20,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Outpu
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_ProcessingMultiBlockBase;
 import gregtech.api.metatileentity.implementations.GTMTE_BusHatch_Input;
+import gregtech.api.metatileentity.implementations.GTMTE_Multi_Hatch_Input;
 
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Log;
@@ -164,10 +165,27 @@ public class GT_MetaTileEntity_HeatExchanger
     @Override
     protected List<ProcessingInputs> collectProcessingInputs() {
         GT_MetaTileEntity_Hatch_Input hatch = mInputHotFluidHatch;
-        if (hatch == null || !isValidMetaTileEntity(hatch) || hatch.getFluid() == null) {
+        if (hatch == null || !isValidMetaTileEntity(hatch)) {
             return Collections.emptyList();
         }
+        if (hatch instanceof GTMTE_Multi_Hatch_Input) {
+            GTMTE_Multi_Hatch_Input multi = (GTMTE_Multi_Hatch_Input) hatch;
+            List<ProcessingInputs> inputs = new ArrayList<>();
+            for (int slot = 0; slot < multi.getMaxType(); slot++) {
+                FluidStack hot = multi.getFluid(slot);
+                if (hot != null && hot.amount > 0) {
+                    int index = slot;
+                    inputs.add(new ProcessingInputs(Collections.emptyList(), Collections.singletonList(hot),
+                            () -> multi == mInputHotFluidHatch && isValidMetaTileEntity(multi)
+                                    && multi.getFluid(index) == hot));
+                }
+            }
+            return inputs;
+        }
         FluidStack hot = hatch.getFluid();
+        if (hot == null) {
+            return Collections.emptyList();
+        }
         return Collections.singletonList(new ProcessingInputs(Collections.emptyList(), Collections.singletonList(hot),
                 () -> hatch == mInputHotFluidHatch && isValidMetaTileEntity(hatch) && hatch.getFluid() == hot));
     }

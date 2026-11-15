@@ -109,7 +109,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 .addHatchInfo("Energy Hatches", "1-4 of any type; top center")
                 .addHatchInfo("Input Buses", "exactly 1 per section except the last; bottom center (ULV recommended)")
                 .addHatchInfo("Output Bus", "exactly 1; bottom center of the last section")
-                .addHatchInfo("Input Hatches", "optional; bottom sides, single-tank only")
+                .addHatchInfo("Input Hatches", "optional; bottom sides")
                 .addHatchInfo("Data Access Hatch", "optional, up to 1; next to the controller")
                 .addStructureHint("Bottom sides: casings or hatches", BOTTOM_HINT)
                 .addStructureHint("Top center: casings or energy hatches", ENERGY_HINT)
@@ -146,8 +146,8 @@ public class GT_MetaTileEntity_AssemblyLine
 
     @Override
     protected ProcessingLogic createProcessingLogic() {
-        return new AssemblyLineProcessingLogic(this::orderedItemInputs, this::orderedFluidInputs,
-                () -> getDataItems(2));
+        return new AssemblyLineProcessingLogic(this::orderedItemInputs, () -> getDataItems(2),
+                () -> orderedFluidInputs().iterator());
     }
 
     @Override
@@ -173,10 +173,16 @@ public class GT_MetaTileEntity_AssemblyLine
         return inputs;
     }
 
-    private List<FluidStack> orderedFluidInputs() {
-        List<FluidStack> inputs = new ArrayList<>();
+    private List<FluidStack[]> orderedFluidInputs() {
+        List<FluidStack[]> inputs = new ArrayList<>();
         for (GT_MetaTileEntity_Hatch_Input hatch : mInputHatches) {
-            inputs.add(isValidMetaTileEntity(hatch) ? hatch.mFluid : null);
+            if (!isValidMetaTileEntity(hatch)) {
+                inputs.add(new FluidStack[0]);
+            } else if (hatch instanceof GTMTE_Multi_Hatch_Input) {
+                inputs.add(((GTMTE_Multi_Hatch_Input) hatch).getStoredFluid());
+            } else {
+                inputs.add(new FluidStack[] { hatch.mFluid });
+            }
         }
         return inputs;
     }
@@ -365,7 +371,7 @@ public class GT_MetaTileEntity_AssemblyLine
                 case OUTPUT_BUS:
                     return tile instanceof GT_MetaTileEntity_Hatch_OutputBus;
                 case FLUID_INPUT:
-                    return tile instanceof GT_MetaTileEntity_Hatch_Input && !(tile instanceof GTMTE_Multi_Hatch_Input);
+                    return tile instanceof GT_MetaTileEntity_Hatch_Input;
                 case DATA:
                     return tile instanceof GT_MetaTileEntity_Hatch_DataAccess;
                 default:
